@@ -1,0 +1,11 @@
+name: Skills
+description: skills
+author: StarTux
+version: 0.4
+main: com.winthier.skills.bukkit.SkillsPlugin
+depend: [ Vault, Exploits ]
+commands: {}
+permissions:
+  skills.collect:
+    description: Collect skill points
+    default: false
