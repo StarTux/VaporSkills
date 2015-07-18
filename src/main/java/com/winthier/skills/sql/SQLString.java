@@ -17,8 +17,8 @@ import lombok.Setter;
  * General purpose table to store repeatedly used strings so we can conveniently reference them by ID.
  */
 @Entity
-@Table(name = "enum_namespaces",
-       uniqueConstraints = @UniqueConstraint(columnNames = {"name"}))
+@Table(name = "strings",
+       uniqueConstraints = @UniqueConstraint(columnNames = {"value"}))
 @Getter
 @Setter
 class SQLString
@@ -38,9 +38,12 @@ class SQLString
     {
         SQLString result = cache.get(string);
         if (result == null) {
-            result = new SQLString(string);
-            SQLDB.get().save(result);
-            cache.put(string, result);
+	    result = SQLDB.get().find(SQLString.class).where().eq("name", string).findUnique();
+	    if (result == null) {
+		result = new SQLString(string);
+		SQLDB.get().save(result);
+	    }
+	    cache.put(string, result);
         }
         return result;
     }
