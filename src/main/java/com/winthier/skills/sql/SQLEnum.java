@@ -3,7 +3,6 @@ package com.winthier.skills.sql;
 import com.avaje.ebean.validation.Length;
 import com.avaje.ebean.validation.NotEmpty;
 import com.avaje.ebean.validation.NotNull;
-import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 import javax.persistence.Entity;
@@ -11,12 +10,14 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
-import lombok.Value;
 
+/**
+ * General purpose table to store enums by name, so we can
+ * reference them by id.
+ */
 @Entity
 @Table(name = "enums",
        uniqueConstraints = @UniqueConstraint(columnNames = {"namespace_id", "name"}))
@@ -24,19 +25,28 @@ import lombok.Value;
 @Setter
 public class SQLEnum
 {
-    @Entity
-    @Table(name = "enum_namespaces",
-           uniqueConstraints = @UniqueConstraint(columnNames = {"name"}))
-    @Getter
-    @Setter
-    public static class SQLNamespace
+    // Cache
+    final static Map<Enum, SQLEnum> cache = new HashMap<>();
+    // Payload
+    @Id int ID;
+    @NotNull @ManyToOne SQLString namespace;
+    @NotNull @ManyToOne SQLString name;
+
+    private SQLEnum(Enum key)
     {
-        @Id int id;
-        @NotEmpty String name;
+        setNamespace(SQLString.of(key.getDeclaringClass().getName()));
+        setName(SQLString.of(key.name()));
     }
 
-    @Id int id;
-    @NotNull @ManyToOne SQLNamespace namespace;
-    @NotEmpty String name;
+    static SQLEnum of(Enum key)
+    {
+        SQLEnum result = cache.get(key);
+        if (result == null) {
+            result = new SQLEnum(key);
+            SQLDB.get().save(result);
+            cache.put(key, result);
+        }
+        return result;
+    }
 }
 
