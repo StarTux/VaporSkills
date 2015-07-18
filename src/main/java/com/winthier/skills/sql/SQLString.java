@@ -14,7 +14,7 @@ import lombok.NonNull;
 import lombok.Setter;
 
 /**
- * General purpose table to store repeatedly used strings so we can conveniently reference them by ID.
+ * General purpose table to store repeatedly used strings so we can conveniently reference them by id.
  */
 @Entity
 @Table(name = "strings",
@@ -26,7 +26,7 @@ class SQLString
     // Cache
     final static Map<String, SQLString> cache = new HashMap<>();
     // Payload
-    @Id Integer ID;
+    @Id Integer id;
     @NotNull @Length(max=255) String value;
 
     private SQLString(String string)

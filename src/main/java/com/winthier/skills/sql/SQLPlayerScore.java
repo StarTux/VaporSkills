@@ -27,7 +27,7 @@ public class SQLPlayerScore
     @Value static class Key { UUID player; String skill; }
     final static Map<Key, SQLPlayerScore> cache = new HashMap<>();
     // Content
-    @Id Integer ID;
+    @Id Integer id;
     @NotNull @ManyToOne SQLPlayer player;
     @NotNull @ManyToOne SQLString skill;
     @NotNull Integer points;

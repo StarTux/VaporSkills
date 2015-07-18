@@ -24,12 +24,12 @@ public class SQLPlayer
     // Cache
     final static Map<UUID, SQLPlayer> cache = new HashMap<>();
     // Content
-    @Id Integer ID;
-    @NotNull UUID UUID;
+    @Id Integer id;
+    @NotNull UUID uuid;
 
     private SQLPlayer(UUID uuid)
     {
-	setUUID(uuid);
+	setUuid(uuid);
     }
 
     public static SQLPlayer of(UUID uuid)

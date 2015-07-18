@@ -28,7 +28,7 @@ public class SQLEnum
     // Cache
     final static Map<Enum, SQLEnum> cache = new HashMap<>();
     // Payload
-    @Id int ID;
+    @Id int id;
     @NotNull @ManyToOne SQLString namespace;
     @NotNull @ManyToOne SQLString name;
 

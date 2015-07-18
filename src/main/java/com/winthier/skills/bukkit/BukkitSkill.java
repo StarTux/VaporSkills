@@ -31,11 +31,17 @@ abstract class BukkitSkill implements Skill
     void enable() {};
     String getPermissionNode()
     {
-	return "skills.skill" + getSkillType().name().toLowerCase();
+	return "skills.skill" + getKey();
     }
 
     boolean allowPlayer(Player player)
     {
 	return player.hasPermission(getPermissionNode());
+    }
+
+    @Override
+    public String getKey()
+    {
+        return getSkillType().name().toLowerCase();
     }
 }
