@@ -16,12 +16,13 @@ class BukkitSkillMine extends BukkitSkillAbstractBlockBreak
     @Override
     Boolean requirePlayerPlacedBlock()
     {
-	return true;
+	return false;
     }
 
     @Override
     boolean allowItemInHand(ItemStack item)
     {
+	// Any pickaxe goes
 	switch (item.getType()) {
 	case DIAMOND_PICKAXE:
 	case GOLD_PICKAXE:

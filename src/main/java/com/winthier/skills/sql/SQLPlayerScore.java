@@ -4,7 +4,9 @@ import com.avaje.ebean.validation.Length;
 import com.avaje.ebean.validation.NotEmpty;
 import com.avaje.ebean.validation.NotNull;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -26,19 +28,20 @@ public class SQLPlayerScore
     // Cache
     @Value static class Key { UUID player; String skill; }
     final static Map<Key, SQLPlayerScore> cache = new HashMap<>();
+    final static Set<SQLPlayerScore> dirties = new HashSet<>();
     // Content
     @Id Integer id;
     @NotNull @ManyToOne SQLPlayer player;
     @NotNull @ManyToOne SQLString skill;
-    @NotNull Integer points;
-    @NotNull Integer level;
+    @NotNull Integer skillPoints;
+    @NotNull Integer skillLevel;
 
     private SQLPlayerScore(SQLPlayer player, SQLString skill)
     {
 	setPlayer(player);
 	setSkill(skill);
-	setPoints(0);
-	setLevel(0);
+	setSkillPoints(0);
+	setSkillLevel(0);
     }
 
     public static SQLPlayerScore of(UUID uuid, String skill)
@@ -62,5 +65,16 @@ public class SQLPlayerScore
     public void save()
     {
 	SQLDB.get().save(this);
+    }
+
+    public void setDirty()
+    {
+	dirties.add(this);
+    }
+
+    public static void saveAll()
+    {
+	SQLDB.get().save(dirties);
+	dirties.clear();
     }
 }

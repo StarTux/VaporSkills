@@ -4,6 +4,7 @@ import com.avaje.ebean.EbeanServer;
 import com.winthier.skills.Skills;
 import java.util.Arrays;
 import java.util.List;
+import javax.persistence.PersistenceException;
 
 public class SQLDB {
     static EbeanServer get() {
@@ -17,6 +18,16 @@ public class SQLDB {
             Thread.dumpStack();
         }
         return list.get(0);
+    }
+
+    public static boolean isSetup()
+    {
+	try {
+	    for (Class<?> clazz : getDatabaseClasses()) get().find(clazz).findRowCount();
+	} catch (PersistenceException pe) {
+	    return false;
+	}
+	return true;
     }
 
     static void clearAllCaches()

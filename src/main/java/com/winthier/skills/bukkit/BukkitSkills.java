@@ -1,7 +1,9 @@
 package com.winthier.skills.bukkit;
 
 import com.avaje.ebean.EbeanServer;
+import com.winthier.skills.Skill;
 import com.winthier.skills.Skills;
+import java.util.UUID;
 import lombok.Getter;
 
 public class BukkitSkills extends Skills
@@ -27,5 +29,11 @@ public class BukkitSkills extends Skills
     public EbeanServer getDatabase()
     {
 	return getPlugin().getDatabase();
+    }
+
+    @Override
+    public void onLevelUp(UUID player, Skill skill, int level)
+    {
+	// TODO: Call an event or whatever
     }
 }
