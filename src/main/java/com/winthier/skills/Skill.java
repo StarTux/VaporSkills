@@ -1,6 +1,8 @@
 package com.winthier.skills;
 
-public class Skill
+public interface Skill
 {
-    
+    String getTitle();
+    String getActivityName();
+    String getPersonName();
 }
