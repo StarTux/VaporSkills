@@ -23,7 +23,7 @@ public class SQLDB {
     {
     }
 
-    static List<Class<?>> getDatabaseClasses()
+    public static List<Class<?>> getDatabaseClasses()
     {
         return Arrays.asList(
             SQLEnum.class
