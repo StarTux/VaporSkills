@@ -32,9 +32,9 @@ public class SQLRewardEntity implements Reward
     @NotNull @ManyToOne SQLString skill;
     @NotNull @ManyToOne SQLString entityType;
     // Rewards
-    @NotNull int skillPoints;
-    @NotNull double money;
-    @NotNull int exp;
+    @NotNull float skillPoints;
+    @NotNull float money;
+    @NotNull float exp;
 
     private SQLRewardEntity(SQLString skill, SQLString entityType)
     {

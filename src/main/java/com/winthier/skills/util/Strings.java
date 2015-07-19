@@ -1,4 +1,4 @@
-package com.winthier.skills.Strings;
+package com.winthier.skills.util;
 
 import java.util.List;
 import lombok.NonNull;

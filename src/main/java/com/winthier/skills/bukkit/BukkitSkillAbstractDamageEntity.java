@@ -1,6 +1,7 @@
 package com.winthier.skills.bukkit;
 
 import com.winthier.exploits.bukkit.BukkitExploits;
+import com.winthier.skills.Reward;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -19,6 +20,10 @@ abstract class BukkitSkillAbstractDamageEntity extends BukkitSkill implements Li
         Player player = findPlayerDamager(event.getDamager());
         if (player == null || !allowPlayer(player)) return;
         if (!allowDamager(event.getDamager(), player)) return;
+        Reward reward = rewardForEntity(event.getEntity());
+        if (reward == null) return;
+        double fraction = Math.min(1.0 ,event.getFinalDamage() / event.getEntity().getMaxHealth());
+        // TODO: Everything else
         //
     }
 

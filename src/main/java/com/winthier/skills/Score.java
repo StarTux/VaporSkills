@@ -64,9 +64,8 @@ public class Score
         return result;
     }
 
-    public Reward rewardForEntity(Skill skill, int blockType, String entityType)
+    public Reward rewardForEntity(Skill skill, String entityType)
     {
-        // TODO: EVERYTHING
-        return null;
+        return SQLRewardEntity.find(skill.getKey(), entityType);
     }
 }

@@ -33,9 +33,9 @@ public class SQLRewardBlock implements Reward
     @NotNull Integer blockType;
     Integer blockData = null;
     // Reward
-    @NotNull int skillPoints;
-    @NotNull double money;
-    @NotNull int exp;
+    @NotNull float skillPoints;
+    @NotNull float money;
+    @NotNull float exp;
 
 
     private SQLRewardBlock(SQLString skill, int blockType)

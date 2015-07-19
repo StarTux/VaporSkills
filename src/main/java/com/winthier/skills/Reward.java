@@ -5,7 +5,7 @@ package com.winthier.skills;
  */
 public interface Reward
 {
-    int getSkillPoints();
-    int getExp();
-    double getMoney();
+    float getSkillPoints();
+    float getMoney();
+    float getExp();
 }

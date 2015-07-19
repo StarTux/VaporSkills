@@ -4,6 +4,7 @@ import com.winthier.skills.Reward;
 import com.winthier.skills.Skill;
 import lombok.Getter;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 /**
@@ -46,6 +47,11 @@ abstract class BukkitSkill implements Skill
         @SuppressWarnings("deprecation")
 	int blockData = (int)block.getData();
         return getSkills().getScore().rewardForBlock(this, blockType, blockData);
+    }
+
+    Reward rewardForEntity(Entity e)
+    {
+        return getSkills().getScore().rewardForEntity(this, BukkitEntities.name(e));
     }
 
     void giveSkillPoints(Player player, int skillPoints)
