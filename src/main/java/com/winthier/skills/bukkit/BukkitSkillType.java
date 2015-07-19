@@ -14,11 +14,12 @@ public enum BukkitSkillType
     ENCHANT,
     EXPLORE,
     FISH,
-    GARDEN,
-    HARVEST,
-    MINE,
+    GARDEN, // ?
+    HARVEST, //
+    MINE, //
     SACRIFICE,
     SMELT,
     TRAVEL,
+    WOODCUTTER, //
     ;
 }

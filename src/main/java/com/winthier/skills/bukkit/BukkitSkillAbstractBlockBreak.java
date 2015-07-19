@@ -1,7 +1,7 @@
 package com.winthier.skills.bukkit;
 
 import com.winthier.exploits.bukkit.BukkitExploits;
-import com.winthier.skills.sql.SQLReward;
+import com.winthier.skills.Reward;
 import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
@@ -49,10 +49,10 @@ abstract class BukkitSkillAbstractBlockBreak extends BukkitSkill implements List
 	if (!allowPlayer(event.getPlayer())) return;
 	if (!allowItemInHand(event.getPlayer().getItemInHand())) return;
 	if (!allowBrokenBlock(event.getBlock())) return;
-	SQLReward reward = rewardForBlock(event.getBlock());
+	Reward reward = rewardForBlock(event.getBlock());
 	if (reward == null) return;
-	BukkitSkills.getInstance().getScore().giveSkillPoints(event.getPlayer().getUniqueId(), this, reward.getSkillPoints());
+        giveSkillPoints(event.getPlayer(), reward.getSkillPoints());
+        giveMoney(event.getPlayer(), reward.getMoney());
 	event.setExpToDrop(event.getExpToDrop() + reward.getExp());
-	
     }
 }

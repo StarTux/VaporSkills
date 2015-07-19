@@ -3,6 +3,7 @@ package com.winthier.skills.sql;
 import com.avaje.ebean.validation.Length;
 import com.avaje.ebean.validation.NotEmpty;
 import com.avaje.ebean.validation.NotNull;
+import com.winthier.skills.Reward;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -21,7 +22,7 @@ import lombok.Value;
        uniqueConstraints = @UniqueConstraint(columnNames = {"skill_id", "block_type", "block_data"}))
 @Getter
 @Setter
-public class SQLRewardBlock
+public class SQLRewardBlock implements Reward
 {
     // Cache
     @Value static class Key { String skill; int blockType; int blockData; }
@@ -31,13 +32,19 @@ public class SQLRewardBlock
     @NotNull @ManyToOne SQLString skill;
     @NotNull Integer blockType;
     Integer blockData = null;
-    @NotNull @ManyToOne SQLReward reward;
+    // Reward
+    @NotNull int skillPoints;
+    @NotNull double money;
+    @NotNull int exp;
+
 
     private SQLRewardBlock(SQLString skill, int blockType)
     {
         setSkill(skill);
         setBlockType(blockType);
-        reward = SQLReward.create();
+        setSkillPoints(0);
+        setMoney(0.0);
+        setExp(0);
     }
 
     private SQLRewardBlock(SQLString skill, int blockType, int blockData)

@@ -1,8 +1,7 @@
 package com.winthier.skills.bukkit;
 
+import com.winthier.skills.Reward;
 import com.winthier.skills.Skill;
-import com.winthier.skills.sql.SQLReward;
-import com.winthier.skills.sql.SQLRewardBlock;
 import lombok.Getter;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -40,18 +39,24 @@ abstract class BukkitSkill implements Skill
         return getSkillType().name().toLowerCase();
     }
 
-    SQLReward rewardForBlock(Block block)
+    Reward rewardForBlock(Block block)
     {
+        @SuppressWarnings("deprecation")
 	int blockType = block.getType().getId();
+        @SuppressWarnings("deprecation")
 	int blockData = (int)block.getData();
-	SQLRewardBlock reward = SQLRewardBlock.find(getKey(), blockType, blockData);
-	if (reward == null) reward = SQLRewardBlock.find(getKey(), blockType);
-	if (reward == null) return null;
-	return reward.getReward();
+        return getSkills().getScore().rewardForBlock(this, blockType, blockData);
+    }
+
+    void giveSkillPoints(Player player, int skillPoints)
+    {
+        if (skillPoints == 0) return;
+	getSkills().getScore().giveSkillPoints(player.getUniqueId(), this, skillPoints);
     }
 
     void giveMoney(Player player, double money)
     {
+        if (money < 0.01) return;
 	getPlugin().getEconomy().depositPlayer(player, money);
     }
 }

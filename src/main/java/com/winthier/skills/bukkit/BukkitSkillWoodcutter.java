@@ -5,13 +5,13 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 @Getter
-class BukkitSkillMine extends BukkitSkillAbstractBlockBreak
+class BukkitSkillWoodcutter extends BukkitSkillAbstractBlockBreak
 {
-    final BukkitSkillType skillType = BukkitSkillType.MINE;
-    final String title = "Mining";
-    final String verb = "mine";
-    final String personName = "miner";
-    final String activityName = "mining";
+    final BukkitSkillType skillType = BukkitSkillType.WOODCUTTER;
+    final String title = "Woodcutting";
+    final String verb = "cut wood";
+    final String personName = "woodcutter";
+    final String activityName = "woodcutting";
 
     @Override
     Boolean requirePlayerPlacedBlock()
@@ -25,11 +25,11 @@ class BukkitSkillMine extends BukkitSkillAbstractBlockBreak
     {
 	// Any pickaxe goes
 	switch (item.getType()) {
-	case DIAMOND_PICKAXE:
-	case GOLD_PICKAXE:
-	case IRON_PICKAXE:
-	case STONE_PICKAXE:
-	case WOOD_PICKAXE:
+	case DIAMOND_AXE:
+	case GOLD_AXE:
+	case IRON_AXE:
+	case STONE_AXE:
+	case WOOD_AXE:
 	    return true;
 	default:
 	    return false;
