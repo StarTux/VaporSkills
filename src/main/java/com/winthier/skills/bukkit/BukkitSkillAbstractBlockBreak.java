@@ -53,6 +53,6 @@ abstract class BukkitSkillAbstractBlockBreak extends BukkitSkill implements List
 	if (reward == null) return;
         giveSkillPoints(event.getPlayer(), reward.getSkillPoints());
         giveMoney(event.getPlayer(), reward.getMoney());
-	event.setExpToDrop(event.getExpToDrop() + reward.getExp());
+	event.setExpToDrop(event.getExpToDrop() + (int)reward.getExp());
     }
 }

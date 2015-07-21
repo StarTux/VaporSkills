@@ -3,7 +3,7 @@ package com.winthier.skills.sql;
 import com.avaje.ebean.validation.Length;
 import com.avaje.ebean.validation.NotEmpty;
 import com.avaje.ebean.validation.NotNull;
-import com.avaje.ebean.validation.Version;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -14,6 +14,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import javax.persistence.Version;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
@@ -34,8 +35,8 @@ public class SQLPlayerScore
     @Id Integer id;
     @NotNull @ManyToOne SQLPlayer player;
     @NotNull @ManyToOne SQLString skill;
-    @NotNull Integer skillPoints;
-    @NotNull Integer skillLevel;
+    @NotNull float skillPoints;
+    @NotNull int skillLevel;
     @Version Date version;
 
     private SQLPlayerScore(SQLPlayer player, SQLString skill)

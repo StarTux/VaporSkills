@@ -43,7 +43,7 @@ public class SQLRewardBlock implements Reward
         setSkill(skill);
         setBlockType(blockType);
         setSkillPoints(0);
-        setMoney(0.0);
+        setMoney(0.0f);
         setExp(0);
     }
 

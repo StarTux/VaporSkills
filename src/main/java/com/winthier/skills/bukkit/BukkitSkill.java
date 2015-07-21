@@ -54,7 +54,7 @@ abstract class BukkitSkill implements Skill
         return getSkills().getScore().rewardForEntity(this, BukkitEntities.name(e));
     }
 
-    void giveSkillPoints(Player player, int skillPoints)
+    void giveSkillPoints(Player player, double skillPoints)
     {
         if (skillPoints == 0) return;
 	getSkills().getScore().giveSkillPoints(player.getUniqueId(), this, skillPoints);

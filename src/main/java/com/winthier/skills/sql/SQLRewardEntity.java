@@ -41,7 +41,7 @@ public class SQLRewardEntity implements Reward
         setSkill(skill);
         setEntityType(entityType);
         setSkillPoints(0);
-        setMoney(0.0);
+        setMoney(0.0f);
         setExp(0);
     }
 

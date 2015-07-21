@@ -6,7 +6,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 @Getter
-class BukkitSkillArcher extends BukkitSkillAbstractDamageEntity
+class BukkitSkillArcher extends BukkitSkillAbstractEntityKill
 {
     final BukkitSkillType skillType = BukkitSkillType.ARCHER;
     final String title = "Archery";
