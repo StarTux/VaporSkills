@@ -3,6 +3,7 @@ package com.winthier.skills.sql;
 import com.avaje.ebean.validation.Length;
 import com.avaje.ebean.validation.NotEmpty;
 import com.avaje.ebean.validation.NotNull;
+import com.avaje.ebean.validation.Version;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -35,6 +36,7 @@ public class SQLPlayerScore
     @NotNull @ManyToOne SQLString skill;
     @NotNull Integer skillPoints;
     @NotNull Integer skillLevel;
+    @Version Date version;
 
     private SQLPlayerScore(SQLPlayer player, SQLString skill)
     {
