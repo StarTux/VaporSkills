@@ -34,9 +34,7 @@ abstract class BukkitSkillAbstractEntityKill extends BukkitSkill implements List
             percentage *= BukkitExploits.getInstance().getKillDistancePercentageWithinSeconds(player, entity.getLocation(), killDistanceSeconds(), fullKillDistance());
         }
         percentage *= scoreMultiplier(player, entity);
-        giveSkillPoints(player, reward.getSkillPoints() * (float)percentage);
-        giveMoney(player, reward.getMoney() * percentage);
-        event.setDroppedExp((int)(event.getDroppedExp() + reward.getExp() * percentage));
+        giveReward(player, reward, percentage);
     }                             
 
     boolean allowDamager(Entity entity, Player player)

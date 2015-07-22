@@ -3,8 +3,8 @@ package com.winthier.skills.bukkit;
 public enum BukkitSkillType
 {
     ARCHER, //
-    BRAWL,
-    BREED,
+    BRAWL, //
+    BREED, //
     BREW,
     BUILD,
     BUTCHER,
