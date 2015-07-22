@@ -4,6 +4,7 @@ import com.avaje.ebean.EbeanServer;
 import com.winthier.skills.Skill;
 import com.winthier.skills.Skills;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
@@ -19,11 +20,15 @@ public class BukkitSkills extends Skills
     {
 	instance = this;
         List<BukkitSkill> skills = Arrays.asList(
-            new BukkitSkillMine(),
-            new BukkitSkillWoodcutter(),
+            new BukkitSkillArcher(),
+            new BukkitSkillBrawl(),
+            new BukkitSkillBreed(),
+            new BukkitSkillBrew(),
             new BukkitSkillHarvest(),
-            new BukkitSkillArcher()
+            new BukkitSkillMine(),
+            new BukkitSkillWoodcutter()
             );
+        for (BukkitSkill skill : skills) skillMap.put(skill.getSkillType(), skill);
     }
 
     BukkitSkillsPlugin getPlugin()
@@ -41,5 +46,11 @@ public class BukkitSkills extends Skills
     public void onLevelUp(UUID player, Skill skill, int level)
     {
 	// TODO: Call an event or whatever
+    }
+
+    @Override
+    public Collection<? extends BukkitSkill> getSkills()
+    {
+        return skillMap.values();
     }
 }
