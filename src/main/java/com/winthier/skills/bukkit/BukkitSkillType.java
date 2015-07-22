@@ -2,7 +2,7 @@ package com.winthier.skills.bukkit;
 
 public enum BukkitSkillType
 {
-    ARCHER,
+    ARCHER, //
     BRAWL,
     BREED,
     BREW,
