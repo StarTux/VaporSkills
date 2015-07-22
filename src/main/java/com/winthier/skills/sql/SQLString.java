@@ -36,6 +36,7 @@ class SQLString
 
     public static SQLString of(String string)
     {
+        if (string == null) return null;
         SQLString result = cache.get(string);
         if (result == null) {
 	    result = SQLDB.get().find(SQLString.class).where().eq("name", string).findUnique();

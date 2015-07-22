@@ -1,8 +1,7 @@
 package com.winthier.skills;
 
 import com.winthier.skills.sql.SQLPlayerScore;
-import com.winthier.skills.sql.SQLRewardBlock;
-import com.winthier.skills.sql.SQLRewardEntity;
+import com.winthier.skills.sql.SQLReward;
 import java.util.UUID;
 
 public class Score
@@ -53,20 +52,17 @@ public class Score
 	return (double)(points * 10);
     }
 
-    public Reward rewardForBlock(Skill skill, int blockType)
-    {
-        return SQLRewardBlock.find(skill.getKey(), blockType);
-    }
-
     public Reward rewardForBlock(Skill skill, int blockType, int blockData)
     {
-        Reward result = SQLRewardBlock.find(skill.getKey(), blockType, blockData);
-        if (result == null) result = rewardForBlock(skill, blockType);
+        Reward result = SQLReward.find(skill.getKey(), blockType, blockData, null);
+        if (result == null) {
+            result = SQLReward.find(skill.getKey(), blockType, null, null);
+        }
         return result;
     }
 
     public Reward rewardForEntity(Skill skill, String entityType)
     {
-        return SQLRewardEntity.find(skill.getKey(), entityType);
+        return SQLReward.find(skill.getKey(), null, null, entityType);
     }
 }
