@@ -8,6 +8,7 @@ import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 /**
  * Abstract class which implements Skill in a Bukkit-y manner.
@@ -52,6 +53,15 @@ abstract class BukkitSkill implements Skill
         return getSkills().getScore().rewardForBlock(this, blockType, blockData);
     }
 
+    Reward rewardForItem(ItemStack item)
+    {
+        @SuppressWarnings("deprecation")
+	int itemType = item.getType().getId();
+        @SuppressWarnings("deprecation")
+        int itemData = (int)item.getDurability();
+        return getSkills().getScore().rewardForBlock(this, itemType, itemData);
+    }
+
     Reward rewardForEntity(Entity e)
     {
         return getSkills().getScore().rewardForEntity(this, BukkitEntities.name(e));
@@ -88,12 +98,11 @@ abstract class BukkitSkill implements Skill
         giveReward(player, reward, 1.0);
     }
     
-    Player getNearestPlayer(Entity e, double max)
+    Player getNearestPlayer(Location loc, double max)
     {
-        Location loc = e.getLocation();
         Player result = null;
         double dist = 0.0;
-        for (Entity o : e.getNearbyEntities(max, max, max)) {
+        for (Entity o : loc.getWorld().getNearbyEntities(loc, max, max, max)) {
             if (!(o instanceof Player)) continue;
             if (result == null) {
                 result = (Player)o;
@@ -106,5 +115,10 @@ abstract class BukkitSkill implements Skill
             }
         }
         return result;
+    }
+
+    Player getNearestPlayer(Entity e, double max)
+    {
+        return getNearestPlayer(e.getLocation(), max);
     }
 }

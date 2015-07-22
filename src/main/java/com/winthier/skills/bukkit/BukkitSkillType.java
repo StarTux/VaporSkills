@@ -5,7 +5,7 @@ public enum BukkitSkillType
     ARCHER, //
     BRAWL, //
     BREED, //
-    BREW,
+    BREW, //
     BUILD,
     BUTCHER,
     COOK,
