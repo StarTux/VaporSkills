@@ -8,8 +8,8 @@ public enum BukkitSkillType
     BREW, //
     BUILD, //
     BUTCHER, //
-    COOK,
-    DIG,
+    COOK, //
+    DIG, //
     EAT, //
     ENCHANT,
     EXPLORE,
@@ -19,7 +19,7 @@ public enum BukkitSkillType
     MINE, //
     QUAFF, //
     SACRIFICE,
-    SMELT,
+    SMELT, //
     TRAVEL,
     WOODCUT, //
     ;
