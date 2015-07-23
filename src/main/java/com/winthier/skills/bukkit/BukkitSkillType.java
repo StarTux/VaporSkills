@@ -10,13 +10,14 @@ public enum BukkitSkillType
     BUTCHER, //
     COOK,
     DIG,
-    EAT,
+    EAT, //
     ENCHANT,
     EXPLORE,
     FISH,
     GARDEN, // ?
     HARVEST, //
     MINE, //
+    QUAFF, //
     SACRIFICE,
     SMELT,
     TRAVEL,

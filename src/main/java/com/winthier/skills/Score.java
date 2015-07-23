@@ -52,17 +52,27 @@ public class Score
 	return (double)(points * 10);
     }
 
-    public Reward rewardForBlock(Skill skill, int blockType, int blockData)
+    private Reward rewardForTypeAndData(Skill skill, int type, int data)
     {
-        Reward result = SQLReward.find(skill.getKey(), blockType, blockData, null);
+        Reward result = SQLReward.find(skill.getKey(), type, data, null);
         if (result == null) {
-            result = SQLReward.find(skill.getKey(), blockType, null, null);
+            result = SQLReward.find(skill.getKey(), type, null, null);
         }
         return result;
+    }
+
+    public Reward rewardForBlock(Skill skill, int blockType, int blockData)
+    {
+        return rewardForTypeAndData(skill, blockType, blockData);
     }
 
     public Reward rewardForEntity(Skill skill, String entityType)
     {
         return SQLReward.find(skill.getKey(), null, null, entityType);
+    }
+
+    public Reward rewardForPotionEffect(Skill skill, int effectType, int effectAmplifier)
+    {
+        return rewardForTypeAndData(skill, effectType, effectAmplifier);
     }
 }

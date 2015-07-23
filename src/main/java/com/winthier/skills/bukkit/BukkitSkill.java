@@ -9,6 +9,7 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffect;
 
 /**
  * Abstract class which implements Skill in a Bukkit-y manner.
@@ -60,6 +61,15 @@ abstract class BukkitSkill implements Skill
         @SuppressWarnings("deprecation")
         int itemData = (int)item.getDurability();
         return getSkills().getScore().rewardForBlock(this, itemType, itemData);
+    }
+
+    Reward rewardForPotionEffect(PotionEffect effect)
+    {
+        @SuppressWarnings("deprecation")
+        int potionType = effect.getType().getId();
+        @SuppressWarnings("deprecation")
+        int potionData = effect.getAmplifier();
+        return getSkills().getScore().rewardForPotionEffect(this, potionType, potionData);
     }
 
     Reward rewardForEntity(Entity e)
