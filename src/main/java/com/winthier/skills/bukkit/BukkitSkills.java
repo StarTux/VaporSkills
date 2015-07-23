@@ -30,7 +30,7 @@ public class BukkitSkills extends Skills
             new BukkitSkillHarvest(),
             new BukkitSkillMine(),
             new BukkitSkillQuaff(),
-            new BukkitSkillWoodcutter()
+            new BukkitSkillWoodcut()
             );
         for (BukkitSkill skill : skills) {
             BukkitSkillType type = skill.getSkillType();

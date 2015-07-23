@@ -21,6 +21,6 @@ public enum BukkitSkillType
     SACRIFICE,
     SMELT,
     TRAVEL,
-    WOODCUTTER, //
+    WOODCUT, //
     ;
 }

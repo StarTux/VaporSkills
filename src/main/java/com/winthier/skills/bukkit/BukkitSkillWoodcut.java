@@ -5,9 +5,9 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 @Getter
-class BukkitSkillWoodcutter extends BukkitSkillAbstractBlockBreak
+class BukkitSkillWoodcut extends BukkitSkillAbstractBlockBreak
 {
-    final BukkitSkillType skillType = BukkitSkillType.WOODCUTTER;
+    final BukkitSkillType skillType = BukkitSkillType.WOODCUT;
     final String title = "Woodcutting";
     final String verb = "cut wood";
     final String personName = "woodcutter";
