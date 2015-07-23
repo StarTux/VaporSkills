@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NonNull;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -70,6 +71,13 @@ abstract class BukkitSkill implements Skill
         @SuppressWarnings("deprecation")
         int potionData = effect.getAmplifier();
         return getSkills().getScore().rewardForPotionEffect(this, potionType, potionData);
+    }
+
+    Reward rewardForEnchantment(Enchantment enchant, int level)
+    {
+        @SuppressWarnings("deprecation")
+        int enchantType = enchant.getId();
+        return getSkills().getScore().rewardForEnchantment(this, enchantType, level);
     }
 
     Reward rewardForEntity(Entity e)

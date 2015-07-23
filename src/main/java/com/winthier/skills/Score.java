@@ -75,4 +75,9 @@ public class Score
     {
         return rewardForTypeAndData(skill, effectType, effectAmplifier);
     }
+
+    public Reward rewardForEnchantment(Skill skill, int enchantType, int enchantLevel)
+    {
+        return rewardForTypeAndData(skill, enchantType, enchantLevel);
+    }
 }

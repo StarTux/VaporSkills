@@ -28,6 +28,7 @@ public class BukkitSkills extends Skills
             new BukkitSkillCook(),
             new BukkitSkillDig(),
             new BukkitSkillEat(),
+            new BukkitSkillEnchant(),
             new BukkitSkillHarvest(),
             new BukkitSkillMine(),
             new BukkitSkillQuaff(),
