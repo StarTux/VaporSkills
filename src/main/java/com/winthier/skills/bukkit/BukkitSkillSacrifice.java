@@ -1,7 +1,7 @@
 package com.winthier.skills.bukkit;
 
 import com.winthier.skills.Reward;
-import org.bukkit.block.Block;
+import lombok.Getter;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -9,7 +9,6 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.inventory.ItemStack;
-import lombok.Getter;
 
 @Getter
 class BukkitSkillSacrifice extends BukkitSkill implements Listener
