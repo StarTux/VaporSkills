@@ -25,8 +25,11 @@ public class BukkitSkills extends Skills
             new BukkitSkillBreed(),
             new BukkitSkillBrew(),
             new BukkitSkillButcher(),
+            new BukkitSkillDig(),
+            new BukkitSkillEat(),
             new BukkitSkillHarvest(),
             new BukkitSkillMine(),
+            new BukkitSkillQuaff(),
             new BukkitSkillWoodcutter()
             );
         for (BukkitSkill skill : skills) {
