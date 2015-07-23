@@ -6,8 +6,8 @@ public enum BukkitSkillType
     BRAWL, //
     BREED, //
     BREW, //
-    BUILD,
-    BUTCHER,
+    BUILD, //
+    BUTCHER, //
     COOK,
     DIG,
     EAT,
