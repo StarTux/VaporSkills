@@ -29,7 +29,13 @@ public class BukkitSkills extends Skills
             new BukkitSkillMine(),
             new BukkitSkillWoodcutter()
             );
-        for (BukkitSkill skill : skills) skillMap.put(skill.getSkillType(), skill);
+        for (BukkitSkill skill : skills) {
+            BukkitSkillType type = skill.getSkillType();
+            if (skillMap.containsKey(type)) {
+                throw new IllegalStateException("Duplicate skill " + type.name() + ": " + skillMap.get(type).getClass().getSimpleName() + " and " + skill.getClass().getSimpleName());
+            }
+            skillMap.put(type, skill);
+        }
     }
 
     BukkitSkillsPlugin getPlugin()
