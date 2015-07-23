@@ -2,7 +2,6 @@ package com.winthier.skills.bukkit;
 
 import com.winthier.exploits.bukkit.BukkitExploits;
 import com.winthier.skills.Reward;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;

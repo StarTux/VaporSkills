@@ -2,7 +2,6 @@ package com.winthier.skills.bukkit;
 
 import com.winthier.exploits.bukkit.BukkitExploits;
 import com.winthier.skills.Reward;
-import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
