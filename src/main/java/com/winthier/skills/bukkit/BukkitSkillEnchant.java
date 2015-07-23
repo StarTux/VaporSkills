@@ -17,7 +17,7 @@ class BukkitSkillEnchant extends BukkitSkill implements Listener
     final String title = "Enchanting";
     final String verb = "enchant";
     final String personName = "enchanter";
-    final String activityName = "mining";
+    final String activityName = "enchanting";
     final double MAX_EXP_LEVEL = 3;
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)

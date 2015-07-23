@@ -11,7 +11,7 @@ public enum BukkitSkillType
     COOK, //
     DIG, //
     EAT, //
-    ENCHANT,
+    ENCHANT, //
     EXPLORE,
     FISH,
     GARDEN, // ?
