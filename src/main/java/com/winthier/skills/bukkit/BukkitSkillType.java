@@ -18,7 +18,7 @@ public enum BukkitSkillType
     HARVEST,   //
     MINE,      //
     QUAFF,     //
-    SACRIFICE,
+    SACRIFICE, //
     SMELT,     //
     TRAVEL,
     WOODCUT,   //
