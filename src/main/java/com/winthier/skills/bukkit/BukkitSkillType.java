@@ -14,7 +14,7 @@ public enum BukkitSkillType
     ENCHANT,   //
     EXPLORE,
     FISH,      //
-    GARDEN,
+    GARDEN,    // plant things(?) grow things w/ bonemeal(?)
     HARVEST,   //
     MINE,      //
     QUAFF,     //
