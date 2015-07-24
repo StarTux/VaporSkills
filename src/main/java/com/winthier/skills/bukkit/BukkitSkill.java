@@ -2,10 +2,14 @@ package com.winthier.skills.bukkit;
 
 import com.winthier.skills.Reward;
 import com.winthier.skills.Skill;
+import java.io.File;
+import java.io.IOException;
 import lombok.Getter;
 import lombok.NonNull;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -17,6 +21,8 @@ import org.bukkit.potion.PotionEffect;
  */
 abstract class BukkitSkill implements Skill
 {
+    private YamlConfiguration config = null;
+    
     BukkitSkillsPlugin getPlugin()
     {
 	return BukkitSkillsPlugin.instance;
@@ -138,5 +144,28 @@ abstract class BukkitSkill implements Skill
     Player getNearestPlayer(Entity e, double max)
     {
         return getNearestPlayer(e.getLocation(), max);
+    }
+
+    File getConfigFile()
+    {
+        return new File(getPlugin().getDataFolder(), getKey() + ".yml");
+    }
+
+    ConfigurationSection getConfig()
+    {
+        if (config == null) {
+            config = YamlConfiguration.loadConfiguration(getConfigFile());
+        }
+        return config;
+    }
+
+    void saveConfig()
+    {
+        if (config == null) return;
+        try {
+            config.save(getConfigFile());
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
+        }
     }
 }
