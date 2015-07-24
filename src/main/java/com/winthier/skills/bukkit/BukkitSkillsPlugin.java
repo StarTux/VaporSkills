@@ -43,7 +43,17 @@ public class BukkitSkillsPlugin extends JavaPlugin
             BukkitSkill skill = skills.skillMap.get(type);
             if (skill == null) {
                 getLogger().warning("Missing skill: " + type.name());
+            } else {
+                skill.onEnable();
             }
+        }
+    }
+
+    @Override
+    public void onDisable()
+    {
+        for (BukkitSkill skill : skills.getSkills()) {
+            skill.onDisable();
         }
     }
 

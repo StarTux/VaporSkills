@@ -35,6 +35,7 @@ abstract class BukkitSkill implements Skill
 
     abstract BukkitSkillType getSkillType();
     void onEnable() {};
+    void onDisable() {};
     
     String getPermissionNode()
     {
