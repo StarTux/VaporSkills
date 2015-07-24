@@ -80,4 +80,9 @@ public class Score
     {
         return rewardForTypeAndData(skill, enchantType, enchantLevel);
     }
+
+    public Reward rewardForName(Skill skill, String name)
+    {
+        return SQLReward.find(skill.getKey(), null, null, name);
+    }
 }

@@ -12,6 +12,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
 
 @Getter
 class BukkitSkillTravel extends BukkitSkill implements Listener
@@ -30,22 +32,32 @@ class BukkitSkillTravel extends BukkitSkill implements Listener
         void load() {
             ConfigurationSection section = getConfig().getConfigurationSection(uuid.toString());
             if (section == null) return;
-            if (section.hasKey("Anchor")) anchor = Location.deserialize(section.get("Anchor"));
+            if (section.isSet("Anchor")) anchor = Location.deserialize((Map<String,Object>)section.get("Anchor"));
             distance = section.getDouble("Distance", 0.0);
         }
-        double currentDistance(Location loc)
-        {
+        boolean didProgress(Location loc) {
             if (anchor == null || !anchor.getWorld().equals(loc.getWorld())) {
+                // If there is no prior location, or it is in
+                // another world, copy the given location.
                 anchor = loc;
                 distance = 0.0;
-                return 0.0;
+                return false;
             } else {
-                double squared = anchor.distanceSquared(loc);
-                if (squared > MIN_DISTANCE * MIN_DISTANCE) {
-                    
+                double newDistance = anchor.distance(loc);
+                if (distance < MIN_DISTANCE && newDistance >= MIN_DISTANCE) {
+                    distance = newDistance;
+                    return true;
+                } else if (newDistance - distance > DISTANCE_STEP) {
+                    distance = newDistance;
+                    return true;
+                } else {
+                    return false;
                 }
-                return 0.0;
             }
+        }
+        void reset(Location loc) {
+            anchor = loc;
+            distance = 0.0;
         }
     }
 
@@ -54,7 +66,8 @@ class BukkitSkillTravel extends BukkitSkill implements Listener
     final String verb = "travel";
     final String personName = "traveler";
     final String activityName = "traveling";
-    final double MIN_DISTANCE = 10.0;
+    final double DISTANCE_STEP = 10.0;
+    final double MIN_DISTANCE = 50.0;
     final Map<UUID, Data> players = new HashMap<>();
 
     void storeAll()
@@ -79,14 +92,36 @@ class BukkitSkillTravel extends BukkitSkill implements Listener
     }
 
     @EventHandler
-    onPlayerMove(PlayerMoveEvent event)
+    void onPlayerMove(PlayerMoveEvent event)
     {
-        
+        Player player = event.getPlayer();
+        if (!allowPlayer(player)) return;
+        Location loc = player.getLocation();
+        if (getData(player).didProgress(player.getLocation())) {
+            giveReward(player, rewardForName("progress"));
+        }
+    }
+
+    @EventHandler
+    void onPlayerTeleport(PlayerTeleportEvent event)
+    {
+        switch (event.getCause()) {
+        case COMMAND:
+        case END_PORTAL:
+        case NETHER_PORTAL:
+        case PLUGIN:
+        case SPECTATE:
+        case UNKNOWN:
+            getData(event.getPlayer()).reset(event.getPlayer().getLocation());
+            break;
+        }
     }
 
     @Override
     void onDisable()
     {
+        storeAll();
+        players.clear();
         saveConfig();
     }
 }

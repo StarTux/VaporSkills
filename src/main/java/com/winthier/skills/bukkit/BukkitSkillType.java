@@ -12,15 +12,15 @@ public enum BukkitSkillType
     DIG,       //
     EAT,       //
     ENCHANT,   //
-    EXPLORE,
+//    EXPLORE,
     FISH,      //
-    GARDEN,    // plant things(?) grow things w/ bonemeal(?)
+//    GARDEN,    // plant things(?) grow things w/ bonemeal(?)
     HARVEST,   //
     MINE,      //
     QUAFF,     //
     SACRIFICE, //
     SMELT,     //
-    TRAVEL,
+    TRAVEL,    //
     WOODCUT,   //
     ;
 }
