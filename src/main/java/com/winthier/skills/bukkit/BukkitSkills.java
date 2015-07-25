@@ -23,6 +23,7 @@ public class BukkitSkills extends Skills
             new BukkitSkillBrawl(),
             new BukkitSkillBreed(),
             new BukkitSkillBrew(),
+            new BukkitSkillBuild(),
             new BukkitSkillButcher(),
             new BukkitSkillCook(),
             new BukkitSkillDig(),
@@ -35,6 +36,7 @@ public class BukkitSkills extends Skills
             new BukkitSkillQuaff(),
             new BukkitSkillSacrifice(),
             new BukkitSkillSmelt(),
+            new BukkitSkillTravel(),
             new BukkitSkillWoodcut()
             );
         for (BukkitSkill skill : skills) {
