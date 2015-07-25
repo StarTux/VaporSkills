@@ -37,6 +37,8 @@ public class BukkitSkillsPlugin extends JavaPlugin
         for (BukkitSkill skill : skills.getSkills()) {
             if (skill instanceof Listener) {
                 getServer().getPluginManager().registerEvents((Listener)skill, this);
+            } else {
+                getLogger().warning("Not an Event Listener: " + skill.getTitle());
             }
         }
         for (BukkitSkillType type : BukkitSkillType.values()) {
