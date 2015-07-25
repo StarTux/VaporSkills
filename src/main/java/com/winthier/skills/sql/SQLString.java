@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.Setter;
 
@@ -21,7 +22,8 @@ import lombok.Setter;
        uniqueConstraints = @UniqueConstraint(columnNames = {"value"}))
 @Getter
 @Setter
-class SQLString
+@NoArgsConstructor
+public class SQLString
 {
     // Cache
     final static Map<String, SQLString> cache = new HashMap<>();

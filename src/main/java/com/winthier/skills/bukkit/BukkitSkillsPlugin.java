@@ -16,7 +16,7 @@ public class BukkitSkillsPlugin extends JavaPlugin
     @Getter private Economy economy;
     @Getter private final BukkitSkills skills = new BukkitSkills();
 
-    BukkitSkillsPlugin()
+    public BukkitSkillsPlugin()
     {
 	instance = this;
     }

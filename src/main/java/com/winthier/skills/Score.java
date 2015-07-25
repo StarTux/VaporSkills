@@ -1,6 +1,6 @@
 package com.winthier.skills;
 
-import com.winthier.skills.sql.SQLPlayerScore;
+import com.winthier.skills.sql.SQLScore;
 import com.winthier.skills.sql.SQLReward;
 import java.util.UUID;
 
@@ -9,7 +9,7 @@ public class Score
     public void giveSkillPoints(UUID player, Skill skill, double points)
     {
 	if (points <= 0) return;
-	SQLPlayerScore row = SQLPlayerScore.of(player, skill.getKey());
+	SQLScore row = SQLScore.of(player, skill.getKey());
 	double skillPoints = row.getSkillPoints();
 	int skillLevel = row.getSkillLevel();
 	// Calculate new
@@ -27,12 +27,12 @@ public class Score
 
     public double getSkillPoints(UUID player, Skill skill)
     {
-	return SQLPlayerScore.of(player, skill.getKey()).getSkillPoints();
+	return SQLScore.of(player, skill.getKey()).getSkillPoints();
     }
 
     public int getSkillLevel(UUID player, Skill skill)
     {
-	return SQLPlayerScore.of(player, skill.getKey()).getSkillLevel();
+	return SQLScore.of(player, skill.getKey()).getSkillLevel();
     }
 
     public int levelForPoints(double skillPointsDouble)

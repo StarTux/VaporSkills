@@ -14,6 +14,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.Setter;
 import lombok.Value;
@@ -23,6 +24,7 @@ import lombok.Value;
        uniqueConstraints = @UniqueConstraint(columnNames = {"skill_id", "type", "data", "name_id"}))
 @Getter
 @Setter
+@NoArgsConstructor
 public class SQLReward implements Reward
 {
     // Cache

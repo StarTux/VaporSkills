@@ -11,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.Setter;
 
@@ -19,6 +20,7 @@ import lombok.Setter;
        uniqueConstraints = @UniqueConstraint(columnNames = {"uuid"}))
 @Getter
 @Setter
+@NoArgsConstructor
 public class SQLPlayer
 {
     // Cache

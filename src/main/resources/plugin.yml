@@ -2,8 +2,9 @@ name: Skills
 description: skills
 author: StarTux
 version: 0.4
-main: com.winthier.skills.bukkit.SkillsPlugin
+main: com.winthier.skills.bukkit.BukkitSkillsPlugin
 depend: [ Vault, Exploits ]
+database: true
 commands: {}
 permissions:
   skills.collect:

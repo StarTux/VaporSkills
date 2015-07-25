@@ -37,7 +37,10 @@ public class SQLDB {
     public static List<Class<?>> getDatabaseClasses()
     {
         return Arrays.asList(
-            SQLEnum.class
+            SQLPlayer.class,
+            SQLReward.class,
+            SQLScore.class,
+            SQLString.class
             );
     }
 }

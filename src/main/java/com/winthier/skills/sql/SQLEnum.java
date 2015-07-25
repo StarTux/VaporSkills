@@ -11,6 +11,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.Setter;
 
@@ -23,6 +24,7 @@ import lombok.Setter;
        uniqueConstraints = @UniqueConstraint(columnNames = {"namespace_id", "name"}))
 @Getter
 @Setter
+@NoArgsConstructor
 public class SQLEnum
 {
     // Cache

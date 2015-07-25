@@ -16,21 +16,23 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.persistence.Version;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.Setter;
 import lombok.Value;
 
 @Entity
-@Table(name = "player_scores",
+@Table(name = "scores",
        uniqueConstraints = @UniqueConstraint(columnNames = {"player_id", "skill_id"}))
 @Getter
 @Setter
-public class SQLPlayerScore
+@NoArgsConstructor
+public class SQLScore
 {
     // Cache
     @Value static class Key { UUID player; String skill; }
-    final static Map<Key, SQLPlayerScore> cache = new HashMap<>();
-    final static Set<SQLPlayerScore> dirties = new HashSet<>();
+    final static Map<Key, SQLScore> cache = new HashMap<>();
+    final static Set<SQLScore> dirties = new HashSet<>();
     // Content
     @Id Integer id;
     @NotNull @ManyToOne SQLPlayer player;
@@ -39,7 +41,7 @@ public class SQLPlayerScore
     @NotNull int skillLevel;
     @Version Date version;
 
-    private SQLPlayerScore(SQLPlayer player, SQLString skill)
+    private SQLScore(SQLPlayer player, SQLString skill)
     {
 	setPlayer(player);
 	setSkill(skill);
@@ -47,17 +49,17 @@ public class SQLPlayerScore
 	setSkillLevel(0);
     }
 
-    public static SQLPlayerScore of(UUID uuid, String skill)
+    public static SQLScore of(UUID uuid, String skill)
     {
 	Key key = new Key(uuid, skill);
-	SQLPlayerScore result = cache.get(key);
+	SQLScore result = cache.get(key);
 	if (result == null) {
-	    result = SQLDB.get().find(SQLPlayerScore.class).where()
+	    result = SQLDB.get().find(SQLScore.class).where()
 		.eq("player", SQLPlayer.of(uuid))
 		.eq("skill", SQLString.of(skill))
 		.findUnique();
 	    if (result == null) {
-		result = new SQLPlayerScore(SQLPlayer.of(uuid), SQLString.of(skill));
+		result = new SQLScore(SQLPlayer.of(uuid), SQLString.of(skill));
 		result.save();
 	    }
 	    cache.put(key, result);
