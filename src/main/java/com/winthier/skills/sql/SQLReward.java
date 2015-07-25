@@ -21,18 +21,22 @@ import lombok.Value;
 
 @Entity
 @Table(name = "rewards",
-       uniqueConstraints = @UniqueConstraint(columnNames = {"skill_id", "type", "data", "name_id"}))
+       uniqueConstraints = @UniqueConstraint(columnNames = {"skill_id", "target_id", "type", "data", "name_id"}))
 @Getter
 @Setter
 @NoArgsConstructor
 public class SQLReward implements Reward
 {
+    public static enum Target {
+        NAME, BLOCK, ENTITY, ENCHANTMENT, POTION_EFFECT;
+    }
     // Cache
-    @Value static class Key { @NonNull String skill; Integer type; Integer data; String name; }
+    @Value static class Key { @NonNull String skill; @NonNull Target target; Integer type; Integer data; String name; }
     final static Map<Key, SQLReward> cache = new HashMap<>();
     // Content
     @Id Integer id;
     @NotNull @ManyToOne SQLString skill;
+    @NotNull @ManyToOne SQLString target;
     Integer type;
     Integer data;
     @ManyToOne(optional=true) SQLString name;
@@ -42,9 +46,10 @@ public class SQLReward implements Reward
     @NotNull float exp;
 
 
-    private SQLReward(SQLString skill, Integer type, Integer data, SQLString name)
+    private SQLReward(SQLString skill, SQLString target, Integer type, Integer data, SQLString name)
     {
         setSkill(skill);
+        setTarget(target);
         setType(type);
         setData(data);
         setName(name);
@@ -55,7 +60,7 @@ public class SQLReward implements Reward
     }
 
     private SQLReward(Key key) {
-        this(SQLString.of(key.skill), key.type, key.data, SQLString.of(key.name));
+        this(SQLString.of(key.skill), SQLString.of(key.target.name()), key.type, key.data, SQLString.of(key.name));
     }
 
     private static SQLReward find(Key key)
@@ -64,6 +69,7 @@ public class SQLReward implements Reward
         if (key == null) {
             ExpressionList<SQLReward> expr = SQLDB.get().find(SQLReward.class).where();
             expr = expr.eq("skill", SQLString.of(key.skill));
+            expr = expr.eq("target", SQLString.of(key.target.name()));
             expr = key.type != null ? expr.eq("type", key.type)               : expr.isNull("type");
             expr = key.data != null ? expr.eq("data", key.data)               : expr.isNull("data");
             expr = key.name != null ? expr.eq("name", SQLString.of(key.name)) : expr.isNull("name");
@@ -84,13 +90,13 @@ public class SQLReward implements Reward
         return result;
     }
 
-    public static SQLReward find(@NonNull String skill, Integer type, Integer data, String name)
+    public static SQLReward find(@NonNull String skill, @NonNull Target target, Integer type, Integer data, String name)
     {
-        return find(new Key(skill, type, data, name));
+        return find(new Key(skill, target, type, data, name));
     }
 
-    public static SQLReward of(@NonNull String skill, Integer type, Integer data, String name)
+    public static SQLReward of(@NonNull String skill, @NonNull Target target, Integer type, Integer data, String name)
     {
-        return of(new Key(skill, type, data, name));
+        return of(new Key(skill, target, type, data, name));
     }
 }

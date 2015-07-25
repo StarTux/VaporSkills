@@ -52,37 +52,37 @@ public class Score
 	return (double)(points * 10);
     }
 
-    private Reward rewardForTypeAndData(Skill skill, int type, int data)
+    private Reward rewardForTypeAndData(Skill skill, SQLReward.Target target, int type, int data)
     {
-        Reward result = SQLReward.find(skill.getKey(), type, data, null);
+        Reward result = SQLReward.find(skill.getKey(), target, type, data, null);
         if (result == null) {
-            result = SQLReward.find(skill.getKey(), type, null, null);
+            result = SQLReward.find(skill.getKey(), target, type, null, null);
         }
         return result;
     }
 
     public Reward rewardForBlock(Skill skill, int blockType, int blockData)
     {
-        return rewardForTypeAndData(skill, blockType, blockData);
+        return rewardForTypeAndData(skill, SQLReward.Target.BLOCK, blockType, blockData);
     }
 
     public Reward rewardForEntity(Skill skill, String entityType)
     {
-        return SQLReward.find(skill.getKey(), null, null, entityType);
+        return SQLReward.find(skill.getKey(), SQLReward.Target.ENTITY, null, null, entityType);
     }
 
     public Reward rewardForPotionEffect(Skill skill, int effectType, int effectAmplifier)
     {
-        return rewardForTypeAndData(skill, effectType, effectAmplifier);
+        return rewardForTypeAndData(skill, SQLReward.Target.POTION_EFFECT, effectType, effectAmplifier);
     }
 
     public Reward rewardForEnchantment(Skill skill, int enchantType, int enchantLevel)
     {
-        return rewardForTypeAndData(skill, enchantType, enchantLevel);
+        return rewardForTypeAndData(skill, SQLReward.Target.ENCHANTMENT, enchantType, enchantLevel);
     }
 
     public Reward rewardForName(Skill skill, String name)
     {
-        return SQLReward.find(skill.getKey(), null, null, name);
+        return SQLReward.find(skill.getKey(), SQLReward.Target.NAME, null, null, name);
     }
 }
