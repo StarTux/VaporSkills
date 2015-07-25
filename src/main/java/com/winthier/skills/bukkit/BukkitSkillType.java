@@ -2,7 +2,6 @@ package com.winthier.skills.bukkit;
 
 public enum BukkitSkillType
 {
-    ARCHER,    //
     BRAWL,     //
     BREED,     //
     BREW,      //
@@ -12,15 +11,16 @@ public enum BukkitSkillType
     DIG,       //
     EAT,       //
     ENCHANT,   //
-//    EXPLORE,
     FISH,      //
-//    GARDEN,    // plant things(?) grow things w/ bonemeal(?)
     HARVEST,   //
+    HUNTER,    //
     MINE,      //
     QUAFF,     //
     SACRIFICE, //
     SMELT,     //
     TRAVEL,    //
     WOODCUT,   //
+//    EXPLORE,
+//    GARDEN,    // plant things(?) grow things w/ bonemeal(?)
     ;
 }
