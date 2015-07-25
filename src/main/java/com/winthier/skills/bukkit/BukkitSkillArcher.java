@@ -13,7 +13,7 @@ class BukkitSkillArcher extends BukkitSkillAbstractEntityKill
     final String verb = "snipe";
     final String personName = "archer";
     final String activityName = "archery";
-    final double KILL_DISTANCE = 8;
+    final double KILL_DISTANCE = 16;
     final long KILL_DISTANCE_SECONDS = 60L * 5;
     final double PLAYER_DISTANCE = 16;
 
@@ -30,7 +30,7 @@ class BukkitSkillArcher extends BukkitSkillAbstractEntityKill
     }
 
     @Override
-    double fullKillDistance()
+    double minKillDistance()
     {
         return KILL_DISTANCE;
     }

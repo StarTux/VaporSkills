@@ -24,14 +24,11 @@ abstract class BukkitSkillAbstractEntityKill extends BukkitSkill implements List
         if (!(entity.getLastDamageCause() instanceof EntityDamageByEntityEvent)) return;
         EntityDamageByEntityEvent edbee = (EntityDamageByEntityEvent)entity.getLastDamageCause();
         if (!allowDamager(edbee.getDamager(), player)) return;
-        //
         if (!allowPlayer(player)) return;
+        if (useKillDistance() && BukkitExploits.getInstance().recentKillDistance(player, entity.getLocation(), killDistanceSeconds()) < minKillDistance()) return;
         Reward reward = rewardForEntity(entity);
         if (reward == null) return;
         double percentage = BukkitExploits.getInstance().getEntityDamageByPlayerPercentage(entity);
-        if (useKillDistance()) {
-            percentage *= BukkitExploits.getInstance().getKillDistancePercentageWithinSeconds(player, entity.getLocation(), killDistanceSeconds(), fullKillDistance());
-        }
         percentage *= scoreMultiplier(player, entity);
         giveReward(player, reward, percentage);
     }                             
@@ -42,7 +39,7 @@ abstract class BukkitSkillAbstractEntityKill extends BukkitSkill implements List
     }
 
     boolean useKillDistance() { return false; }
-    double fullKillDistance() { return 16.0; }
+    double minKillDistance() { return 16.0; }
     long killDistanceSeconds() { return 60; }
     double scoreMultiplier(Player player, Entity entity) { return 1.0; }
 }

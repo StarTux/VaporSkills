@@ -12,7 +12,7 @@ class BukkitSkillBrawl extends BukkitSkillAbstractEntityKill
     final String verb = "brawl";
     final String personName = "brawler";
     final String activityName = "brawling";
-    final double KILL_DISTANCE = 8;
+    final double KILL_DISTANCE = 16;
     final long KILL_DISTANCE_SECONDS = 60L * 5;
 
     @Override
@@ -28,7 +28,7 @@ class BukkitSkillBrawl extends BukkitSkillAbstractEntityKill
     }
 
     @Override
-    double fullKillDistance()
+    double minKillDistance()
     {
         return KILL_DISTANCE;
     }
