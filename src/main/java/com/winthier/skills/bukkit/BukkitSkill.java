@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.IOException;
 import lombok.Getter;
 import lombok.NonNull;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.ConfigurationSection;
@@ -44,7 +45,9 @@ abstract class BukkitSkill implements Skill
 
     boolean allowPlayer(Player player)
     {
-	return player.hasPermission(getPermissionNode());
+        if (player.getGameMode() != GameMode.SURVIVAL) return false;
+	if (!player.hasPermission(getPermissionNode())) return false;
+        return true;
     }
 
     @Override
