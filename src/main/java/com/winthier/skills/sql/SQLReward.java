@@ -28,7 +28,7 @@ import lombok.Value;
 public class SQLReward implements Reward
 {
     public static enum Target {
-        NAME, BLOCK, ENTITY, ENCHANTMENT, POTION_EFFECT;
+        NAME, BLOCK, ITEM, ENTITY, ENCHANTMENT, POTION_EFFECT;
     }
     // Cache
     @Value static class Key { @NonNull String skill; @NonNull Target target; Integer type; Integer data; String name; }
@@ -98,5 +98,10 @@ public class SQLReward implements Reward
     public static SQLReward of(@NonNull String skill, @NonNull Target target, Integer type, Integer data, String name)
     {
         return of(new Key(skill, target, type, data, name));
+    }
+
+    public void save()
+    {
+        SQLDB.get().save(this);
     }
 }

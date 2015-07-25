@@ -66,6 +66,11 @@ public class Score
         return rewardForTypeAndData(skill, SQLReward.Target.BLOCK, blockType, blockData);
     }
 
+    public Reward rewardForItem(Skill skill, int blockType, int blockData)
+    {
+        return rewardForTypeAndData(skill, SQLReward.Target.ITEM, blockType, blockData);
+    }
+    
     public Reward rewardForEntity(Skill skill, String entityType)
     {
         return SQLReward.find(skill.getKey(), SQLReward.Target.ENTITY, null, null, entityType);

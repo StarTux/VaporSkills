@@ -68,7 +68,7 @@ abstract class BukkitSkill implements Skill
 	int itemType = item.getType().getId();
         @SuppressWarnings("deprecation")
         int itemData = (int)item.getDurability();
-        return getSkills().getScore().rewardForBlock(this, itemType, itemData);
+        return getSkills().getScore().rewardForItem(this, itemType, itemData);
     }
 
     Reward rewardForPotionEffect(PotionEffect effect)
