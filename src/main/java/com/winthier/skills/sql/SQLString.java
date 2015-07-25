@@ -41,7 +41,7 @@ public class SQLString
         if (string == null) return null;
         SQLString result = cache.get(string);
         if (result == null) {
-	    result = SQLDB.get().find(SQLString.class).where().eq("name", string).findUnique();
+	    result = SQLDB.get().find(SQLString.class).where().eq("value", string).findUnique();
 	    if (result == null) {
 		result = new SQLString(string);
 		SQLDB.get().save(result);
