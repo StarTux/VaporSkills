@@ -6,6 +6,7 @@ import com.winthier.skills.Skills;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -15,6 +16,7 @@ public class BukkitSkills extends Skills
 {
     @Getter static BukkitSkills instance;
     final Map<BukkitSkillType, BukkitSkill> skillMap = new EnumMap<>(BukkitSkillType.class);
+    final Map<String, BukkitSkill> nameMap = new HashMap<>();
 
     BukkitSkills()
     {
@@ -45,6 +47,12 @@ public class BukkitSkills extends Skills
                 throw new IllegalStateException("Duplicate skill " + type.name() + ": " + skillMap.get(type).getClass().getSimpleName() + " and " + skill.getClass().getSimpleName());
             }
             skillMap.put(type, skill);
+            nameMap.put(type.name().toLowerCase(), skill);
+            nameMap.put(skill.getKey().toLowerCase(), skill);
+            nameMap.put(skill.getTitle().toLowerCase(), skill);
+            nameMap.put(skill.getVerb().toLowerCase(), skill);
+            nameMap.put(skill.getActivityName().toLowerCase(), skill);
+            nameMap.put(skill.getPersonName().toLowerCase(), skill);
         }
     }
 
@@ -69,5 +77,15 @@ public class BukkitSkills extends Skills
     public Collection<? extends BukkitSkill> getSkills()
     {
         return skillMap.values();
+    }
+
+    BukkitSkill skillByName(String name)
+    {
+        return nameMap.get(name.toLowerCase());
+    }
+
+    BukkitSkill skillByType(BukkitSkillType type)
+    {
+        return skillMap.get(type);
     }
 }

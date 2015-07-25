@@ -7,6 +7,13 @@ depend: [ Vault, Exploits ]
 database: true
 commands: {}
 permissions:
-  skills.collect:
-    description: Collect skill points
-    default: false
+  skills.skill.*:
+    description: Use all skills
+    default: op
+  skills.admin:
+    description: Perform admin tasks
+    default: op
+commands:
+  skillsadmin:
+    aliases: [ skilladmin, skadmin ]
+    permission: skills.admin
