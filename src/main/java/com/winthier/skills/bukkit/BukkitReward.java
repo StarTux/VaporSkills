@@ -68,7 +68,7 @@ class BukkitReward implements Reward
                            SQLReward.Target.valueOf(sqlReward.getTarget().getValue()),
                            sqlReward.getType(),
                            sqlReward.getData(),
-                           sqlReward.getName().getValue());
+                           sqlReward.getName() == null ? null : sqlReward.getName().getValue());
         }
         SQLReward findSQLReward() {
             return SQLReward.find(BukkitSkills.getInstance().skillByType(skill).getKey(), target, type, data, name);
@@ -157,6 +157,6 @@ class BukkitReward implements Reward
     @Override
     public String toString()
     {
-        return String.format("%s %.02f %.02f %.02f", key, skillPoints, money, exp);
+        return String.format("%s %.2f %.2f %.2f", key, skillPoints, money, exp);
     }
 }
