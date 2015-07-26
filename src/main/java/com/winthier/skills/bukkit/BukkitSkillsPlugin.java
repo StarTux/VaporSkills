@@ -9,6 +9,7 @@ import net.milkbowl.vault.permission.Permission;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 
 public class BukkitSkillsPlugin extends JavaPlugin
 {
@@ -51,6 +52,11 @@ public class BukkitSkillsPlugin extends JavaPlugin
             }
         }
         getCommand("skillsadmin").setExecutor(adminCommand);
+        new BukkitRunnable() {
+            @Override public void run() {
+                flush();
+            }
+        }.runTaskTimer(this, 20*10, 20*10);
     }
 
     @Override
@@ -58,6 +64,17 @@ public class BukkitSkillsPlugin extends JavaPlugin
     {
         for (BukkitSkill skill : skills.getSkills()) {
             skill.onDisable();
+        }
+        flush();
+        SQLDB.clearAllCaches();
+    }
+
+    void flush()
+    {
+        try {
+            SQLDB.saveAll();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

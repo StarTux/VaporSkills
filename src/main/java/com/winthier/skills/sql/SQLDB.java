@@ -30,8 +30,17 @@ public class SQLDB {
 	return true;
     }
 
-    static void clearAllCaches()
+    public static void clearAllCaches()
     {
+        SQLString.cache.clear();
+        SQLPlayer.cache.clear();
+        SQLReward.cache.clear();
+        SQLScore.cache.clear();
+    }
+
+    public static void saveAll()
+    {
+        SQLScore.saveAll();
     }
 
     public static List<Class<?>> getDatabaseClasses()
