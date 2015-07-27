@@ -72,6 +72,7 @@ class BukkitCommandAdmin implements CommandExecutor
                 String line = null;
                 while (null != (line = in.readLine())) {
                     linum++;
+                    line = line.split("#")[0];
                     if (line.isEmpty()) continue;
                     String[] tokens = line.split("\\s+");
                     reward = BukkitReward.parse(tokens);
