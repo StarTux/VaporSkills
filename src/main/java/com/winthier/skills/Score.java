@@ -39,17 +39,17 @@ public class Score
     {
         int skillPoints = (int)skillPointsDouble;
 	int level = 0;
-	while (pointsForLevel(level) < skillPoints) level += 1;
+	while (pointsForLevel(level + 1) <= skillPoints) level += 1;
 	return level;
     }
 
-    public double pointsForLevel(int skillLevel)
+    public int pointsForLevel(int skillLevel)
     {
 	int points = 0;
 	for (int i = 1; i <= skillLevel; ++i) {
 	    points += i;
 	}
-	return (double)(points * 10);
+	return points * 10;
     }
 
     private Reward rewardForTypeAndData(Skill skill, SQLReward.Target target, int type, int data)
