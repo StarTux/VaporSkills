@@ -11,4 +11,6 @@ class BukkitSkillEat extends BukkitSkillAbstractConsume
     final String verb = "eat";
     final String personName = "eater";
     final String activityName = "eating";
+
+    // TODO: Factor in percentage of food bar filled?
 }
