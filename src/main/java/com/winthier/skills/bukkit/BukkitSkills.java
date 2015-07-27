@@ -11,12 +11,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import lombok.Getter;
+import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Player;
 
 public class BukkitSkills extends Skills
 {
     @Getter static BukkitSkills instance;
     final Map<BukkitSkillType, BukkitSkill> skillMap = new EnumMap<>(BukkitSkillType.class);
     final Map<String, BukkitSkill> nameMap = new HashMap<>();
+    final Map<UUID, Double> moneys = new HashMap<>();
 
     BukkitSkills()
     {
@@ -87,5 +91,33 @@ public class BukkitSkills extends Skills
     BukkitSkill skillByType(BukkitSkillType type)
     {
         return skillMap.get(type);
+    }
+
+    void giveMoney(Player player, double amount) {
+        if (amount < 0.01) return;
+        Double stored = moneys.get(player.getUniqueId());
+        if (stored == null) {
+            stored = amount;
+        } else {
+            stored += amount;
+        }
+        moneys.put(player.getUniqueId(), stored);
+    }
+
+    void depositAllMoneys()
+    {
+        try {
+            for (Map.Entry<UUID, Double> entry : moneys.entrySet()) {
+                Double amount = entry.getValue();
+                if (amount == null || amount < 0.01) continue;
+                OfflinePlayer player = Bukkit.getServer().getOfflinePlayer(entry.getKey());
+                if (player == null) continue;
+                getPlugin().getEconomy().depositPlayer(player, amount);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            moneys.clear();
+        }
     }
 }

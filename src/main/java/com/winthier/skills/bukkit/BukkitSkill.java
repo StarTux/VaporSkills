@@ -109,7 +109,7 @@ abstract class BukkitSkill implements Skill
     private void giveMoney(Player player, double money)
     {
         if (money < 0.01) return;
-	getPlugin().getEconomy().depositPlayer(player, money);
+        getSkills().giveMoney(player, money);
     }
 
     private void giveExp(Player player, double exp) {

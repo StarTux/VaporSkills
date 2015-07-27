@@ -73,6 +73,7 @@ public class BukkitSkillsPlugin extends JavaPlugin
     {
         try {
             SQLDB.saveAll();
+            skills.depositAllMoneys();
         } catch (Exception e) {
             e.printStackTrace();
         }
