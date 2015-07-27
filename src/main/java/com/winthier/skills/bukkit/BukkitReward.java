@@ -2,6 +2,7 @@ package com.winthier.skills.bukkit;
 
 import com.winthier.skills.Reward;
 import com.winthier.skills.sql.SQLReward;
+import com.winthier.skills.util.Strings;
 import java.util.Arrays;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -115,7 +116,7 @@ class BukkitReward implements Reward
             return name;
         }
         @Override public String toString() {
-            return String.format("%s %s (%s) %s:%s {%s}", skill.name(), target.name(), typeAsPrettyString(), typeAsString(), dataAsString(), nameAsString());
+            return String.format("%s %s (%s) %s:%s {%s}", Strings.camelCase(skill.name()), Strings.camelCase(target.name()), typeAsPrettyString(), typeAsString(), dataAsString(), nameAsString());
         }
     }
     final Key key;
