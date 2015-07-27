@@ -30,8 +30,16 @@ class BukkitCommandAdmin implements CommandExecutor
         try {
             if (cmd.equals("reward")) {
                 return onCommandRewards(sender, Arrays.copyOfRange(args, 1, args.length));
+            } else if (cmd.equals("reload")) {
+                getPlugin().reloadAll();
+                sender.sendMessage("[Skills] Configuration reloaded");
+            } else if (cmd.equals("save")) {
+                getPlugin().saveAll();
+                sender.sendMessage("[Skills] All data saved to disk");
             } else {
-                sender.sendMessage("Usage: /skadmin reward");
+                sender.sendMessage("/skadmin reload");
+                sender.sendMessage("/skadmin save");
+                sender.sendMessage("/skadmin reward");
             }
         } catch (RuntimeException re) {
             sender.sendMessage("Syntax error");

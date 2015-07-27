@@ -54,7 +54,7 @@ public class BukkitSkillsPlugin extends JavaPlugin
         getCommand("skillsadmin").setExecutor(adminCommand);
         new BukkitRunnable() {
             @Override public void run() {
-                flush();
+                saveAll();
             }
         }.runTaskTimer(this, 20*10, 20*10);
     }
@@ -65,11 +65,11 @@ public class BukkitSkillsPlugin extends JavaPlugin
         for (BukkitSkill skill : skills.getSkills()) {
             skill.onDisable();
         }
-        flush();
+        saveAll();
         SQLDB.clearAllCaches();
     }
 
-    void flush()
+    void saveAll()
     {
         try {
             SQLDB.saveAll();
@@ -77,6 +77,11 @@ public class BukkitSkillsPlugin extends JavaPlugin
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    void reloadAll()
+    {
+        SQLDB.clearAllCaches();
     }
 
     @Override
