@@ -46,7 +46,7 @@ abstract class BukkitSkill implements Skill
     boolean allowPlayer(Player player)
     {
         if (player.getGameMode() != GameMode.SURVIVAL) return false;
-	if (!player.hasPermission(getPermissionNode())) return false;
+	if (!player.hasPermission("skills.skill.*") && !player.hasPermission(getPermissionNode())) return false;
         return true;
     }
 

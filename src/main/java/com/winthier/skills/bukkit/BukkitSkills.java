@@ -72,9 +72,15 @@ public class BukkitSkills extends Skills
     }
 
     @Override
-    public void onLevelUp(UUID player, Skill skill, int level)
+    public void onLevelUp(UUID uuid, Skill skill, int level)
     {
-	// TODO: Call an event or whatever
+        Player player = Bukkit.getServer().getPlayer(uuid);
+        if (player != null) {
+            player.sendMessage(skill.getTitle() + " level " + level);
+            BukkitUtil.title(player,
+                             "{color:aqua,text:'" + skill.getTitle() + "'}",
+                             "{color:aqua,text:'Level " + level + "'}");
+        }
     }
 
     @Override

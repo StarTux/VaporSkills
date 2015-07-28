@@ -10,10 +10,16 @@ permissions:
   skills.skill.*:
     description: Use all skills
     default: op
+  skills.skills:
+    description: Use the /skills command
+    default: op
   skills.admin:
     description: Perform admin tasks
     default: op
 commands:
+  skills:
+    aliases: [ skill, sk ]
+    permission: skills.skills
   skillsadmin:
     aliases: [ skilladmin, skadmin ]
     permission: skills.admin

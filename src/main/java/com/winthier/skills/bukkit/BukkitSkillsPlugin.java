@@ -17,6 +17,7 @@ public class BukkitSkillsPlugin extends JavaPlugin
     @Getter private Economy economy;
     @Getter private final BukkitSkills skills = new BukkitSkills();
     final BukkitCommandAdmin adminCommand = new BukkitCommandAdmin();
+    final BukkitCommandSkills skillsCommand = new BukkitCommandSkills();
 
     public BukkitSkillsPlugin()
     {
@@ -52,6 +53,7 @@ public class BukkitSkillsPlugin extends JavaPlugin
             }
         }
         getCommand("skillsadmin").setExecutor(adminCommand);
+        getCommand("skills").setExecutor(skillsCommand);
         new BukkitRunnable() {
             @Override public void run() {
                 saveAll();
