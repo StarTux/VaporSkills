@@ -3,6 +3,7 @@ package com.winthier.skills.bukkit;
 import com.avaje.ebean.EbeanServer;
 import com.winthier.skills.Skill;
 import com.winthier.skills.Skills;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.EnumMap;
@@ -57,6 +58,12 @@ public class BukkitSkills extends Skills
             nameMap.put(skill.getVerb().toLowerCase(), skill);
             nameMap.put(skill.getActivityName().toLowerCase(), skill);
             nameMap.put(skill.getPersonName().toLowerCase(), skill);
+        }
+        for (Map.Entry<String, BukkitSkill> entry : new ArrayList<>(nameMap.entrySet())) {
+            BukkitSkill skill = entry.getValue();
+            for (String name = entry.getKey(); name.length() > 0; name = name.substring(0, name.length() - 1)) {
+                if (!nameMap.containsKey(name)) nameMap.put(name, skill);
+            }
         }
     }
 
