@@ -64,12 +64,16 @@ class BukkitReward implements Reward
             String name = parseName(nameArg);
             return new Key(skill.getSkillType(), target, type, data, name);
         }
-        static Key of(SQLReward sqlReward) {
-            return new Key(BukkitSkills.getInstance().skillByName(sqlReward.getSkill().getValue()).getSkillType(),
-                           SQLReward.Target.valueOf(sqlReward.getTarget().getValue()),
-                           sqlReward.getType(),
-                           sqlReward.getData(),
-                           sqlReward.getName() == null ? null : sqlReward.getName().getValue());
+        static Key of(Reward reward) {
+            if (reward instanceof SQLReward) {
+                SQLReward sqlReward = (SQLReward)reward;
+                return new Key(BukkitSkills.getInstance().skillByName(sqlReward.getSkill().getValue()).getSkillType(),
+                               SQLReward.Target.valueOf(sqlReward.getTarget().getValue()),
+                               sqlReward.getType(),
+                               sqlReward.getData(),
+                               sqlReward.getName() == null ? null : sqlReward.getName().getValue());
+            }
+            return null;
         }
         SQLReward findSQLReward() {
             return SQLReward.find(BukkitSkills.getInstance().skillByType(skill).getKey(), target, type, data, name);
@@ -137,13 +141,13 @@ class BukkitReward implements Reward
         return new BukkitReward(key, skillPoints, money, exp);
     }
 
-    static BukkitReward of(SQLReward sqlReward)
+    static BukkitReward of(Reward reward)
     {
-        Key key = Key.of(sqlReward);
+        Key key = Key.of(reward);
         BukkitReward result = new BukkitReward(key);
-        result.skillPoints = sqlReward.getSkillPoints();
-        result.money = sqlReward.getMoney();
-        result.exp = sqlReward.getExp();
+        result.skillPoints = reward.getSkillPoints();
+        result.money = reward.getMoney();
+        result.exp = reward.getExp();
         return result;
     }
 

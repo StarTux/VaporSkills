@@ -120,6 +120,9 @@ abstract class BukkitSkill implements Skill
     void giveReward(@NonNull Player player, Reward reward, double factor)
     {
         if (reward == null) return;
+        if (getSkills().hasDebugMode(player)) {
+            player.sendMessage(String.format("%s x%.2f", BukkitReward.of(reward), factor));
+        }
         if (factor < 0.01) return;
         giveSkillPoints(player, reward.getSkillPoints() * factor);
         giveMoney(player, reward.getMoney() * factor);

@@ -10,6 +10,7 @@ import java.util.Arrays;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 class BukkitCommandAdmin implements CommandExecutor
 {
@@ -27,6 +28,7 @@ class BukkitCommandAdmin implements CommandExecutor
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
     {
         String cmd = args.length == 0 ? "" : args[0].toLowerCase();
+        final Player player = sender instanceof Player ? (Player)sender : null;
         try {
             if (cmd.equals("reward")) {
                 return onCommandRewards(sender, Arrays.copyOfRange(args, 1, args.length));
@@ -36,9 +38,22 @@ class BukkitCommandAdmin implements CommandExecutor
             } else if (cmd.equals("save")) {
                 getPlugin().saveAll();
                 sender.sendMessage("[Skills] All data saved to disk");
+            } else if (cmd.equals("debug")) {
+                if (player == null) {
+                    sender.sendMessage("Player expected");
+                    return true;
+                }
+                if (getSkills().hasDebugMode(player)) {
+                    getSkills().setDebugMode(player, false);
+                    player.sendMessage("Debug mode disabled");
+                } else {
+                    getSkills().setDebugMode(player, true);
+                    player.sendMessage("Debug mode enabled");
+                }
             } else {
                 sender.sendMessage("/skadmin reload");
                 sender.sendMessage("/skadmin save");
+                sender.sendMessage("/skadmin debug");
                 sender.sendMessage("/skadmin reward");
             }
         } catch (RuntimeException re) {

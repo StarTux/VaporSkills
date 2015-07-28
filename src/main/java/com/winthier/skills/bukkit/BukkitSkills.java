@@ -8,8 +8,10 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.EnumMap;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import lombok.Getter;
 import org.bukkit.Bukkit;
@@ -22,6 +24,7 @@ public class BukkitSkills extends Skills
     final Map<BukkitSkillType, BukkitSkill> skillMap = new EnumMap<>(BukkitSkillType.class);
     final Map<String, BukkitSkill> nameMap = new HashMap<>();
     final Map<UUID, Double> moneys = new HashMap<>();
+    final Set<UUID> playersInDebugMode = new HashSet<>();
 
     BukkitSkills()
     {
@@ -131,6 +134,19 @@ public class BukkitSkills extends Skills
             e.printStackTrace();
         } finally {
             moneys.clear();
+        }
+    }
+
+    boolean hasDebugMode(Player player)
+    {
+        return (playersInDebugMode.contains(player.getUniqueId()));
+    }
+
+    void setDebugMode(Player player, boolean debugMode) {
+        if (debugMode) {
+            playersInDebugMode.add(player.getUniqueId());
+        } else {
+            playersInDebugMode.remove(player.getUniqueId());
         }
     }
 }
