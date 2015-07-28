@@ -7,6 +7,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -91,6 +93,7 @@ class BukkitCommandAdmin implements CommandExecutor
             BufferedReader in = null;
             BukkitReward reward = null;
             try {
+                Set<BukkitReward.Key> keys = new HashSet<>();
                 in = new BufferedReader(new FileReader(file));
                 String line = null;
                 while (null != (line = in.readLine())) {
@@ -99,6 +102,7 @@ class BukkitCommandAdmin implements CommandExecutor
                     if (line.isEmpty()) continue;
                     String[] tokens = line.split("\\s+");
                     reward = BukkitReward.parse(tokens);
+                    if (keys.contains(reward.key)) sender.sendMessage("Warning: Duplicate key '" + reward.key + "' in line " + linum);
                     reward.store();
                     sender.sendMessage("" + reward);
                     count++;
