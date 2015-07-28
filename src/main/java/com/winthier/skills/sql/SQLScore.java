@@ -3,9 +3,11 @@ package com.winthier.skills.sql;
 import com.avaje.ebean.validation.Length;
 import com.avaje.ebean.validation.NotEmpty;
 import com.avaje.ebean.validation.NotNull;
+import com.winthier.skills.Skill;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -65,6 +67,15 @@ public class SQLScore
 	    cache.put(key, result);
 	}
 	return result;
+    }
+
+    public static List<SQLScore> rank(Skill skill)
+    {
+        return SQLDB.get().find(SQLScore.class).where()
+            .eq("skill_id", SQLString.of(skill).getId())
+            .gt("skill_level", 0)
+            .orderBy("skill_points DESC")
+            .findList();
     }
 
     public void save()

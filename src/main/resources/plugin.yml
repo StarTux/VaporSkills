@@ -3,7 +3,7 @@ description: skills
 author: StarTux
 version: 0.4
 main: com.winthier.skills.bukkit.BukkitSkillsPlugin
-depend: [ Vault, Exploits ]
+depend: [ Vault, Exploits, PlayerCache ]
 database: true
 commands: {}
 permissions:
@@ -13,6 +13,9 @@ permissions:
   skills.skills:
     description: Use the /skills command
     default: op
+  skills.highscore:
+    description: Use the /highscore command
+    default: op
   skills.admin:
     description: Perform admin tasks
     default: op
@@ -20,6 +23,9 @@ commands:
   skills:
     aliases: [ skill, sk ]
     permission: skills.skills
+  highscore:
+    aliases: [ hi, hiscore, highscores, hiscores ]
+    permission: skills.highscore
   skillsadmin:
     aliases: [ skilladmin, skadmin ]
     permission: skills.admin

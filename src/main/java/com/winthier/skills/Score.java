@@ -1,11 +1,15 @@
 package com.winthier.skills;
 
-import com.winthier.skills.sql.SQLScore;
 import com.winthier.skills.sql.SQLReward;
+import com.winthier.skills.sql.SQLScore;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 public class Score
 {
+    final Map<String, Highscore> highscores = new HashMap<>();
+    
     public void giveSkillPoints(UUID player, Skill skill, double points)
     {
 	if (points <= 0) return;
@@ -89,5 +93,15 @@ public class Score
     public Reward rewardForName(Skill skill, String name)
     {
         return SQLReward.find(skill.getKey(), SQLReward.Target.NAME, null, null, name);
+    }
+
+    public Highscore getHighscore(Skill skill)
+    {
+        Highscore result = highscores.get(skill.getKey());
+        if (result == null || result.ageInSeconds() > 60) {
+            result = Highscore.create(skill);
+            highscores.put(skill.getKey(), result);
+        }
+        return result;
     }
 }

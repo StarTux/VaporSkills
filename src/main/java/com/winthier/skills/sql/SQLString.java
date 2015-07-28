@@ -3,6 +3,7 @@ package com.winthier.skills.sql;
 import com.avaje.ebean.validation.Length;
 import com.avaje.ebean.validation.NotEmpty;
 import com.avaje.ebean.validation.NotNull;
+import com.winthier.skills.Skill;
 import java.util.HashMap;
 import java.util.Map;
 import javax.persistence.Entity;
@@ -49,5 +50,10 @@ public class SQLString
 	    cache.put(string, result);
         }
         return result;
+    }
+
+    public static SQLString of(Skill skill)
+    {
+        return of(skill.getKey());
     }
 }

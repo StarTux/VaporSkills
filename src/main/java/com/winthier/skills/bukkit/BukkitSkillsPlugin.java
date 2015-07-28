@@ -18,6 +18,7 @@ public class BukkitSkillsPlugin extends JavaPlugin
     @Getter private final BukkitSkills skills = new BukkitSkills();
     final BukkitCommandAdmin adminCommand = new BukkitCommandAdmin();
     final BukkitCommandSkills skillsCommand = new BukkitCommandSkills();
+    final BukkitCommandHighscore highscoreCommand = new BukkitCommandHighscore();
 
     public BukkitSkillsPlugin()
     {
@@ -54,6 +55,7 @@ public class BukkitSkillsPlugin extends JavaPlugin
         }
         getCommand("skillsadmin").setExecutor(adminCommand);
         getCommand("skills").setExecutor(skillsCommand);
+        getCommand("highscore").setExecutor(highscoreCommand);
         new BukkitRunnable() {
             @Override public void run() {
                 saveAll();
