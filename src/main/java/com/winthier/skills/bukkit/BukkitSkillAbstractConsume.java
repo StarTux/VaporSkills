@@ -14,7 +14,7 @@ abstract class BukkitSkillAbstractConsume extends BukkitSkill implements Listene
     public void onPlayerItemConsume(PlayerItemConsumeEvent event)
     {
         if (!allowPlayer(event.getPlayer())) return;
-        
+        onConsume(event.getPlayer(), event.getItem());
     }
 
     void onConsume(Player player, ItemStack item)
