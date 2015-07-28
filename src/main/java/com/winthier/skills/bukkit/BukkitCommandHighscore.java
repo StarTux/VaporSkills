@@ -4,7 +4,6 @@ import com.winthier.playercache.PlayerCache;
 import com.winthier.skills.Highscore;
 import com.winthier.skills.util.Strings;
 import java.util.UUID;
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -22,13 +21,6 @@ class BukkitCommandHighscore implements CommandExecutor
         return BukkitSkillsPlugin.getInstance();
     }
 
-    void msg(CommandSender sender, String msg, Object... args)
-    {
-        msg = ChatColor.translateAlternateColorCodes('&', msg);
-        if (args.length > 0) msg = String.format(msg, args);
-        sender.sendMessage(msg);
-    }
-    
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
     {
@@ -48,10 +40,10 @@ class BukkitCommandHighscore implements CommandExecutor
             return true;
         }
         final UUID uuid = player.getUniqueId();
-        msg(sender, "&b&l%s", skill.getTitle());
+        BukkitUtil.msg(sender, "&b&l%s", skill.getTitle());
         for (Highscore.Row row : getSkills().getScore().getHighscore(skill).getRows()) {
             String name = PlayerCache.nameForUuid(row.getPlayer());
-            msg(sender, " &3%d &b%02d &3%s", row.getRank(), row.getSkillLevel(), name);
+            BukkitUtil.msg(sender, " &3%d &b%02d &3%s", row.getRank(), row.getSkillLevel(), name);
         }
         return true;
     }
@@ -66,6 +58,6 @@ class BukkitCommandHighscore implements CommandExecutor
             sb.append(Strings.camelCase(skill.getVerb()));
             sb.append("&8(&b#").append(rank).append("&8)");
         }
-        msg(player, sb.toString());
+        BukkitUtil.msg(player, sb.toString());
     }
 }

@@ -2,7 +2,6 @@ package com.winthier.skills.bukkit;
 
 import com.winthier.skills.util.Strings;
 import java.util.UUID;
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -20,13 +19,6 @@ class BukkitCommandSkills implements CommandExecutor
         return BukkitSkillsPlugin.getInstance();
     }
 
-    void msg(CommandSender sender, String msg, Object... args)
-    {
-        msg = ChatColor.translateAlternateColorCodes('&', msg);
-        if (args.length > 0) msg = String.format(msg, args);
-        sender.sendMessage(msg);
-    }
-    
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
     {
@@ -49,10 +41,10 @@ class BukkitCommandSkills implements CommandExecutor
         int skillPoints = (int)getSkills().getScore().getSkillPoints(uuid, skill);
         int skillLevel = getSkills().getScore().getSkillLevel(uuid, skill);
         int forNextLevel = getSkills().getScore().pointsForLevel(skillLevel + 1) - skillPoints;
-        msg(sender, "&b&l%s", skill.getTitle());
-        msg(sender, " &3Your Skill Level: &b%d", skillLevel);
-        msg(sender, " &3Your Skill Points: &b%d", skillPoints);
-        msg(sender, " &3For Next Level: &b%d", forNextLevel);
+        BukkitUtil.msg(sender, "&b&l%s", skill.getTitle());
+        BukkitUtil.msg(sender, " &3Your Skill Level: &b%d", skillLevel);
+        BukkitUtil.msg(sender, " &3Your Skill Points: &b%d", skillPoints);
+        BukkitUtil.msg(sender, " &3For Next Level: &b%d", forNextLevel);
         return true;
     }
 
@@ -65,6 +57,6 @@ class BukkitCommandSkills implements CommandExecutor
             sb.append(Strings.camelCase(skill.getVerb()));
             sb.append("&8(&b").append(getSkills().getScore().getSkillLevel(uuid, skill)).append("&8)");
         }
-        msg(player, sb.toString());
+        BukkitUtil.msg(player, sb.toString());
     }
 }

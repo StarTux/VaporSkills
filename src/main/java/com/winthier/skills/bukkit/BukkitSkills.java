@@ -85,12 +85,11 @@ public class BukkitSkills extends Skills
     public void onLevelUp(UUID uuid, Skill skill, int level)
     {
         Player player = Bukkit.getServer().getPlayer(uuid);
-        if (player != null) {
-            player.sendMessage(skill.getTitle() + " level " + level);
-            BukkitUtil.title(player,
-                             "{color:aqua,text:'" + skill.getTitle() + "'}",
-                             "{color:aqua,text:'Level " + level + "'}");
-        }
+        if (player == null) return;
+        BukkitUtil.announce("%s reached level %d in &a[%s]", player.getName(), level, skill.getTitle());
+        BukkitUtil.title(player,
+                         "{color:aqua,text:'" + skill.getTitle() + "'}",
+                         "{color:aqua,text:'Level " + level + "'}");
     }
 
     @Override
