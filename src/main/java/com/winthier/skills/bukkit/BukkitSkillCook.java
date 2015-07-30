@@ -11,10 +11,4 @@ class BukkitSkillCook extends BukkitSkillAbstractFurnace
     final String verb = "cook";
     final String personName = "chef";
     final String activityName = "cooking";
-
-    @Override
-    double smeltRadius()
-    {
-        return 40.0;
-    }
 }

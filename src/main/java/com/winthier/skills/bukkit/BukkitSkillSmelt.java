@@ -11,10 +11,4 @@ class BukkitSkillSmelt extends BukkitSkillAbstractFurnace
     final String verb = "smelt";
     final String personName = "smelter";
     final String activityName = "smelting";
-
-    @Override
-    double smeltRadius()
-    {
-        return 40.0;
-    }
 }
