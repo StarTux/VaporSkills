@@ -19,6 +19,7 @@ public class BukkitSkillsPlugin extends JavaPlugin
     final BukkitCommandAdmin adminCommand = new BukkitCommandAdmin();
     final BukkitCommandSkills skillsCommand = new BukkitCommandSkills();
     final BukkitCommandHighscore highscoreCommand = new BukkitCommandHighscore();
+    static final String REWARDS_TXT = "rewards.txt";
 
     public BukkitSkillsPlugin()
     {
@@ -61,6 +62,7 @@ public class BukkitSkillsPlugin extends JavaPlugin
                 saveAll();
             }
         }.runTaskTimer(this, 20*10, 20*10);
+        saveResource(REWARDS_TXT, false);
     }
 
     @Override

@@ -1,0 +1,160 @@
+#Skill Target	Type Data Name	SP Money Exp
+Mine Block		Diamond_Ore	0 -		10 10 0
+Mine Block		Iron_Ore 0 -		2 2 2
+Mine Block		Gold_Ore 0 -		5 5 5
+Mine Block		Emerald_Ore 0 -		10 10 0
+Mine Block		Stone 0 -		.01 .01 1
+Mine Block		Stone 1 -		.1 .1 1		# Granite
+Mine Block		Stone 3 -		.1 .1 1		# Diorite
+Mine Block		Stone 5 -		.1 .1 1		# Andesite
+Mine Block		Coal_Ore 0 -		1 1 1
+Mine Block		Redstone_Ore 0 -	2 2 2
+Mine Block		Glowing_Redstone_Ore 0 -	2 2 2
+Mine Block		Lapis_Ore 0 -		3 3 3
+Mine Block		Quartz_Ore 0 -		4 4 4
+Mine Block		Glowstone 0 -		5 5 5
+Mine Block		Sandstone 0 - 		1 1 1
+Mine Block		Red_Sandstone 0 -	1 1 1
+
+Dig Block		Dirt 0 -		.1 .1 .1
+Dig Block		Dirt 1 -		.1 .1 .1	# Coarse Dirt
+Dig Block		Dirt 2 -		.1 .1 .1	# Podzol
+Dig Block		Grass 0 -		.2 .2 .2
+Dig Block		Mycel 0 -		.2 .2 .2
+Dig Block		Sand 0 -		.2 .2 .2
+Dig Block		Sand 1 -		.2 .2 .2	# Red Sandstone
+Dig Block		Gravel 0 -		.3 .3 .3
+Dig Block		Soul_Sand 0 -		.4 .4 .4
+Dig Block		Clay 0 -		.5 .5 .5
+
+Smelt Item		Iron_Ingot 0 -		2 2 1
+Smelt Item		Gold_Ingot 0 -		3 3 1
+Smelt Item		Stone 0 -		.1 .1 1
+Smelt Item		Nether_Brick_Item 0 -	1 1 1
+Smelt Item		Glass 0 -		1 1 1
+Smelt Item		Clay_Brick 0 -		1 1 1
+Smelt Item		Smooth_Brick 2 -	1 1 1		# Cracked Stone Brick
+Smelt Item		Ink_Sack 2 -		1 1 1		# Green Dye
+
+Brawl Entity		- - Zombie		1 1 0
+Brawl Entity		- - Skeleton		3 3 3
+Brawl Entity		- - Creeper		10 10 0
+Brawl Entity		- - Spider		3 3 3
+Brawl Entity		- - CaveSpider		5 5 5
+Brawl Entity		- - Enderman		10 20 0
+Brawl Entity		- - PigZombie		20 20 0
+Brawl Entity		- - Blaze		20 20 0
+Brawl Entity		- - Slime		1 1 1
+Brawl Entity		- - MagmaCube		3 3 3
+Brawl Entity		- - Guardian		10 10 10
+Brawl Entity		- - ElderGuardian	20 20 20
+Brawl Entity		- - EnderDragon		50 50 50
+Brawl Entity		- - Wither		50 50 50
+
+Hunt Entity		- - Zombie		1 1 0
+Hunt Entity		- - Skeleton		3 3 3
+Hunt Entity		- - Creeper		10 10 0
+Hunt Entity		- - Spider		3 3 3
+Hunt Entity		- - CaveSpider		5 5 5
+Hunt Entity		- - Enderman		10 20 0
+Hunt Entity		- - PigZombie		20 20 0
+Hunt Entity		- - Blaze		20 20 0
+Hunt Entity		- - Slime		1 1 1
+Hunt Entity		- - MagmaCube		3 3 3
+Hunt Entity		- - Guardian		10 10 10
+Hunt Entity		- - ElderGuardian	20 20 20
+Hunt Entity		- - EnderDragon		50 50 50
+Hunt Entity		- - Wither		50 50 50
+
+Breed Entity		- - Chicken		1 1 0
+Breed Entity		- - Cow			5 5 0
+Breed Entity		- - Pig			5 5 0
+Breed Entity		- - Sheep		5 5 0
+Breed Entity		- - Rabbit		5 5 0
+Breed Entity		- - MushroomCow		10 10 0
+Breed Entity		- - Wolf		10 10 0
+Breed Entity		- - Ocelot		10 10 0
+Breed Entity		- - Horse		20 20 0
+
+Butcher Entity		- - Chicken		1 1 1
+Butcher Entity		- - Cow			2 2 2
+Butcher Entity		- - Sheep		2 2 2
+Butcher Entity		- - Pig			2 2 2
+Butcher Entity		- - Rabbit		2 2 2
+Butcher Entity		- - MushroomCow		5 5 5
+Butcher Entity		- - Wolf		10 10 10
+Butcher Entity		- - Ocelot		10 10 10
+Butcher Entity		- - Horse		10 10 10
+
+Brew Item		Nether_Stalk 0 -	1 1 1
+Brew Item		Redstone 0 -		1 1 1
+Brew Item		Glowstone_Dust 0 -	1 1 1
+Brew Item		Speckled_Melon 0 -	1 1 1
+Brew Item		Fermented_Spider_Eye 0 -	1 1 1
+Brew Item		Magma_Cream 0 -		1 1 1
+Brew Item		Spider_Eye 0 -		1 1 1
+Brew Item		Ghast_Tear 0 -		1 1 1
+Brew Item		Sugar 0 -		1 1 1
+
+Build Block		Smooth_Brick 0 -	.1 .1 .1
+Build Block		Stone 2 -		.1 .1 .1	# Smooth Granite
+Build Block		Stone 4 -		.1 .1 .1	# Smooth Diorite
+Build Block		Stone 6 -		.1 .1 .1	# Smooth Andesite
+
+Cook Item		Cooked_Beef 0 -		1 1 1
+Cook Item		Cooked_Chicken 0 -	1 1 1
+Cook Item		Cooked_Fish 0 -		1 1 1
+Cook Item		Cooked_Mutton 0 -	1 1 1
+Cook Item		Cooked_Rabbit 0 -	1 1 1
+Cook Item		Grilled_Pork 0 -	1 1 1
+Cook Item		Baked_Potato 0 -	1 1 1
+
+Eat Item		Raw_Beef 0 -		1 1 1
+Eat Item		Pork 0 -		1 1 1
+Eat Item		Raw_Chicken 0 -		1 1 1
+Eat Item		Raw_Fish 0 -		1 1 1
+Eat Item		Cooked_Beef 0 -		1 1 1
+Eat Item		Grilled_Pork 0 -	1 1 1
+Eat Item		Cooked_Chicken 0 -	1 1 1
+Eat Item		Cooked_Fish 0 -		1 1 1
+Eat Item		Cooked_Mutton 0 -	1 1 1
+Eat Item		Cooked_Rabbit 0 -	1 1 1
+Eat Item		Pumpkin_Pie 0 -		1 1 1
+Eat Item		Bread 0 -		1 1 1
+Eat Item		Apple 0 -		1 1 1
+Eat Item		Carrot 0 -		1 1 1
+Eat Item		Golden_Carrot 0 -	1 1 1
+Eat Item		Melon 0 -		1 1 1
+Eat Item		Potato_Item 0 -		1 1 1
+Eat Item		Baked_Potato 0 -	1 1 1
+Eat Item		Golden_Apple 0 -	5 5 1
+Eat Item		Golden_Apple 1 -	20 20 1
+
+Enchant Enchantment	Dig_Speed 1 -		1 1 0
+Enchant Enchantment	Dig_Speed 2 -		5 5 0
+Enchant Enchantment	Dig_Speed 3 -		10 10 0
+
+Fish Item		Raw_Fish 0 -		1 1 0
+Fish Item		Raw_Fish 1 -		2 2 0		# Salmon
+Fish Item		Raw_Fish 2 -		5 5 0		# Clownfish
+Fish Item		Raw_Fish 3 -		10 10 0		# Pufferfish
+
+Woodcut Block		Log - -			1 1 1
+Woodcut Block		Log_2 - -		1 1 1
+Woodcut Block		Leaves - -		.1 .1 .1
+Woodcut Block		Leaves_2 - -		.1 .1 .1
+
+Harvest Block		Crops 7 -		1 1 1
+Harvest Block		Potato 7 -		1 1 1
+Harvest Block		Carrot 7 -		1 1 1
+Harvest Block		Cactus - -		1 1 1
+Harvest Block		Pumpkin 0 -		1 1 1
+Harvest Block		Melon_Block 0 -		1 1 1
+Harvest Block		Red_Mushroom 0 -	1 1 1
+Harvest Block		Brown_Mushroom 0 -	1 1 1
+
+Quaff Potion_Effect	Heal 1 -		1 1 1
+
+Sacrifice Item		Diamond 0 -		10 10 10
+
+Travel Name		- - progress		1 1 1

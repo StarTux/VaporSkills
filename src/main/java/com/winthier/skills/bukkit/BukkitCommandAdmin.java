@@ -83,9 +83,9 @@ class BukkitCommandAdmin implements CommandExecutor
             reward.store();
             sender.sendMessage("+" + reward);
         } else if (cmd.equals("import") && args.length == 1) {
-            File file = new File(getPlugin().getDataFolder(), "rewards.txt");
+            File file = new File(getPlugin().getDataFolder(), BukkitSkillsPlugin.REWARDS_TXT);
             if (!file.exists()) {
-                sender.sendMessage("rewards.txt not found");
+                sender.sendMessage(BukkitSkillsPlugin.REWARDS_TXT + " not found");
                 return true;
             }
             int linum = 0;
@@ -107,12 +107,12 @@ class BukkitCommandAdmin implements CommandExecutor
                     sender.sendMessage("" + reward);
                     count++;
                 }
-                sender.sendMessage("Imported " + count + " rewards from rewards.txt.");
+                sender.sendMessage("Imported " + count + " rewards from " + BukkitSkillsPlugin.REWARDS_TXT);
             } catch (IOException ioe) {
-                sender.sendMessage("Error reading rewards.txt. See console.");
+                sender.sendMessage("Error reading " + BukkitSkillsPlugin.REWARDS_TXT + ". See console.");
                 ioe.printStackTrace();
             } catch (RuntimeException re) {
-                sender.sendMessage("Error parsing rewards.txt, line " + linum + ". See console.");
+                sender.sendMessage("Error parsing " + BukkitSkillsPlugin.REWARDS_TXT + ", line " + linum + ". See console.");
                 sender.sendMessage("" + reward);
                 re.printStackTrace();
             } finally {
