@@ -25,5 +25,5 @@ abstract class BukkitSkillAbstractFurnace extends BukkitSkill implements Listene
         giveReward(player, rewardForItem(result));
     }
 
-    abstract double smeltRadius() { return 160; }
+    double smeltRadius() { return 160; }
 }
