@@ -32,7 +32,13 @@ class BukkitSkillTravel extends BukkitSkill implements Listener
         void load() {
             ConfigurationSection section = getConfig().getConfigurationSection(uuid.toString());
             if (section == null) return;
-            if (section.isSet("Anchor")) anchor = Location.deserialize((Map<String,Object>)section.getConfigurationSection("Anchor").getValues(true));
+            if (section.isSet("Anchor")) {
+                try {
+                    anchor = Location.deserialize(section.getConfigurationSection("Anchor").getValues(true));
+                } catch (IllegalArgumentException iae) {
+                    anchor = null;
+                }
+            }
             distance = section.getDouble("Distance", 0.0);
         }
         boolean didProgress(Location loc) {
