@@ -7,4 +7,5 @@ public interface Skill
     String getVerb();
     String getActivityName();
     String getPersonName();
+    String getDescription();
 }

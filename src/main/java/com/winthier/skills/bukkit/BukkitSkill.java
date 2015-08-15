@@ -34,6 +34,13 @@ abstract class BukkitSkill implements Skill
 	return BukkitSkills.instance;
     }
 
+    @Override
+    public String getDescription()
+    {
+        // TODO
+        return "This is a default skill description. Slap StarTux around so he will finally implement proper skill descriptions and not this dribble.";
+    }
+
     abstract BukkitSkillType getSkillType();
     void onEnable() {};
     void onDisable() {};

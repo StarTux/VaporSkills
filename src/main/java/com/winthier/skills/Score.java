@@ -47,13 +47,31 @@ public class Score
 	return level;
     }
 
+    public int pointsToLevelUpTo(int i)
+    {
+        if (i <= 0) return 0;
+        return i * 10;
+    }
+
     public int pointsForLevel(int skillLevel)
     {
 	int points = 0;
 	for (int i = 1; i <= skillLevel; ++i) {
-	    points += i;
+	    points += pointsToLevelUpTo(i);
 	}
-	return points * 10;
+	return points;
+    }
+
+    public int pointsInLevel(int skillPoints)
+    {
+        int level = levelForPoints(skillPoints);
+        return skillPoints - pointsForLevel(level);
+    }
+
+    public int pointsForNextLevel(int skillPoints)
+    {
+        int level = levelForPoints(skillPoints);
+        return pointsForLevel(level + 1) - skillPoints;
     }
 
     private Reward rewardForTypeAndData(Skill skill, SQLReward.Target target, int type, int data)

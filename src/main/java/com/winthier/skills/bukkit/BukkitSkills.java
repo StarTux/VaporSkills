@@ -86,10 +86,19 @@ public class BukkitSkills extends Skills
     {
         Player player = Bukkit.getServer().getPlayer(uuid);
         if (player == null) return;
-        BukkitUtil.announce("%s reached level %d in &a[%s]", player.getName(), level, skill.getTitle());
         BukkitUtil.title(player,
                          "{color:aqua,text:'" + skill.getTitle() + "'}",
                          "{color:aqua,text:'Level " + level + "'}");
+        if (level >= 10) {
+            BukkitUtil.announceRaw(
+                BukkitUtil.format("&f%s reached level %d in ", player.getName(), level),
+                BukkitUtil.button(
+                    "&a[" + skill.getTitle() + "]",
+                    "/sk " + skill.getVerb(),
+                    "&3&l" + skill.getTitle() + " &bSkill",
+                    // TODO: Put something more interesting here?
+                    "&7Click for more info"));
+        }
     }
 
     @Override

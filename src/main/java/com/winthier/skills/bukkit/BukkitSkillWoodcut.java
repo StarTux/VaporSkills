@@ -9,7 +9,7 @@ class BukkitSkillWoodcut extends BukkitSkillAbstractBlockBreak
 {
     final BukkitSkillType skillType = BukkitSkillType.WOODCUT;
     final String title = "Woodcutting";
-    final String verb = "cut wood";
+    final String verb = "woodcut";
     final String personName = "woodcutter";
     final String activityName = "woodcutting";
 
