@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import lombok.Getter;
+import org.apache.commons.lang3.text.WordUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -95,9 +96,10 @@ public class BukkitSkills extends Skills
                 BukkitUtil.button(
                     "&a[" + skill.getTitle() + "]",
                     "/sk " + skill.getVerb(),
-                    "&3&l" + skill.getTitle() + " &bSkill",
+                    "&a" + skill.getTitle(),
                     // TODO: Put something more interesting here?
-                    "&7Click for more info"));
+                    "&oSkill",
+                    WordUtils.wrap(skill.getDescription(), 32)));
         }
     }
 
