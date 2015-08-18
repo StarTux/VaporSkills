@@ -99,4 +99,20 @@ class BukkitUtil
         map2.put("value", lines);
         return map;
     }
+
+
+    static String progressBar(int has, int needs)
+    {
+        final int len = 20;
+        double percentage = Math.min(100.0, (double)has / (double)needs);
+        has = (int)(percentage * (double)len);
+        StringBuilder sb = new StringBuilder();
+        sb.append("&3[&f");
+        for (int i = 0; i < len; ++i) {
+            if (has == i) sb.append("&8");
+            sb.append("|");
+        }
+        sb.append("&3]");
+        return format(sb.toString());
+    }
 }

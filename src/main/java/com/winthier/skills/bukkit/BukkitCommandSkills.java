@@ -4,6 +4,7 @@ import com.winthier.skills.util.Strings;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import org.apache.commons.lang3.text.WordUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -54,9 +55,10 @@ class BukkitCommandSkills implements CommandExecutor
             message.add(BukkitUtil.button(
                             "&b" + Strings.camelCase(skill.getVerb()) + "&3(&f"+skillLevel+"&3)",
                             "/sk " + skill.getVerb(),
-                            "&3&l" + skill.getTitle(),
+                            "&3&l" + skill.getTitle() + " " + BukkitUtil.progressBar(pointsInLevel, pointsToLevelUp),
                             "&3Skill Level: &b" + skillLevel,
                             "&3Skill Points: &f"+pointsInLevel+"&3/&f"+pointsToLevelUp,
+                            "&r" + WordUtils.wrap(skill.getDescription(), 32),
                             "&7Click for more details"));
         }
         BukkitUtil.raw(player, message);
@@ -72,21 +74,21 @@ class BukkitCommandSkills implements CommandExecutor
         final UUID uuid = player.getUniqueId();
         int skillPoints = (int)getSkills().getScore().getSkillPoints(uuid, skill);
         int skillLevel = getSkills().getScore().getSkillLevel(uuid, skill);
-        BukkitUtil.msg(player, "&3&l%s &bLevel &f%d", skill.getTitle(), skillLevel);
+        int pointsInLevel = getSkills().getScore().pointsInLevel(skillPoints);
+        int pointsToLevelUp = getSkills().getScore().pointsToLevelUpTo(skillLevel + 1);
+        BukkitUtil.msg(player, "&3&l%s &bLevel &f%d %s",
+                       skill.getTitle(),
+                       skillLevel,
+                       BukkitUtil.progressBar(pointsInLevel, pointsToLevelUp));
         BukkitUtil.raw(player,
                        BukkitUtil.format(" &3Skill Points: "),
                        BukkitUtil.tooltip(
                            BukkitUtil.format("&f%d&3/&f%d",
-                                             getSkills().getScore().pointsInLevel(skillPoints),
-                                             getSkills().getScore().pointsToLevelUpTo(skillLevel + 1)),
+                                             pointsInLevel,
+                                             pointsToLevelUp),
                            BukkitUtil.format("&3Total Skill Points: &f%d", skillPoints),
                            BukkitUtil.format("&3For Next Level: &f%d",
                                              getSkills().getScore().pointsForNextLevel(skillPoints))));
         BukkitUtil.msg(player, " &r%s", skill.getDescription());
-    }
-
-    String progressBar()
-    {
-        return "|";
     }
 }
