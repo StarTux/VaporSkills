@@ -26,6 +26,7 @@ public class BukkitSkills extends Skills
     final Map<String, BukkitSkill> nameMap = new HashMap<>();
     final Map<UUID, Double> moneys = new HashMap<>();
     final Set<UUID> playersInDebugMode = new HashSet<>();
+    final Map<UUID, BukkitPlayer> players = new HashMap<>();
 
     BukkitSkills()
     {
@@ -98,8 +99,11 @@ public class BukkitSkills extends Skills
                     "/sk " + skill.getVerb(),
                     "&a" + skill.getTitle(),
                     // TODO: Put something more interesting here?
-                    "&oSkill",
-                    WordUtils.wrap(skill.getDescription(), 32)));
+                    "&f&oSkill",
+                    "&r" + WordUtils.wrap(skill.getDescription(), 32)));
+        }
+        if (skill instanceof BukkitSkill) {
+            BukkitPlayer.of(player).displaySkill((BukkitSkill)skill, player);
         }
     }
 
@@ -158,5 +162,25 @@ public class BukkitSkills extends Skills
         } else {
             playersInDebugMode.remove(player.getUniqueId());
         }
+    }
+
+    BukkitPlayer getBukkitPlayer(UUID uuid)
+    {
+        BukkitPlayer result = players.get(uuid);
+        if (result == null) {
+            result = new BukkitPlayer(uuid);
+            players.put(uuid, result);
+        }
+        return result;
+    }
+
+    BukkitPlayer getBukkitPlayer(Player player)
+    {
+        return getBukkitPlayer(player.getUniqueId());
+    }
+
+    void updateAllPlayers()
+    {
+        for (BukkitPlayer player : players.values()) player.updateScoreboard();
     }
 }

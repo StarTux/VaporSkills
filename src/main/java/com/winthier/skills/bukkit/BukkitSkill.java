@@ -134,6 +134,7 @@ abstract class BukkitSkill implements Skill
         giveSkillPoints(player, reward.getSkillPoints() * factor);
         giveMoney(player, reward.getMoney() * factor);
         giveExp(player, reward.getExp() * factor);
+        BukkitPlayer.of(player).onReward(this, reward, factor);
     }
 
     void giveReward(Player player, Reward reward)
