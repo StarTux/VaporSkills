@@ -1,11 +1,13 @@
 package com.winthier.skills.bukkit;
 
 import com.winthier.skills.sql.SQLDB;
+import java.io.File;
 import java.util.List;
 import javax.persistence.PersistenceException;
 import lombok.Getter;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -21,7 +23,9 @@ public class BukkitSkillsPlugin extends JavaPlugin implements Listener
     final BukkitCommandAdmin adminCommand = new BukkitCommandAdmin();
     final BukkitCommandSkills skillsCommand = new BukkitCommandSkills();
     final BukkitCommandHighscore highscoreCommand = new BukkitCommandHighscore();
+    YamlConfiguration descriptions = null;
     static final String REWARDS_TXT = "rewards.txt";
+    static final String DESCRIPTIONS_YML = "descriptions.yml";
 
     public BukkitSkillsPlugin()
     {
@@ -79,6 +83,9 @@ public class BukkitSkillsPlugin extends JavaPlugin implements Listener
         }.runTaskTimer(this, 20, 20);
         // Files
         saveResource(REWARDS_TXT, false);
+        saveResource(DESCRIPTIONS_YML, false);
+        //
+        skills.buildNameMap();
     }
 
     @Override
@@ -109,6 +116,8 @@ public class BukkitSkillsPlugin extends JavaPlugin implements Listener
     void reloadAll()
     {
         SQLDB.clearAllCaches();
+        descriptions = null;
+        skills.buildNameMap();
     }
 
     @Override
@@ -141,5 +150,13 @@ public class BukkitSkillsPlugin extends JavaPlugin implements Listener
     public void onPlayerQuit(PlayerQuitEvent event)
     {
         skills.players.remove(event.getPlayer().getUniqueId());
+    }
+
+    String getDescription(BukkitSkill skill, String key, String dfl)
+    {
+        if (descriptions == null) {
+            descriptions = YamlConfiguration.loadConfiguration(new File(getDataFolder(), DESCRIPTIONS_YML));
+        }
+        return descriptions.getString(skill.getKey() + "." + key, dfl);
     }
 }

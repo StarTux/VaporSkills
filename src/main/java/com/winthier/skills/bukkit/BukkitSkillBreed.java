@@ -1,20 +1,14 @@
 package com.winthier.skills.bukkit;
 
-import lombok.Getter;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 
-@Getter
 class BukkitSkillBreed extends BukkitSkill implements Listener
 {
-    final BukkitSkillType skillType = BukkitSkillType.BREED;
-    final String title = "Breeding";
-    final String verb = "breed";
-    final String personName = "breeder";
-    final String activityName = "breeding";
+    @lombok.Getter final BukkitSkillType skillType = BukkitSkillType.BREED;
     final double RADIUS = 10.0;
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)

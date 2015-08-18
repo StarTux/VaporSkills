@@ -1,6 +1,5 @@
 package com.winthier.skills.bukkit;
 
-import lombok.Getter;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -9,14 +8,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.inventory.ItemStack;
 
-@Getter
 class BukkitSkillFish extends BukkitSkill implements Listener
 {
-    final BukkitSkillType skillType = BukkitSkillType.FISH;
-    final String title = "Fishing";
-    final String verb = "fish";
-    final String personName = "fisher";
-    final String activityName = "fishing";
+    @lombok.Getter final BukkitSkillType skillType = BukkitSkillType.FISH;
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onPlayerFish(PlayerFishEvent event)

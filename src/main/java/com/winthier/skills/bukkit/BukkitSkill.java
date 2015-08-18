@@ -35,10 +35,33 @@ abstract class BukkitSkill implements Skill
     }
 
     @Override
-    public String getDescription()
+    public final String getTitle()
     {
-        // TODO
-        return "This is a default skill description. Slap StarTux around so he will finally implement proper skill descriptions and not this dribble.";
+        return getPlugin().getDescription(this, "Title", getKey());
+    }
+    
+    @Override
+    public final String getVerb()
+    {
+        return getPlugin().getDescription(this, "Verb", getKey());
+    }
+    
+    @Override
+    public final String getActivityName()
+    {
+        return getPlugin().getDescription(this, "Activity", getKey());
+    }
+    
+    @Override
+    public final String getPersonName()
+    {
+        return getPlugin().getDescription(this, "Person", getKey());
+    }
+    
+    @Override
+    public final String getDescription()
+    {
+        return getPlugin().getDescription(this, "Description", "This is a default skill description. Slap StarTux around so he will finally implement proper skill descriptions and not this dribble.");
     }
 
     abstract BukkitSkillType getSkillType();
@@ -47,7 +70,7 @@ abstract class BukkitSkill implements Skill
     
     String getPermissionNode()
     {
-	return "skills.skill" + getKey();
+	return "skills.skill." + getKey();
     }
 
     boolean allowPlayer(Player player)

@@ -1,17 +1,11 @@
 package com.winthier.skills.bukkit;
 
-import lombok.Getter;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
-@Getter
 class BukkitSkillWoodcut extends BukkitSkillAbstractBlockBreak
 {
-    final BukkitSkillType skillType = BukkitSkillType.WOODCUT;
-    final String title = "Woodcutting";
-    final String verb = "woodcut";
-    final String personName = "woodcutter";
-    final String activityName = "woodcutting";
+    @lombok.Getter final BukkitSkillType skillType = BukkitSkillType.WOODCUT;
 
     @Override
     Boolean requirePlayerPlacedBlock()

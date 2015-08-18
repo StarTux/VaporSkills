@@ -1,18 +1,12 @@
 package com.winthier.skills.bukkit;
 
-import lombok.Getter;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
-@Getter
-class BukkitSkillHunter extends BukkitSkillAbstractEntityKill
+class BukkitSkillHunt extends BukkitSkillAbstractEntityKill
 {
-    final BukkitSkillType skillType = BukkitSkillType.HUNTER;
-    final String title = "Hunting";
-    final String verb = "hunt";
-    final String personName = "hunter";
-    final String activityName = "hunting";
+    @lombok.Getter final BukkitSkillType skillType = BukkitSkillType.HUNT;
     final double KILL_DISTANCE = 16;
     final long KILL_DISTANCE_SECONDS = 60L * 5;
     final double PLAYER_DISTANCE = 16;

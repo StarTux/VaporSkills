@@ -1,17 +1,11 @@
 package com.winthier.skills.bukkit;
 
-import lombok.Getter;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
-@Getter
 class BukkitSkillBrawl extends BukkitSkillAbstractEntityKill
 {
-    final BukkitSkillType skillType = BukkitSkillType.BRAWL;
-    final String title = "Brawling";
-    final String verb = "brawl";
-    final String personName = "brawler";
-    final String activityName = "brawling";
+    @lombok.Getter final BukkitSkillType skillType = BukkitSkillType.BRAWL;
     final double KILL_DISTANCE = 16;
     final long KILL_DISTANCE_SECONDS = 60L * 5;
 

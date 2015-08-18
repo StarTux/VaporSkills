@@ -1,6 +1,5 @@
 package com.winthier.skills.bukkit;
 
-import lombok.Getter;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -8,14 +7,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.BrewEvent;
 import org.bukkit.inventory.ItemStack;
 
-@Getter
 class BukkitSkillBrew extends BukkitSkill implements Listener
 {
-    final BukkitSkillType skillType = BukkitSkillType.BREW;
-    final String title = "Brewing";
-    final String verb = "brew";
-    final String personName = "brewer";
-    final String activityName = "brewing";
+    @lombok.Getter final BukkitSkillType skillType = BukkitSkillType.BREW;
     final double RADIUS = 40.0;
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)

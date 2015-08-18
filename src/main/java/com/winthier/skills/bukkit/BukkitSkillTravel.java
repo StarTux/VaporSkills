@@ -4,7 +4,6 @@ import com.winthier.skills.Reward;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
@@ -15,7 +14,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
-@Getter
 class BukkitSkillTravel extends BukkitSkill implements Listener
 {
     @RequiredArgsConstructor
@@ -67,11 +65,7 @@ class BukkitSkillTravel extends BukkitSkill implements Listener
         }
     }
 
-    final BukkitSkillType skillType = BukkitSkillType.TRAVEL;
-    final String title = "Traveling";
-    final String verb = "travel";
-    final String personName = "traveler";
-    final String activityName = "traveling";
+    @lombok.Getter final BukkitSkillType skillType = BukkitSkillType.TRAVEL;
     final double DISTANCE_STEP = 10.0;
     final double MIN_DISTANCE = 50.0;
     final Map<UUID, Data> players = new HashMap<>();

@@ -13,7 +13,7 @@ public enum BukkitSkillType
     ENCHANT,   //
     FISH,      //
     HARVEST,   //
-    HUNTER,    //
+    HUNT,      //
     MINE,      //
     QUAFF,     //
     SACRIFICE, //

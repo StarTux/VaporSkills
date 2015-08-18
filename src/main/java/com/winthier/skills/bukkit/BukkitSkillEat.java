@@ -1,20 +1,14 @@
 package com.winthier.skills.bukkit;
 
 import com.winthier.skills.Reward;
-import lombok.Getter;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
-@Getter
 class BukkitSkillEat extends BukkitSkillAbstractConsume
 {
-    final BukkitSkillType skillType = BukkitSkillType.EAT;
-    final String title = "Eating";
-    final String verb = "eat";
-    final String personName = "eater";
-    final String activityName = "eating";
+    @lombok.Getter final BukkitSkillType skillType = BukkitSkillType.EAT;
 
     @Override
     void onConsume(Player player, ItemStack item)

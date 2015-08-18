@@ -1,7 +1,6 @@
 package com.winthier.skills.bukkit;
 
 import com.winthier.skills.Reward;
-import lombok.Getter;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -10,14 +9,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.inventory.ItemStack;
 
-@Getter
 class BukkitSkillSacrifice extends BukkitSkill implements Listener
 {
-    final BukkitSkillType skillType = BukkitSkillType.SACRIFICE;
-    final String title = "Sacrifice";
-    final String verb = "sacrifice";
-    final String personName = "sacrificer";
-    final String activityName = "sacrifing";
+    @lombok.Getter final BukkitSkillType skillType = BukkitSkillType.SACRIFICE;
     final double RADIUS = 20;
     
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)

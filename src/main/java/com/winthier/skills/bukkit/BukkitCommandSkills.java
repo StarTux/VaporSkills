@@ -54,7 +54,7 @@ class BukkitCommandSkills implements CommandExecutor
             message.add(" ");
             message.add(BukkitUtil.button(
                             "&b" + Strings.camelCase(skill.getVerb()) + "&3(&f"+skillLevel+"&3)",
-                            "/sk " + skill.getVerb(),
+                            "/sk " + skill.getKey(),
                             "&3&l" + skill.getTitle() + " " + BukkitUtil.progressBar(pointsInLevel, pointsToLevelUp),
                             "&3Skill Level: &b" + skillLevel,
                             "&3Skill Points: &f"+pointsInLevel+"&3/&f"+pointsToLevelUp,

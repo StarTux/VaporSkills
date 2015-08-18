@@ -1,17 +1,11 @@
 package com.winthier.skills.bukkit;
 
-import lombok.Getter;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
-@Getter
 class BukkitSkillDig extends BukkitSkillAbstractBlockBreak
 {
-    final BukkitSkillType skillType = BukkitSkillType.DIG;
-    final String title = "Digging";
-    final String verb = "dig";
-    final String personName = "digger";
-    final String activityName = "digging";
+    @lombok.Getter final BukkitSkillType skillType = BukkitSkillType.DIG;
 
     @Override
     Boolean requirePlayerPlacedBlock()

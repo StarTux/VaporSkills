@@ -1,6 +1,5 @@
 package com.winthier.skills.bukkit;
 
-import lombok.Getter;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
@@ -9,14 +8,9 @@ import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.Potion;
 import org.bukkit.potion.PotionEffect;
 
-@Getter
 class BukkitSkillQuaff extends BukkitSkillAbstractConsume
 {
-    final BukkitSkillType skillType = BukkitSkillType.QUAFF;
-    final String title = "Quaffing";
-    final String verb = "quaff";
-    final String personName = "quaffer";
-    final String activityName = "quaffing";
+    @lombok.Getter final BukkitSkillType skillType = BukkitSkillType.QUAFF;
 
     @Override
     void onConsume(Player player, ItemStack item)

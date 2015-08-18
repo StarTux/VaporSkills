@@ -43,7 +43,7 @@ public class BukkitSkills extends Skills
             new BukkitSkillEnchant(),
             new BukkitSkillFish(),
             new BukkitSkillHarvest(),
-            new BukkitSkillHunter(),
+            new BukkitSkillHunt(),
             new BukkitSkillMine(),
             new BukkitSkillQuaff(),
             new BukkitSkillSacrifice(),
@@ -57,13 +57,21 @@ public class BukkitSkills extends Skills
                 throw new IllegalStateException("Duplicate skill " + type.name() + ": " + skillMap.get(type).getClass().getSimpleName() + " and " + skill.getClass().getSimpleName());
             }
             skillMap.put(type, skill);
-            nameMap.put(type.name().toLowerCase(), skill);
+        }
+    }
+
+    void buildNameMap()
+    {
+        nameMap.clear();
+        // Put all the names in the map
+        for (BukkitSkill skill : skillMap.values()) {
             nameMap.put(skill.getKey().toLowerCase(), skill);
             nameMap.put(skill.getTitle().toLowerCase(), skill);
             nameMap.put(skill.getVerb().toLowerCase(), skill);
             nameMap.put(skill.getActivityName().toLowerCase(), skill);
             nameMap.put(skill.getPersonName().toLowerCase(), skill);
         }
+        // Bake the map
         for (Map.Entry<String, BukkitSkill> entry : new ArrayList<>(nameMap.entrySet())) {
             BukkitSkill skill = entry.getValue();
             for (String name = entry.getKey(); name.length() > 0; name = name.substring(0, name.length() - 1)) {
