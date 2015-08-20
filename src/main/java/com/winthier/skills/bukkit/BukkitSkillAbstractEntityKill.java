@@ -18,7 +18,7 @@ abstract class BukkitSkillAbstractEntityKill extends BukkitSkill implements List
     public void onEntityDeath(EntityDeathEvent event)
     {
         LivingEntity entity = event.getEntity();
-        if (entity instanceof Player) return;
+        if (!allowEntity(entity)) return;
         Player player = entity.getKiller();
         if (player == null) return;
         if (!(entity.getLastDamageCause() instanceof EntityDamageByEntityEvent)) return;
@@ -38,6 +38,7 @@ abstract class BukkitSkillAbstractEntityKill extends BukkitSkill implements List
         return true;
     }
 
+    boolean allowEntity(LivingEntity entity) { return !(entity instanceof Player); }
     boolean useKillDistance() { return false; }
     double minKillDistance() { return 16.0; }
     long killDistanceSeconds() { return 60; }
