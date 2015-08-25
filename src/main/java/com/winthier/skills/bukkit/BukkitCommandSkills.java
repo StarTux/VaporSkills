@@ -30,10 +30,14 @@ class BukkitCommandSkills implements CommandExecutor
             sender.sendMessage("Player expected");
             return true;
         }
+        String cmd = args.length > 0 ? args[0].toLowerCase() : "";
         if (args.length == 0) {
             listSkills(player);
+        } else if (args.length >= 1 && "sidebar".equals(cmd)) {
+            String sub = args.length == 2 ? args[1].toLowerCase() : "";
+            modifySidebar(player, sub);
         } else if (args.length == 1) {
-            skillDetail(player, args[0].toLowerCase());
+            skillDetail(player, cmd);
         } else {
             return false;
         }
@@ -44,6 +48,7 @@ class BukkitCommandSkills implements CommandExecutor
     void listSkills(Player player)
     {
         UUID uuid = player.getUniqueId();
+        BukkitUtil.msg(player, "");
         List<Object> message = new ArrayList<>();
         message.add(BukkitUtil.format("&3&lSkills:"));
         for (BukkitSkill skill : getSkills().getSkills()) {
@@ -62,6 +67,12 @@ class BukkitCommandSkills implements CommandExecutor
                             "&7Click for more details"));
         }
         BukkitUtil.raw(player, message);
+        BukkitUtil.raw(player,
+                       BukkitUtil.format(" &3Sidebar: "),
+                       BukkitUtil.button("&3[&fReset&3]", "/sk sidebar reset", "&7Reset the sidebar"), " ",
+                       BukkitUtil.button("&3[&fOn&3]", "/sk sidebar on", "&7Enable sidebar"), " ", 
+                       BukkitUtil.button("&3[&fOff&3]", "/sk sidebar off", "&7Disable sidebar"));
+        BukkitUtil.msg(player, "");
     }
     
     void skillDetail(Player player, String name)
@@ -76,6 +87,7 @@ class BukkitCommandSkills implements CommandExecutor
         int skillLevel = getSkills().getScore().getSkillLevel(uuid, skill);
         int pointsInLevel = getSkills().getScore().pointsInLevel(skillPoints);
         int pointsToLevelUp = getSkills().getScore().pointsToLevelUpTo(skillLevel + 1);
+        BukkitUtil.msg(player, "");
         BukkitUtil.msg(player, "&3&l%s &bLevel &f%d %s",
                        skill.getTitle(),
                        skillLevel,
@@ -89,6 +101,34 @@ class BukkitCommandSkills implements CommandExecutor
                            BukkitUtil.format("&3Total Skill Points: &f%d", skillPoints),
                            BukkitUtil.format("&3For Next Level: &f%d",
                                              getSkills().getScore().pointsForNextLevel(skillPoints))));
+        BukkitUtil.raw(player,
+                       BukkitUtil.format(" &3Sidebar: "),
+                       BukkitUtil.button("&3[&fFocus&3]", "/sk sidebar "+skill.getKey(), "&7Focus this "+skill.getTitle()+" in the sidebar"), " ",
+                       BukkitUtil.button("&3[&fReset&3]", "/sk sidebar reset", "&7Reset the sidebar"), " ",
+                       BukkitUtil.button("&3[&fOn&3]", "/sk sidebar on", "&7Turn sidebar on"), " ", 
+                       BukkitUtil.button("&3[&fOff&3]", "/sk sidebar off", "&7Turn sidebar off"));
         BukkitUtil.msg(player, " &r%s", skill.getDescription());
+        BukkitUtil.msg(player, "");
+    }
+
+    void modifySidebar(Player player, String arg)
+    {
+        if ("reset".equals(arg)) {
+            BukkitPlayer.of(player).setSidebarEnabled(player, false);
+            BukkitPlayer.of(player).setSidebarEnabled(player, true);
+            BukkitUtil.msg(player, "&bSidebar reset");
+        } else if ("off".equals(arg)) {
+            BukkitPlayer.of(player).setSidebarEnabled(player, false);
+            BukkitUtil.msg(player, "&bSidebar disabled");
+        } else if ("on".equals(arg)) {
+            BukkitPlayer.of(player).setSidebarEnabled(player, true);
+            BukkitUtil.msg(player, "&bSidebar enabled");
+        } else {
+            BukkitSkill skill = getSkills().skillByName(arg);
+            if (skill == null) return;
+            BukkitPlayer.of(player).setSidebarEnabled(player, true);
+            BukkitPlayer.of(player).setForcedSkill(skill);
+            BukkitUtil.msg(player, "&bDisplaying %s", skill.getTitle());
+        }
     }
 }

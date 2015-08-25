@@ -44,6 +44,7 @@ class BukkitCommandHighscore implements CommandExecutor
     void listSkills(Player player)
     {
         UUID uuid = player.getUniqueId();
+        BukkitUtil.msg(player, "");
         List<Object> message = new ArrayList<>();
         message.add(BukkitUtil.format("&3&lHighscores:"));
         for (BukkitSkill skill : getSkills().getSkills()) {
@@ -69,6 +70,7 @@ class BukkitCommandHighscore implements CommandExecutor
                             "&7Click for more details"));
         }
         BukkitUtil.raw(player, message);
+        BukkitUtil.msg(player, "");
     }
 
     // TODO page numbers
@@ -80,9 +82,11 @@ class BukkitCommandHighscore implements CommandExecutor
             return;
         }
         final UUID uuid = player.getUniqueId();
+        BukkitUtil.msg(player, "");
         BukkitUtil.msg(player, "&b&l%s", skill.getTitle());
         for (Highscore.Row row : getSkills().getScore().getHighscore(skill).getRows()) {
             BukkitUtil.msg(player, " &3#%d &f%02d &3%s", row.getRank(), row.getSkillLevel(), PlayerCache.nameForUuid(row.getPlayer()));
         }
+        BukkitUtil.msg(player, "");
     }
 }

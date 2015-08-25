@@ -21,6 +21,8 @@ class BukkitPlayer
     Objective sidebarObjective = null;
     String lastProgressBar = null;
     BukkitSkillType skillOnScoreboard = null;
+    BukkitSkillType forcedSkillOnScoreboard = null;
+    boolean sidebarEnabled = true;
     // Skill points short-term memory
     final Map<BukkitSkillType, BukkitPlayerSkill> skills = new EnumMap<>(BukkitSkillType.class);
     // Instant feedback task
@@ -56,6 +58,7 @@ class BukkitPlayer
 
     void onReward(BukkitSkill skill, Reward reward, double factor)
     {
+        if (!sidebarEnabled) return;
         skills.get(skill.getSkillType()).onReward(reward, factor);
         // Make sure the scoreboard gets updated as soon as
         // possible for instant feedback.
@@ -74,23 +77,28 @@ class BukkitPlayer
     {
         Player player = getPlayer();
         if (player == null) return;
-        int highestSkillPoints = 0;
-        BukkitSkillType highestType = null;
-        long now = System.currentTimeMillis();
-        for (BukkitPlayerSkill playerSkill : skills.values()) {
-            playerSkill.checkLastReward(now);
-            int skillPoints = (int)playerSkill.getSkillPoints();
-            if (highestSkillPoints < skillPoints) {
-                highestSkillPoints = skillPoints;
-                highestType = playerSkill.getType();
+        if (forcedSkillOnScoreboard == null) {
+            int highestSkillPoints = 0;
+            BukkitSkillType highestType = null;
+            long now = System.currentTimeMillis();
+            for (BukkitPlayerSkill playerSkill : skills.values()) {
+                playerSkill.checkLastReward(now);
+                int skillPoints = (int)playerSkill.getSkillPoints();
+                if (highestSkillPoints < skillPoints) {
+                    highestSkillPoints = skillPoints;
+                    highestType = playerSkill.getType();
+                }
             }
+            skillOnScoreboard = highestType;
+        } else {
+            skillOnScoreboard = forcedSkillOnScoreboard;
         }
-        this.skillOnScoreboard = highestType;
         setupScoreboard(player);
     }
 
     void displaySkill(BukkitSkill skill, Player player)
     {
+        if (forcedSkillOnScoreboard != null) return;
         if (skillOnScoreboard == skill.getSkillType()) return;
         for (BukkitPlayerSkill playerSkill : skills.values()) {
             if (playerSkill.getType() != skill.getSkillType()) playerSkill.reset();
@@ -101,6 +109,11 @@ class BukkitPlayer
 
     void setupScoreboard(Player player)
     {
+        if (!sidebarEnabled) {
+            skillOnScoreboard = null;
+        } else if (forcedSkillOnScoreboard != null) {
+            skillOnScoreboard = forcedSkillOnScoreboard;
+        }
         if (skillOnScoreboard == null) {
             player.setScoreboard(Bukkit.getServer().getScoreboardManager().getMainScoreboard());
         } else {
@@ -123,12 +136,35 @@ class BukkitPlayer
                 if (lastProgressBar != null) scoreboard.resetScores(lastProgressBar);
             }
             lastProgressBar = progressBar;
-            sidebarObjective.getScore("For next level").setScore(pointsForNextLevel);
-            sidebarObjective.getScore("Skill Points").setScore((int)playerSkill.getSkillPoints());
-            sidebarObjective.getScore("Money").setScore((int)playerSkill.getMoney());
-            sidebarObjective.getScore("Exp").setScore((int)playerSkill.getExp());
+            sidebarObjective.getScore(BukkitUtil.format("&aFor next level")).setScore(pointsForNextLevel);
+            sidebarObjective.getScore(BukkitUtil.format("&9Skill Points")).setScore((int)playerSkill.getSkillPoints());
+            sidebarObjective.getScore(BukkitUtil.format("&9Money")).setScore((int)playerSkill.getMoney());
+            // sidebarObjective.getScore(BukkitUtil.format("Exp")).setScore((int)playerSkill.getExp());
             player.setScoreboard(scoreboard);
         }
+    }
+
+    void setSidebarEnabled(Player player, boolean value)
+    {
+        if (sidebarEnabled == value) return;
+        sidebarEnabled = value;
+        if (!value) {
+            player.setScoreboard(Bukkit.getServer().getScoreboardManager().getMainScoreboard());
+            scoreboard = null;
+            sidebarObjective = null;
+            forcedSkillOnScoreboard = null;
+            skillOnScoreboard = null;
+            for (BukkitPlayerSkill playerSkill : skills.values()) playerSkill.reset();
+            if (updateTask != null) {
+                updateTask.cancel();
+                updateTask = null;
+            }
+        }
+    }
+
+    void setForcedSkill(BukkitSkill skill)
+    {
+        forcedSkillOnScoreboard = skill.getSkillType();
     }
 }
 
