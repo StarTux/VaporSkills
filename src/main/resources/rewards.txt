@@ -1,31 +1,49 @@
-#Skill Target	Type Data Name	SP Money Exp
-Mine Block		Diamond_Ore	0 -		10 10 0
-Mine Block		Iron_Ore 0 -		2 2 2
-Mine Block		Gold_Ore 0 -		5 5 5
-Mine Block		Emerald_Ore 0 -		10 10 0
-Mine Block		Stone 0 -		.01 .01 1
-Mine Block		Stone 1 -		.1 .1 1		# Granite
-Mine Block		Stone 3 -		.1 .1 1		# Diorite
-Mine Block		Stone 5 -		.1 .1 1		# Andesite
-Mine Block		Coal_Ore 0 -		1 1 1
-Mine Block		Redstone_Ore 0 -	2 2 2
-Mine Block		Glowing_Redstone_Ore 0 -	2 2 2
-Mine Block		Lapis_Ore 0 -		3 3 3
-Mine Block		Quartz_Ore 0 -		4 4 4
-Mine Block		Glowstone 0 -		5 5 5
-Mine Block		Sandstone 0 - 		1 1 1
-Mine Block		Red_Sandstone 0 -	1 1 1
+#===============================================================================
+# Skill Target		Type Data Name		SP Money Exp
+#===============================================================================
 
-Dig Block		Dirt 0 -		.1 .1 .1
+#===============================================================================
+# Mining
+# Give exp for all ores that don't give exp in vanilla.
+#===============================================================================
+
+Mine Block		Diamond_Ore 0 -		5 5 0		# Vanilla: 3-7 exp (5 avg)
+Mine Block		Iron_Ore 0 -		1 1 1
+Mine Block		Gold_Ore 0 -		2 2 2
+Mine Block		Emerald_Ore 0 -		10 10 0		# Vanilla: 3-7 exp (5 avg)
+Mine Block		Stone 0 -		.1 .1 .1
+Mine Block		Sandstone 0 - 		.1 .1 .1
+Mine Block		Red_Sandstone 0 -	.1 .1 .1
+Mine Block		Stone 1 -		.5 .5 .5	# Granite
+Mine Block		Stone 3 -		.5 .5 .5	# Diorite
+Mine Block		Stone 5 -		.5 .5 .5	# Andesite
+Mine Block		Coal_Ore 0 -		.7 .7 .7	# Vanilla: 0-2 exp (1 avg)
+Mine Block		Redstone_Ore 0 -	3 3 0		# Vanilla: 1-5 exp (3 avg)
+Mine Block		Glowing_Redstone_Ore 0 -	3 3 0	# Vanilla: 1-5 exp (3 avg)
+Mine Block		Lapis_Ore 0 -		3.5 3.5 0	# Vanilla: 2-5 exp (3.5 avg)
+Mine Block		Quartz_Ore 0 -		3.5 3.5 0	# Vanilla: 2-5 exp (3.5 avg)
+Mine Block		Glowstone 0 -		3.5 3.5 3.5
+
+#===============================================================================
+# Digging
+# Using the stone value from mining as point of orientation.
+#===============================================================================
+
+Dig Block		Dirt 0 -		.05 .05 .05
 Dig Block		Dirt 1 -		.1 .1 .1	# Coarse Dirt
 Dig Block		Dirt 2 -		.1 .1 .1	# Podzol
 Dig Block		Grass 0 -		.2 .2 .2
 Dig Block		Mycel 0 -		.2 .2 .2
-Dig Block		Sand 0 -		.2 .2 .2
-Dig Block		Sand 1 -		.2 .2 .2	# Red Sandstone
-Dig Block		Gravel 0 -		.3 .3 .3
-Dig Block		Soul_Sand 0 -		.4 .4 .4
-Dig Block		Clay 0 -		.5 .5 .5
+Dig Block		Sand 0 -		.05 .05 .05
+Dig Block		Sand 1 -		.05 .05 .05	# Red Sand
+Dig Block		Gravel 0 -		.1 .1 .1
+Dig Block		Soul_Sand 0 -		.2 .2 .2
+Dig Block		Clay 0 -		1 1 1
+
+#===============================================================================
+# Smelting
+# 
+#===============================================================================
 
 Smelt Item		Iron_Ingot 0 -		2 2 1
 Smelt Item		Gold_Ingot 0 -		3 3 1
@@ -36,35 +54,65 @@ Smelt Item		Clay_Brick 0 -		1 1 1
 Smelt Item		Smooth_Brick 2 -	1 1 1		# Cracked Stone Brick
 Smelt Item		Ink_Sack 2 -		1 1 1		# Green Dye
 
-Brawl Entity		- - Zombie		1 1 0
-Brawl Entity		- - Skeleton		3 3 3
-Brawl Entity		- - Creeper		10 10 0
-Brawl Entity		- - Spider		3 3 3
-Brawl Entity		- - CaveSpider		5 5 5
-Brawl Entity		- - Enderman		10 20 0
-Brawl Entity		- - PigZombie		20 20 0
-Brawl Entity		- - Blaze		20 20 0
-Brawl Entity		- - Slime		1 1 1
-Brawl Entity		- - MagmaCube		3 3 3
-Brawl Entity		- - Guardian		10 10 10
-Brawl Entity		- - ElderGuardian	20 20 20
-Brawl Entity		- - EnderDragon		50 50 50
-Brawl Entity		- - Wither		50 50 50
+#===============================================================================
+# Brawling
+# Give no exp since all mobs drop exp. Orient SP and money on vanilla exp.
+#===============================================================================
 
-Hunt Entity		- - Zombie		1 1 0
-Hunt Entity		- - Skeleton		3 3 3
-Hunt Entity		- - Creeper		10 10 0
-Hunt Entity		- - Spider		3 3 3
-Hunt Entity		- - CaveSpider		5 5 5
-Hunt Entity		- - Enderman		10 20 0
-Hunt Entity		- - PigZombie		20 20 0
-Hunt Entity		- - Blaze		20 20 0
-Hunt Entity		- - Slime		1 1 1
-Hunt Entity		- - MagmaCube		3 3 3
-Hunt Entity		- - Guardian		10 10 10
-Hunt Entity		- - ElderGuardian	20 20 20
-Hunt Entity		- - EnderDragon		50 50 50
-Hunt Entity		- - Wither		50 50 50
+Brawl Entity		- - Zombie		5 5 0		# Vanilla:  5 exp
+Brawl Entity		- - BabyZombie		12 12 0		# Vanilla: 12 exp
+Brawl Entity		- - Skeleton		5 5 0		# Vanilla:  5 exp
+Brawl Entity		- - Creeper		5 5 0		# Vanilla:  5 exp
+Brawl Entity		- - Spider		5 5 0		# Vanilla:  5 exp
+Brawl Entity		- - CaveSpider		5 5 0		# Vanilla:  5 exp
+Brawl Entity		- - Endermite		5 5 0		# Vanilla:  5 exp
+Brawl Entity		- - Silverfish		5 5 0		# Vanilla:  5 exp
+Brawl Entity		- - Enderman		5 5 0		# Vanilla:  5 exp
+Brawl Entity		- - PigZombie		5 5 0		# Vanilla:  5 exp
+Brawl Entity		- - BabyPigZombie	12 12 0		# Vanilla: 12 exp
+Brawl Entity		- - Blaze		10 10 0		# Vanilla: 10 exp
+Brawl Entity		- - BigSlime		4 4 0		# Vanilla:  4 exp
+Brawl Entity		- - SmallSlime		2 2 0		# Vanilla:  2 exp
+Brawl Entity		- - TinySlime		1 1 0		# Vanilla:  1 exp
+Brawl Entity		- - BigMagmaCube	4 4 0		# Vanilla:  4 exp
+Brawl Entity		- - SmallMagmaCube	2 2 0		# Vanilla:  2 exp
+Brawl Entity		- - TinyMagmaCube	1 1 0		# Vanilla:  1 exp
+Brawl Entity		- - Guardian		10 10 0		# Vanilla: 10 exp
+Brawl Entity		- - ElderGuardian	10 10 0		# Vanilla: 10 exp
+Brawl Entity		- - Wither		50 50 0		# Vanilla: 50 exp 
+Brawl Entity		- - EnderDragon		20 20 0		# Vanilla: 12k exp 
+
+#===============================================================================
+# Hunting
+# Strongly inspired by Brawling.
+#===============================================================================
+
+Hunt Entity		- - Zombie		5 5 0		# Vanilla:  5 exp
+Hunt Entity		- - BabyZombie		12 12 0		# Vanilla: 12 exp
+Hunt Entity		- - Skeleton		5 5 0		# Vanilla:  5 exp
+Hunt Entity		- - Creeper		5 5 0		# Vanilla:  5 exp
+Hunt Entity		- - Spider		5 5 0		# Vanilla:  5 exp
+Hunt Entity		- - CaveSpider		5 5 0		# Vanilla:  5 exp
+Hunt Entity		- - Endermite		5 5 0		# Vanilla:  5 exp
+Hunt Entity		- - Silverfish		5 5 0		# Vanilla:  5 exp
+Hunt Entity		- - Enderman		5 5 0		# Vanilla:  5 exp
+Hunt Entity		- - PigZombie		5 5 0		# Vanilla:  5 exp
+Hunt Entity		- - BabyPigZombie	12 12 0		# Vanilla: 12 exp
+Hunt Entity		- - Blaze		10 10 0		# Vanilla: 10 exp
+Hunt Entity		- - BigSlime		4 4 0		# Vanilla:  4 exp
+Hunt Entity		- - SmallSlime		2 2 0		# Vanilla:  2 exp
+Hunt Entity		- - TinySlime		1 1 0		# Vanilla:  1 exp
+Hunt Entity		- - BigMagmaCube	4 4 0		# Vanilla:  4 exp
+Hunt Entity		- - SmallMagmaCube	2 2 0		# Vanilla:  2 exp
+Hunt Entity		- - TinyMagmaCube	1 1 0		# Vanilla:  1 exp
+Hunt Entity		- - Guardian		10 10 0		# Vanilla: 10 exp
+Hunt Entity		- - ElderGuardian	10 10 0		# Vanilla: 10 exp
+Hunt Entity		- - EnderDragon		20 20 0		# Vanilla: 12k exp 
+Hunt Entity		- - Wither		50 50 0		# Vanilla: 50 exp
+
+#===============================================================================
+# Breeding
+#===============================================================================
 
 Breed Entity		- - Chicken		1 1 0
 Breed Entity		- - Cow			5 5 0
@@ -76,6 +124,10 @@ Breed Entity		- - Wolf		10 10 0
 Breed Entity		- - Ocelot		10 10 0
 Breed Entity		- - Horse		20 20 0
 
+#===============================================================================
+# Butchering
+#===============================================================================
+
 Butcher Entity		- - Chicken		1 1 1
 Butcher Entity		- - Cow			2 2 2
 Butcher Entity		- - Sheep		2 2 2
@@ -85,6 +137,10 @@ Butcher Entity		- - MushroomCow		5 5 5
 Butcher Entity		- - Wolf		10 10 10
 Butcher Entity		- - Ocelot		10 10 10
 Butcher Entity		- - Horse		10 10 10
+
+#===============================================================================
+# Brewing
+#===============================================================================
 
 Brew Item		Nether_Stalk 0 -	1 1 1
 Brew Item		Redstone 0 -		1 1 1
@@ -96,10 +152,16 @@ Brew Item		Spider_Eye 0 -		1 1 1
 Brew Item		Ghast_Tear 0 -		1 1 1
 Brew Item		Sugar 0 -		1 1 1
 
-Build Block		Smooth_Brick 0 -	.1 .1 .1
-Build Block		Stone 2 -		.1 .1 .1	# Smooth Granite
-Build Block		Stone 4 -		.1 .1 .1	# Smooth Diorite
-Build Block		Stone 6 -		.1 .1 .1	# Smooth Andesite
+#===============================================================================
+# Building
+# idek
+#===============================================================================
+
+Build Name		- - BlockPlaced		1 1 1
+
+#===============================================================================
+# Cooking
+#===============================================================================
 
 Cook Item		Cooked_Beef 0 -		1 1 1
 Cook Item		Cooked_Chicken 0 -	1 1 1
@@ -108,6 +170,10 @@ Cook Item		Cooked_Mutton 0 -	1 1 1
 Cook Item		Cooked_Rabbit 0 -	1 1 1
 Cook Item		Grilled_Pork 0 -	1 1 1
 Cook Item		Baked_Potato 0 -	1 1 1
+
+#===============================================================================
+# Eating
+#===============================================================================
 
 Eat Item		Raw_Beef 0 -		1 1 1
 Eat Item		Pork 0 -		1 1 1
@@ -130,19 +196,53 @@ Eat Item		Baked_Potato 0 -	1 1 1
 Eat Item		Golden_Apple 0 -	5 5 1
 Eat Item		Golden_Apple 1 -	20 20 1
 
-Enchant Enchantment	Dig_Speed 1 -		1 1 0
-Enchant Enchantment	Dig_Speed 2 -		5 5 0
-Enchant Enchantment	Dig_Speed 3 -		10 10 0
+#===============================================================================
+# Enchanting
+# No exp for any.
+#===============================================================================
+
+Enchant Enchantment	Arrow_Damage 1 -	1 1 0		# Power (Limit 5)
+Enchant Enchantment	Arrow_Damage 2 -	2 2 0
+Enchant Enchantment	Arrow_Damage 3 -	3 3 0
+Enchant Enchantment	Arrow_Damage 4 -	5 5 0
+Enchant Enchantment	Arrow_Damage 5 -	10 10 0
+
+Enchant Enchantment	Arrow_Fire 1 -		1 1 0		# Flame (Limit 1)
+
+Enchant Enchantment	Arrow_Infinite 1 -	10 10 0		# Infinity (Limit 1)
+
+Enchant Enchantment	Arrow_Knockback 1 -	1 1 0		# Punch (Limit 2)
+Enchant Enchantment	Arrow_Knockback 2 -	2 2 0
+
+Enchant Enchantment	Damage_All 1 -		1 1 0		# Sharpness (Limit 5)
+Enchant Enchantment	Damage_All 2 -		2 2 0
+Enchant Enchantment	Damage_All 3 -		3 3 0
+Enchant Enchantment	Damage_All 4 -		5 5 0
+Enchant Enchantment	Damage_All 5 -		10 10 0
+
+Enchant Enchantment	Damage_Arthropods 1 -	1 1 0		#  (Bane of Arthropods 5)
+Enchant Enchantment	Damage_Arthropods 2 -	2 2 0
+Enchant Enchantment	Damage_Arthropods 3 -	3 3 0
+Enchant Enchantment	Damage_Arthropods 4 -	5 5 0
+Enchant Enchantment	Damage_Arthropods 5 -	10 10 0
+
+Enchant Enchantment	Dig_Speed 1 -		1 1 0		# Efficiency (Limit 5)
+Enchant Enchantment	Dig_Speed 2 -		2 2 0
+Enchant Enchantment	Dig_Speed 3 -		3 3 0
+Enchant Enchantment	Dig_Speed 4 -		5 5 0
+Enchant Enchantment	Dig_Speed 5 -		10 10 0
+
+#===============================================================================
 
 Fish Item		Raw_Fish 0 -		1 1 0
 Fish Item		Raw_Fish 1 -		2 2 0		# Salmon
 Fish Item		Raw_Fish 2 -		5 5 0		# Clownfish
 Fish Item		Raw_Fish 3 -		10 10 0		# Pufferfish
 
-Woodcut Block		Log - -			1 1 1
-Woodcut Block		Log_2 - -		1 1 1
-Woodcut Block		Leaves - -		.1 .1 .1
-Woodcut Block		Leaves_2 - -		.1 .1 .1
+Woodcut Block		Log - -			1 .5 .5
+Woodcut Block		Log_2 - -		1 .5 .5
+Woodcut Block		Leaves - -		.1 .01 .1
+Woodcut Block		Leaves_2 - -		.1 .01 .1
 
 Harvest Block		Crops 7 -		1 1 1
 Harvest Block		Potato 7 -		1 1 1
