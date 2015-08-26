@@ -2,12 +2,16 @@ package com.winthier.skills.bukkit;
 
 import com.winthier.skills.Reward;
 import com.winthier.skills.Skill;
+import com.winthier.skills.sql.SQLPlayerSetting;
 import java.io.File;
 import java.io.IOException;
+import java.util.UUID;
 import lombok.Getter;
 import lombok.NonNull;
+import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -210,5 +214,52 @@ abstract class BukkitSkill implements Skill
         } catch (IOException ioe) {
             ioe.printStackTrace();
         }
+    }
+
+    String getPlayerSettingString(UUID uuid, String key, String dfl)
+    {
+        String result = SQLPlayerSetting.getString(uuid, getKey(), key);
+        return result != null ? result : dfl;
+    }
+
+    int getPlayerSettingInt(UUID uuid, String key, int dfl)
+    {
+        Integer result = SQLPlayerSetting.getInt(uuid, getKey(), key);
+        return result != null ? result : dfl;
+    }
+
+    double getPlayerSettingDouble(UUID uuid, String key, double dfl)
+    {
+        Double result = SQLPlayerSetting.getDouble(uuid, getKey(), key);
+        return result != null ? result : dfl;
+    }
+
+    Location getPlayerSettingLocation(UUID uuid, String key, Location dfl)
+    {
+        String serial = SQLPlayerSetting.getString(uuid, getKey(), key);
+        if (serial == null) return dfl;
+        String[] tokens = serial.split(",");
+        if (tokens.length != 6) return dfl;
+        World world = Bukkit.getServer().getWorld(tokens[0]);
+        if (world == null) return dfl;
+        try {
+            return new Location(world,
+                                Double.parseDouble(tokens[1]),
+                                Double.parseDouble(tokens[2]),
+                                Double.parseDouble(tokens[3]),
+                                Float.parseFloat(tokens[4]),
+                                Float.parseFloat(tokens[5]));
+        } catch (NumberFormatException nfe) {
+            return dfl;
+        }
+    }
+
+    void setPlayerSetting(UUID uuid, String key, Object value)
+    {
+        if (value instanceof Location) {
+            Location loc = (Location)value;
+            value = String.format("%s,%f,%f,%f,%f,%f", loc.getWorld().getName(), loc.getX(), loc.getY(), loc.getZ(), loc.getYaw(), loc.getPitch());
+        }
+        SQLPlayerSetting.set(uuid, getKey(), key, value);
     }
 }

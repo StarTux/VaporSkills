@@ -34,6 +34,7 @@ public class SQLDB {
     {
         SQLString.cache.clear();
         SQLPlayer.cache.clear();
+        SQLPlayerSetting.cache.clear();
         SQLReward.cache.clear();
         SQLScore.cache.clear();
     }
@@ -41,12 +42,14 @@ public class SQLDB {
     public static void saveAll()
     {
         SQLScore.saveAll();
+        SQLPlayerSetting.saveAll();
     }
 
     public static List<Class<?>> getDatabaseClasses()
     {
         return Arrays.asList(
             SQLPlayer.class,
+            SQLPlayerSetting.class,
             SQLReward.class,
             SQLScore.class,
             SQLString.class
