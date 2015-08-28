@@ -15,11 +15,16 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 
 class BukkitSkillTravel extends BukkitSkill implements Listener
 {
-    final static String ANCHOR = "anchor";
-    final static String DISTANCE = "distance";
+    @lombok.Getter final BukkitSkillType skillType = BukkitSkillType.TRAVEL;
+    final double DISTANCE_STEP = 10.0;
+    final double MIN_DISTANCE = 50.0;
+    final double MAX_TELEPORT_DISTANCE = 128.0;
+    final Map<UUID, Data> players = new HashMap<>();
 
     @RequiredArgsConstructor
     class Data {
+        final static String ANCHOR = "anchor";
+        final static String DISTANCE = "distance";
         final UUID uuid;
         Location anchor;
         double distance;
@@ -54,13 +59,11 @@ class BukkitSkillTravel extends BukkitSkill implements Listener
         void reset(Player player) {
             anchor = player.getLocation();
             distance = 0.0;
+            if (getSkills().hasDebugMode(player)) {
+                BukkitUtil.msg(player, "&e%s Reset %d %d %d", getTitle(), anchor.getBlockX(), anchor.getBlockY(), anchor.getBlockZ());
+            }
         }
     }
-
-    @lombok.Getter final BukkitSkillType skillType = BukkitSkillType.TRAVEL;
-    final double DISTANCE_STEP = 10.0;
-    final double MIN_DISTANCE = 50.0;
-    final Map<UUID, Data> players = new HashMap<>();
 
     void storeAll()
     {
@@ -82,6 +85,7 @@ class BukkitSkillTravel extends BukkitSkill implements Listener
     @EventHandler
     void onPlayerMove(PlayerMoveEvent event)
     {
+        if (event instanceof PlayerTeleportEvent) return;
         Player player = event.getPlayer();
         if (!allowPlayer(player)) return;
         Location loc = player.getLocation();
@@ -93,15 +97,11 @@ class BukkitSkillTravel extends BukkitSkill implements Listener
     @EventHandler
     void onPlayerTeleport(PlayerTeleportEvent event)
     {
-        switch (event.getCause()) {
-        case COMMAND:
-        case END_PORTAL:
-        case NETHER_PORTAL:
-        case PLUGIN:
-        case SPECTATE:
-        case UNKNOWN:
-            getData(event.getPlayer()).reset(event.getPlayer());
-            break;
+        Player player = event.getPlayer();
+        if (!event.getFrom().getWorld().equals(event.getTo().getWorld())) {
+            getData(player).reset(player);
+        } else if (event.getFrom().distanceSquared(event.getTo()) > MAX_TELEPORT_DISTANCE * MAX_TELEPORT_DISTANCE) {
+            getData(player).reset(player);
         }
     }
 
