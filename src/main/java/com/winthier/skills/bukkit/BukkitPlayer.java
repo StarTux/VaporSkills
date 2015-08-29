@@ -182,7 +182,7 @@ class BukkitPlayerSkill
 
     void checkLastReward(long now)
     {
-        if (now - lastReward > 1000 * 10) {
+        if (now - lastReward > 1000 * 20) {
             reset();
         }
     }
