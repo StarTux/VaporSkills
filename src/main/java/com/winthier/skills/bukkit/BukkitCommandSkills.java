@@ -103,7 +103,7 @@ class BukkitCommandSkills implements CommandExecutor
                                              getSkills().getScore().pointsForNextLevel(skillPoints))));
         BukkitUtil.raw(player,
                        BukkitUtil.format(" &3Sidebar: "),
-                       BukkitUtil.button("&3[&fFocus&3]", "/sk sidebar "+skill.getKey(), "&7Focus this "+skill.getTitle()+" in the sidebar"), " ",
+                       BukkitUtil.button("&3[&fFocus&3]", "/sk sidebar "+skill.getKey(), "&7Focus "+skill.getTitle()+" in the sidebar"), " ",
                        BukkitUtil.button("&3[&fReset&3]", "/sk sidebar reset", "&7Reset the sidebar"), " ",
                        BukkitUtil.button("&3[&fOn&3]", "/sk sidebar on", "&7Turn sidebar on"), " ", 
                        BukkitUtil.button("&3[&fOff&3]", "/sk sidebar off", "&7Turn sidebar off"));
