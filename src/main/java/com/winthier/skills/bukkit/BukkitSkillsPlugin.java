@@ -23,9 +23,7 @@ public class BukkitSkillsPlugin extends JavaPlugin implements Listener
     final BukkitCommandAdmin adminCommand = new BukkitCommandAdmin();
     final BukkitCommandSkills skillsCommand = new BukkitCommandSkills();
     final BukkitCommandHighscore highscoreCommand = new BukkitCommandHighscore();
-    YamlConfiguration descriptions = null;
     static final String REWARDS_TXT = "rewards.txt";
-    static final String DESCRIPTIONS_YML = "descriptions.yml";
 
     public BukkitSkillsPlugin()
     {
@@ -35,6 +33,10 @@ public class BukkitSkillsPlugin extends JavaPlugin implements Listener
     @Override
     public void onEnable()
     {
+        // Files
+        saveDefaultConfig();
+        reloadConfig();
+        saveResource(REWARDS_TXT, false);
         // Economy
 	if (!setupEconomy()) {
 	    getLogger().warning("Economy setup failed. Disabling skills.");
@@ -81,9 +83,6 @@ public class BukkitSkillsPlugin extends JavaPlugin implements Listener
                 updateAllPlayers();
             }
         }.runTaskTimer(this, 20, 20);
-        // Files
-        saveResource(REWARDS_TXT, false);
-        saveResource(DESCRIPTIONS_YML, false);
         //
         skills.buildNameMap();
     }
@@ -115,8 +114,8 @@ public class BukkitSkillsPlugin extends JavaPlugin implements Listener
 
     void reloadAll()
     {
+        reloadConfig();
         SQLDB.clearAllCaches();
-        descriptions = null;
         skills.buildNameMap();
     }
 
@@ -150,13 +149,5 @@ public class BukkitSkillsPlugin extends JavaPlugin implements Listener
     public void onPlayerQuit(PlayerQuitEvent event)
     {
         skills.players.remove(event.getPlayer().getUniqueId());
-    }
-
-    String getDescription(BukkitSkill skill, String key, String dfl)
-    {
-        if (descriptions == null) {
-            descriptions = YamlConfiguration.loadConfiguration(new File(getDataFolder(), DESCRIPTIONS_YML));
-        }
-        return descriptions.getString(skill.getKey() + "." + key, dfl);
     }
 }

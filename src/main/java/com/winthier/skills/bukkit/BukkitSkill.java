@@ -14,7 +14,6 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -26,8 +25,6 @@ import org.bukkit.potion.PotionEffect;
  */
 abstract class BukkitSkill implements Skill
 {
-    private YamlConfiguration config = null;
-    
     BukkitSkillsPlugin getPlugin()
     {
 	return BukkitSkillsPlugin.instance;
@@ -41,31 +38,31 @@ abstract class BukkitSkill implements Skill
     @Override
     public final String getTitle()
     {
-        return getPlugin().getDescription(this, "Title", getKey());
+        return getConfig().getString("Title", getKey());
     }
     
     @Override
     public final String getVerb()
     {
-        return getPlugin().getDescription(this, "Verb", getKey());
+        return getConfig().getString("Verb", getKey());
     }
     
     @Override
     public final String getActivityName()
     {
-        return getPlugin().getDescription(this, "Activity", getKey());
+        return getConfig().getString("Activity", getKey());
     }
     
     @Override
     public final String getPersonName()
     {
-        return getPlugin().getDescription(this, "Person", getKey());
+        return getConfig().getString("Person", getKey());
     }
     
     @Override
     public final String getDescription()
     {
-        return getPlugin().getDescription(this, "Description", "This is a default skill description. Slap StarTux around so he will finally implement proper skill descriptions and not this dribble.");
+        return getConfig().getString("Description", "This is a default skill description. Slap StarTux around so he will finally implement proper skill descriptions and not this dribble.");
     }
 
     abstract BukkitSkillType getSkillType();
@@ -200,20 +197,9 @@ abstract class BukkitSkill implements Skill
 
     ConfigurationSection getConfig()
     {
-        if (config == null) {
-            config = YamlConfiguration.loadConfiguration(getConfigFile());
-        }
-        return config;
-    }
-
-    void saveConfig()
-    {
-        if (config == null) return;
-        try {
-            config.save(getConfigFile());
-        } catch (IOException ioe) {
-            ioe.printStackTrace();
-        }
+        ConfigurationSection result = getPlugin().getConfig().getConfigurationSection(getKey());
+        if (result == null) result = getPlugin().getConfig().createSection(getKey());
+        return result;
     }
 
     String getPlayerSettingString(UUID uuid, String key, String dfl)
