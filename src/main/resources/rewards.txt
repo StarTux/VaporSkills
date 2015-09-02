@@ -45,14 +45,14 @@ Dig Block		Clay 0 -		1 1 1
 # 
 #===============================================================================
 
-Smelt Item		Iron_Ingot 0 -		2 2 1
-Smelt Item		Gold_Ingot 0 -		3 3 1
-Smelt Item		Stone 0 -		.1 .1 1
-Smelt Item		Nether_Brick_Item 0 -	1 1 1
-Smelt Item		Glass 0 -		1 1 1
-Smelt Item		Clay_Brick 0 -		1 1 1
-Smelt Item		Smooth_Brick 2 -	1 1 1		# Cracked Stone Brick
-Smelt Item		Ink_Sack 2 -		1 1 1		# Green Dye
+Smelt Item		Iron_Ingot 0 -		.7 .7 0		# Vanilla: 0.7 exp
+Smelt Item		Gold_Ingot 0 -		1 1 0		# Vanilla: 1.0 exp
+Smelt Item		Stone 0 -		.1 .1 0		# Vanilla: 0.1 exp
+Smelt Item		Nether_Brick_Item 0 -	.1 .1 0		# Vanilla: 0.1 exp
+Smelt Item		Glass 0 -		.1 .1 0		# Vanilla: 0.1 exp
+Smelt Item		Clay_Brick 0 -		.3 .3 0		# Vanilla: 0.3 exp
+Smelt Item		Smooth_Brick 2 -	.1 .1 0		# Vanille: 0.1 exp // Cracked Stone Brick
+Smelt Item		Ink_Sack 2 -		.2 .2 0		# Vanilla: 0.2 exp // Green Dye
 
 #===============================================================================
 # Brawling
@@ -79,8 +79,8 @@ Brawl Entity		- - SmallMagmaCube	2 2 0		# Vanilla:  2 exp
 Brawl Entity		- - TinyMagmaCube	1 1 0		# Vanilla:  1 exp
 Brawl Entity		- - Guardian		10 10 0		# Vanilla: 10 exp
 Brawl Entity		- - ElderGuardian	10 10 0		# Vanilla: 10 exp
+Brawl Entity		- - EnderDragon		100 100 0	# Vanilla: 12k exp 
 Brawl Entity		- - Wither		50 50 0		# Vanilla: 50 exp 
-Brawl Entity		- - EnderDragon		20 20 0		# Vanilla: 12k exp 
 
 #===============================================================================
 # Hunting
@@ -107,36 +107,36 @@ Hunt Entity		- - SmallMagmaCube	2 2 0		# Vanilla:  2 exp
 Hunt Entity		- - TinyMagmaCube	1 1 0		# Vanilla:  1 exp
 Hunt Entity		- - Guardian		10 10 0		# Vanilla: 10 exp
 Hunt Entity		- - ElderGuardian	10 10 0		# Vanilla: 10 exp
-Hunt Entity		- - EnderDragon		20 20 0		# Vanilla: 12k exp 
+Hunt Entity		- - EnderDragon		100 100 0	# Vanilla: 12k exp 
 Hunt Entity		- - Wither		50 50 0		# Vanilla: 50 exp
 
 #===============================================================================
 # Breeding
 #===============================================================================
 
-Breed Entity		- - Chicken		1 1 0
-Breed Entity		- - Cow			5 5 0
-Breed Entity		- - Pig			5 5 0
-Breed Entity		- - Sheep		5 5 0
-Breed Entity		- - Rabbit		5 5 0
-Breed Entity		- - MushroomCow		10 10 0
-Breed Entity		- - Wolf		10 10 0
-Breed Entity		- - Ocelot		10 10 0
-Breed Entity		- - Horse		20 20 0
+Breed Entity		- - Chicken		4 4 0		# Vanilla: 1-7 exp (4 avg)
+Breed Entity		- - Cow			4 4 0		# Vanilla: 1-7 exp (4 avg)
+Breed Entity		- - Pig			4 4 0		# Vanilla: 1-7 exp (4 avg)
+Breed Entity		- - Sheep		4 4 0		# Vanilla: 1-7 exp (4 avg)
+Breed Entity		- - Rabbit		4 4 0		# Vanilla: 1-4 exp (2.5 avg)
+Breed Entity		- - MushroomCow		4 4 0		# Vanilla: 1-7 exp (4 avg)
+Breed Entity		- - Wolf		4 4 0		# Vanilla: 1-7 exp (4 avg)
+Breed Entity		- - Ocelot		4 4 0		# Vanilla: 1-7 exp (4 avg)
+Breed Entity		- - Horse		4 4 0		# Vanilla: 1-7 exp (4 avg)
 
 #===============================================================================
 # Butchering
 #===============================================================================
 
-Butcher Entity		- - Chicken		1 1 1
-Butcher Entity		- - Cow			2 2 2
-Butcher Entity		- - Sheep		2 2 2
-Butcher Entity		- - Pig			2 2 2
-Butcher Entity		- - Rabbit		2 2 2
-Butcher Entity		- - MushroomCow		5 5 5
-Butcher Entity		- - Wolf		10 10 10
-Butcher Entity		- - Ocelot		10 10 10
-Butcher Entity		- - Horse		10 10 10
+Butcher Entity		- - Chicken		2 2 0		# Vanilla: 1-3 (2 avg)
+Butcher Entity		- - Cow			2 2 0		# Vanilla: 1-3 (2 avg)
+Butcher Entity		- - Sheep		2 2 0		# Vanilla: 1-3 (2 avg)
+Butcher Entity		- - Pig			2 2 0		# Vanilla: 1-3 (2 avg)
+Butcher Entity		- - Rabbit		2 2 0		# Vanilla: 1-3 (2 avg)
+Butcher Entity		- - MushroomCow		2 2 0		# Vanilla: 1-3 (2 avg)
+Butcher Entity		- - Wolf		2 2 0		# Vanilla: 1-3 (2 avg)
+Butcher Entity		- - Ocelot		2 2 0		# Vanilla: 1-3 (2 avg)
+Butcher Entity		- - Horse		2 2 0		# Vanilla: 1-3 (2 avg)
 
 #===============================================================================
 # Brewing
@@ -154,7 +154,7 @@ Brew Item		Sugar 0 -		1 1 1
 
 #===============================================================================
 # Building
-# idek
+# Reward in intervals
 #===============================================================================
 
 Build Name		- - progress		1 1 1
