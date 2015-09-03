@@ -113,6 +113,11 @@ public class Score
         return SQLReward.find(skill.getKey(), SQLReward.Target.NAME, null, null, name);
     }
 
+    public Reward rewardForName(Skill skill, String name, int data)
+    {
+        return SQLReward.find(skill.getKey(), SQLReward.Target.NAME, null, data, name);
+    }
+    
     public Highscore getHighscore(Skill skill)
     {
         Highscore result = highscores.get(skill.getKey());

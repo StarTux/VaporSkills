@@ -131,6 +131,11 @@ abstract class BukkitSkill implements Skill
         return getSkills().getScore().rewardForName(this, name);
     }
 
+    Reward rewardForName(String name, int data)
+    {
+        return getSkills().getScore().rewardForName(this, name, data);
+    }
+    
     private void giveSkillPoints(Player player, double skillPoints)
     {
         if (skillPoints < 0.01) return;
