@@ -153,6 +153,13 @@ Brew Item		Ghast_Tear 0 -		1 1 1
 Brew Item		Sugar 0 -		1 1 1
 
 #===============================================================================
+# Traveling
+# Reward in intervals
+#===============================================================================
+
+Travel Name		- - progress		1 1 1
+
+#===============================================================================
 # Building
 # Reward in intervals
 #===============================================================================
@@ -160,41 +167,51 @@ Brew Item		Sugar 0 -		1 1 1
 Build Name		- - progress		1 1 1
 
 #===============================================================================
+# Fishing
+#===============================================================================
+
+Fish Item		Raw_Fish 0 -		3.5 3.5 0	# Vanilla: 1-6 exp (3.5 avg)
+Fish Item		Raw_Fish 1 -		3.5 3.5 0	# Vanilla: 1-6 exp (3.5 avg) // Salmon
+Fish Item		Raw_Fish 2 -		5 5 0		# Vanilla: Unknown exp       // Clownfish
+Fish Item		Raw_Fish 3 -		10 10 0		# Vanilla: Unknown exp       // Pufferfish
+
+#===============================================================================
 # Cooking
 #===============================================================================
 
-Cook Item		Cooked_Beef 0 -		1 1 1
-Cook Item		Cooked_Chicken 0 -	1 1 1
-Cook Item		Cooked_Fish 0 -		1 1 1
-Cook Item		Cooked_Mutton 0 -	1 1 1
-Cook Item		Cooked_Rabbit 0 -	1 1 1
-Cook Item		Grilled_Pork 0 -	1 1 1
-Cook Item		Baked_Potato 0 -	1 1 1
+Cook Item		Cooked_Beef 0 -		.35 .35 0	# Vanilla: 0.35 exp
+Cook Item		Cooked_Chicken 0 -	.35 .35 0	# Vanilla: 0.35 exp
+Cook Item		Cooked_Fish 0 -		.35 .35 0	# Vanilla: 0.35 exp
+Cook Item		Cooked_Fish 1 -		.35 .35 0	# Vanilla: 0.35 exp // Salmon
+Cook Item		Cooked_Mutton 0 -	.35 .35 0	# Vanilla: 0.35 exp
+Cook Item		Cooked_Rabbit 0 -	.35 .35 0	# Vanilla: 0.35 exp
+Cook Item		Grilled_Pork 0 -	.35 .35 0	# Vanilla: 0.35 exp
+Cook Item		Baked_Potato 0 -	.35 .35 0	# Vanilla: 0.35 exp
 
 #===============================================================================
 # Eating
 #===============================================================================
 
-Eat Item		Raw_Beef 0 -		1 1 1
-Eat Item		Pork 0 -		1 1 1
-Eat Item		Raw_Chicken 0 -		1 1 1
-Eat Item		Raw_Fish 0 -		1 1 1
-Eat Item		Cooked_Beef 0 -		1 1 1
-Eat Item		Grilled_Pork 0 -	1 1 1
-Eat Item		Cooked_Chicken 0 -	1 1 1
-Eat Item		Cooked_Fish 0 -		1 1 1
-Eat Item		Cooked_Mutton 0 -	1 1 1
-Eat Item		Cooked_Rabbit 0 -	1 1 1
-Eat Item		Pumpkin_Pie 0 -		1 1 1
-Eat Item		Bread 0 -		1 1 1
-Eat Item		Apple 0 -		1 1 1
-Eat Item		Carrot 0 -		1 1 1
-Eat Item		Golden_Carrot 0 -	1 1 1
-Eat Item		Melon 0 -		1 1 1
-Eat Item		Potato_Item 0 -		1 1 1
-Eat Item		Baked_Potato 0 -	1 1 1
-Eat Item		Golden_Apple 0 -	5 5 1
-Eat Item		Golden_Apple 1 -	20 20 1
+Eat Item		Raw_Beef 0 -		.1 .1 .1
+Eat Item		Pork 0 -		.1 .1 .1
+Eat Item		Raw_Chicken 0 -		.1 .1 .1
+Eat Item		Raw_Fish 0 -		.1 .1 .1
+Eat Item		Cooked_Beef 0 -		.1 .1 .1
+Eat Item		Grilled_Pork 0 -	.1 .1 .1
+Eat Item		Cooked_Chicken 0 -	.1 .1 .1
+Eat Item		Cooked_Fish 0 -		.1 .1 .1
+Eat Item		Cooked_Mutton 0 -	.1 .1 .1
+Eat Item		Cooked_Rabbit 0 -	.1 .1 .1
+Eat Item		Pumpkin_Pie 0 -		.1 .1 .1
+Eat Item		Bread 0 -		.1 .1 .1
+Eat Item		Apple 0 -		.1 .1 .1
+Eat Item		Carrot 0 -		.1 .1 .1
+Eat Item		Golden_Carrot 0 -	.1 .1 .1
+Eat Item		Melon 0 -		.1 .1 .1
+Eat Item		Potato_Item 0 -		.1 .1 .1
+Eat Item		Baked_Potato 0 -	.1 .1 .1
+Eat Item		Golden_Apple 0 -	.1 .1 .1
+Eat Item		Golden_Apple 1 -	.1 .1 .1
 
 #===============================================================================
 # Enchanting
@@ -233,16 +250,17 @@ Enchant Enchantment	Dig_Speed 4 -		5 5 0
 Enchant Enchantment	Dig_Speed 5 -		10 10 0
 
 #===============================================================================
-
-Fish Item		Raw_Fish 0 -		1 1 0
-Fish Item		Raw_Fish 1 -		2 2 0		# Salmon
-Fish Item		Raw_Fish 2 -		5 5 0		# Clownfish
-Fish Item		Raw_Fish 3 -		10 10 0		# Pufferfish
+# Woodcutting
+#===============================================================================
 
 Woodcut Block		Log - -			1 .5 .5
 Woodcut Block		Log_2 - -		1 .5 .5
 Woodcut Block		Leaves - -		.1 .01 .1
 Woodcut Block		Leaves_2 - -		.1 .01 .1
+
+#===============================================================================
+# Woodcutting
+#===============================================================================
 
 Harvest Block		Crops 7 -		1 1 1
 Harvest Block		Potato 7 -		1 1 1
@@ -253,8 +271,15 @@ Harvest Block		Melon_Block 0 -		1 1 1
 Harvest Block		Red_Mushroom 0 -	1 1 1
 Harvest Block		Brown_Mushroom 0 -	1 1 1
 
+#===============================================================================
+# Quaffing
+#===============================================================================
+
 Quaff Potion_Effect	Heal 1 -		1 1 1
 
-Sacrifice Item		Diamond 0 -		10 10 10
+#===============================================================================
+# Sacrifice
+# Stabilize market prices
+#===============================================================================
 
-Travel Name		- - progress		1 1 1
+Sacrifice Item		Diamond 0 -		10 10 50
