@@ -15,12 +15,9 @@ public enum BukkitSkillType
     HARVEST,   //
     HUNT,      //
     MINE,      //
-    QUAFF,     //
     SACRIFICE, //
     SMELT,     //
     TRAVEL,    //
     WOODCUT,   //
-//    EXPLORE,
-//    GARDEN,    // plant things(?) grow things w/ bonemeal(?)
     ;
 }
