@@ -84,6 +84,15 @@ abstract class BukkitSkill implements Skill
         return getSkills().getScore().rewardForBlock(this, blockType, blockData);
     }
 
+    Reward rewardForBlockNamed(Block block, String name)
+    {
+        @SuppressWarnings("deprecation")
+	int blockType = block.getType().getId();
+        @SuppressWarnings("deprecation")
+	int blockData = (int)block.getData();
+        return getSkills().getScore().rewardForBlockNamed(this, blockType, blockData, name);
+    }
+    
     Reward rewardForItem(ItemStack item)
     {
         @SuppressWarnings("deprecation")

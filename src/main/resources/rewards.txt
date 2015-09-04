@@ -235,14 +235,25 @@ Woodcut Block		Leaves_2 - -		.1 .1 .1
 # Woodcutting
 #===============================================================================
 
-Harvest Block		Crops 7 -		1 1 1
-Harvest Block		Potato 7 -		1 1 1
-Harvest Block		Carrot 7 -		1 1 1
-Harvest Block		Cactus - -		1 1 1
-Harvest Block		Pumpkin 0 -		1 1 1
-Harvest Block		Melon_Block 0 -		1 1 1
-Harvest Block		Red_Mushroom 0 -	1 1 1
-Harvest Block		Brown_Mushroom 0 -	1 1 1
+# Automatic harvesting with water
+Harvest Block		Crops 7 water		.1 .1 .1
+Harvest Block		Potato 7 water		.1 .1 .1
+Harvest Block		Carrot 7 water		.1 .1 .1
+Harvest Block		Red_Mushroom 0 water	.1 .1 .1
+Harvest Block		Brown_Mushroom 0 water	.1 .1 .1
+# Manual harvesting
+Harvest Block		Crops 7 -		.3 .3 .3
+Harvest Block		Potato 7 -		.3 .3 .3
+Harvest Block		Carrot 7 -		.3 .3 .3
+Harvest Block		Red_Mushroom 0 -	.3 .3 .3
+Harvest Block		Brown_Mushroom 0 -	.3 .3 .3
+Harvest Block		Cactus - -		.3 .3 .3
+Harvest Block		Sugar_Cane_Block - -	.3 .3 .3
+Harvest Block		Pumpkin - -		.3 .3 .3
+Harvest Block		Melon_Block - -		.3 .3 .3
+Harvest Block		Huge_Mushroom_1 - -     .3 .3 .3
+Harvest Block		Huge_Mushroom_2 - -     .3 .3 .3
+Harvest Block		Vine - -		.5 .5 .5
 
 #===============================================================================
 # Quaffing
