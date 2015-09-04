@@ -1,108 +1,72 @@
 brawl:
-  Title: Brawling
-  Verb: brawl
-  Person: brawler
-  Activity: brawling
+  DisplayName: Brawling
+  Shorthand: Brawl
   Description: Fight hostile monsters in close combat, ideally with your sword.
 breed:
-  Title: Breeding
-  Verb: breed
-  Person: breeder
-  Activity: breeding
+  DisplayName: Breeding
+  Shorthand: Breed
   Description: Feed your farm animals to make them breed and increase their numbers.
 brew:
-  Title: Brewing
-  Verb: brew
-  Person: brewer
-  Activity: brewing
+  DisplayName: Brewing
+  Shorthand: Brew
   Description: Brew magic potions in the brewing stand to achieve epic effects or wreak havoc on your enemies.
 build:
-  Title: Building
-  Verb: build
-  Person: builder
-  Activity: building
+  DisplayName: Building
+  Shorthand: Build
   Description: Place blocks in the world to make your own epic creations.
 butcher:
-  Title: Butchery
-  Verb: butcher
-  Person: butcher
-  Activity: butchering
+  DisplayName: Butchery
+  Shorthand: Butcher
   Description: Butcher your farm animals to harvest their precious drops.
 cook:
-  Title: Cooking
-  Verb: cook
-  Person: chef
-  Activity: cooking
+  DisplayName: Cooking
+  Shorthand: Cook
   Description: Prepare your meals in the oven to increase their effectiveness and tase.
 dig:
-  Title: Digging
-  Verb: dig
-  Person: digger
-  Activity: digging
+  DisplayName: Digging
+  Shorthand: Dig
   Description: Use your shovel to dig in the ground and find epic treasure hidden beneath.
 eat:
-  Title: Eating
-  Verb: eat
-  Person: eater
-  Activity: eating
+  DisplayName: Eating
+  Shorthand: Eat
   Description: Eat healthy and tasty food to maintain your stamina, heal up and refresh.
 enchant:
-  Title: Enchanting
-  Verb: enchant
-  Person: enchanter
-  Activity: enchanting
+  DisplayName: Enchanting
+  Shorthand: Enchant
   Description: Improve your weapons, tools and armor on the enchanting table to make them stronger, more effective and deadlier.
 fish:
-  Title: Fishing
-  Verb: fish
-  Person: fisher
-  Activity: fishing
+  DisplayName: Fishing
+  Shorthand: Fish
   Description: Cast your fishing rod in bodies of water to catch different types of fish for food or brewing.
 harvest:
-  Title: Harvesting
-  Verb: harvest
-  Person: harvester
-  Activity: harvesting
+  DisplayName: Harvesting
+  Shorthand: Harvest
   Description: Reap the rewards of your hard gardening work by harvesting cereal, fruit and vegetables.
 hunt:
-  Title: Hunting
-  Verb: hunt
-  Person: hunter
-  Activity: hunting
+  DisplayName: Hunting
+  Shorthand: Hunt
   Description: Snipe dangerous creatures from afar with your bow to stay out of harms way.
 mine:
-  Title: Mining
-  Verb: mine
-  Person: miner
-  Activity: mining
+  DisplayName: Mining
+  Shorthand: Mine
   Description: Grab your pickaxe and descend into the deep mines of this world to find precious ores and rare gems.
 quaff:
-  Title: Quaffing
-  Verb: quaff
-  Person: quaffer
-  Activity: quaffing
+  DisplayName: Quaffing
+  Shorthand: Quaff
   Description: Drink powerful potions to make you stronger, faster or deadlier.
 sacrifice:
-  Title: Sacrifice
-  Verb: sacrifice
-  Person: sacrificer
-  Activity: sacrificing
-  Description: Sacrifice your precious offerings to the almight Creeper Overlord in exchange for his blessing.
+  DisplayName: Sacrifice
+  Shorthand: Sacrifice
+  Description: Sacrifice your precious offerings to the almighty Creeper Overlord in exchange for his blessing.
 smelt:
-  Title: Smelting
-  Verb: smelt
-  Person: smelter
-  Activity: smelting
+  DisplayName: Smelting
+  Shorthand: Smelt
   Description: Refine your ores and raw materials in a furnace to make them even more precious and useful.
 travel:
-  Title: Traveling
-  Verb: travel
-  Person: traveler
-  Activity: traveling
+  DisplayName: Traveling
+  Shorthand: Travel
   Description: Leave your home and travel out in the world on foot, boat, or horseback to explore the wide world of Winthier.
 woodcut:
-  Title: Woodcutting
-  Verb: woodcut
-  Person: woodcutter
-  Activity: woodcutting
+  DisplayName: Woodcutting
+  Shorthand: Woodcut
   Description: Grab your axe and cut down trees to collect lumber for your building projects.

@@ -36,27 +36,15 @@ abstract class BukkitSkill implements Skill
     }
 
     @Override
-    public final String getTitle()
+    public final String getDisplayName()
     {
-        return getConfig().getString("Title", getKey());
+        return getConfig().getString("DisplayName", getKey());
     }
     
     @Override
-    public final String getVerb()
+    public final String getShorthand()
     {
-        return getConfig().getString("Verb", getKey());
-    }
-    
-    @Override
-    public final String getActivityName()
-    {
-        return getConfig().getString("Activity", getKey());
-    }
-    
-    @Override
-    public final String getPersonName()
-    {
-        return getConfig().getString("Person", getKey());
+        return getConfig().getString("Shorthand", getKey());
     }
     
     @Override

@@ -66,10 +66,8 @@ public class BukkitSkills extends Skills
         // Put all the names in the map
         for (BukkitSkill skill : skillMap.values()) {
             nameMap.put(skill.getKey().toLowerCase(), skill);
-            nameMap.put(skill.getTitle().toLowerCase(), skill);
-            nameMap.put(skill.getVerb().toLowerCase(), skill);
-            nameMap.put(skill.getActivityName().toLowerCase(), skill);
-            nameMap.put(skill.getPersonName().toLowerCase(), skill);
+            nameMap.put(skill.getDisplayName().toLowerCase(), skill);
+            nameMap.put(skill.getShorthand().toLowerCase(), skill);
         }
         // Bake the map
         for (Map.Entry<String, BukkitSkill> entry : new ArrayList<>(nameMap.entrySet())) {
@@ -97,15 +95,15 @@ public class BukkitSkills extends Skills
         Player player = Bukkit.getServer().getPlayer(uuid);
         if (player == null) return;
         BukkitUtil.title(player,
-                         "{color:aqua,text:'" + skill.getTitle() + "'}",
+                         "{color:aqua,text:'" + skill.getDisplayName() + "'}",
                          "{color:aqua,text:'Level " + level + "'}");
         if (level >= 10) {
             BukkitUtil.announceRaw(
                 BukkitUtil.format("&f%s reached level %d in ", player.getName(), level),
                 BukkitUtil.button(
-                    "&a[" + skill.getTitle() + "]",
-                    "/sk " + skill.getVerb(),
-                    "&a" + skill.getTitle(),
+                    "&a[" + skill.getDisplayName() + "]",
+                    "/sk " + skill.getShorthand(),
+                    "&a" + skill.getDisplayName(),
                     // TODO: Put something more interesting here?
                     "&f&oSkill",
                     "&r" + WordUtils.wrap(skill.getDescription(), 32)));

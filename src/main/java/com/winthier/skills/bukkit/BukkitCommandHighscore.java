@@ -63,9 +63,9 @@ class BukkitCommandHighscore implements CommandExecutor
             }
             message.add(" ");
             message.add(BukkitUtil.button(
-                            "&b" + Strings.camelCase(skill.getVerb()) + "&3(&f#"+rank+"&3)",
+                            "&b" + skill.getShorthand() + "&3(&f#"+rank+"&3)",
                             "/hi " + skill.getKey(),
-                            "&3&l" + skill.getTitle() + " &f#" + rank,
+                            "&3&l" + skill.getDisplayName() + " &f#" + rank,
                             sb.toString(),
                             "&7Click for more details"));
         }
@@ -83,7 +83,7 @@ class BukkitCommandHighscore implements CommandExecutor
         }
         final UUID uuid = player.getUniqueId();
         BukkitUtil.msg(player, "");
-        BukkitUtil.msg(player, "&b&l%s", skill.getTitle());
+        BukkitUtil.msg(player, "&b&l%s", skill.getDisplayName());
         for (Highscore.Row row : getSkills().getScore().getHighscore(skill).getRows()) {
             BukkitUtil.msg(player, " &3#%d &f%02d &3%s", row.getRank(), row.getSkillLevel(), PlayerCache.nameForUuid(row.getPlayer()));
         }

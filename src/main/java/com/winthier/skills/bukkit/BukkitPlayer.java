@@ -129,7 +129,7 @@ class BukkitPlayer
             int pointsInLevel = getSkills().getScore().pointsInLevel(skillPoints);
             int pointsToLevelUp = getSkills().getScore().pointsToLevelUpTo(skillLevel + 1);
             int pointsForNextLevel = getSkills().getScore().pointsForNextLevel(skillPoints);
-            sidebarObjective.setDisplayName(BukkitUtil.format("&3&l%s &blvl &f%d", skill.getTitle(), skillLevel));
+            sidebarObjective.setDisplayName(BukkitUtil.format("&3&l%s &blvl &f%d", skill.getDisplayName(), skillLevel));
             String progressBar = BukkitUtil.progressBar(pointsInLevel, pointsToLevelUp);
             if (!progressBar.equals(lastProgressBar)) {
                 sidebarObjective.getScore(progressBar).setScore(0);

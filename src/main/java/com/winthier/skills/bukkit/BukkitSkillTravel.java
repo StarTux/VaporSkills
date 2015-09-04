@@ -60,7 +60,7 @@ class BukkitSkillTravel extends BukkitSkill implements Listener
             anchor = player.getLocation();
             distance = 0.0;
             if (getSkills().hasDebugMode(player)) {
-                BukkitUtil.msg(player, "&e%s Reset %d %d %d", getTitle(), anchor.getBlockX(), anchor.getBlockY(), anchor.getBlockZ());
+                BukkitUtil.msg(player, "&e%s Reset %d %d %d", getDisplayName(), anchor.getBlockX(), anchor.getBlockY(), anchor.getBlockZ());
             }
         }
     }

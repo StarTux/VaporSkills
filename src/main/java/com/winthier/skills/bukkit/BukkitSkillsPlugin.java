@@ -34,9 +34,8 @@ public class BukkitSkillsPlugin extends JavaPlugin implements Listener
     public void onEnable()
     {
         // Files
-        saveDefaultConfig();
+        writeDefaultFiles();
         reloadConfig();
-        saveResource(REWARDS_TXT, false);
         // Economy
 	if (!setupEconomy()) {
 	    getLogger().warning("Economy setup failed. Disabling skills.");
@@ -54,7 +53,7 @@ public class BukkitSkillsPlugin extends JavaPlugin implements Listener
             if (skill instanceof Listener) {
                 getServer().getPluginManager().registerEvents((Listener)skill, this);
             } else {
-                getLogger().warning("Not an Event Listener: " + skill.getTitle());
+                getLogger().warning("Not an Event Listener: " + skill.getDisplayName());
             }
         }
         // Double check skills
@@ -97,6 +96,12 @@ public class BukkitSkillsPlugin extends JavaPlugin implements Listener
         SQLDB.clearAllCaches();
     }
 
+    void writeDefaultFiles()
+    {
+        saveDefaultConfig();
+        saveResource(REWARDS_TXT, false);
+    }
+
     void saveAll()
     {
         try {
@@ -114,6 +119,7 @@ public class BukkitSkillsPlugin extends JavaPlugin implements Listener
 
     void reloadAll()
     {
+        writeDefaultFiles();
         reloadConfig();
         SQLDB.clearAllCaches();
         skills.buildNameMap();

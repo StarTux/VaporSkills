@@ -71,7 +71,7 @@ class BukkitCommandAdmin implements CommandExecutor
         if (cmd.equals("list") && args.length == 2) {
             BukkitSkill skill = BukkitSkills.getInstance().skillByName(args[1]);
             if (skill == null) throw new IllegalArgumentException("Skill not found: " + args[1]);
-            sender.sendMessage("Rewards of " + skill.getTitle() + ":");
+            sender.sendMessage("Rewards of " + skill.getDisplayName() + ":");
             int count = 0;
             for (SQLReward sqlReward : SQLReward.findList(skill.getKey())) {
                 sender.sendMessage(BukkitReward.of(sqlReward).toString());

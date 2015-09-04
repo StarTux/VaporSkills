@@ -58,9 +58,9 @@ class BukkitCommandSkills implements CommandExecutor
             int pointsToLevelUp = getSkills().getScore().pointsToLevelUpTo(skillLevel + 1);
             message.add(" ");
             message.add(BukkitUtil.button(
-                            "&b" + Strings.camelCase(skill.getVerb()) + "&3(&f"+skillLevel+"&3)",
+                            "&b" + skill.getShorthand() + "&3(&f"+skillLevel+"&3)",
                             "/sk " + skill.getKey(),
-                            "&3&l" + skill.getTitle() + " " + BukkitUtil.progressBar(pointsInLevel, pointsToLevelUp),
+                            "&3&l" + skill.getDisplayName() + " " + BukkitUtil.progressBar(pointsInLevel, pointsToLevelUp),
                             "&3Skill Level: &b" + skillLevel,
                             "&3Skill Points: &f"+pointsInLevel+"&3/&f"+pointsToLevelUp,
                             "&r" + WordUtils.wrap(skill.getDescription(), 32),
@@ -89,7 +89,7 @@ class BukkitCommandSkills implements CommandExecutor
         int pointsToLevelUp = getSkills().getScore().pointsToLevelUpTo(skillLevel + 1);
         BukkitUtil.msg(player, "");
         BukkitUtil.msg(player, "&3&l%s &bLevel &f%d %s",
-                       skill.getTitle(),
+                       skill.getDisplayName(),
                        skillLevel,
                        BukkitUtil.progressBar(pointsInLevel, pointsToLevelUp));
         BukkitUtil.raw(player,
@@ -103,7 +103,7 @@ class BukkitCommandSkills implements CommandExecutor
                                              getSkills().getScore().pointsForNextLevel(skillPoints))));
         BukkitUtil.raw(player,
                        BukkitUtil.format(" &3Sidebar: "),
-                       BukkitUtil.button("&3[&fFocus&3]", "/sk sidebar "+skill.getKey(), "&7Focus "+skill.getTitle()+" in the sidebar"), " ",
+                       BukkitUtil.button("&3[&fFocus&3]", "/sk sidebar "+skill.getKey(), "&7Focus "+skill.getDisplayName()+" in the sidebar"), " ",
                        BukkitUtil.button("&3[&fReset&3]", "/sk sidebar reset", "&7Reset the sidebar"), " ",
                        BukkitUtil.button("&3[&fOn&3]", "/sk sidebar on", "&7Turn sidebar on"), " ", 
                        BukkitUtil.button("&3[&fOff&3]", "/sk sidebar off", "&7Turn sidebar off"));
@@ -128,7 +128,7 @@ class BukkitCommandSkills implements CommandExecutor
             if (skill == null) return;
             BukkitPlayer.of(player).setSidebarEnabled(player, true);
             BukkitPlayer.of(player).setForcedSkill(skill);
-            BukkitUtil.msg(player, "&bDisplaying %s", skill.getTitle());
+            BukkitUtil.msg(player, "&bDisplaying %s", skill.getDisplayName());
         }
     }
 }
