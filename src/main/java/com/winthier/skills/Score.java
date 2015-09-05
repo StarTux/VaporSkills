@@ -29,6 +29,16 @@ public class Score
 	row.setDirty();
     }
 
+    public void setSkillLevel(UUID player, Skill skill, int skillLevel)
+    {
+	if (skillLevel < 0) throw new IllegalArgumentException("Skill level cannot be less than 0");
+	SQLScore row = SQLScore.of(player, skill.getKey());
+	int skillPoints = pointsForLevel(skillLevel);
+	row.setSkillPoints((float)skillPoints);
+	row.setSkillLevel(skillLevel);
+	row.setDirty();
+    }
+
     public double getSkillPoints(UUID player, Skill skill)
     {
 	return SQLScore.of(player, skill.getKey()).getSkillPoints();

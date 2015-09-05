@@ -1,5 +1,6 @@
 package com.winthier.skills.bukkit;
 
+import com.winthier.playercache.PlayerCache;
 import com.winthier.skills.sql.SQLDB;
 import com.winthier.skills.sql.SQLReward;
 import java.io.BufferedReader;
@@ -9,6 +10,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -33,7 +35,9 @@ class BukkitCommandAdmin implements CommandExecutor
         final Player player = sender instanceof Player ? (Player)sender : null;
         try {
             if (cmd.equals("reward")) {
-                return onCommandRewards(sender, Arrays.copyOfRange(args, 1, args.length));
+                return onCommandReward(sender, Arrays.copyOfRange(args, 1, args.length));
+            } else if (cmd.equals("score")) {
+                return onCommandScore(sender, Arrays.copyOfRange(args, 1, args.length));
             } else if (cmd.equals("reload")) {
                 getPlugin().reloadAll();
                 sender.sendMessage("[Skills] Configuration reloaded");
@@ -57,6 +61,7 @@ class BukkitCommandAdmin implements CommandExecutor
                 sender.sendMessage("/skadmin save");
                 sender.sendMessage("/skadmin debug");
                 sender.sendMessage("/skadmin reward");
+                sender.sendMessage("/skadmin score");
             }
         } catch (RuntimeException re) {
             sender.sendMessage("Syntax error");
@@ -65,7 +70,7 @@ class BukkitCommandAdmin implements CommandExecutor
         return true;
     }
 
-    boolean onCommandRewards(CommandSender sender, String[] args)
+    boolean onCommandReward(CommandSender sender, String[] args)
     {
         String cmd = args.length == 0 ? "" : args[0].toLowerCase();
         if (cmd.equals("list") && args.length == 2) {
@@ -124,10 +129,97 @@ class BukkitCommandAdmin implements CommandExecutor
             }
         } else {
             sender.sendMessage("/skadmin reward list <skill>");
-            sender.sendMessage("/skadmin reward get <skill> <target> <type> <data> <name>");
             sender.sendMessage("/skadmin reward set <skill> <target> <type> <data> <name> <sp> <money> <exp>");
             sender.sendMessage("/skadmin reward import");
-            sender.sendMessage("/skadmin reward clear");
+        }
+        return true;
+    }
+
+    boolean onCommandScore(CommandSender sender, String[] args)
+    {
+        String cmd = args.length == 0 ? "" : args[0].toLowerCase();
+        if (cmd.equals("list") && args.length == 2) {
+            UUID uuid = PlayerCache.uuidForName(args[1]);
+            if (uuid == null) {
+                sender.sendMessage("Player not found: " + args[1]);
+                return true;
+            }
+            sender.sendMessage("Scores of " + PlayerCache.nameForUuid(uuid) + ":");
+            for (BukkitSkill skill : getSkills().getSkills()) {
+                int lvl = getSkills().getScore().getSkillLevel(uuid, skill);
+                int sp = (int)getSkills().getScore().getSkillPoints(uuid, skill);
+                int pil = getSkills().getScore().pointsInLevel(sp);
+                int ptlut = getSkills().getScore().pointsToLevelUpTo(lvl + 1);
+                sender.sendMessage(String.format(" lvl:%d %s sp:%d (%d/%d)", lvl, skill.getShorthand(), sp, pil, ptlut));
+                                                 
+            }
+        } else if (cmd.equals("reset") && (args.length == 2 || args.length == 3)) {
+            UUID uuid = PlayerCache.uuidForName(args[1]);
+            if (uuid == null) {
+                sender.sendMessage("Player not found: " + args[1]);
+                return true;
+            }
+            if (args.length >= 3) {
+                BukkitSkill skill = getSkills().skillByName(args[2]);
+                if (skill == null) {
+                    sender.sendMessage("Skill not found: " + args[2]);
+                    return true;
+                }
+                getSkills().getScore().setSkillLevel(uuid, skill, 0);
+                sender.sendMessage("Score reset: " + PlayerCache.nameForUuid(uuid) + ", " + skill.getDisplayName());
+            } else {
+                for (BukkitSkill skill : getSkills().getSkills()) {
+                    getSkills().getScore().setSkillLevel(uuid, skill, 0);
+                }
+                sender.sendMessage("Scores reset: " + PlayerCache.nameForUuid(uuid));
+            }
+        } else if (cmd.equals("setlevel") && args.length == 4) {
+            UUID uuid = PlayerCache.uuidForName(args[1]);
+            if (uuid == null) {
+                sender.sendMessage("Player not found: " + args[1]);
+                return true;
+            }
+            BukkitSkill skill = getSkills().skillByName(args[2]);
+            if (skill == null) {
+                sender.sendMessage("Skill not found: " + args[2]);
+                return true;
+            }
+            int skillLevel = 0;
+            try {
+                skillLevel = Integer.parseInt(args[3]);
+            } catch (NumberFormatException nfe) {}
+            if (skillLevel <= 0) {
+                sender.sendMessage("Invalid level: " + args[3]);
+                return true;
+            }
+            getSkills().getScore().setSkillLevel(uuid, skill, skillLevel);
+            sender.sendMessage("Skill level set: " + PlayerCache.nameForUuid(uuid) + ", " + skill.getDisplayName() + ": " + skillLevel);
+        } else if (cmd.equals("givepoints") && args.length == 4) {
+            UUID uuid = PlayerCache.uuidForName(args[1]);
+            if (uuid == null) {
+                sender.sendMessage("Player not found: " + args[1]);
+                return true;
+            }
+            BukkitSkill skill = getSkills().skillByName(args[2]);
+            if (skill == null) {
+                sender.sendMessage("Skill not found: " + args[2]);
+                return true;
+            }
+            int skillPoints = 0;
+            try {
+                skillPoints = Integer.parseInt(args[3]);
+            } catch (NumberFormatException nfe) {}
+            if (skillPoints <= 0) {
+                sender.sendMessage("Invalid points: " + args[3]);
+                return true;
+            }
+            getSkills().getScore().giveSkillPoints(uuid, skill, skillPoints);
+            sender.sendMessage("Points given: " + PlayerCache.nameForUuid(uuid) + ", " + skill.getDisplayName() + ": " + skillPoints);
+        } else {
+            sender.sendMessage("/skadmin score list <player>");
+            sender.sendMessage("/skadmin score reset <player> [skill]");
+            sender.sendMessage("/skadmin score setlevel <player> <skill> <level>");
+            sender.sendMessage("/skadmin score givepoints <player> <skill> <points>");
         }
         return true;
     }
