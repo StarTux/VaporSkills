@@ -56,10 +56,10 @@ class BukkitPlayer
         return getSkills().getBukkitPlayer(player);
     }
 
-    void onReward(BukkitSkill skill, Reward reward, double factor)
+    void onReward(BukkitSkill skill, double skillPoints, double money, double exp)
     {
         if (!sidebarEnabled) return;
-        skills.get(skill.getSkillType()).onReward(reward, factor);
+        skills.get(skill.getSkillType()).onReward(skillPoints, money, exp);
         // Make sure the scoreboard gets updated as soon as
         // possible for instant feedback.
         if (updateTask == null) {
@@ -187,14 +187,11 @@ class BukkitPlayerSkill
         }
     }
 
-    void onReward(Reward reward, double factor)
+    void onReward(double skillPoints, double money, double exp)
     {
         long now = System.currentTimeMillis();
         checkLastReward(now);
         lastReward = now;
-        double skillPoints = reward.getSkillPoints() * factor;
-        double money = reward.getMoney() * factor;
-        double exp = reward.getExp() * factor;
         if (skillPoints > 0.01) this.skillPoints += skillPoints;
         if (money > 0.01) this.money += money;
         if (exp > 0.01) this.exp += exp;

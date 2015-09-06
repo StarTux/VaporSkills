@@ -3,9 +3,12 @@ package com.winthier.skills.bukkit;
 import com.winthier.skills.Reward;
 import com.winthier.skills.Skill;
 import com.winthier.skills.sql.SQLPlayerSetting;
+import com.winthier.skills.util.Strings;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.UUID;
+import lombok.Getter;
 import lombok.Getter;
 import lombok.NonNull;
 import org.bukkit.Bukkit;
@@ -23,8 +26,16 @@ import org.bukkit.potion.PotionEffect;
 /**
  * Abstract class which implements Skill in a Bukkit-y manner.
  */
+@Getter
 abstract class BukkitSkill implements Skill
 {
+    double skillPointsFactor = 1.0;
+    double moneyFactor = 1.0;
+    double expFactor = 1.0;
+    String displayName;
+    String shorthand;
+    String description;
+
     BukkitSkillsPlugin getPlugin()
     {
 	return BukkitSkillsPlugin.instance;
@@ -35,25 +46,23 @@ abstract class BukkitSkill implements Skill
 	return BukkitSkills.instance;
     }
 
-    @Override
-    public final String getDisplayName()
+    /**
+     * Called before onEnable() and on every command triggered
+     * reload. Call super.configure() if you override this method!
+     */
+    void configure()
     {
-        return getConfig().getString("DisplayName", getKey());
-    }
-    
-    @Override
-    public final String getShorthand()
-    {
-        return getConfig().getString("Shorthand", getKey());
-    }
-    
-    @Override
-    public final String getDescription()
-    {
-        return getConfig().getString("Description", "This is a default skill description. Slap StarTux around so he will finally implement proper skill descriptions and not this dribble.");
+        displayName = getConfig().getString("DisplayName", getKey());
+        shorthand = getConfig().getString("Shorthand", getKey());
+        description = getConfig().getString("Description", "This is a default skill description. Slap StarTux around so he will finally implement proper skill descriptions and not this dribble.");
+        List<Double> factors = getConfig().getDoubleList("RewardFactors");
+        skillPointsFactor = factors.size() >= 1 ? factors.get(0) : 1.0;
+        moneyFactor       = factors.size() >= 2 ? factors.get(1) : 1.0;
+        expFactor         = factors.size() >= 3 ? factors.get(2) : 1.0;
     }
 
     abstract BukkitSkillType getSkillType();
+
     void onEnable() {};
     void onDisable() {};
     
@@ -153,14 +162,25 @@ abstract class BukkitSkill implements Skill
     void giveReward(@NonNull Player player, Reward reward, double factor)
     {
         if (reward == null) return;
+        double skillPoints = reward.getSkillPoints() * factor * getSkillPointsFactor() * getSkills().getSkillPointsFactor();
+        double money       = reward.getMoney()       * factor * getMoneyFactor()       * getSkills().getMoneyFactor();
+        double exp         = reward.getExp()         * factor * getExpFactor()         * getSkills().getExpFactor();
+        if (skillPoints < 0.01 && money < 0.01 && exp < 0.01) return;
         if (getSkills().hasDebugMode(player)) {
-            player.sendMessage(String.format("%s x%.2f", BukkitReward.of(reward), factor));
+            BukkitReward br = BukkitReward.of(reward);
+            BukkitUtil.msg(player, "[sk] &e%s &8%s &e%s %s&8:&e%s &8\"&e%s&8\" &6%.2f %.2f %.2f",
+                           getShorthand(),
+                           Strings.camelCase(br.key.getTarget().name()),
+                           Strings.camelCase(br.key.typeAsPrettyString()),
+                           br.key.typeAsString(),
+                           br.key.dataAsString(),
+                           br.key.nameAsString(),
+                           skillPoints, money, exp);
         }
-        if (factor < 0.01) return;
-        giveSkillPoints(player, reward.getSkillPoints() * factor);
-        giveMoney(player, reward.getMoney() * factor);
-        giveExp(player, reward.getExp() * factor);
-        BukkitPlayer.of(player).onReward(this, reward, factor);
+        giveSkillPoints(player, skillPoints);
+        giveMoney(player, money);
+        giveExp(player, exp);
+        BukkitPlayer.of(player).onReward(this, skillPoints, money, exp);
     }
 
     void giveReward(Player player, Reward reward)

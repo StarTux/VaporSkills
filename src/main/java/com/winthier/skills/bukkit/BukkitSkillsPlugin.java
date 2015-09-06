@@ -49,6 +49,7 @@ public class BukkitSkillsPlugin extends JavaPlugin implements Listener
 	    return;
 	}
         // Skills
+        skills.configure();
         for (BukkitSkill skill : skills.getSkills()) {
             if (skill instanceof Listener) {
                 getServer().getPluginManager().registerEvents((Listener)skill, this);
@@ -62,6 +63,7 @@ public class BukkitSkillsPlugin extends JavaPlugin implements Listener
             if (skill == null) {
                 getLogger().warning("Missing skill: " + type.name());
             } else {
+                skill.configure();
                 skill.onEnable();
             }
         }
@@ -122,6 +124,8 @@ public class BukkitSkillsPlugin extends JavaPlugin implements Listener
         writeDefaultFiles();
         reloadConfig();
         SQLDB.clearAllCaches();
+        skills.configure();
+        for (BukkitSkill skill : skills.getSkills()) skill.configure();
         skills.buildNameMap();
     }
 

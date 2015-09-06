@@ -19,6 +19,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
+@Getter
 public class BukkitSkills extends Skills
 {
     @Getter static BukkitSkills instance;
@@ -27,6 +28,9 @@ public class BukkitSkills extends Skills
     final Map<UUID, Double> moneys = new HashMap<>();
     final Set<UUID> playersInDebugMode = new HashSet<>();
     final Map<UUID, BukkitPlayer> players = new HashMap<>();
+    double skillPointsFactor = 1.0;
+    double moneyFactor = 1.0;
+    double expFactor = 1.0;
 
     BukkitSkills()
     {
@@ -57,6 +61,14 @@ public class BukkitSkills extends Skills
             }
             skillMap.put(type, skill);
         }
+    }
+
+    void configure()
+    {
+        List<Double> factors = getPlugin().getConfig().getDoubleList("RewardFactors");
+        skillPointsFactor = factors.size() >= 1 ? factors.get(0) : 1.0;
+        moneyFactor       = factors.size() >= 2 ? factors.get(1) : 1.0;
+        expFactor         = factors.size() >= 3 ? factors.get(2) : 1.0;
     }
 
     void buildNameMap()
