@@ -78,14 +78,13 @@ class BukkitPlayer
         Player player = getPlayer();
         if (player == null) return;
         if (forcedSkillOnScoreboard == null) {
-            int highestSkillPoints = 0;
+            int highestCount = 0;
             BukkitSkillType highestType = null;
             long now = System.currentTimeMillis();
             for (BukkitPlayerSkill playerSkill : skills.values()) {
                 playerSkill.checkLastReward(now);
-                int skillPoints = (int)playerSkill.getSkillPoints();
-                if (highestSkillPoints < skillPoints) {
-                    highestSkillPoints = skillPoints;
+                if (highestCount < playerSkill.getCount()) {
+                    highestCount = playerSkill.getCount();
                     highestType = playerSkill.getType();
                 }
             }
@@ -172,11 +171,13 @@ class BukkitPlayer
 class BukkitPlayerSkill
 {
     final BukkitSkillType type;
+    int count;
     double skillPoints, money, exp;
     long lastReward = 0;
 
     void reset()
     {
+        count = 0;
         skillPoints = money = exp = 0;
     }
 
@@ -192,6 +193,7 @@ class BukkitPlayerSkill
         long now = System.currentTimeMillis();
         checkLastReward(now);
         lastReward = now;
+        count += 1;
         if (skillPoints > 0.01) this.skillPoints += skillPoints;
         if (money > 0.01) this.money += money;
         if (exp > 0.01) this.exp += exp;
