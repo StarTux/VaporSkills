@@ -50,7 +50,9 @@ class BukkitCommandHighscore implements CommandExecutor
         for (BukkitSkill skill : getSkills().getSkills()) {
             Highscore hi = getSkills().getScore().getHighscore(skill);
             int rank = hi.rankOfPlayer(uuid);
+            String rankString = rank > 0 ? "#" + rank : "-";
             int index = hi.indexOfPlayer(uuid);
+            if (index < 0) index = 2;
             StringBuilder sb = new StringBuilder();
             for (int i = Math.max(0, index - 2); i <= Math.min(hi.size() - 1, index + 2); ++i) {
                 if (sb.length() > 0) sb.append("\n");
@@ -63,9 +65,9 @@ class BukkitCommandHighscore implements CommandExecutor
             }
             message.add(" ");
             message.add(BukkitUtil.button(
-                            "&b" + skill.getShorthand() + "&3(&f#"+rank+"&3)",
+                            "&b" + skill.getShorthand() + "&3(&f"+rankString+"&3)",
                             "/hi " + skill.getKey(),
-                            "&3&l" + skill.getDisplayName() + " &f#" + rank,
+                            "&3&l" + skill.getDisplayName() + " &f" + rankString,
                             sb.toString(),
                             "&7Click for more details"));
         }

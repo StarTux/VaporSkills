@@ -47,7 +47,7 @@ public class Highscore
         for (Row row : rows) {
             if (row.player.equals(player)) return row.rank;
         }
-        return rows.get(rows.size() - 1).rank + 1;
+        return -1;
     }
 
     public int indexOfPlayer(UUID player)
@@ -58,7 +58,7 @@ public class Highscore
             if (row.player.equals(player)) break;
             i += 1;
         }
-        return i;
+        return -1;
     }
 
     public Row rowAt(int index)
