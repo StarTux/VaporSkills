@@ -168,7 +168,7 @@ abstract class BukkitSkill implements Skill
         if (skillPoints < 0.01 && money < 0.01 && exp < 0.01) return;
         if (getSkills().hasDebugMode(player)) {
             BukkitReward br = BukkitReward.of(reward);
-            BukkitUtil.msg(player, "[sk] &e%s &8%s &e%s %s&8:&e%s &8\"&e%s&8\" &6%.2f %.2f %.2f",
+            BukkitUtil.msg(player, "[sk] &e%s &8%s &e%s %s&8:&e%s &8\"&e%s&8\" &6%.2f&8sp &6%.2f&8mo &6%.2f&8xp",
                            getShorthand(),
                            Strings.camelCase(br.key.getTarget().name()),
                            Strings.camelCase(br.key.typeAsPrettyString()),
