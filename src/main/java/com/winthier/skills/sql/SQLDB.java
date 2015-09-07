@@ -32,16 +32,18 @@ public class SQLDB {
 
     public static void clearAllCaches()
     {
-        SQLString.cache.clear();
         SQLPlayer.cache.clear();
         SQLPlayerSetting.cache.clear();
         SQLReward.cache.clear();
         SQLScore.cache.clear();
+        SQLStat.cache.clear();
+        SQLString.cache.clear();
     }
 
     public static void saveAll()
     {
         SQLScore.saveAll();
+        SQLStat.saveAll();
         SQLPlayerSetting.saveAll();
     }
 
@@ -52,6 +54,7 @@ public class SQLDB {
             SQLPlayerSetting.class,
             SQLReward.class,
             SQLScore.class,
+            SQLStat.class,
             SQLString.class
             );
     }
