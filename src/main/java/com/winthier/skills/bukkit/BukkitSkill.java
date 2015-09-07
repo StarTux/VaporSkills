@@ -155,8 +155,8 @@ abstract class BukkitSkill implements Skill
     }
 
     private void giveExp(Player player, double exp) {
-        if (exp < 1.0) return;
-        player.giveExp((int)exp);
+        if (exp < 0.01) return;
+        getSkills().giveExp(player, exp);
     }
 
     void giveReward(@NonNull Player player, Reward reward, double factor)

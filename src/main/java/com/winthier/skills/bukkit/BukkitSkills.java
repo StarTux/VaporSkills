@@ -26,6 +26,7 @@ public class BukkitSkills extends Skills
     final Map<BukkitSkillType, BukkitSkill> skillMap = new EnumMap<>(BukkitSkillType.class);
     final Map<String, BukkitSkill> nameMap = new HashMap<>();
     final Map<UUID, Double> moneys = new HashMap<>();
+    final Map<UUID, Double> exps = new HashMap<>();
     final Set<UUID> playersInDebugMode = new HashSet<>();
     final Map<UUID, BukkitPlayer> players = new HashMap<>();
     double skillPointsFactor = 1.0;
@@ -149,6 +150,23 @@ public class BukkitSkills extends Skills
             stored += amount;
         }
         moneys.put(player.getUniqueId(), stored);
+    }
+
+    void giveExp(Player player, double amount) {
+        if (amount < 0.01) return;
+        final UUID uuid = player.getUniqueId();
+        Double stored = exps.get(uuid);
+        if (stored == null) {
+            stored = amount;
+        } else {
+            stored += amount;
+        }
+        if (stored >= 1.0) {
+            int full = stored.intValue();
+            stored -= (double)full;
+            player.giveExp(full);
+        }
+        exps.put(uuid, stored);
     }
 
     void depositAllMoneys()
