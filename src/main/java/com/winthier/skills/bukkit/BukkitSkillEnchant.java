@@ -21,13 +21,14 @@ class BukkitSkillEnchant extends BukkitSkill implements Listener
         final int level = player.getLevel();
         new BukkitRunnable() {
             @Override public void run() {
-                onEnchanted(player, level);
+                onEnchanted(player, level, event.getExpLevelCost());
             }
         }.runTask(getPlugin());
     }
 
-    void onEnchanted(Player player, int oldLevel) {
-        int levelsSpent = oldLevel - player.getLevel();
-        giveReward(player, rewardForName("exp_level_cost", levelsSpent));
+    void onEnchanted(Player player, int oldLevel, int levelUsed) {
+        int spent = oldLevel - player.getLevel();
+        double factor = Math.min(1.0, (double)levelUsed / (double)spent / 10);
+        giveReward(player, rewardForName("exp_level_cost", spent), factor*factor);
     }
 }
