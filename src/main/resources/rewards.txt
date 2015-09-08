@@ -194,26 +194,26 @@ Cook Item		Baked_Potato 0 -	.35 .35 0	# Vanilla: 0.35 exp
 # Eating
 #===============================================================================
 
-Eat Item		Raw_Beef 0 -		.1 .1 .1
-Eat Item		Pork 0 -		.1 .1 .1
-Eat Item		Raw_Chicken 0 -		.1 .1 .1
-Eat Item		Raw_Fish 0 -		.1 .1 .1
-Eat Item		Cooked_Beef 0 -		.1 .1 .1
-Eat Item		Grilled_Pork 0 -	.1 .1 .1
-Eat Item		Cooked_Chicken 0 -	.1 .1 .1
-Eat Item		Cooked_Fish 0 -		.1 .1 .1
-Eat Item		Cooked_Mutton 0 -	.1 .1 .1
-Eat Item		Cooked_Rabbit 0 -	.1 .1 .1
-Eat Item		Pumpkin_Pie 0 -		.1 .1 .1
-Eat Item		Bread 0 -		.1 .1 .1
-Eat Item		Apple 0 -		.1 .1 .1
-Eat Item		Carrot 0 -		.1 .1 .1
-Eat Item		Golden_Carrot 0 -	.1 .1 .1
-Eat Item		Melon 0 -		.1 .1 .1
-Eat Item		Potato_Item 0 -		.1 .1 .1
-Eat Item		Baked_Potato 0 -	.1 .1 .1
-Eat Item		Golden_Apple 0 -	.1 .1 .1
-Eat Item		Golden_Apple 1 -	.1 .1 .1
+Eat Item		Raw_Beef 0 -		.2 .2 .2
+Eat Item		Pork 0 -		.2 .2 .2
+Eat Item		Raw_Chicken 0 -		.2 .2 .2
+Eat Item		Raw_Fish 0 -		.2 .2 .2
+Eat Item		Apple 0 -		.2 .2 .2
+Eat Item		Carrot 0 -		.2 .2 .2
+Eat Item		Melon 0 -		.2 .2 .2
+Eat Item		Potato_Item 0 -		.2 .2 .2
+Eat Item		Bread 0 -		.3 .3 .3
+Eat Item		Baked_Potato 0 -	.3 .3 .3
+Eat Item		Cooked_Beef 0 -		.3 .3 .3
+Eat Item		Grilled_Pork 0 -	.3 .3 .3
+Eat Item		Cooked_Chicken 0 -	.3 .3 .3
+Eat Item		Cooked_Fish 0 -		.3 .3 .3
+Eat Item		Cooked_Mutton 0 -	.3 .3 .3
+Eat Item		Cooked_Rabbit 0 -	.3 .3 .3
+Eat Item		Pumpkin_Pie 0 -		.3 .3 .3
+Eat Item		Golden_Carrot 0 -	.3 .3 .3
+Eat Item		Golden_Apple 0 -	.3 .3 .3
+Eat Item		Golden_Apple 1 -	.4 .4 .4
 
 #===============================================================================
 # Enchanting
