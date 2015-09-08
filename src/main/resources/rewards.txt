@@ -68,6 +68,7 @@ Brawl Entity		- - CaveSpider		5 5 0		# Vanilla:  5 exp
 Brawl Entity		- - Endermite		5 5 0		# Vanilla:  5 exp
 Brawl Entity		- - Silverfish		5 5 0		# Vanilla:  5 exp
 Brawl Entity		- - Enderman		5 5 0		# Vanilla:  5 exp
+Brawl Entity		- - Witch		5 5 0		# Vanilla:  5 exp
 Brawl Entity		- - PigZombie		5 5 0		# Vanilla:  5 exp
 Brawl Entity		- - BabyPigZombie	12 12 0		# Vanilla: 12 exp
 Brawl Entity		- - Blaze		10 10 0		# Vanilla: 10 exp
@@ -96,6 +97,7 @@ Hunt Entity		- - CaveSpider		5 5 0		# Vanilla:  5 exp
 Hunt Entity		- - Endermite		5 5 0		# Vanilla:  5 exp
 Hunt Entity		- - Silverfish		5 5 0		# Vanilla:  5 exp
 Hunt Entity		- - Enderman		5 5 0		# Vanilla:  5 exp
+Hunt Entity		- - Witch		5 5 0		# Vanilla:  5 exp
 Hunt Entity		- - PigZombie		5 5 0		# Vanilla:  5 exp
 Hunt Entity		- - BabyPigZombie	12 12 0		# Vanilla: 12 exp
 Hunt Entity		- - Blaze		10 10 0		# Vanilla: 10 exp
