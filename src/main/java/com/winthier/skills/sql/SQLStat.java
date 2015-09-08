@@ -66,9 +66,9 @@ public class SQLStat
             .eq("player", SQLPlayer.of(player)).findUnique();
         if (result == null) {
             result = new SQLStat(reward, SQLPlayer.of(player));
-            cache.put(key, result);
             result.setDirty();
         }
+        cache.put(key, result);
         return result;
     }
 
