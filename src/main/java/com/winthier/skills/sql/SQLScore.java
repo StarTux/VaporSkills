@@ -14,6 +14,7 @@ import java.util.UUID;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.PersistenceException;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.persistence.Version;
@@ -62,7 +63,7 @@ public class SQLScore
 		.findUnique();
 	    if (result == null) {
 		result = new SQLScore(SQLPlayer.of(uuid), SQLString.of(skill));
-		result.save();
+		result.setDirty();
 	    }
 	    cache.put(key, result);
 	}
@@ -78,11 +79,6 @@ public class SQLScore
             .findList();
     }
 
-    public void save()
-    {
-	SQLDB.get().save(this);
-    }
-
     public void setDirty()
     {
 	dirties.add(this);
@@ -90,7 +86,13 @@ public class SQLScore
 
     public static void saveAll()
     {
-	SQLDB.get().save(dirties);
-	dirties.clear();
+        try {
+            SQLDB.get().save(dirties);
+        } catch (PersistenceException pe) {
+            System.err.println("SQLScore saveAll throws PersistenceException. Clearing cache");
+            pe.printStackTrace();
+            cache.clear();
+        }
+        dirties.clear();
     }
 }
