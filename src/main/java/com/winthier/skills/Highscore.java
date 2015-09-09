@@ -43,7 +43,7 @@ public class Highscore
 
     public int rankOfPlayer(UUID player)
     {
-        if (rows.isEmpty()) return 1;
+        if (rows.isEmpty()) return -1;
         for (Row row : rows) {
             if (row.player.equals(player)) return row.rank;
         }
@@ -52,7 +52,7 @@ public class Highscore
 
     public int indexOfPlayer(UUID player)
     {
-        if (rows.isEmpty()) return 0;
+        if (rows.isEmpty()) return -1;
         int i = 0;
         for (Row row : rows) {
             if (row.player.equals(player)) break;
