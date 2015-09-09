@@ -1,4 +1,4 @@
-RewardFactors: [ 1, 1, 1 ]
+RewardFactors: [ 1, .5, 1 ]
 brawl:
   RewardFactors: [ 1, 1, 1 ]
   DisplayName: Brawling
@@ -65,7 +65,7 @@ mine:
   Shorthand: Mine
   Description: Grab your pickaxe and descend into the deep mines of this world to find precious ores and rare gems.
 sacrifice:
-  RewardFactors: [ 1, 1, 1 ]
+  RewardFactors: [ 1, 2, 1 ]
   DisplayName: Sacrifice
   Shorthand: Sacrifice
   Description: Sacrifice your precious offerings to the almighty Creeper Overlord in exchange for his blessing.
