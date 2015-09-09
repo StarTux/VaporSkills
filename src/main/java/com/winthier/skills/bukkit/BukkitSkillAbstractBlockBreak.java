@@ -3,6 +3,7 @@ package com.winthier.skills.bukkit;
 import com.winthier.exploits.bukkit.BukkitExploits;
 import com.winthier.skills.Reward;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -11,37 +12,45 @@ import org.bukkit.inventory.ItemStack;
 
 abstract class BukkitSkillAbstractBlockBreak extends BukkitSkill implements Listener
 {
+    long repeatInterval = 60*60;
+
+    @Override
+    void configure()
+    {
+        super.configure();
+        repeatInterval = getConfig().getLong("RepeatInterval", 60*60);
+    }
+
     /**
-     * Default function always returns true.
+     * Determine if the item in hand is acceptable while breaking
+     * blocks. Return false to deny rewards while holding the
+     * item, true to allow it. Default function always returns
+     * true.
      */
     boolean allowItemInHand(ItemStack item)
     {
 	return true;
     }
 
-    Boolean requirePlayerPlacedBlock()
-    {
-	return null;
-    }
-
     /**
      * Default function checks if the blocks is natural or player
      * placed and returns based on requirePlayerPlacedBlock();
      */
-    boolean allowBrokenBlock(Block block)
+    boolean allowBrokenBlock(Player player, Block block)
     {
-	if (requirePlayerPlacedBlock() != null) {
-	    if (BukkitExploits.getInstance().isPlayerPlaced(block) != requirePlayerPlacedBlock()) return false;
-	}
+        if (BukkitExploits.getInstance().isPlayerPlaced(block)) return false;
+        if (BukkitExploits.getInstance().didRecentlyBreak(player, block, repeatInterval)) return false;
 	return true;
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onBlockBreak(BlockBreakEvent event)
     {
-	if (!allowPlayer(event.getPlayer())) return;
-	if (!allowItemInHand(event.getPlayer().getItemInHand())) return;
-	if (!allowBrokenBlock(event.getBlock())) return;
-        giveReward(event.getPlayer(), rewardForBlock(event.getBlock()));
+        Player player = event.getPlayer();
+        Block block = event.getBlock();
+	if (!allowPlayer(player)) return;
+	if (!allowItemInHand(player.getItemInHand())) return;
+	if (!allowBrokenBlock(player, block)) return;
+        giveReward(player, rewardForBlock(block));
     }
 }

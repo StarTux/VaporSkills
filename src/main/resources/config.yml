@@ -38,6 +38,7 @@ dig:
   DisplayName: Digging
   Shorthand: Dig
   Description: Use your shovel to dig in the ground and find epic treasure hidden beneath.
+  RepeatInterval: 3600
 eat:
   RewardFactors: [ 1, 1, 1 ]
   DisplayName: Eating
@@ -68,6 +69,7 @@ mine:
   DisplayName: Mining
   Shorthand: Mine
   Description: Grab your pickaxe and descend into the deep mines of this world to find precious ores and rare gems.
+  RepeatInterval: 3600
 sacrifice:
   RewardFactors: [ 1, 2, 1 ]
   DisplayName: Sacrifice
@@ -88,3 +90,4 @@ woodcut:
   DisplayName: Woodcutting
   Shorthand: Woodcut
   Description: Grab your axe and cut down trees to collect lumber for your building projects.
+  RepeatInterval: 3600

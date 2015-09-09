@@ -1,18 +1,12 @@
 package com.winthier.skills.bukkit;
 
+import lombok.Getter;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 class BukkitSkillDig extends BukkitSkillAbstractBlockBreak
 {
     @lombok.Getter final BukkitSkillType skillType = BukkitSkillType.DIG;
-
-    @Override
-    Boolean requirePlayerPlacedBlock()
-    {
-        // We want blocks to be *not* player placed.
-	return false;
-    }
 
     @Override
     boolean allowItemInHand(ItemStack item)

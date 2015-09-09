@@ -1,18 +1,12 @@
 package com.winthier.skills.bukkit;
 
+import lombok.Getter;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 class BukkitSkillMine extends BukkitSkillAbstractBlockBreak
 {
-    @lombok.Getter final BukkitSkillType skillType = BukkitSkillType.MINE;
-
-    @Override
-    Boolean requirePlayerPlacedBlock()
-    {
-        // We want blocks to be *not* player placed.
-	return false;
-    }
+    @Getter final BukkitSkillType skillType = BukkitSkillType.MINE;
 
     @Override
     boolean allowItemInHand(ItemStack item)
