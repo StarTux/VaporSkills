@@ -20,7 +20,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 class BukkitSkillBuild extends BukkitSkill implements Listener
 {
     @Getter final BukkitSkillType skillType = BukkitSkillType.BUILD;
-    long repeatInterval = 60L * 60L;
+    long repeatInterval = 60*60;
     int placementThreshold = 5;
     long placementInterval = 10;
     final Set<Material> placementBlacklist = EnumSet.noneOf(Material.class);
@@ -61,7 +61,7 @@ class BukkitSkillBuild extends BukkitSkill implements Listener
     }
 
     @Override
-    public void configure()
+    void configure()
     {
         super.configure();
         placementThreshold = getConfig().getInt("PlacementThreshold", 5);
