@@ -50,7 +50,7 @@ class BukkitReward implements Reward
         }
         static Key parse(String[] tokens)
         {
-            if (tokens.length != 5) throw new IllegalArgumentException("8 items required");
+            if (tokens.length != 5) throw new IllegalArgumentException("5 items required");
             String skillTypeArg = tokens[0];
             String targetArg = tokens[1];
             String typeArg = tokens[2];
@@ -130,7 +130,7 @@ class BukkitReward implements Reward
 
     static BukkitReward parse(String[] tokens)
     {
-        if (tokens.length != 8) throw new IllegalArgumentException("8 items required");
+        if (tokens.length != 8 && tokens.length != 9) throw new IllegalArgumentException("8 or 9 items required");
         String skillPointsArg = tokens[5];
         String moneyArg = tokens[6];
         String expArg = tokens[7];
@@ -138,6 +138,12 @@ class BukkitReward implements Reward
         float skillPoints = Float.parseFloat(skillPointsArg);
         float money = Float.parseFloat(moneyArg);
         float exp = Float.parseFloat(expArg);
+        if (tokens.length >= 9) {
+            float factor = Float.parseFloat(tokens[8]);
+            skillPoints *= factor;
+            money *= factor;
+            exp *= factor;
+        }
         return new BukkitReward(key, skillPoints, money, exp);
     }
 
