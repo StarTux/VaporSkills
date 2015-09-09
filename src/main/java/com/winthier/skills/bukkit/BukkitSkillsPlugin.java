@@ -23,6 +23,7 @@ public class BukkitSkillsPlugin extends JavaPlugin implements Listener
     final BukkitCommandAdmin adminCommand = new BukkitCommandAdmin();
     final BukkitCommandSkills skillsCommand = new BukkitCommandSkills();
     final BukkitCommandHighscore highscoreCommand = new BukkitCommandHighscore();
+    static final String CONFIG_YML = "config.yml";
     static final String REWARDS_TXT = "rewards.txt";
 
     public BukkitSkillsPlugin()
@@ -34,7 +35,7 @@ public class BukkitSkillsPlugin extends JavaPlugin implements Listener
     public void onEnable()
     {
         // Files
-        writeDefaultFiles();
+        writeDefaultFiles(false);
         reloadConfig();
         // Economy
 	if (!setupEconomy()) {
@@ -98,10 +99,11 @@ public class BukkitSkillsPlugin extends JavaPlugin implements Listener
         SQLDB.clearAllCaches();
     }
 
-    void writeDefaultFiles()
+    void writeDefaultFiles(boolean force)
     {
-        saveDefaultConfig();
-        saveResource(REWARDS_TXT, false);
+        if (!force) saveDefaultConfig();
+        if (force) saveResource(CONFIG_YML, force);
+        saveResource(REWARDS_TXT, force);
     }
 
     void saveAll()
@@ -121,7 +123,7 @@ public class BukkitSkillsPlugin extends JavaPlugin implements Listener
 
     void reloadAll()
     {
-        writeDefaultFiles();
+        writeDefaultFiles(false);
         reloadConfig();
         SQLDB.clearAllCaches();
         skills.configure();

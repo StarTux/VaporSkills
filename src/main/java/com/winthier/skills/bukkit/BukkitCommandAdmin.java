@@ -34,16 +34,12 @@ class BukkitCommandAdmin implements CommandExecutor
         String cmd = args.length == 0 ? "" : args[0].toLowerCase();
         final Player player = sender instanceof Player ? (Player)sender : null;
         try {
-            if (cmd.equals("reward")) {
+            if (cmd.equals("config")) {
+                return onCommandConfig(sender, Arrays.copyOfRange(args, 1, args.length));
+            } else if (cmd.equals("reward")) {
                 return onCommandReward(sender, Arrays.copyOfRange(args, 1, args.length));
             } else if (cmd.equals("score")) {
                 return onCommandScore(sender, Arrays.copyOfRange(args, 1, args.length));
-            } else if (cmd.equals("reload")) {
-                getPlugin().reloadAll();
-                sender.sendMessage("[Skills] Configuration reloaded");
-            } else if (cmd.equals("save")) {
-                getPlugin().saveAll();
-                sender.sendMessage("[Skills] All data saved to disk");
             } else if (cmd.equals("debug")) {
                 if (player == null) {
                     sender.sendMessage("Player expected");
@@ -57,15 +53,35 @@ class BukkitCommandAdmin implements CommandExecutor
                     player.sendMessage("Debug mode enabled");
                 }
             } else {
-                sender.sendMessage("/skadmin reload");
-                sender.sendMessage("/skadmin save");
                 sender.sendMessage("/skadmin debug");
+                sender.sendMessage("/skadmin config");
                 sender.sendMessage("/skadmin reward");
                 sender.sendMessage("/skadmin score");
             }
         } catch (RuntimeException re) {
             sender.sendMessage("Syntax error");
             re.printStackTrace();
+        }
+        return true;
+    }
+
+    boolean onCommandConfig(CommandSender sender, String[] args)
+    {
+        String cmd = args.length == 0 ? "" : args[0].toLowerCase();
+        if (cmd.equals("reload")) {
+            getPlugin().reloadAll();
+            sender.sendMessage("[Skills] Configuration reloaded");
+        } else if (cmd.equals("save")) {
+            getPlugin().writeDefaultFiles(false);
+            getPlugin().saveAll();
+            sender.sendMessage("[Skills] All data saved to disk");
+        } else if (cmd.equals("overwrite")) {
+            getPlugin().writeDefaultFiles(true);
+            sender.sendMessage("[Skills] All config files overwritten with plugin defaults");
+        } else {
+            sender.sendMessage("/skadmin config reload");
+            sender.sendMessage("/skadmin config save");
+            sender.sendMessage("/skadmin config overwrite");
         }
         return true;
     }
