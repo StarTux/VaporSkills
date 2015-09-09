@@ -1,12 +1,15 @@
 package com.winthier.skills.bukkit;
 
 import com.winthier.exploits.bukkit.BukkitExploits;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import lombok.Data;
 import lombok.Getter;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -17,9 +20,10 @@ import org.bukkit.event.block.BlockPlaceEvent;
 class BukkitSkillBuild extends BukkitSkill implements Listener
 {
     @Getter final BukkitSkillType skillType = BukkitSkillType.BUILD;
-    final long REPEAT_CHECK_SECONDS = 60L * 60L;
-    final int BLOCKS_THRESHOLD = 10;
-    final long BUILD_INTERVAL = 1000 * (long)BLOCKS_THRESHOLD;
+    long repeatInterval = 60L * 60L;
+    int placementThreshold = 5;
+    long placementInterval = 10;
+    final Set<Material> placementBlacklist = EnumSet.noneOf(Material.class);
     Map<UUID, PlayerData> players = new HashMap<>();
 
     @Data
@@ -55,6 +59,24 @@ class BukkitSkillBuild extends BukkitSkill implements Listener
     {
         return getPlayerData(player.getUniqueId());
     }
+
+    @Override
+    public void configure()
+    {
+        super.configure();
+        placementThreshold = getConfig().getInt("PlacementThreshold", 5);
+        placementInterval = getConfig().getLong("PlacementInterval", 10);
+        repeatInterval = getConfig().getLong("RepeatInterval", 60*60);
+        placementBlacklist.clear();
+        for (String i : getConfig().getStringList("PlacementBlacklist")) {
+            try {
+                Material mat = Material.valueOf(i.toUpperCase());
+                placementBlacklist.add(mat);
+            } catch (IllegalArgumentException iae) {
+                getPlugin().getLogger().warning("Build configure: Material not found: " + i);
+            }
+        }
+    }
     
     @Override
     public void onDisable()
@@ -69,15 +91,16 @@ class BukkitSkillBuild extends BukkitSkill implements Listener
 	if (!allowPlayer(player)) return;
 	if (!allowPlacedBlock(event.getBlock(), player)) return;
         PlayerData data = getPlayerData(player);
-        if (data.age() >= BUILD_INTERVAL) data.reset();
-        if (data.addBlocksPlaced(1) == BLOCKS_THRESHOLD) {
+        if (data.age() >= placementInterval * 1000L) data.reset();
+        if (data.addBlocksPlaced(1) == placementThreshold) {
             giveReward(player, rewardForName("progress"));
         }
     }
 
     boolean allowPlacedBlock(Block block, Player player)
     {
-        if (BukkitExploits.getInstance().didRecentlyPlace(player, block, REPEAT_CHECK_SECONDS)) return false;
+        if (placementBlacklist.contains(block.getType())) return false;
+        if (BukkitExploits.getInstance().didRecentlyPlace(player, block, repeatInterval)) return false;
         return true;
     }
 }

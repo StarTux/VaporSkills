@@ -19,6 +19,10 @@ build:
   DisplayName: Building
   Shorthand: Build
   Description: Place blocks in the world to make your own epic creations.
+  PlacementThreshold: 5
+  PlacementInterval: 10
+  RepeatInterval: 3600
+  PlacementBlacklist: []
 butcher:
   RewardFactors: [ 1, 1, 1 ]
   DisplayName: Butchery
