@@ -396,3 +396,87 @@ Sacrifice Item		Water_Lily - -		.01 .01 .01
 Sacrifice Item		Wheat - -		.01 .01 .01
 Sacrifice Item		Wool - -		.01 .01 .01
 Sacrifice Item		Yellow_Flower - -	.01 .01 .01
+
+Sacrifice Enchantment	Protection_Environmental 1 -	1 10 1	.3
+Sacrifice Enchantment	Protection_Fire 1 -		1 10 1	.3
+Sacrifice Enchantment	Protection_Fall 1 -		1 10 1	.3
+Sacrifice Enchantment	Protection_Explosions 1 -	1 10 1	.3
+Sacrifice Enchantment	Protection_Projectile 1 -	1 10 1	.3
+Sacrifice Enchantment	Oxygen 1 -			1 10 1	.3
+Sacrifice Enchantment	Thorns 1 -			1 10 1	.3
+Sacrifice Enchantment	Depth_Strider 1 -		1 10 1	.3
+Sacrifice Enchantment	Damage_All 1 -			1 10 1	.3
+Sacrifice Enchantment	Damage_Undead 1 -		1 10 1	.3
+Sacrifice Enchantment	Damage_Arthropods 1 -		1 10 1	.3
+Sacrifice Enchantment	Knockback 1 -			1 10 1	.3
+Sacrifice Enchantment	Fire_Aspect 1 -			1 10 1	.3
+Sacrifice Enchantment	Loot_Bonus_Mobs 1 -		1 10 1	.3
+Sacrifice Enchantment	Dig_Speed 1 -			1 10 1	.3
+Sacrifice Enchantment	Durability 1 -			1 10 1	.3
+Sacrifice Enchantment	Loot_Bonus_Blocks 1 -		1 10 1	.3
+Sacrifice Enchantment	Arrow_Damage 1 -		1 10 1	.3
+Sacrifice Enchantment	Arrow_Knockback 1 -		1 10 1	.3
+Sacrifice Enchantment	Luck 1 -			1 10 1	.3
+Sacrifice Enchantment	Lure 1 -			1 10 1	.3
+Sacrifice Enchantment	Water_Worker 1 -		1 10 1	3
+Sacrifice Enchantment	Silk_Touch 1 -			1 10 1	3
+Sacrifice Enchantment	Arrow_Fire 1 -			1 10 1	3
+Sacrifice Enchantment	Arrow_Infinite 1 -		1 10 1	3
+
+Sacrifice Enchantment	Protection_Environmental 2 -	1 10 1	.5
+Sacrifice Enchantment	Protection_Fire 2 -		1 10 1	.5
+Sacrifice Enchantment	Protection_Fall 2 -		1 10 1	.5
+Sacrifice Enchantment	Protection_Explosions 2 -	1 10 1	.5
+Sacrifice Enchantment	Protection_Projectile 2 -	1 10 1	.5
+Sacrifice Enchantment	Oxygen 2 -			1 10 1	.5
+Sacrifice Enchantment	Thorns 2 -			1 10 1	.5
+Sacrifice Enchantment	Depth_Strider 2 -		1 10 1	.5
+Sacrifice Enchantment	Damage_All 2 -			1 10 1	.5
+Sacrifice Enchantment	Damage_Undead 2 -		1 10 1	.5
+Sacrifice Enchantment	Damage_Arthropods 2 -		1 10 1	.5
+Sacrifice Enchantment	Loot_Bonus_Mobs 2 -		1 10 1	.5
+Sacrifice Enchantment	Dig_Speed 2 -			1 10 1	.5
+Sacrifice Enchantment	Durability 2 -			1 10 1	.5
+Sacrifice Enchantment	Loot_Bonus_Blocks 2 -		1 10 1	.5
+Sacrifice Enchantment	Arrow_Damage 2 -		1 10 1	.5
+Sacrifice Enchantment	Luck 2 -			1 10 1	.5
+Sacrifice Enchantment	Lure 2 -			1 10 1	.5
+Sacrifice Enchantment	Knockback 2 -			1 10 1	3
+Sacrifice Enchantment	Fire_Aspect 2 -			1 10 1	3
+Sacrifice Enchantment	Arrow_Knockback 2 -		1 10 1	3
+
+Sacrifice Enchantment	Protection_Environmental 3 -	1 10 1	3
+Sacrifice Enchantment	Protection_Fire 3 -		1 10 1	3
+Sacrifice Enchantment	Protection_Fall 3 -		1 10 1	3
+Sacrifice Enchantment	Protection_Explosions 3 -	1 10 1	3
+Sacrifice Enchantment	Protection_Projectile 3 -	1 10 1	3
+Sacrifice Enchantment	Damage_All 3 -			1 10 1	3
+Sacrifice Enchantment	Damage_Undead 3 -		1 10 1	3
+Sacrifice Enchantment	Damage_Arthropods 3 -		1 10 1	3
+Sacrifice Enchantment	Dig_Speed 3 -			1 10 1	3
+Sacrifice Enchantment	Arrow_Damage 3 -		1 10 1	3
+Sacrifice Enchantment	Oxygen 3 -			1 10 1	5
+Sacrifice Enchantment	Thorns 3 -			1 10 1	5
+Sacrifice Enchantment	Depth_Strider 3 -		1 10 1	5
+Sacrifice Enchantment	Loot_Bonus_Mobs 3 -		1 10 1	5
+Sacrifice Enchantment	Durability 3 -			1 10 1	5
+Sacrifice Enchantment	Loot_Bonus_Blocks 3 -		1 10 1	5
+Sacrifice Enchantment	Luck 3 -			1 10 1	5
+Sacrifice Enchantment	Lure 3 -			1 10 1	5
+
+Sacrifice Enchantment	Damage_All 4 -			1 10 1	4
+Sacrifice Enchantment	Damage_Undead 4 -		1 10 1	4
+Sacrifice Enchantment	Damage_Arthropods 4 -		1 10 1	4
+Sacrifice Enchantment	Dig_Speed 4 -			1 10 1	4
+Sacrifice Enchantment	Arrow_Damage 4 -		1 10 1	4
+Sacrifice Enchantment	Protection_Environmental 4 -	1 10 1	5
+Sacrifice Enchantment	Protection_Fire 4 -		1 10 1	5
+Sacrifice Enchantment	Protection_Fall 4 -		1 10 1	5
+Sacrifice Enchantment	Protection_Explosions 4 -	1 10 1	5
+Sacrifice Enchantment	Protection_Projectile 4 -	1 10 1	5
+
+Sacrifice Enchantment	Damage_All 5 -			1 10 1	5
+Sacrifice Enchantment	Damage_Undead 5 -		1 10 1	5
+Sacrifice Enchantment	Damage_Arthropods 5 -		1 10 1	5
+Sacrifice Enchantment	Dig_Speed 5 -			1 10 1	5
+Sacrifice Enchantment	Arrow_Damage 5 -		1 10 1	5
