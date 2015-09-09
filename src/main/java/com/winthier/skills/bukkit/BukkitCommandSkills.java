@@ -1,5 +1,6 @@
 package com.winthier.skills.bukkit;
 
+import com.winthier.skills.Highscore;
 import com.winthier.skills.Reward;
 import com.winthier.skills.util.Strings;
 import java.util.ArrayList;
@@ -93,10 +94,12 @@ class BukkitCommandSkills implements CommandExecutor
         int pointsInLevel = getSkills().getScore().pointsInLevel(skillPoints);
         int pointsToLevelUp = getSkills().getScore().pointsToLevelUpTo(skillLevel + 1);
         BukkitUtil.msg(player, "");
+        // Title
         BukkitUtil.msg(player, "&3&l%s &bLevel &f%d %s",
                        skill.getDisplayName(),
                        skillLevel,
                        BukkitUtil.progressBar(pointsInLevel, pointsToLevelUp));
+        // Statistics
         BukkitUtil.raw(player,
                        BukkitUtil.format(" &3Skill Points: "),
                        BukkitUtil.tooltip(
@@ -106,12 +109,25 @@ class BukkitCommandSkills implements CommandExecutor
                            BukkitUtil.format("&3Total Skill Points: &f%d", skillPoints),
                            BukkitUtil.format("&3For Next Level: &f%d",
                                              getSkills().getScore().pointsForNextLevel(skillPoints))));
+        // Highscore
+        Highscore hi = getSkills().getScore().getHighscore(skill);
+        int rank = hi.rankOfPlayer(uuid);
+        String rankString = rank > 0 ? "#" + rank : "-";
+        BukkitUtil.raw(player,
+                       BukkitUtil.format(" &3Your rank: "),
+                       BukkitUtil.button("&f"+rankString+" &3[&fHighscore&3]",
+                                         "/hi " + skill.getKey(),
+                                         "&3&l" + skill.getDisplayName() + " &f" + rankString,
+                                         getPlugin().getHighscoreCommand().formatHighscoreAroundPlayer(hi, uuid),
+                                         "&7Click for more details"));
+        // Sidebar
         BukkitUtil.raw(player,
                        BukkitUtil.format(" &3Sidebar: "),
                        BukkitUtil.button("&3[&fFocus&3]", "/sk sidebar "+skill.getKey(), "&7Focus "+skill.getDisplayName()+" in the sidebar"), " ",
                        BukkitUtil.button("&3[&fReset&3]", "/sk sidebar reset", "&7Reset the sidebar"), " ",
                        BukkitUtil.button("&3[&fOn&3]", "/sk sidebar on", "&7Turn sidebar on"), " ", 
                        BukkitUtil.button("&3[&fOff&3]", "/sk sidebar off", "&7Turn sidebar off"));
+        // Sacrifice special
         if (skill.getSkillType() == BukkitSkillType.SACRIFICE) {
             BukkitUtil.raw(player,
                            BukkitUtil.format(" &3Check item in hand: "),
@@ -120,6 +136,7 @@ class BukkitCommandSkills implements CommandExecutor
                                              "&7about the value of the item",
                                              "&7in your hand"));
         }
+        // Description
         BukkitUtil.msg(player, " &r%s", skill.getDescription());
         BukkitUtil.msg(player, "");
     }

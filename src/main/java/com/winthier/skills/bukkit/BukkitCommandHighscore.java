@@ -6,6 +6,7 @@ import com.winthier.skills.util.Strings;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import org.apache.commons.lang3.text.WordUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -41,6 +42,24 @@ class BukkitCommandHighscore implements CommandExecutor
         return true;
     }
 
+    String formatHighscoreAroundPlayer(Highscore hi, UUID uuid)
+    {
+        int rank = hi.rankOfPlayer(uuid);
+        int index = hi.indexOfPlayer(uuid);
+        if (index < 0) index = 2;
+        StringBuilder sb = new StringBuilder();
+        for (int i = Math.max(0, index - 2); i <= Math.min(hi.size() - 1, index + 2); ++i) {
+            if (sb.length() > 0) sb.append("\n");
+            Highscore.Row row = hi.rowAt(i);
+            if (uuid.equals(row.getPlayer())) {
+                sb.append(BukkitUtil.format("&3#%02d &blvl &f%d &b%s", row.getRank(), row.getSkillLevel(), PlayerCache.nameForUuid(row.getPlayer())));
+            } else {
+                sb.append(BukkitUtil.format("&3#%02d &blvl &f%d &3%s", row.getRank(), row.getSkillLevel(), PlayerCache.nameForUuid(row.getPlayer())));
+            }
+        }
+        return sb.toString();
+    }
+
     void listSkills(Player player)
     {
         UUID uuid = player.getUniqueId();
@@ -51,24 +70,13 @@ class BukkitCommandHighscore implements CommandExecutor
             Highscore hi = getSkills().getScore().getHighscore(skill);
             int rank = hi.rankOfPlayer(uuid);
             String rankString = rank > 0 ? "#" + rank : "-";
-            int index = hi.indexOfPlayer(uuid);
-            if (index < 0) index = 2;
-            StringBuilder sb = new StringBuilder();
-            for (int i = Math.max(0, index - 2); i <= Math.min(hi.size() - 1, index + 2); ++i) {
-                if (sb.length() > 0) sb.append("\n");
-                Highscore.Row row = hi.rowAt(i);
-                if (uuid.equals(row.getPlayer())) {
-                    sb.append(BukkitUtil.format("&3#%02d &blvl &f%d &b%s", row.getRank(), row.getSkillLevel(), PlayerCache.nameForUuid(row.getPlayer())));
-                } else {
-                    sb.append(BukkitUtil.format("&3#%02d &blvl &f%d &3%s", row.getRank(), row.getSkillLevel(), PlayerCache.nameForUuid(row.getPlayer())));
-                }
-            }
             message.add(" ");
             message.add(BukkitUtil.button(
                             "&b" + skill.getShorthand() + "&3(&f"+rankString+"&3)",
                             "/hi " + skill.getKey(),
                             "&3&l" + skill.getDisplayName() + " &f" + rankString,
-                            sb.toString(),
+                            formatHighscoreAroundPlayer(hi, uuid),
+                            "&r" + WordUtils.wrap(skill.getDescription(), 32),
                             "&7Click for more details"));
         }
         BukkitUtil.raw(player, message);
@@ -84,9 +92,10 @@ class BukkitCommandHighscore implements CommandExecutor
             return;
         }
         final UUID uuid = player.getUniqueId();
+        Highscore hi = getSkills().getScore().getHighscore(skill);
         BukkitUtil.msg(player, "");
-        BukkitUtil.msg(player, "&b&l%s", skill.getDisplayName());
-        for (Highscore.Row row : getSkills().getScore().getHighscore(skill).getRows()) {
+        BukkitUtil.msg(player, "&3&l%s &bHighscore &3(Rank &f#%d&3)", skill.getDisplayName(), hi.rankOfPlayer(uuid));
+        for (Highscore.Row row : hi.getRows()) {
             BukkitUtil.msg(player, " &3#%d &f%02d &3%s", row.getRank(), row.getSkillLevel(), PlayerCache.nameForUuid(row.getPlayer()));
         }
         BukkitUtil.msg(player, "");

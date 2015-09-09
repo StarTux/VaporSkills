@@ -15,11 +15,12 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
+@Getter
 public class BukkitSkillsPlugin extends JavaPlugin implements Listener
 {
     @Getter static BukkitSkillsPlugin instance;
-    @Getter private Economy economy;
-    @Getter private final BukkitSkills skills = new BukkitSkills();
+    Economy economy;
+    final BukkitSkills skills = new BukkitSkills();
     final BukkitCommandAdmin adminCommand = new BukkitCommandAdmin();
     final BukkitCommandSkills skillsCommand = new BukkitCommandSkills();
     final BukkitCommandHighscore highscoreCommand = new BukkitCommandHighscore();
