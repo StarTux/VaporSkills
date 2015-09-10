@@ -99,6 +99,7 @@ class BukkitSkillBuild extends BukkitSkill implements Listener
 
     boolean allowPlacedBlock(Block block, Player player)
     {
+        if (!block.getType().isSolid()) return false;
         if (placementBlacklist.contains(block.getType())) return false;
         if (BukkitExploits.getInstance().didRecentlyPlace(player, block, repeatInterval)) return false;
         return true;
