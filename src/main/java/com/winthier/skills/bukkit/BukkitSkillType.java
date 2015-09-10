@@ -18,6 +18,7 @@ public enum BukkitSkillType
     MINE,
     SACRIFICE,
     SMELT,
+    TAME,
     TRAVEL,
     WOODCUT,
     ;

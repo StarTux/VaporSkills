@@ -85,6 +85,11 @@ smelt:
   DisplayName: Smelting
   Shorthand: Smelt
   Description: Refine your ores and raw materials in a furnace to make them even more precious and useful.
+tame:
+  RewardFactors: [ 1, 1, 1 ]
+  DisplayName: Taming
+  Shorthand: Tame
+  Description: Tame wild animals.
 travel:
   RewardFactors: [ 1, 1, 1 ]
   DisplayName: Traveling
