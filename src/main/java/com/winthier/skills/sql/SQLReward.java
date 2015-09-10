@@ -132,4 +132,11 @@ public class SQLReward implements Reward
     {
         SQLDB.get().save(this);
     }
+
+    public static void deleteAll()
+    {
+        cache.clear();
+        listCache.clear();
+        SQLDB.get().createSqlUpdate("DELETE FROM rewards").execute();
+    }
 }

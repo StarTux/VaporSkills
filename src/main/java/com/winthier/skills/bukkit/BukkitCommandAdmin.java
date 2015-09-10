@@ -104,6 +104,9 @@ class BukkitCommandAdmin implements CommandExecutor
             reward.store();
             SQLDB.clearAllCaches();
             sender.sendMessage("+" + reward);
+        } else if (cmd.equals("clear") && args.length == 1) {
+            SQLReward.deleteAll();
+            sender.sendMessage("All rewards cleared");
         } else if (cmd.equals("import") && args.length == 1) {
             File file = new File(getPlugin().getDataFolder(), BukkitSkillsPlugin.REWARDS_TXT);
             if (!file.exists()) {
@@ -148,6 +151,7 @@ class BukkitCommandAdmin implements CommandExecutor
         } else {
             sender.sendMessage("/skadmin reward list <skill>");
             sender.sendMessage("/skadmin reward set <skill> <target> <type> <data> <name> <sp> <money> <exp>");
+            sender.sendMessage("/skadmin reward clear");
             sender.sendMessage("/skadmin reward import");
         }
         return true;
