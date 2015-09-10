@@ -3,7 +3,7 @@ blacksmith:
   RewardFactors: [ 1, 1, 1 ]
   DisplayName: Blacksmithing
   Shorthand: Blacksmith
-  Description: Repair, refine or rename items on an anvil.
+  Description: Repair and refine items on an anvil.
 brawl:
   RewardFactors: [ 1, 1, 1 ]
   DisplayName: Brawling
