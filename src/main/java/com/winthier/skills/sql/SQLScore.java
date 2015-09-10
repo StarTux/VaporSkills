@@ -52,17 +52,17 @@ public class SQLScore
 	setSkillLevel(0);
     }
 
-    public static SQLScore of(UUID uuid, String skill)
+    public static SQLScore of(UUID uuid, Skill skill)
     {
-	Key key = new Key(uuid, skill);
+	Key key = new Key(uuid, skill.getKey());
 	SQLScore result = cache.get(key);
 	if (result == null) {
 	    result = SQLDB.get().find(SQLScore.class).where()
 		.eq("player", SQLPlayer.of(uuid))
-		.eq("skill", SQLString.of(skill))
+		.eq("skill", SQLString.of(skill.getKey()))
 		.findUnique();
 	    if (result == null) {
-		result = new SQLScore(SQLPlayer.of(uuid), SQLString.of(skill));
+		result = new SQLScore(SQLPlayer.of(uuid), SQLString.of(skill.getKey()));
 		result.setDirty();
 	    }
 	    cache.put(key, result);
@@ -73,7 +73,7 @@ public class SQLScore
     public static List<SQLScore> rank(Skill skill)
     {
         return SQLDB.get().find(SQLScore.class).where()
-            .eq("skill_id", SQLString.of(skill).getId())
+            .eq("skill_id", SQLString.of(skill.getKey()).getId())
             .gt("skill_level", 0)
             .orderBy("skill_points DESC")
             .findList();

@@ -141,6 +141,11 @@ abstract class BukkitSkill implements Skill
     {
         return getSkills().getScore().rewardForName(this, name, data);
     }
+
+    Reward rewardForNameAndMaximum(String name, int dataMax)
+    {
+        return getSkills().getScore().rewardForNameAndMaximum(this, name, dataMax);
+    }
     
     private void giveSkillPoints(Player player, double skillPoints)
     {

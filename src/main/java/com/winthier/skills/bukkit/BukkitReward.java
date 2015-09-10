@@ -76,10 +76,10 @@ class BukkitReward implements Reward
             return null;
         }
         SQLReward findSQLReward() {
-            return SQLReward.find(BukkitSkills.getInstance().skillByType(skill).getKey(), target, type, data, name);
+            return SQLReward.find(BukkitSkills.getInstance().skillByType(skill), target, type, data, name);
         }
         SQLReward makeSQLReward() {
-            return SQLReward.of(BukkitSkills.getInstance().skillByType(skill).getKey(), target, type, data, name);
+            return SQLReward.of(BukkitSkills.getInstance().skillByType(skill), target, type, data, name);
         }
         BukkitReward find() {
             SQLReward sqlReward = findSQLReward();

@@ -35,6 +35,7 @@ public class SQLDB {
         SQLPlayer.cache.clear();
         SQLPlayerSetting.cache.clear();
         SQLReward.cache.clear();
+        SQLReward.listCache.clear();
         SQLScore.cache.clear();
         SQLStat.cache.clear();
         SQLString.cache.clear();

@@ -94,7 +94,7 @@ class BukkitCommandAdmin implements CommandExecutor
             if (skill == null) throw new IllegalArgumentException("Skill not found: " + args[1]);
             sender.sendMessage("Rewards of " + skill.getDisplayName() + ":");
             int count = 0;
-            for (SQLReward sqlReward : SQLReward.findList(skill.getKey())) {
+            for (SQLReward sqlReward : SQLReward.findList(skill)) {
                 sender.sendMessage(BukkitReward.of(sqlReward).toString());
                 count++;
             }
@@ -102,6 +102,7 @@ class BukkitCommandAdmin implements CommandExecutor
         } else if (cmd.equals("set") && args.length == 9) {
             BukkitReward reward = BukkitReward.parse(Arrays.copyOfRange(args, 1, args.length));
             reward.store();
+            SQLDB.clearAllCaches();
             sender.sendMessage("+" + reward);
         } else if (cmd.equals("import") && args.length == 1) {
             File file = new File(getPlugin().getDataFolder(), BukkitSkillsPlugin.REWARDS_TXT);
@@ -143,6 +144,7 @@ class BukkitCommandAdmin implements CommandExecutor
                     ioe.printStackTrace();
                 }
             }
+            SQLDB.clearAllCaches();
         } else {
             sender.sendMessage("/skadmin reward list <skill>");
             sender.sendMessage("/skadmin reward set <skill> <target> <type> <data> <name> <sp> <money> <exp>");

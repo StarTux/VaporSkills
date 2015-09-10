@@ -5,6 +5,7 @@ import com.avaje.ebean.validation.Length;
 import com.avaje.ebean.validation.NotEmpty;
 import com.avaje.ebean.validation.NotNull;
 import com.winthier.skills.Reward;
+import com.winthier.skills.Skill;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -36,6 +37,7 @@ public class SQLReward implements Reward
     // Cache
     @Value static class Key { @NonNull String skill; @NonNull Target target; Integer type; Integer data; String name; }
     final static Map<Key, SQLReward> cache = new HashMap<>();
+    final static Map<Key, List<SQLReward>> listCache = new HashMap<>();
     // Content
     @Id Integer id;
     @NotNull @ManyToOne SQLString skill;
@@ -81,6 +83,20 @@ public class SQLReward implements Reward
         return result;
     }
 
+    private static List<SQLReward> findList(Key key)
+    {
+        if (listCache.containsKey(key)) return listCache.get(key);
+        ExpressionList<SQLReward> expr = SQLDB.get().find(SQLReward.class).where();
+        expr = expr.eq("skill", SQLString.of(key.skill));
+        expr = expr.eq("target", SQLString.of(key.target.name()));
+        if (key.type != null) expr = expr.eq("type", key.type);
+        if (key.data != null) expr = expr.eq("data", key.data);
+        if (key.name != null) expr = expr.eq("name", SQLString.of(key.name));
+        List<SQLReward> result = expr.findList();
+        listCache.put(key, result);
+        return result;
+    }
+    
     private static SQLReward of(Key key)
     {
         SQLReward result = find(key);
@@ -92,19 +108,24 @@ public class SQLReward implements Reward
         return result;
     }
 
-    public static SQLReward find(@NonNull String skill, @NonNull Target target, Integer type, Integer data, String name)
+    public static SQLReward find(@NonNull Skill skill, @NonNull Target target, Integer type, Integer data, String name)
     {
-        return find(new Key(skill, target, type, data, name));
+        return find(new Key(skill.getKey(), target, type, data, name));
     }
 
-    public static SQLReward of(@NonNull String skill, @NonNull Target target, Integer type, Integer data, String name)
+    public static List<SQLReward> findList(@NonNull Skill skill, @NonNull Target target, Integer type, Integer data, String name)
     {
-        return of(new Key(skill, target, type, data, name));
+        return findList(new Key(skill.getKey(), target, type, data, name));
+    }
+    
+    public static SQLReward of(@NonNull Skill skill, @NonNull Target target, Integer type, Integer data, String name)
+    {
+        return of(new Key(skill.getKey(), target, type, data, name));
     }
 
-    public static List<SQLReward> findList(@NonNull String skill)
+    public static List<SQLReward> findList(@NonNull Skill skill)
     {
-        return SQLDB.get().find(SQLReward.class).where().eq("skill", SQLString.of(skill)).findList();
+        return SQLDB.get().find(SQLReward.class).where().eq("skill", SQLString.of(skill.getKey())).findList();
     }
 
     public void save()
