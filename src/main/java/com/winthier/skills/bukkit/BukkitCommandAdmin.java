@@ -40,6 +40,8 @@ class BukkitCommandAdmin implements CommandExecutor
                 return onCommandReward(sender, Arrays.copyOfRange(args, 1, args.length));
             } else if (cmd.equals("score")) {
                 return onCommandScore(sender, Arrays.copyOfRange(args, 1, args.length));
+            } else if (cmd.equals("test")) {
+                return onCommandTest(sender, Arrays.copyOfRange(args, 1, args.length));
             } else if (cmd.equals("debug")) {
                 if (player == null) {
                     sender.sendMessage("Player expected");
@@ -57,10 +59,41 @@ class BukkitCommandAdmin implements CommandExecutor
                 sender.sendMessage("/skadmin config");
                 sender.sendMessage("/skadmin reward");
                 sender.sendMessage("/skadmin score");
+                sender.sendMessage("/skadmin test");
             }
         } catch (RuntimeException re) {
             sender.sendMessage("Syntax error");
             re.printStackTrace();
+        }
+        return true;
+    }
+
+    boolean onCommandTest(CommandSender sender, String[] args)
+    {
+        String cmd = args.length == 0 ? "" : args[0].toLowerCase();
+        if (cmd.equals("levelup")) {
+            Player player = getPlugin().getServer().getPlayer(args[1]);
+            if (player == null) {
+                sender.sendMessage("Player not found: " + args[1]);
+                return true;
+            }
+            BukkitSkill skill = getSkills().skillByName(args[2]);
+            if (skill == null) {
+                sender.sendMessage("Skill not found: " + args[2]);
+                return true;
+            }
+            int skillLevel = 0;
+            try {
+                skillLevel = Integer.parseInt(args[3]);
+            } catch (NumberFormatException nfe) {}
+            if (skillLevel < 0) {
+                sender.sendMessage("Invalid level: " + args[3]);
+                return true;
+            }
+            getSkills().showLevelUpTitle(player, skill, skillLevel);
+            getSkills().announceLevelUp(player, skill, skillLevel);
+        } else {
+            sender.sendMessage("skadmin test levelup <player> <skill> <level>");
         }
         return true;
     }
@@ -210,7 +243,7 @@ class BukkitCommandAdmin implements CommandExecutor
             try {
                 skillLevel = Integer.parseInt(args[3]);
             } catch (NumberFormatException nfe) {}
-            if (skillLevel <= 0) {
+            if (skillLevel < 0) {
                 sender.sendMessage("Invalid level: " + args[3]);
                 return true;
             }

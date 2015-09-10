@@ -108,23 +108,31 @@ public class BukkitSkills extends Skills
     {
         Player player = Bukkit.getServer().getPlayer(uuid);
         if (player == null) return;
-        BukkitUtil.title(player,
-                         "{color:aqua,text:'" + skill.getDisplayName() + "'}",
-                         "{color:aqua,text:'Level " + level + "'}");
-        if (level >= 10) {
-            BukkitUtil.announceRaw(
-                BukkitUtil.format("&f%s reached level %d in ", player.getName(), level),
-                BukkitUtil.button(
-                    "&a[" + skill.getDisplayName() + "]",
-                    "/sk " + skill.getShorthand(),
-                    "&a" + skill.getDisplayName(),
-                    // TODO: Put something more interesting here?
-                    "&f&oSkill",
-                    "&r" + WordUtils.wrap(skill.getDescription(), 32)));
-        }
+        showLevelUpTitle(player, skill, level);
+        if (level >= 10) announceLevelUp(player, skill, level);
         if (skill instanceof BukkitSkill) {
             BukkitPlayer.of(player).displaySkill((BukkitSkill)skill, player);
         }
+    }
+
+    void showLevelUpTitle(Player player, Skill skill, int level)
+    {
+        BukkitUtil.title(player,
+                         "{color:aqua,text:'" + skill.getDisplayName() + "'}",
+                         "{color:aqua,text:'Level " + level + "'}");
+    }
+
+    void announceLevelUp(Player player, Skill skill, int level)
+    {
+        BukkitUtil.announceRaw(
+            BukkitUtil.format("&f%s reached level %d in ", player.getName(), level),
+            BukkitUtil.button(
+                "&a[" + skill.getDisplayName() + "]",
+                "/sk " + skill.getShorthand(),
+                "&a" + skill.getDisplayName(),
+                // TODO: Put something more interesting here?
+                "&f&oSkill",
+                "&r" + WordUtils.wrap(skill.getDescription(), 32)));
     }
 
     @Override
