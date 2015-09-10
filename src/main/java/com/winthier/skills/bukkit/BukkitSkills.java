@@ -109,6 +109,7 @@ public class BukkitSkills extends Skills
         Player player = Bukkit.getServer().getPlayer(uuid);
         if (player == null) return;
         showLevelUpTitle(player, skill, level);
+        BukkitLevelUpEffect.launch(player, level);
         if (level >= 10) announceLevelUp(player, skill, level);
         if (skill instanceof BukkitSkill) {
             BukkitPlayer.of(player).displaySkill((BukkitSkill)skill, player);

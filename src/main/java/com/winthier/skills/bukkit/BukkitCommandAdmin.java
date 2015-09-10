@@ -91,6 +91,7 @@ class BukkitCommandAdmin implements CommandExecutor
                 return true;
             }
             getSkills().showLevelUpTitle(player, skill, skillLevel);
+            BukkitLevelUpEffect.launch(player, skillLevel);
             getSkills().announceLevelUp(player, skill, skillLevel);
         } else {
             sender.sendMessage("skadmin test levelup <player> <skill> <level>");
