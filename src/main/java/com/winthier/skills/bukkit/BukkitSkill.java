@@ -197,17 +197,14 @@ abstract class BukkitSkill implements Skill
     Player getNearestPlayer(Location loc, double max)
     {
         Player result = null;
-        double dist = 0.0;
-        for (Entity o : loc.getWorld().getNearbyEntities(loc, max, max, max)) {
-            if (!(o instanceof Player)) continue;
-            if (result == null) {
-                result = (Player)o;
-            } else {
-                double newDist = loc.distanceSquared(o.getLocation());
-                if (newDist < dist) {
-                    dist = newDist;
-                    result = (Player)o;
-                }
+        double maxs = max*max;
+        double dist = maxs;
+        for (Player player : loc.getWorld().getPlayers()) {
+            double newDist = loc.distanceSquared(player.getLocation());
+            if (newDist > maxs) continue;
+            if (result == null || newDist < dist) {
+                result = player;
+                dist = newDist;
             }
         }
         return result;
