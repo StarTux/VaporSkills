@@ -33,7 +33,7 @@ import lombok.Value;
 public class SQLStat
 {
     // Cache
-    @Value static class Key { @NonNull int rewardId; @NonNull UUID player; }
+    @Value static class Key { int rewardId; @NonNull UUID player; }
     final static Map<Key, SQLStat> cache = new HashMap<>();
     final static Set<SQLStat> dirties = new HashSet<>();
     // Key
