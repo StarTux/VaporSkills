@@ -37,6 +37,7 @@ public class BukkitSkills extends Skills
     {
 	instance = this;
         List<BukkitSkill> skills = Arrays.asList(
+            new BukkitSkillBlacksmith(),
             new BukkitSkillBrawl(),
             new BukkitSkillBreed(),
             new BukkitSkillBrew(),

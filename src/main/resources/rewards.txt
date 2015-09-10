@@ -225,6 +225,16 @@ Enchant Name		- 2 exp_level_cost	2 2 0
 Enchant Name		- 3 exp_level_cost	5 5 0
 
 #===============================================================================
+# Blacksmithing
+#===============================================================================
+Blacksmith Name		- 1 exp_level_cost	1 1 1	.03125
+Blacksmith Name		- 2 exp_level_cost	1 1 1	.0625
+Blacksmith Name		- 4 exp_level_cost	1 1 1	.125
+Blacksmith Name		- 8 exp_level_cost	1 1 1	.25
+Blacksmith Name		- 16 exp_level_cost	1 1 1	.5
+Blacksmith Name		- 32 exp_level_cost	1 1 1	1
+
+#===============================================================================
 # Woodcutting
 #===============================================================================
 
