@@ -112,7 +112,7 @@ public class BukkitSkills extends Skills
         if (player == null) return;
         showLevelUpTitle(player, skill, level);
         BukkitLevelUpEffect.launch(player, level);
-        if (level >= 10) announceLevelUp(player, skill, level);
+        if (level % 5 == 0) announceLevelUp(player, skill, level);
         if (skill instanceof BukkitSkill) {
             BukkitPlayer.of(player).displaySkill((BukkitSkill)skill, player);
         }
@@ -120,9 +120,7 @@ public class BukkitSkills extends Skills
 
     void showLevelUpTitle(Player player, Skill skill, int level)
     {
-        BukkitUtil.title(player,
-                         "{color:aqua,text:'" + skill.getDisplayName() + "'}",
-                         "{color:aqua,text:'Level " + level + "'}");
+        BukkitUtil.title(player, "&b"+skill.getDisplayName(), "&bLevel " + level);
     }
 
     void announceLevelUp(Player player, Skill skill, int level)

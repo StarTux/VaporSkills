@@ -42,8 +42,7 @@ class BukkitUtil
 
     static void title(Player player, String title, String subtitle)
     {
-        consoleCommand(String.format("minecraft:title %s subtitle %s", player.getName(), format(subtitle)));
-        consoleCommand(String.format("minecraft:title %s title %s", player.getName(), format(title)));
+        player.sendTitle(format(title), format(subtitle));
     }
 
     static void raw(Player player, Object... obj)
