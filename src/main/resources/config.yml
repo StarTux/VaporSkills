@@ -1,25 +1,31 @@
+Enabled: true
 RewardFactors: [ 1, .5, 1 ]
 blacksmith:
+  Enabled: true
   RewardFactors: [ 1, 1, 1 ]
   DisplayName: Blacksmithing
   Shorthand: Blacksmith
   Description: Repair and refine items on an anvil.
 brawl:
+  Enabled: true
   RewardFactors: [ 1, 1, 1 ]
   DisplayName: Brawling
   Shorthand: Brawl
   Description: Fight hostile monsters in close combat, ideally with your sword.
 breed:
+  Enabled: true
   RewardFactors: [ 1, 1, 1 ]
   DisplayName: Breeding
   Shorthand: Breed
   Description: Feed your farm animals to make them breed and increase their numbers.
 brew:
+  Enabled: true
   RewardFactors: [ 1, 1, 1 ]
   DisplayName: Brewing
   Shorthand: Brew
   Description: Brew magic potions in the brewing stand to achieve epic effects or wreak havoc on your enemies.
 build:
+  Enabled: true
   RewardFactors: [ 1, 1, 1 ]
   DisplayName: Building
   Shorthand: Build
@@ -29,68 +35,81 @@ build:
   RepeatInterval: 3600
   PlacementBlacklist: []
 butcher:
+  Enabled: true
   RewardFactors: [ 1, 1, 1 ]
   DisplayName: Butchery
   Shorthand: Butcher
   Description: Butcher your farm animals to harvest their precious drops.
 cook:
+  Enabled: true
   RewardFactors: [ 1, 1, 1 ]
   DisplayName: Cooking
   Shorthand: Cook
   Description: Prepare your meals in the oven to increase their effectiveness and tase.
 dig:
+  Enabled: true
   RewardFactors: [ 1, 1, 1 ]
   DisplayName: Digging
   Shorthand: Dig
   Description: Use your shovel to dig in the ground and find epic treasure hidden beneath.
   RepeatInterval: 3600
 eat:
+  Enabled: true
   RewardFactors: [ 1, 1, 1 ]
   DisplayName: Eating
   Shorthand: Eat
   Description: Eat healthy and tasty food to maintain your stamina, heal up and refresh.
 enchant:
+  Enabled: true
   RewardFactors: [ 1, 1, 1 ]
   DisplayName: Enchanting
   Shorthand: Enchant
   Description: Improve your weapons, tools and armor on the enchanting table to make them stronger, more effective and deadlier.
 fish:
+  Enabled: true
   RewardFactors: [ 1, 1, 1 ]
   DisplayName: Fishing
   Shorthand: Fish
   Description: Cast your fishing rod in bodies of water to catch different types of fish for food or brewing.
 harvest:
+  Enabled: true
   RewardFactors: [ 1, 1, 1 ]
   DisplayName: Harvesting
   Shorthand: Harvest
   Description: Reap the rewards of your hard gardening work by harvesting cereal, fruit and vegetables.
 hunt:
+  Enabled: true
   RewardFactors: [ 1, 1, 1 ]
   DisplayName: Hunting
   Shorthand: Hunt
   Description: Snipe dangerous creatures from afar with your bow to stay out of harms way.
 mine:
+  Enabled: true
   RewardFactors: [ 1, 1, 1 ]
   DisplayName: Mining
   Shorthand: Mine
   Description: Grab your pickaxe and descend into the deep mines of this world to find precious ores and rare gems.
   RepeatInterval: 3600
 sacrifice:
+  Enabled: true
   RewardFactors: [ 1, 2, 1 ]
   DisplayName: Sacrifice
   Shorthand: Sacrifice
   Description: Sacrifice your precious offerings to the almighty Creeper Overlord in exchange for his blessing.
 smelt:
+  Enabled: true
   RewardFactors: [ 1, 1, 1 ]
   DisplayName: Smelting
   Shorthand: Smelt
   Description: Refine your ores and raw materials in a furnace to make them even more precious and useful.
 tame:
+  Enabled: true
   RewardFactors: [ 1, 1, 1 ]
   DisplayName: Taming
   Shorthand: Tame
   Description: Tame wild animals.
 travel:
+  Enabled: true
   RewardFactors: [ 1, 1, 1 ]
   DisplayName: Traveling
   Shorthand: Travel
@@ -99,6 +118,7 @@ travel:
   MaxTeleportDistance: 128
   MaxDistanceNoProgress: 96
 woodcut:
+  Enabled: true
   RewardFactors: [ 1, 1, 1 ]
   DisplayName: Woodcutting
   Shorthand: Woodcut

@@ -67,6 +67,7 @@ class BukkitCommandHighscore implements CommandExecutor
         List<Object> message = new ArrayList<>();
         message.add(BukkitUtil.format("&3&lHighscores:"));
         for (BukkitSkill skill : getSkills().getSkills()) {
+            if (!skill.isEnabled()) continue;
             Highscore hi = getSkills().getScore().getHighscore(skill);
             int rank = hi.rankOfPlayer(uuid);
             String rankString = rank > 0 ? "#" + rank : "-";

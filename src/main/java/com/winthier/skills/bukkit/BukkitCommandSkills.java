@@ -58,6 +58,7 @@ class BukkitCommandSkills implements CommandExecutor
         List<Object> message = new ArrayList<>();
         message.add(BukkitUtil.format("&3&lSkills:"));
         for (BukkitSkill skill : getSkills().getSkills()) {
+            if (!skill.isEnabled()) continue;
             int skillPoints = (int)getSkills().getScore().getSkillPoints(uuid, skill);
             int skillLevel = getSkills().getScore().getSkillLevel(uuid, skill);
             int pointsInLevel = getSkills().getScore().pointsInLevel(skillPoints);

@@ -29,6 +29,7 @@ public class BukkitSkills extends Skills
     final Map<UUID, Double> exps = new HashMap<>();
     final Set<UUID> playersInDebugMode = new HashSet<>();
     final Map<UUID, BukkitPlayer> players = new HashMap<>();
+    boolean enabled = true;
     double skillPointsFactor = 1.0;
     double moneyFactor = 1.0;
     double expFactor = 1.0;
@@ -68,6 +69,7 @@ public class BukkitSkills extends Skills
 
     void configure()
     {
+        enabled = getPlugin().getConfig().getBoolean("Enabled", true);
         List<Double> factors = getPlugin().getConfig().getDoubleList("RewardFactors");
         skillPointsFactor = factors.size() >= 1 ? factors.get(0) : 1.0;
         moneyFactor       = factors.size() >= 2 ? factors.get(1) : 1.0;

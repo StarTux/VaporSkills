@@ -29,6 +29,7 @@ import org.bukkit.potion.PotionEffect;
 @Getter
 abstract class BukkitSkill implements Skill
 {
+    boolean enabled = true;
     double skillPointsFactor = 1.0;
     double moneyFactor = 1.0;
     double expFactor = 1.0;
@@ -52,6 +53,7 @@ abstract class BukkitSkill implements Skill
      */
     void configure()
     {
+        enabled = getConfig().getBoolean("Enabled", true);
         displayName = getConfig().getString("DisplayName", getKey());
         shorthand = getConfig().getString("Shorthand", getKey());
         description = getConfig().getString("Description", "This is a default skill description. Slap StarTux around so he will finally implement proper skill descriptions and not this dribble.");
@@ -73,6 +75,7 @@ abstract class BukkitSkill implements Skill
 
     boolean allowPlayer(Player player)
     {
+        if (!enabled || !getSkills().isEnabled()) return false;
         if (player.getGameMode() != GameMode.SURVIVAL) return false;
 	if (!player.hasPermission("skills.skill.*") && !player.hasPermission(getPermissionNode())) return false;
         return true;
