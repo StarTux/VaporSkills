@@ -23,7 +23,7 @@ brew:
   RewardFactors: [ 1, 1, 1 ]
   DisplayName: Brewing
   Shorthand: Brew
-  Description: Brew magic potions in the brewing stand to achieve epic effects or wreak havoc on your enemies.
+  Description: Brew magic potions in the brewing stand to achieve epic effects to wreak havoc on your enemies.
 build:
   Enabled: true
   RewardFactors: [ 1, 1, 1 ]

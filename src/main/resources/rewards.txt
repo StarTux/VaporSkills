@@ -46,6 +46,10 @@ Dig Block		Clay 0 -		1 1 1	.5
 # 
 #===============================================================================
 
+Smelt Item		Coal 0 -		1 1 0	.1	# Vanilla: 0.1 exp
+Smelt Item		Coal 1 -		1 1 0	.15	# Vanilla: 0.1 exp // Charcoal
+Smelt Item		Diamond 0 -		1 1 0	1	# Vanilla: 1 exp
+Smelt Item		Quartz 0 -		1 1 0	.2	# Vanilla: 1 exp
 Smelt Item		Iron_Ingot 0 -		.7 .7 0		# Vanilla: 0.7 exp
 Smelt Item		Gold_Ingot 0 -		1 1 0		# Vanilla: 1.0 exp
 Smelt Item		Stone 0 -		.1 .1 0		# Vanilla: 0.1 exp
@@ -63,6 +67,7 @@ Smelt Item		Ink_Sack 2 -		.2 .2 0		# Vanilla: 0.2 exp // Green Dye
 Brawl Entity		- - Zombie		5 5 0		# Vanilla:  5 exp
 Brawl Entity		- - BabyZombie		12 12 0		# Vanilla: 12 exp
 Brawl Entity		- - Skeleton		5 5 0		# Vanilla:  5 exp
+Brawl Entity		- - WitherSkeleton	5 5 0		# Vanilla:  5 exp
 Brawl Entity		- - Creeper		5 5 0		# Vanilla:  5 exp
 Brawl Entity		- - Spider		5 5 0		# Vanilla:  5 exp
 Brawl Entity		- - CaveSpider		5 5 0		# Vanilla:  5 exp
@@ -92,6 +97,7 @@ Brawl Entity		- - Wither		50 50 0		# Vanilla: 50 exp
 Hunt Entity		- - Zombie		5 5 0		# Vanilla:  5 exp
 Hunt Entity		- - BabyZombie		12 12 0		# Vanilla: 12 exp
 Hunt Entity		- - Skeleton		5 5 0		# Vanilla:  5 exp
+Hunt Entity		- - WitherSkeleton	5 5 0		# Vanilla:  5 exp
 Hunt Entity		- - Creeper		5 5 0		# Vanilla:  5 exp
 Hunt Entity		- - Spider		5 5 0		# Vanilla:  5 exp
 Hunt Entity		- - CaveSpider		5 5 0		# Vanilla:  5 exp
@@ -269,6 +275,7 @@ Harvest Block		Potato 7 water		.1 .1 .1
 Harvest Block		Carrot 7 water		.1 .1 .1
 Harvest Block		Red_Mushroom 0 water	.1 .1 .1
 Harvest Block		Brown_Mushroom 0 water	.1 .1 .1
+Harvest Block		Nether_Warts 3 water	.1 .1 .1
 # Manual harvesting
 Harvest Block		Crops 7 -		.3 .3 .3
 Harvest Block		Potato 7 -		.3 .3 .3
@@ -279,6 +286,7 @@ Harvest Block		Cactus - -		.3 .3 .3
 Harvest Block		Sugar_Cane_Block - -	.3 .3 .3
 Harvest Block		Pumpkin - -		.3 .3 .3
 Harvest Block		Melon_Block - -		.3 .3 .3
+Harvest Block		Nether_Warts 3 -	.3 .3 .3
 Harvest Block		Huge_Mushroom_1 - -     .3 .3 .3
 Harvest Block		Huge_Mushroom_2 - -     .3 .3 .3
 Harvest Block		Vine - -		.5 .5 .5
@@ -288,7 +296,7 @@ Harvest Block		Vine - -		.5 .5 .5
 # Stabilize market prices
 #===============================================================================
 
-Sacrifice Item		Iron_Ingot - -		1 10 1
+Sacrifice Item		Iron_Ingot - -		1 1 1
 Sacrifice Item		Ink_Sack 4 -		1 1 1		# Lapis Lazuli
 Sacrifice Item		Lapis_Ore - -		1 1 1
 Sacrifice Item		Diamond 0 -		5 70 5
@@ -313,7 +321,7 @@ Sacrifice Item		Diamond_Ore 0 -		5 70 5	1
 Sacrifice Item		Diamond_Block 0 -	5 70 5	9
 
 Sacrifice Item		Iron_Ore - -		1 1 1	1
-Sacrifice Item		Iron_Block - -		1 10 1	9
+Sacrifice Item		Iron_Block - -		1 1 1	1
 
 Sacrifice Item		Record_10 - -		1 1 1
 Sacrifice Item		Record_11 - -		1 1 1
