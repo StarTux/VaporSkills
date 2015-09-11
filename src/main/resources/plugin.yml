@@ -9,7 +9,7 @@ commands: {}
 permissions:
   skills.skill.*:
     description: Use all skills
-    default: op
+    default: false
   skills.skills:
     description: Use the /skills command
     default: op
