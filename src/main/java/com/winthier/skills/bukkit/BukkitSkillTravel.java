@@ -4,70 +4,74 @@ import com.winthier.skills.Reward;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.Location;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
 class BukkitSkillTravel extends BukkitSkill implements Listener
 {
-    @lombok.Getter final BukkitSkillType skillType = BukkitSkillType.TRAVEL;
-    final double DISTANCE_STEP = 10.0;
-    final double MIN_DISTANCE = 50.0;
-    final double MAX_TELEPORT_DISTANCE = 128.0;
+    @Getter final BukkitSkillType skillType = BukkitSkillType.TRAVEL;
+    final static String ANCHOR = "anchor";
+    final static String DISTANCE = "distance";
     final Map<UUID, Data> players = new HashMap<>();
+    double distanceStep = 16;
+    double maxTeleportDistance = 128;
+    double maxDistanceNoProgress = 96;
 
     @RequiredArgsConstructor
     class Data {
-        final static String ANCHOR = "anchor";
-        final static String DISTANCE = "distance";
         final UUID uuid;
-        Location anchor;
+        Location anchor, last;
         double distance;
         void store() {
             setPlayerSetting(uuid, ANCHOR, anchor);
             setPlayerSetting(uuid, DISTANCE, distance);
         }
         void load(Player player) {
-            anchor = getPlayerSettingLocation(uuid, ANCHOR, player.getLocation());
+            last = anchor = getPlayerSettingLocation(uuid, ANCHOR, player.getLocation());
             distance = getPlayerSettingDouble(uuid, DISTANCE, 0);
         }
-        boolean didProgress(Player player) {
-            Location loc = player.getLocation();
+        void onPlayerMove(Player player, Location loc) {
             if (!anchor.getWorld().equals(loc.getWorld())) {
                 // If the world changed, reset.
-                reset(player);
-                return false;
-            } else {
-                double newDistance = anchor.distance(loc);
-                if (distance < MIN_DISTANCE && newDistance >= MIN_DISTANCE) {
-                    // Breach min distance
-                    distance = newDistance;
-                    return true;
-                } else if (newDistance - distance > DISTANCE_STEP) {
-                    distance = newDistance;
-                    return true;
-                } else {
-                    return false;
-                }
+                reset(player, loc);
+                return;
+            }
+            double newDistance = loc.distance(anchor);
+            if (newDistance - distance > distanceStep) {
+                last = loc;
+                distance = newDistance;
+                giveReward(player, rewardForNameAndMaximum("distance", (int)distance));
+            } else if (!loc.getWorld().equals(last.getWorld()) ||
+                       loc.distanceSquared(last) > maxDistanceNoProgress*maxDistanceNoProgress) {
+                reset(player, loc);
             }
         }
-        void reset(Player player) {
-            anchor = player.getLocation();
-            distance = 0.0;
+        void reset(Player player, Location loc) {
+            last = anchor = loc;
+            distance = 0;
             if (getSkills().hasDebugMode(player)) {
                 BukkitUtil.msg(player, "&e%s Reset %d %d %d", getDisplayName(), anchor.getBlockX(), anchor.getBlockY(), anchor.getBlockZ());
             }
         }
     }
 
-    void storeAll()
+    @Override
+    public void configure()
     {
-        for (Data data : players.values()) data.store();
+        super.configure();
+        distanceStep = getConfig().getDouble("DistanceStep", 16);
+        maxTeleportDistance = getConfig().getDouble("MaxTeleportDistance", 128);
+        maxDistanceNoProgress = getConfig().getDouble("MaxDistanceNoProgress", 96);
     }
 
     Data getData(Player player)
@@ -82,33 +86,61 @@ class BukkitSkillTravel extends BukkitSkill implements Listener
         return result;
     }
 
-    @EventHandler
+    @Override
+    boolean allowPlayer(Player player)
+    {
+        if (!super.allowPlayer(player)) return false;
+        if (player.isInsideVehicle()) {
+            if (player.getVehicle().getType() == EntityType.HORSE ||
+                player.getVehicle().getType() == EntityType.PIG) {
+                if (player.getVehicle().isInsideVehicle()) return false;
+            } else {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     void onPlayerMove(PlayerMoveEvent event)
     {
         if (event instanceof PlayerTeleportEvent) return;
         Player player = event.getPlayer();
         if (!allowPlayer(player)) return;
-        Location loc = player.getLocation();
-        if (getData(player).didProgress(player)) {
-            giveReward(player, rewardForName("progress"));
-        }
+        getData(player).onPlayerMove(player, event.getTo());
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     void onPlayerTeleport(PlayerTeleportEvent event)
     {
-        Player player = event.getPlayer();
-        if (!event.getFrom().getWorld().equals(event.getTo().getWorld())) {
-            getData(player).reset(player);
-        } else if (event.getFrom().distanceSquared(event.getTo()) > MAX_TELEPORT_DISTANCE * MAX_TELEPORT_DISTANCE) {
-            getData(player).reset(player);
+        final Player player = event.getPlayer();
+        if (!allowPlayer(player)) return;
+        if (!event.getFrom().getWorld().equals(event.getTo().getWorld()) ||
+            event.getFrom().distanceSquared(event.getTo()) > maxTeleportDistance*maxTeleportDistance) {
+            getData(player).reset(player, event.getTo());
+        } else {
+            getData(player).onPlayerMove(player, event.getTo());
         }
     }
 
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+    void onPlayerRespawn(PlayerRespawnEvent event)
+    {
+        Player player = event.getPlayer();
+        getData(player).reset(player, event.getRespawnLocation());
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+    void onPlayerQuit(PlayerQuitEvent event)
+    {
+        Data data = players.remove(event.getPlayer().getUniqueId());
+        if (data != null) data.store();
+    }
+    
     @Override
     void onDisable()
     {
-        storeAll();
+        for (Data data : players.values()) data.store();
         players.clear();
     }
 }

@@ -167,7 +167,14 @@ Brew Item		Sugar 0 -		1 1 1
 # Reward in intervals
 #===============================================================================
 
-Travel Name		- - progress		1 1 1
+Travel Name		- 32 distance		1 1 1	.5
+Travel Name		- 64 distance		1 1 1	1
+Travel Name		- 128 distance		1 1 1	1.5
+Travel Name		- 256 distance		1 1 1	2
+Travel Name		- 512 distance		1 1 1	2.5
+Travel Name		- 1024 distance		1 1 1	3
+Travel Name		- 2048 distance		1 1 1	3.5
+Travel Name		- 4096 distance		1 1 1	4
 
 #===============================================================================
 # Building
