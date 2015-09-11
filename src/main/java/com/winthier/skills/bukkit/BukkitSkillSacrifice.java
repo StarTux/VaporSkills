@@ -3,8 +3,11 @@ package com.winthier.skills.bukkit;
 import com.winthier.skills.CustomReward;
 import com.winthier.skills.Reward;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
@@ -19,15 +22,19 @@ class BukkitSkillSacrifice extends BukkitSkill implements Listener
 {
     @lombok.Getter final BukkitSkillType skillType = BukkitSkillType.SACRIFICE;
     final double RADIUS = 20;
+    final Set<UUID> handled = new HashSet<>();
     
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onEntityDamage(EntityDamageEvent event)
     {
         if (!(event.getEntity() instanceof Item)) return;
+        Item item = (Item)event.getEntity();
+        if (!item.isValid()) return;
+        if (handled.contains(item.getUniqueId())) return;
+        handled.add(item.getUniqueId());
         Player player = getNearestPlayer(event.getEntity().getLocation(), RADIUS);
         if (player == null) return;
         if (!allowPlayer(player)) return;
-        Item item = (Item)event.getEntity();
         List<Reward> rewards = rewardsForItem(item.getItemStack());
         if (rewards.isEmpty()) return;
         double factor = (double)item.getItemStack().getAmount();
