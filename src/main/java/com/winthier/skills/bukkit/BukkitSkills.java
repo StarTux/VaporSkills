@@ -222,7 +222,7 @@ public class BukkitSkills extends Skills
             for (Iterator<Map.Entry<UUID, Double>> iter = moneys.entrySet().iterator(); iter.hasNext(); ) {
                 Map.Entry<UUID, Double> entry = iter.next();
                 Double amount = entry.getValue();
-                if (amount == null || amount < 10) continue;
+                if (amount == null || amount < 100) continue;
                 OfflinePlayer player = Bukkit.getServer().getOfflinePlayer(entry.getKey());
                 if (player == null) continue;
                 getPlugin().getEconomy().depositPlayer(player, amount);

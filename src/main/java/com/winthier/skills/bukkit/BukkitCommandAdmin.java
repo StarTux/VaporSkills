@@ -2,7 +2,9 @@ package com.winthier.skills.bukkit;
 
 import com.winthier.playercache.PlayerCache;
 import com.winthier.skills.sql.SQLDB;
+import com.winthier.skills.sql.SQLLog;
 import com.winthier.skills.sql.SQLReward;
+import com.winthier.skills.sql.SQLScore;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -93,8 +95,13 @@ class BukkitCommandAdmin implements CommandExecutor
             getSkills().showLevelUpTitle(player, skill, skillLevel);
             BukkitLevelUpEffect.launch(player, skillLevel);
             getSkills().announceLevelUp(player, skill, skillLevel);
+        } else if (cmd.equals("backlog")) {
+            sender.sendMessage("Moneys: " + getSkills().getMoneys().size());
+            sender.sendMessage("Score: " + SQLScore.getDirties().size());
+            sender.sendMessage("Logs: " + SQLLog.getDirties().size());
         } else {
             sender.sendMessage("skadmin test levelup <player> <skill> <level>");
+            sender.sendMessage("skadmin test backlog");
         }
         return true;
     }

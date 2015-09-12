@@ -30,7 +30,8 @@ import lombok.Value;
 @NoArgsConstructor
 public class SQLLog implements Reward
 {
-    final static List<SQLLog> dirties = new ArrayList<>();
+    @Getter final static List<SQLLog> dirties = new ArrayList<>();
+    static long lastSave = 0;
     // Key
     @Id Integer id;
     @ManyToOne(optional = false) SQLString skill;
@@ -87,5 +88,13 @@ public class SQLLog implements Reward
             pe.printStackTrace();
         }
         dirties.clear();
+    }
+
+    static void saveSome()
+    {
+        long now = System.currentTimeMillis();
+        if (now - lastSave < 1000L * 60L) return;
+        lastSave = now;
+        saveAll();
     }
 }

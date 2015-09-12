@@ -7,6 +7,7 @@ import com.winthier.skills.Skill;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -32,10 +33,11 @@ import lombok.Value;
 @NoArgsConstructor
 public class SQLScore
 {
+    static final float SAVING_THRESHOLD = 200.0f;
     // Cache
     @Value static class Key { UUID player; String skill; }
     final static Map<Key, SQLScore> cache = new HashMap<>();
-    final static Set<SQLScore> dirties = new HashSet<>();
+    @Getter final static Set<SQLScore> dirties = new HashSet<>();
     // Content
     @Id Integer id;
     @NotNull @ManyToOne SQLPlayer player;
@@ -43,6 +45,7 @@ public class SQLScore
     @NotNull float skillPoints;
     @NotNull int skillLevel;
     @Version Date version;
+    transient float skillPointsAdded = 0;
 
     private SQLScore(SQLPlayer player, SQLString skill)
     {
@@ -79,9 +82,15 @@ public class SQLScore
             .findList();
     }
 
-    public void setDirty()
+    public void setDirty(float val)
     {
 	dirties.add(this);
+        skillPointsAdded += val;
+    }
+
+    public void setDirty()
+    {
+        setDirty(SAVING_THRESHOLD);
     }
 
     public static void saveAll()
@@ -94,5 +103,21 @@ public class SQLScore
             cache.clear();
         }
         dirties.clear();
+    }
+
+    public static void saveSome()
+    {
+        for (Iterator<SQLScore> iter = dirties.iterator(); iter.hasNext(); ) {
+            SQLScore score = iter.next();
+            if (score.skillPointsAdded < SAVING_THRESHOLD) continue;
+            score.skillPointsAdded = 0;
+            try {
+                SQLDB.get().save(score);
+            } catch (PersistenceException pe) {
+                System.err.println("SQLScore saveSome throws PersistenceException.");
+            }
+            iter.remove();
+            return;
+        }
     }
 }

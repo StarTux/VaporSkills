@@ -27,7 +27,7 @@ public class Score
 	// "Write" data
 	row.setSkillPoints((float)newSkillPoints);
 	row.setSkillLevel(newSkillLevel);
-	row.setDirty();
+	row.setDirty((float)points);
     }
 
     public void setSkillLevel(UUID player, Skill skill, int skillLevel)

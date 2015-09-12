@@ -47,6 +47,12 @@ public class SQLDB {
         SQLScore.saveAll();
     }
 
+    public static void saveSome()
+    {
+        SQLLog.saveSome();
+        SQLScore.saveSome();
+    }
+
     public static List<Class<?>> getDatabaseClasses()
     {
         return Arrays.asList(

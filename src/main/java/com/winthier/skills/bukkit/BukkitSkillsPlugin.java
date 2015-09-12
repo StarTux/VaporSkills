@@ -116,7 +116,7 @@ public class BukkitSkillsPlugin extends JavaPlugin implements Listener
     void saveSome()
     {
         try {
-            SQLDB.saveAll();
+            SQLDB.saveSome();
             skills.depositSomeMoneys();
         } catch (Exception e) {
             e.printStackTrace();
