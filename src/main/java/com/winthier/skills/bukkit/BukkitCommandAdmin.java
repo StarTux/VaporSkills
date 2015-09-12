@@ -138,10 +138,18 @@ class BukkitCommandAdmin implements CommandExecutor
             reward.store();
             SQLDB.clearAllCaches();
             sender.sendMessage("+" + reward);
+        } else if (cmd.equals("flush") && args.length == 1) {
+            SQLDB.saveAll();
+            SQLDB.clearAllCaches();
+            sender.sendMessage("Databases flushed");
         } else if (cmd.equals("clear") && args.length == 1) {
+            SQLDB.saveAll();
+            SQLDB.clearAllCaches();
             SQLReward.deleteAll();
             sender.sendMessage("All rewards cleared");
         } else if (cmd.equals("import") && args.length == 1) {
+            SQLDB.saveAll();
+            SQLDB.clearAllCaches();
             File file = new File(getPlugin().getDataFolder(), BukkitSkillsPlugin.REWARDS_TXT);
             if (!file.exists()) {
                 sender.sendMessage(BukkitSkillsPlugin.REWARDS_TXT + " not found");
@@ -185,6 +193,7 @@ class BukkitCommandAdmin implements CommandExecutor
         } else {
             sender.sendMessage("/skadmin reward list <skill>");
             sender.sendMessage("/skadmin reward set <skill> <target> <type> <data> <name> <sp> <money> <exp>");
+            sender.sendMessage("/skadmin reward flush");
             sender.sendMessage("/skadmin reward clear");
             sender.sendMessage("/skadmin reward import");
         }

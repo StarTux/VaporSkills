@@ -126,7 +126,6 @@ public class BukkitSkillsPlugin extends JavaPlugin implements Listener
     {
         writeDefaultFiles(false);
         reloadConfig();
-        SQLDB.clearAllCaches();
         skills.configure();
         for (BukkitSkill skill : skills.getSkills()) skill.configure();
         skills.buildNameMap();
