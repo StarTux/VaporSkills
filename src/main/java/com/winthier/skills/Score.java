@@ -1,8 +1,8 @@
 package com.winthier.skills;
 
+import com.winthier.skills.sql.SQLLog;
 import com.winthier.skills.sql.SQLReward;
 import com.winthier.skills.sql.SQLScore;
-import com.winthier.skills.sql.SQLStat;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -147,10 +147,10 @@ public class Score
         return result;
     }
 
-    public void logReward(Reward reward, UUID player, double skillPoints, double money, double exp)
+    public void logReward(Reward reward, UUID player, Reward outcome)
     {
         if (!(reward instanceof SQLReward)) return;
-        SQLStat.log((SQLReward)reward, player, (float)skillPoints, (float)money, (float)exp);
+        SQLLog.log((SQLReward)reward, player, outcome);
     }
     
     public Highscore getHighscore(Skill skill)

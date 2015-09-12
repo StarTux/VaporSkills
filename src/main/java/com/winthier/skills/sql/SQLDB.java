@@ -37,25 +37,24 @@ public class SQLDB {
         SQLReward.cache.clear();
         SQLReward.listCache.clear();
         SQLScore.cache.clear();
-        SQLStat.cache.clear();
         SQLString.cache.clear();
     }
 
     public static void saveAll()
     {
-        SQLScore.saveAll();
-        SQLStat.saveAll();
+        SQLLog.saveAll();
         SQLPlayerSetting.saveAll();
+        SQLScore.saveAll();
     }
 
     public static List<Class<?>> getDatabaseClasses()
     {
         return Arrays.asList(
+            SQLLog.class,
             SQLPlayer.class,
             SQLPlayerSetting.class,
             SQLReward.class,
             SQLScore.class,
-            SQLStat.class,
             SQLString.class
             );
     }

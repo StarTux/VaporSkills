@@ -1,5 +1,6 @@
 package com.winthier.skills.bukkit;
 
+import com.winthier.skills.CustomReward;
 import com.winthier.skills.Reward;
 import com.winthier.skills.Skill;
 import com.winthier.skills.sql.SQLPlayerSetting;
@@ -188,8 +189,9 @@ abstract class BukkitSkill implements Skill
         giveSkillPoints(player, skillPoints);
         giveMoney(player, money);
         giveExp(player, exp);
-        BukkitPlayer.of(player).onReward(this, skillPoints, money, exp);
-        getSkills().getScore().logReward(reward, player.getUniqueId(), skillPoints, money, exp);
+        Reward outcome = new CustomReward((float)skillPoints, (float)money, (float)exp);
+        BukkitPlayer.of(player).onReward(this, outcome);
+        getSkills().getScore().logReward(reward, player.getUniqueId(), outcome);
     }
 
     void giveReward(Player player, Reward reward)

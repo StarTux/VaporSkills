@@ -82,10 +82,10 @@ class BukkitPlayer
         return getSkills().getBukkitPlayer(player);
     }
 
-    void onReward(BukkitSkill skill, double skillPoints, double money, double exp)
+    void onReward(BukkitSkill skill, Reward reward)
     {
         if (!sidebarEnabled) return;
-        skills.get(skill.getSkillType()).onReward(skillPoints, money, exp);
+        skills.get(skill.getSkillType()).onReward(reward.getSkillPoints(), reward.getMoney(), reward.getExp());
         // Make sure the scoreboard gets updated as soon as
         // possible for instant feedback.
         if (updateTask == null) {
