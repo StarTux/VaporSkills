@@ -99,6 +99,7 @@ class BukkitCommandAdmin implements CommandExecutor
             sender.sendMessage("Moneys: " + getSkills().getMoneys().size());
             sender.sendMessage("Score: " + SQLScore.getDirties().size());
             sender.sendMessage("Logs: " + SQLLog.getDirties().size());
+            sender.sendMessage("Drops: " + ((BukkitSkillSacrifice)getSkills().skillByType(BukkitSkillType.SACRIFICE)).dropped.size());
         } else {
             sender.sendMessage("skadmin test levelup <player> <skill> <level>");
             sender.sendMessage("skadmin test backlog");
