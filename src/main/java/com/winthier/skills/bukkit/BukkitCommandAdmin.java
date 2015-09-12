@@ -133,11 +133,6 @@ class BukkitCommandAdmin implements CommandExecutor
                 count++;
             }
             sender.sendMessage("end of list (" + count + ")");
-        } else if (cmd.equals("set") && args.length == 9) {
-            BukkitReward reward = BukkitReward.parse(Arrays.copyOfRange(args, 1, args.length));
-            reward.store();
-            SQLDB.clearAllCaches();
-            sender.sendMessage("+" + reward);
         } else if (cmd.equals("flush") && args.length == 1) {
             SQLDB.saveAll();
             SQLDB.clearAllCaches();
@@ -189,10 +184,8 @@ class BukkitCommandAdmin implements CommandExecutor
                     ioe.printStackTrace();
                 }
             }
-            SQLDB.clearAllCaches();
         } else {
             sender.sendMessage("/skadmin reward list <skill>");
-            sender.sendMessage("/skadmin reward set <skill> <target> <type> <data> <name> <sp> <money> <exp>");
             sender.sendMessage("/skadmin reward flush");
             sender.sendMessage("/skadmin reward clear");
             sender.sendMessage("/skadmin reward import");
