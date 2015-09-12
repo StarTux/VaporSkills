@@ -50,20 +50,19 @@ class BukkitCommandSkills implements CommandExecutor
         return true;
     }
 
-
     void listSkills(Player player)
     {
         UUID uuid = player.getUniqueId();
         BukkitUtil.msg(player, "");
+        BukkitUtil.msg(player, "&3&lSkills &7&o(Click for more info)");
         List<Object> message = new ArrayList<>();
-        message.add(BukkitUtil.format("&3&lSkills:"));
         for (BukkitSkill skill : getSkills().getSkills()) {
             if (!skill.isEnabled()) continue;
             int skillPoints = (int)getSkills().getScore().getSkillPoints(uuid, skill);
             int skillLevel = getSkills().getScore().getSkillLevel(uuid, skill);
             int pointsInLevel = getSkills().getScore().pointsInLevel(skillPoints);
             int pointsToLevelUp = getSkills().getScore().pointsToLevelUpTo(skillLevel + 1);
-            message.add(" ");
+            if (!message.isEmpty()) message.add(" ");
             message.add(BukkitUtil.button(
                             "&b" + skill.getShorthand() + "&3(&f"+skillLevel+"&3)",
                             "/sk " + skill.getKey(),
