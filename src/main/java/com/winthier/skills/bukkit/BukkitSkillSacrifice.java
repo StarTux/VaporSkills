@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import lombok.Getter;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
@@ -14,20 +15,17 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.player.PlayerDropItemEvent;
-
 import org.bukkit.event.entity.ItemDespawnEvent;
 import org.bukkit.event.entity.ItemMergeEvent;
-import org.bukkit.event.player.PlayerPickupItemEvent;
-
-
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.event.inventory.InventoryPickupItemEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
+import org.bukkit.event.player.PlayerPickupItemEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 
 class BukkitSkillSacrifice extends BukkitSkill implements Listener
 {
-    @lombok.Getter final BukkitSkillType skillType = BukkitSkillType.SACRIFICE;
+    @Getter final BukkitSkillType skillType = BukkitSkillType.SACRIFICE;
     final double RADIUS = 20;
     final Map<UUID, UUID> dropped = new HashMap<>();
 
