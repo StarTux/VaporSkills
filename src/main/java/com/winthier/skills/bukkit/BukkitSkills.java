@@ -112,7 +112,11 @@ public class BukkitSkills extends Skills
         if (player == null) return;
         showLevelUpTitle(player, skill, level);
         BukkitLevelUpEffect.launch(player, level);
-        if (level % 5 == 0) announceLevelUp(player, skill, level);
+        if (level % 5 == 0) {
+            announceLevelUp(player, skill, level);
+        } else {
+            informLevelUp(player, skill, level);
+        }
         if (skill instanceof BukkitSkill) {
             BukkitPlayer.of(player).displaySkill((BukkitSkill)skill, player);
         }
@@ -136,6 +140,19 @@ public class BukkitSkills extends Skills
                 "&r" + WordUtils.wrap(skill.getDescription(), 32)));
     }
 
+    void informLevelUp(Player player, Skill skill, int level)
+    {
+        BukkitUtil.announceRaw(
+            BukkitUtil.format("&fYou reached level %d in ", level),
+            BukkitUtil.button(
+                "&a[" + skill.getDisplayName() + "]",
+                "/sk " + skill.getShorthand(),
+                "&a" + skill.getDisplayName(),
+                // TODO: Put something more interesting here?
+                "&f&oSkill",
+                "&r" + WordUtils.wrap(skill.getDescription(), 32)));
+    }
+    
     @Override
     public Collection<? extends BukkitSkill> getSkills()
     {
