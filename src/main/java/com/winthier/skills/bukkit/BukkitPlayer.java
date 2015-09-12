@@ -52,6 +52,7 @@ class BukkitPlayer
     final Map<BukkitSkillType, BukkitPlayerSkill> skills = new EnumMap<>(BukkitSkillType.class);
     // Instant feedback task
     BukkitRunnable updateTask;
+    boolean shown = false;
 
     BukkitPlayer(UUID uuid)
     {
@@ -163,8 +164,22 @@ class BukkitPlayer
             sidebarObjective.getScore(BukkitUtil.format("&aFor next level")).setScore(pointsForNextLevel);
             sidebarObjective.getScore(BukkitUtil.format("&9Skill Points")).setScore((int)playerSkill.getSkillPoints());
             sidebarObjective.getScore(BukkitUtil.format("&9Money")).setScore((int)playerSkill.getMoney());
-            // sidebarObjective.getScore(BukkitUtil.format("Exp")).setScore((int)playerSkill.getExp());
             player.setScoreboard(scoreboard);
+            if (!shown) {
+                shown = true;
+                BukkitUtil.raw(player,
+                               BukkitUtil.format("You collect skill points. Click "),
+                               BukkitUtil.button("&3[&rSk&3]",
+                                                 "/sk",
+                                                 "Command: &3/sk",
+                                                 "&7Skills overview"),
+                               BukkitUtil.format("&r or "),
+                               BukkitUtil.button("&3[&rHi&3]",
+                                                 "/hi",
+                                                 "Command: &3/hi",
+                                                 "&7Skills highscore"),
+                               BukkitUtil.format("&r for more info."));
+            }
         }
     }
 
