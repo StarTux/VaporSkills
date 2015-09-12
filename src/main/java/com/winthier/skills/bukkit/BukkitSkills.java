@@ -9,6 +9,7 @@ import java.util.Collection;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -211,6 +212,26 @@ public class BukkitSkills extends Skills
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
+            moneys.clear();
+        }
+    }
+
+    void depositSomeMoneys()
+    {
+        try {
+            for (Iterator<Map.Entry<UUID, Double>> iter = moneys.entrySet().iterator(); iter.hasNext(); ) {
+                Map.Entry<UUID, Double> entry = iter.next();
+                Double amount = entry.getValue();
+                if (amount == null || amount < 10) continue;
+                OfflinePlayer player = Bukkit.getServer().getOfflinePlayer(entry.getKey());
+                if (player == null) continue;
+                getPlugin().getEconomy().depositPlayer(player, amount);
+                iter.remove();
+                return;
+            }
+        } catch (Exception e) {
+            System.err.println("Error delivering moneys. Clearing partial amounts.");
+            e.printStackTrace();
             moneys.clear();
         }
     }

@@ -78,7 +78,7 @@ public class BukkitSkillsPlugin extends JavaPlugin implements Listener
         // Tasks
         new BukkitRunnable() {
             @Override public void run() {
-                saveAll();
+                saveSome();
                 updateAllPlayers();
             }
         }.runTaskTimer(this, 20, 20);
@@ -113,6 +113,16 @@ public class BukkitSkillsPlugin extends JavaPlugin implements Listener
         }
     }
 
+    void saveSome()
+    {
+        try {
+            SQLDB.saveAll();
+            skills.depositSomeMoneys();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
     void updateAllPlayers()
     {
         skills.updateAllPlayers();
@@ -156,6 +166,7 @@ public class BukkitSkillsPlugin extends JavaPlugin implements Listener
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event)
     {
+        saveAll();
         skills.players.remove(event.getPlayer().getUniqueId());
     }
 }
