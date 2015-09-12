@@ -79,10 +79,6 @@ public class BukkitSkillsPlugin extends JavaPlugin implements Listener
         new BukkitRunnable() {
             @Override public void run() {
                 saveAll();
-            }
-        }.runTaskTimer(this, 20*10, 20*10);
-        new BukkitRunnable() {
-            @Override public void run() {
                 updateAllPlayers();
             }
         }.runTaskTimer(this, 20, 20);
