@@ -48,10 +48,10 @@ public class BukkitLevelUpEffect extends BukkitRunnable
             if (ticks == 20*4) player.getWorld().playSound(player.getEyeLocation(), Sound.FIREWORK_TWINKLE, .5f, 1);
             if (ticks == 20*6) player.getWorld().playSound(player.getEyeLocation(), Sound.FIREWORK_TWINKLE2, .6f, 1);
             if (ticks == 20*8) player.getWorld().playSound(player.getEyeLocation(), Sound.FIREWORK_TWINKLE2, .5f, 1);
-            if (ticks % 20 == 10) player.getWorld().playSound(player.getEyeLocation(), Sound.ENDERMAN_TELEPORT, .2f, .65f);
         }
         spiral(player, ticks);
         if (ticks == 0) player.getWorld().playSound(player.getEyeLocation(), Sound.LEVEL_UP, 1, 1);
+        if (ticks % 20 == 10) player.getWorld().playSound(player.getEyeLocation(), Sound.ENDERMAN_TELEPORT, .1f, .65f);
     }
 
     void colorful(Player player, int ticks, double height) {
