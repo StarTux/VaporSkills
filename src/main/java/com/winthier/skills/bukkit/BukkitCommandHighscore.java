@@ -97,7 +97,7 @@ class BukkitCommandHighscore implements CommandExecutor
         BukkitUtil.msg(player, "");
         int rank = hi.rankOfPlayer(uuid);
         String rankString = rank > 0 ? "#" + rank : "-";
-        BukkitUtil.msg(player, "&3&l%s &bHighscore &3(Rank &f#%d&3)", skill.getDisplayName(), rankString);
+        BukkitUtil.msg(player, "&3&l%s &bHighscore &3(Rank &f#%s&3)", skill.getDisplayName(), rankString);
         int size = Math.min(10, hi.size());
         for (int i = 0; i < size; ++i) {
             Highscore.Row row = hi.rowAt(i);
