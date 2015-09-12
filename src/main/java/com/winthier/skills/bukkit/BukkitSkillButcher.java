@@ -11,7 +11,7 @@ class BukkitSkillButcher extends BukkitSkillAbstractEntityKill
 
     @Override
     boolean allowEntity(LivingEntity entity) {
-        if (entity instanceof Player) return false;
+        if (!super.allowEntity(entity)) return false;
         if (entity instanceof Ageable && !((Ageable)entity).isAdult()) return false;
         return true;
     }

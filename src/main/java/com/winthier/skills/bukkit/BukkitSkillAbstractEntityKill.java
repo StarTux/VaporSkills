@@ -38,7 +38,13 @@ abstract class BukkitSkillAbstractEntityKill extends BukkitSkill implements List
         return true;
     }
 
-    boolean allowEntity(LivingEntity entity) { return !(entity instanceof Player); }
+    boolean allowEntity(LivingEntity entity)
+    {
+        if (entity instanceof Player) return false;
+        if (entity.getCustomName() != null) return false;
+        return true;
+    }
+    
     boolean useKillDistance() { return false; }
     double minKillDistance() { return 16.0; }
     long killDistanceSeconds() { return 60; }
