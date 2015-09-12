@@ -175,7 +175,7 @@ class BukkitCommandSkills implements CommandExecutor
         if (pivot == 0.0) {
             BukkitUtil.msg(player, prefix + "This item has no value to me");
         } else if (pivot < 0.1) {
-            BukkitUtil.msg(player, prefix + "You will hardly level up, if you sacrifice a lot of these.");
+            BukkitUtil.msg(player, prefix + "You will hardly level up if you sacrifice a lot of these.");
         } else if (pivot < 1) {
             BukkitUtil.msg(player, prefix + "You will level up slowly if you sacrifice a lot of these.");
         } else if (pivot < 5) {
