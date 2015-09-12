@@ -142,7 +142,8 @@ public class BukkitSkills extends Skills
 
     void informLevelUp(Player player, Skill skill, int level)
     {
-        BukkitUtil.announceRaw(
+        BukkitUtil.raw(
+            player,
             BukkitUtil.format("&fYou reached level %d in ", level),
             BukkitUtil.button(
                 "&a[" + skill.getDisplayName() + "]",
