@@ -48,6 +48,6 @@ class BukkitSkillBlacksmith extends BukkitSkill implements Listener
         // Were levels used up?
         int levelsUsed = oldLevel - player.getLevel();
         if (levelsUsed <= 0) return;
-        giveReward(player, rewardForNameAndMaximum("exp_level_cost", levelsUsed), (double)levelsUsed);
+        giveReward(player, rewardForNameAndMaximum("exp_level_cost", levelsUsed));
     }
 }
