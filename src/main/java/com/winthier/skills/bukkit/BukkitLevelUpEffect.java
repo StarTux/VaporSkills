@@ -41,17 +41,17 @@ public class BukkitLevelUpEffect extends BukkitRunnable
             cancel();
             return;
         }
-        if (level >= 10) {
+        if (level % 5 == 0) {
             if (ticks % 8 == 0) colorful(player, ticks, 0.1);
             if (ticks % 8 == 4) colorful(player, ticks, 2.3);
             if (ticks == 20*2) player.getWorld().playSound(player.getEyeLocation(), Sound.FIREWORK_TWINKLE, .6f, 1);
             if (ticks == 20*4) player.getWorld().playSound(player.getEyeLocation(), Sound.FIREWORK_TWINKLE, .5f, 1);
             if (ticks == 20*6) player.getWorld().playSound(player.getEyeLocation(), Sound.FIREWORK_TWINKLE2, .6f, 1);
             if (ticks == 20*8) player.getWorld().playSound(player.getEyeLocation(), Sound.FIREWORK_TWINKLE2, .5f, 1);
+            if (ticks % 20 == 10) player.getWorld().playSound(player.getEyeLocation(), Sound.ENDERMAN_TELEPORT, .2f, .65f);
         }
         spiral(player, ticks);
         if (ticks == 0) player.getWorld().playSound(player.getEyeLocation(), Sound.LEVEL_UP, 1, 1);
-        if (ticks % 20 == 10) player.getWorld().playSound(player.getEyeLocation(), Sound.ENDERMAN_TELEPORT, .2f, .65f);
     }
 
     void colorful(Player player, int ticks, double height) {
