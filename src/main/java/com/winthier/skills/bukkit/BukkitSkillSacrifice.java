@@ -14,6 +14,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityCombustEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.ItemDespawnEvent;
 import org.bukkit.event.entity.ItemMergeEvent;
@@ -34,12 +35,9 @@ class BukkitSkillSacrifice extends BukkitSkill implements Listener
     {
         dropped.put(event.getItemDrop().getUniqueId(), event.getPlayer().getUniqueId());
     }
-    
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
-    public void onEntityDamage(EntityDamageEvent event)
+
+    void onItemSacrificed(Item item)
     {
-        if (!(event.getEntity() instanceof Item)) return;
-        Item item = (Item)event.getEntity();
         if (!item.isValid()) return;
         UUID uuid = dropped.remove(item.getUniqueId());
         if (uuid == null) return;
@@ -52,7 +50,20 @@ class BukkitSkillSacrifice extends BukkitSkill implements Listener
         item.remove();
         for (Reward reward : rewards) giveReward(player, reward, factor);
     }
+    
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+    public void onEntityDamage(EntityDamageEvent event)
+    {
+        if (!(event.getEntity() instanceof Item)) return;
+        onItemSacrificed((Item)event.getEntity());
+    }
 
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
+    public void onEntityCombust(EntityCombustEvent event) {
+        if (!(event.getEntity() instanceof Item)) return;
+        onItemSacrificed((Item)event.getEntity());
+    }
+    
     // Items removed from world
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
