@@ -4,6 +4,7 @@ import com.winthier.skills.Reward;
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.WeakHashMap;
 import lombok.Data;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -48,6 +49,7 @@ class BukkitPlayer
     BukkitSkillType skillOnScoreboard = null;
     BukkitSkillType forcedSkillOnScoreboard = null;
     boolean sidebarEnabled = true;
+    final Map<Scoreboard, Boolean> scoreboardCache = new WeakHashMap<>();
     // Skill points short-term memory
     final Map<BukkitSkillType, BukkitPlayerSkill> skills = new EnumMap<>(BukkitSkillType.class);
     // Instant feedback task
@@ -140,12 +142,15 @@ class BukkitPlayer
             skillOnScoreboard = forcedSkillOnScoreboard;
         }
         if (skillOnScoreboard == null) {
-            player.setScoreboard(Bukkit.getServer().getScoreboardManager().getMainScoreboard());
+            if (scoreboardCache.containsKey(player.getScoreboard())) {
+                player.setScoreboard(Bukkit.getServer().getScoreboardManager().getMainScoreboard());
+            }
         } else {
             BukkitPlayerSkill playerSkill = skills.get(skillOnScoreboard);
             BukkitSkill skill = getSkills().skillByType(skillOnScoreboard);
             if (scoreboard == null) {
                 scoreboard = Bukkit.getServer().getScoreboardManager().getNewScoreboard();
+                scoreboardCache.put(scoreboard, true);
                 sidebarObjective = scoreboard.registerNewObjective("Skills", "dummy");
                 sidebarObjective.setDisplaySlot(DisplaySlot.SIDEBAR);
             }
@@ -188,7 +193,9 @@ class BukkitPlayer
         if (sidebarEnabled == value) return;
         sidebarEnabled = value;
         if (!value) {
-            player.setScoreboard(Bukkit.getServer().getScoreboardManager().getMainScoreboard());
+            if (scoreboardCache.containsKey(player.getScoreboard())) {
+                player.setScoreboard(Bukkit.getServer().getScoreboardManager().getMainScoreboard());
+            }
             scoreboard = null;
             sidebarObjective = null;
             forcedSkillOnScoreboard = null;
