@@ -260,10 +260,10 @@ Blacksmith Name		- 30 exp_level_cost	1 1 0	30
 # Woodcutting
 #===============================================================================
 
-Woodcut Block		Log - -			.5 .5 .5
-Woodcut Block		Log_2 - -		.5 .5 .5
-Woodcut Block		Leaves - -		.1 .1 .1
-Woodcut Block		Leaves_2 - -		.1 .1 .1
+Woodcut Block		Log - -			1 1 1	.75
+Woodcut Block		Log_2 - -		1 1 1	.75
+Woodcut Block		Leaves - -		1 1 1	.1
+Woodcut Block		Leaves_2 - -		1 1 1	.1
 
 #===============================================================================
 # Harvesting
