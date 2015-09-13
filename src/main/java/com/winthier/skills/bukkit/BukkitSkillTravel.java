@@ -27,6 +27,18 @@ class BukkitSkillTravel extends BukkitSkill implements Listener
     double maxTeleportDistance = 128;
     double maxDistanceNoProgress = 96;
 
+    static double horizontalDistanceSquared(Location loc1, Location loc2)
+    {
+        double x = loc2.getX() - loc1.getX();
+        double z = loc2.getZ() - loc1.getZ();
+        return x*x + z*z;
+    }
+
+    static double horizontalDistance(Location loc1, Location loc2)
+    {
+        return Math.sqrt(horizontalDistanceSquared(loc1, loc2));
+    }
+
     @RequiredArgsConstructor
     class Data {
         final UUID uuid;
@@ -46,13 +58,13 @@ class BukkitSkillTravel extends BukkitSkill implements Listener
                 reset(player, loc);
                 return;
             }
-            double newDistance = loc.distance(anchor);
+            double newDistance = horizontalDistance(loc, anchor);
             if (newDistance - distance > distanceStep) {
                 last = loc;
                 distance = newDistance;
                 giveReward(player, rewardForNameAndMaximum("distance", (int)distance));
             } else if (!loc.getWorld().equals(last.getWorld()) ||
-                       loc.distanceSquared(last) > maxDistanceNoProgress*maxDistanceNoProgress) {
+                       horizontalDistanceSquared(loc, last) > maxDistanceNoProgress*maxDistanceNoProgress) {
                 reset(player, loc);
             }
         }
@@ -116,7 +128,7 @@ class BukkitSkillTravel extends BukkitSkill implements Listener
         final Player player = event.getPlayer();
         if (!allowPlayer(player)) return;
         if (!event.getFrom().getWorld().equals(event.getTo().getWorld()) ||
-            event.getFrom().distanceSquared(event.getTo()) > maxTeleportDistance*maxTeleportDistance) {
+            horizontalDistanceSquared(event.getFrom(), event.getTo()) > maxTeleportDistance*maxTeleportDistance) {
             getData(player).reset(player, event.getTo());
         } else {
             getData(player).onPlayerMove(player, event.getTo());
