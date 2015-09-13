@@ -88,6 +88,7 @@ Brawl Entity		- - Guardian		10 10 0		# Vanilla: 10 exp
 Brawl Entity		- - ElderGuardian	10 10 0		# Vanilla: 10 exp
 Brawl Entity		- - EnderDragon		100 100 0	# Vanilla: 12k exp 
 Brawl Entity		- - Wither		50 50 0		# Vanilla: 50 exp 
+Brawl Entity		- - Ghast		5 5 0		# Vanilla: 5 exp
 
 #===============================================================================
 # Hunting
@@ -118,6 +119,7 @@ Hunt Entity		- - Guardian		10 10 0		# Vanilla: 10 exp
 Hunt Entity		- - ElderGuardian	10 10 0		# Vanilla: 10 exp
 Hunt Entity		- - EnderDragon		100 100 0	# Vanilla: 12k exp 
 Hunt Entity		- - Wither		50 50 0		# Vanilla: 50 exp
+Hunt Entity		- - Ghast		5 5 0		# Vanilla: 5 exp
 
 #===============================================================================
 # Breeding
