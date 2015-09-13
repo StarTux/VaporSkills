@@ -33,7 +33,7 @@ build:
   PlacementThreshold: 5
   PlacementInterval: 10
   RepeatInterval: 3600
-  PlacementBlacklist: []
+  PlacementBlacklist: [ Soil ]
 butcher:
   Enabled: true
   RewardFactors: [ 1, 1, 1 ]
@@ -76,7 +76,7 @@ harvest:
   RewardFactors: [ 1, 1, 1 ]
   DisplayName: Harvesting
   Shorthand: Harvest
-  Description: Reap the rewards of your hard gardening work by harvesting cereal, fruit and vegetables.
+  Description: Reap the rewards of your hard gardening work by harvesting crops, fruit and vegetables.
 hunt:
   Enabled: true
   RewardFactors: [ 1, 1, 1 ]
@@ -123,4 +123,4 @@ woodcut:
   DisplayName: Woodcutting
   Shorthand: Woodcut
   Description: Grab your axe and cut down trees to collect lumber for your building projects.
-  RepeatInterval: 3600
+  RepeatInterval: 60
