@@ -25,6 +25,7 @@ Mine Block		Lapis_Ore 0 -		1 1 0	3.5	# Vanilla: 2-5 exp (3.5 avg)
 Mine Block		Quartz_Ore 0 -		1 1 0	3.5	# Vanilla: 2-5 exp (3.5 avg)
 Mine Block		Glowstone 0 -		1 1 1	3
 Mine Block		Ender_Stone 0 -		1 1 1	.1
+Mine Block		Obsidian 0 -		1 1 1	.2
 
 #===============================================================================
 # Digging
