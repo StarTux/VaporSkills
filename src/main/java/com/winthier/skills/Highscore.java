@@ -55,7 +55,7 @@ public class Highscore
         if (rows.isEmpty()) return -1;
         int i = 0;
         for (Row row : rows) {
-            if (row.player.equals(player)) break;
+            if (row.player.equals(player)) return i;
             i += 1;
         }
         return -1;
