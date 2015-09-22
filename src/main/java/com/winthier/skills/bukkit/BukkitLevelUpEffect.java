@@ -16,13 +16,15 @@ public class BukkitLevelUpEffect extends BukkitRunnable
     final UUID player;
     final BukkitSkill skill;
     final int level;
+    final boolean special;
     int ticks = 0;
     final int MAX_TICKS = 20*8;
     final int RADIUS = 64;
 
     static void launch(Player player, BukkitSkill skill, int level)
     {
-        new BukkitLevelUpEffect(player.getUniqueId(), skill, level).runTaskTimer(BukkitSkillsPlugin.getInstance(), 0, 1);
+        boolean special = level > 100 || (level > 50 && level % 5 == 0) || level % 10 == 0;
+        new BukkitLevelUpEffect(player.getUniqueId(), skill, level, special).runTaskTimer(BukkitSkillsPlugin.getInstance(), 0, 1);
     }
 
     Player getPlayer()
@@ -39,35 +41,47 @@ public class BukkitLevelUpEffect extends BukkitRunnable
             return;
         }
         Player player = getPlayer();
-        if (player == null) {
+        if (player == null || !player.isValid()) {
             cancel();
             return;
         }
-        if (ticks == 0) {
-            showLevelUpTitle(player);
-            if (level % 5 == 0) {
+        if (special) {
+            if (ticks == 0) {
                 announceLevelUp(player);
-            } else {
-                informLevelUp(player);
+                showLevelUpTitle(player);
             }
-        }
-        if (level % 5 == 0) {
             if (ticks % 8 == 0) colorful(player, ticks, 0.1);
             if (ticks % 8 == 4) colorful(player, ticks, 2.3);
             if (ticks == 20*2) player.getWorld().playSound(player.getEyeLocation(), Sound.FIREWORK_TWINKLE, .6f, 1);
             if (ticks == 20*4) player.getWorld().playSound(player.getEyeLocation(), Sound.FIREWORK_TWINKLE, .5f, 1);
             if (ticks == 20*6) player.getWorld().playSound(player.getEyeLocation(), Sound.FIREWORK_TWINKLE2, .6f, 1);
             if (ticks == 20*8) player.getWorld().playSound(player.getEyeLocation(), Sound.FIREWORK_TWINKLE2, .5f, 1);
+        } else {
+            if (ticks == 0) {
+                informLevelUp(player);
+                showLevelUpSubtitle(player, 0);
+            } if (ticks == 40) {
+                showLevelUpSubtitle(player, 1);
+            }
         }
-        spiral(player, ticks);
         if (ticks == 0) player.getWorld().playSound(player.getEyeLocation(), Sound.LEVEL_UP, 1, 1);
         if (ticks % 20 == 10) player.getWorld().playSound(player.getEyeLocation(), Sound.ENDERMAN_TELEPORT, .1f, .65f);
+        spiral(player, ticks);
     }
 
 
     void showLevelUpTitle(Player player)
     {
-        BukkitUtil.title(player, "&b"+skill.getDisplayName(), "&bLevel " + level);
+        BukkitUtil.title(player, "&a"+skill.getDisplayName(), "&aLevel " + level);
+    }
+
+    void showLevelUpSubtitle(Player player, int n)
+    {
+        if (n == 0) {
+            BukkitUtil.title(player, "", "&a"+skill.getDisplayName());
+        } else if (n == 1) {
+            BukkitUtil.title(player, "", "&aLevel " + level);
+        }
     }
 
     void announceLevelUp(Player player)
