@@ -83,6 +83,8 @@ hunt:
   DisplayName: Hunting
   Shorthand: Hunt
   Description: Snipe dangerous creatures from afar with your bow to stay out of harms way.
+  KillDistanceInterval: 300
+  MinKillDistance: 16
 mine:
   Enabled: true
   RewardFactors: [ 1, 1, 1 ]
