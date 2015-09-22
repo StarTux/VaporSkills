@@ -59,6 +59,8 @@ eat:
   DisplayName: Eating
   Shorthand: Eat
   Description: Eat healthy and tasty food to maintain your stamina, heal up and refresh.
+  FoodLevelFactor: 1
+  SaturationFactor: 1
 enchant:
   Enabled: true
   RewardFactors: [ 1, 1, 1 ]
