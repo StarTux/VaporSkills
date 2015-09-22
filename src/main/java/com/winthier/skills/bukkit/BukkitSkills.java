@@ -54,6 +54,7 @@ public class BukkitSkills extends Skills
             new BukkitSkillHunt(),
             new BukkitSkillMine(),
             new BukkitSkillSacrifice(),
+            new BukkitSkillShear(),
             new BukkitSkillSmelt(),
             new BukkitSkillTame(),
             new BukkitSkillTravel(),

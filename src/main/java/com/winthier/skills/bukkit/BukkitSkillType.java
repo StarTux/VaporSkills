@@ -17,6 +17,7 @@ public enum BukkitSkillType
     HUNT,
     MINE,
     SACRIFICE,
+    SHEAR,
     SMELT,
     TAME,
     TRAVEL,

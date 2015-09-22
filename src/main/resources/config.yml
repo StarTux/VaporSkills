@@ -98,6 +98,12 @@ sacrifice:
   DisplayName: Sacrifice
   Shorthand: Sacrifice
   Description: Sacrifice your precious offerings to the almighty Creeper Overlord in exchange for his blessing.
+shear:
+  Enabled: true
+  RewardFactors: [ 1, 1, 1 ]
+  DisplayName: Shearing
+  Shorthand: Shear
+  Description: Use shears to harvest wool from sheep.
 smelt:
   Enabled: true
   RewardFactors: [ 1, 1, 1 ]
