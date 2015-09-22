@@ -19,10 +19,10 @@ Mine Block		Stone 1 -		1 1 1	.1	# Granite
 Mine Block		Stone 3 -		1 1 1	.1	# Diorite
 Mine Block		Stone 5 -		1 1 1	.1	# Andesite
 Mine Block		Coal_Ore 0 -		1 1 1	.5	# Vanilla: 0-2 exp (1 avg)
-Mine Block		Redstone_Ore 0 -	1 1 0	3	# Vanilla: 1-5 exp (3 avg)
-Mine Block	Glowing_Redstone_Ore 0 -	1 1 0	3	# Vanilla: 1-5 exp (3 avg)
+Mine Block		Redstone_Ore 0 -	1 1 0	2	# Vanilla: 1-5 exp (3 avg)
+Mine Block	Glowing_Redstone_Ore 0 -	1 1 0	2	# Vanilla: 1-5 exp (3 avg)
 Mine Block		Lapis_Ore 0 -		1 1 0	3.5	# Vanilla: 2-5 exp (3.5 avg)
-Mine Block		Quartz_Ore 0 -		1 1 0	3.5	# Vanilla: 2-5 exp (3.5 avg)
+Mine Block		Quartz_Ore 0 -		1 1 0	2	# Vanilla: 2-5 exp (3.5 avg)
 Mine Block		Glowstone 0 -		1 1 1	3
 Mine Block		Ender_Stone 0 -		1 1 1	.1
 Mine Block		Obsidian 0 -		1 1 1	.2
