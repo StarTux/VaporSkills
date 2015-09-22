@@ -118,7 +118,7 @@ travel:
   Description: Leave your home and travel out in the world on foot, boat, or horseback to explore the wide world of Winthier.
   DistanceStep: 16
   MaxTeleportDistance: 128
-  MaxDistanceNoProgress: 96
+  MaxDistanceNoProgress: 128
 woodcut:
   Enabled: true
   RewardFactors: [ 1, 1, 1 ]
