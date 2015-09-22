@@ -92,9 +92,7 @@ class BukkitCommandAdmin implements CommandExecutor
                 sender.sendMessage("Invalid level: " + args[3]);
                 return true;
             }
-            getSkills().showLevelUpTitle(player, skill, skillLevel);
-            BukkitLevelUpEffect.launch(player, skillLevel);
-            getSkills().announceLevelUp(player, skill, skillLevel);
+            BukkitLevelUpEffect.launch(player, skill, skillLevel);
         } else if (cmd.equals("backlog")) {
             sender.sendMessage("Moneys: " + getSkills().getMoneys().size());
             sender.sendMessage("Score: " + SQLScore.getDirties().size());

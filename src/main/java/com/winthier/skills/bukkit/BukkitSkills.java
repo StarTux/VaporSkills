@@ -15,7 +15,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import lombok.Getter;
-import org.apache.commons.lang3.text.WordUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -112,48 +111,10 @@ public class BukkitSkills extends Skills
     {
         Player player = Bukkit.getServer().getPlayer(uuid);
         if (player == null) return;
-        showLevelUpTitle(player, skill, level);
-        BukkitLevelUpEffect.launch(player, level);
-        if (level % 5 == 0) {
-            announceLevelUp(player, skill, level);
-        } else {
-            informLevelUp(player, skill, level);
-        }
         if (skill instanceof BukkitSkill) {
+            BukkitLevelUpEffect.launch(player, (BukkitSkill)skill, level);
             BukkitPlayer.of(player).displaySkill((BukkitSkill)skill, player);
         }
-    }
-
-    void showLevelUpTitle(Player player, Skill skill, int level)
-    {
-        BukkitUtil.title(player, "&b"+skill.getDisplayName(), "&bLevel " + level);
-    }
-
-    void announceLevelUp(Player player, Skill skill, int level)
-    {
-        BukkitUtil.announceRaw(
-            BukkitUtil.format("&f%s reached level %d in ", player.getName(), level),
-            BukkitUtil.button(
-                "&a[" + skill.getDisplayName() + "]",
-                "/sk " + skill.getShorthand(),
-                "&a" + skill.getDisplayName(),
-                // TODO: Put something more interesting here?
-                "&f&oSkill",
-                "&r" + WordUtils.wrap(skill.getDescription(), 32)));
-    }
-
-    void informLevelUp(Player player, Skill skill, int level)
-    {
-        BukkitUtil.raw(
-            player,
-            BukkitUtil.format("&fYou reached level %d in ", level),
-            BukkitUtil.button(
-                "&a[" + skill.getDisplayName() + "]",
-                "/sk " + skill.getShorthand(),
-                "&a" + skill.getDisplayName(),
-                // TODO: Put something more interesting here?
-                "&f&oSkill",
-                "&r" + WordUtils.wrap(skill.getDescription(), 32)));
     }
     
     @Override

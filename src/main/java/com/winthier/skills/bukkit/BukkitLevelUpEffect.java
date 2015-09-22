@@ -2,6 +2,7 @@ package com.winthier.skills.bukkit;
 
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.text.WordUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Effect;
 import org.bukkit.Sound; 
@@ -13,14 +14,15 @@ import org.bukkit.scheduler.BukkitRunnable;
 public class BukkitLevelUpEffect extends BukkitRunnable
 {
     final UUID player;
+    final BukkitSkill skill;
     final int level;
     int ticks = 0;
     final int MAX_TICKS = 20*8;
     final int RADIUS = 64;
 
-    static void launch(Player player, int level)
+    static void launch(Player player, BukkitSkill skill, int level)
     {
-        new BukkitLevelUpEffect(player.getUniqueId(), level).runTaskTimer(BukkitSkillsPlugin.getInstance(), 0, 1);
+        new BukkitLevelUpEffect(player.getUniqueId(), skill, level).runTaskTimer(BukkitSkillsPlugin.getInstance(), 0, 1);
     }
 
     Player getPlayer()
@@ -41,6 +43,14 @@ public class BukkitLevelUpEffect extends BukkitRunnable
             cancel();
             return;
         }
+        if (ticks == 0) {
+            showLevelUpTitle(player);
+            if (level % 5 == 0) {
+                announceLevelUp(player);
+            } else {
+                informLevelUp(player);
+            }
+        }
         if (level % 5 == 0) {
             if (ticks % 8 == 0) colorful(player, ticks, 0.1);
             if (ticks % 8 == 4) colorful(player, ticks, 2.3);
@@ -54,6 +64,39 @@ public class BukkitLevelUpEffect extends BukkitRunnable
         if (ticks % 20 == 10) player.getWorld().playSound(player.getEyeLocation(), Sound.ENDERMAN_TELEPORT, .1f, .65f);
     }
 
+
+    void showLevelUpTitle(Player player)
+    {
+        BukkitUtil.title(player, "&b"+skill.getDisplayName(), "&bLevel " + level);
+    }
+
+    void announceLevelUp(Player player)
+    {
+        BukkitUtil.announceRaw(
+            BukkitUtil.format("&f%s reached level %d in ", player.getName(), level),
+            BukkitUtil.button(
+                "&a[" + skill.getDisplayName() + "]",
+                "/sk " + skill.getShorthand(),
+                "&a" + skill.getDisplayName(),
+                // TODO: Put something more interesting here?
+                "&f&oSkill",
+                "&r" + WordUtils.wrap(skill.getDescription(), 32)));
+    }
+
+    void informLevelUp(Player player)
+    {
+        BukkitUtil.raw(
+            player,
+            BukkitUtil.format("&fYou reached level %d in ", level),
+            BukkitUtil.button(
+                "&a[" + skill.getDisplayName() + "]",
+                "/sk " + skill.getShorthand(),
+                "&a" + skill.getDisplayName(),
+                // TODO: Put something more interesting here?
+                "&f&oSkill",
+                "&r" + WordUtils.wrap(skill.getDescription(), 32)));
+    }
+    
     void colorful(Player player, int ticks, double height) {
         World world = player.getWorld();
         world.spigot().playEffect(player.getLocation().add(0,
