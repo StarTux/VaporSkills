@@ -10,6 +10,7 @@ import java.util.UUID;
 public class Score
 {
     final Map<String, Highscore> highscores = new HashMap<>();
+    Highscore totalHighscore = null;
     
     public void giveSkillPoints(UUID player, Skill skill, double points)
     {
@@ -155,11 +156,20 @@ public class Score
     
     public Highscore getHighscore(Skill skill)
     {
-        Highscore result = highscores.get(skill);
-        if (result == null || result.ageInSeconds() > 60) {
-            result = Highscore.create(skill);
-            highscores.put(skill.getKey(), result);
+        if (skill == null) {
+            Highscore result = totalHighscore;
+            if (result == null || result.ageInSeconds() > 60*10) {
+                result = Highscore.create(null);
+                totalHighscore = result;
+            }
+            return result;
+        } else {
+            Highscore result = highscores.get(skill);
+            if (result == null || result.ageInSeconds() > 60) {
+                result = Highscore.create(skill);
+                highscores.put(skill.getKey(), result);
+            }
+            return result;
         }
-        return result;
     }
 }

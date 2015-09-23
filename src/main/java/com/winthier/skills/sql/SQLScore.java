@@ -1,9 +1,13 @@
 package com.winthier.skills.sql;
 
+import com.avaje.ebean.SqlQuery;
+import com.avaje.ebean.SqlRow;
 import com.avaje.ebean.validation.Length;
 import com.avaje.ebean.validation.NotEmpty;
 import com.avaje.ebean.validation.NotNull;
 import com.winthier.skills.Skill;
+import com.winthier.skills.Skills;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -35,6 +39,7 @@ public class SQLScore
 {
     static final float SAVING_THRESHOLD = 200.0f;
     // Cache
+    @Value public static class Entry { UUID player; double skillPoints; int skillLevel; }
     @Value static class Key { UUID player; String skill; }
     final static Map<Key, SQLScore> cache = new HashMap<>();
     @Getter final static Set<SQLScore> dirties = new HashSet<>();
@@ -73,13 +78,35 @@ public class SQLScore
 	return result;
     }
 
-    public static List<SQLScore> rank(Skill skill)
+    public static List<Entry> rank(Skill skill)
     {
-        return SQLDB.get().find(SQLScore.class).where()
-            .eq("skill_id", SQLString.of(skill.getKey()).getId())
-            .gt("skill_level", 0)
-            .orderBy("skill_points DESC")
-            .findList();
+        if (skill == null) return rank();
+        List<Entry> result = new ArrayList<>();
+        for (SQLScore score : SQLDB.get().find(SQLScore.class).where()
+                 .eq("skill_id", SQLString.of(skill.getKey()).getId())
+                 .gt("skill_level", 0)
+                 .orderBy("skill_points DESC")
+                 .setMaxRows(100)
+                 .findList()) {
+            result.add(new Entry(score.getPlayer().getUuid(), score.getSkillPoints(), score.getSkillLevel()));
+        }
+        return result;
+    }
+
+    public static List<Entry> rank()
+    {
+        List<Integer> skillIds = new ArrayList<>();
+        for (Skill skill : Skills.getInstance().getSkills()) skillIds.add(SQLString.of(skill.getKey()).getId());
+        SqlQuery query = SQLDB.get().createSqlQuery("SELECT player_id, uuid, SUM(skill_points) AS skill_points FROM scores JOIN players ON player_id = players.id WHERE skill_id IN (:skill_ids) GROUP BY player_id ORDER BY skill_points DESC LIMIT 100");
+        query.setParameter("skill_ids", skillIds);
+        List<Entry> result = new ArrayList<>();
+        for (SqlRow row : query.findList()) {
+            UUID uuid = UUID.fromString(row.getString("uuid"));
+            double skillPoints = (double)row.getFloat("skill_points") / (double)skillIds.size();
+            int skillLevel = Skills.getInstance().getScore().levelForPoints(skillPoints);
+            result.add(new Entry(uuid, skillPoints, skillLevel));
+        }
+        return result;
     }
 
     public void setDirty(float val)

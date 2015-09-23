@@ -28,8 +28,8 @@ public class Highscore
         Highscore result = new Highscore();
         int lastLevel = -1;
         int rank = 0;
-        for (SQLScore score : SQLScore.rank(skill)) {
-            UUID player = score.getPlayer().getUuid();
+        for (SQLScore.Entry score : SQLScore.rank(skill)) {
+            UUID player = score.getPlayer();
             int skillPoints = (int)score.getSkillPoints();
             int skillLevel = score.getSkillLevel();
             if (skillLevel != lastLevel) {

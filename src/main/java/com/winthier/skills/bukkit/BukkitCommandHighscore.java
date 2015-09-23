@@ -66,12 +66,22 @@ class BukkitCommandHighscore implements CommandExecutor
         BukkitUtil.msg(player, "");
         BukkitUtil.msg(player, "&3&lHighscore &7&o(Click for more info)");
         List<Object> message = new ArrayList<>();
+        Highscore hi = getSkills().getScore().getHighscore(null);
+        int rank = hi.rankOfPlayer(uuid);
+        String rankString = rank > 0 ? "#" + rank : "-";
+        message.add(BukkitUtil.button(
+                        "&bTotal&3(&f"+rankString+"&3)",
+                        "/hi total",
+                        "&3&lTotal &f" + rankString,
+                        formatHighscoreAroundPlayer(hi, uuid),
+                        "&r" + WordUtils.wrap("The total skill level is made of the average skill points of all skills.", 32),
+                        "&7Click for more details"));
         for (BukkitSkill skill : getSkills().getSkills()) {
             if (!skill.isEnabled()) continue;
-            Highscore hi = getSkills().getScore().getHighscore(skill);
-            int rank = hi.rankOfPlayer(uuid);
-            String rankString = rank > 0 ? "#" + rank : "-";
-            if (!message.isEmpty()) message.add(" ");
+            hi = getSkills().getScore().getHighscore(skill);
+            rank = hi.rankOfPlayer(uuid);
+            rankString = rank > 0 ? "#" + rank : "-";
+            message.add(" ");
             message.add(BukkitUtil.button(
                             "&b" + skill.getShorthand() + "&3(&f"+rankString+"&3)",
                             "/hi " + skill.getKey(),
@@ -87,17 +97,25 @@ class BukkitCommandHighscore implements CommandExecutor
     // TODO page numbers
     void skillDetail(Player player, String name)
     {
-        BukkitSkill skill = getSkills().skillByName(name);
-        if (skill == null) {
-            player.sendMessage("Skill not found: " + name);
-            return;
+        Highscore hi;
+        String displayName;
+        if ("total".equals(name)) {
+            hi = getSkills().getScore().getHighscore(null);
+            displayName = "Total";
+        } else {
+            BukkitSkill skill = getSkills().skillByName(name);
+            if (skill == null) {
+                player.sendMessage("Skill not found: " + name);
+                return;
+            }
+            hi = getSkills().getScore().getHighscore(skill);
+            displayName = skill.getDisplayName();
         }
         final UUID uuid = player.getUniqueId();
-        Highscore hi = getSkills().getScore().getHighscore(skill);
         BukkitUtil.msg(player, "");
         int rank = hi.rankOfPlayer(uuid);
         String rankString = rank > 0 ? "#" + rank : "-";
-        BukkitUtil.msg(player, "&3&l%s &bHighscore &3(Rank &f%s&3)", skill.getDisplayName(), rankString);
+        BukkitUtil.msg(player, "&3&l%s &bHighscore &3(Rank &f%s&3)", displayName, rankString);
         int size = Math.min(10, hi.size());
         for (int i = 0; i < size; ++i) {
             Highscore.Row row = hi.rowAt(i);
