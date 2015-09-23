@@ -33,8 +33,10 @@ class BukkitSkillHunt extends BukkitSkill implements Listener
         Player player = (Player)arrow.getShooter();
         if (!allowPlayer(player)) return;
         LivingEntity entity = (LivingEntity)event.getEntity();
+        if (entity.getCustomName() != null) return;
         if (BukkitExploits.getInstance().recentKillDistance(player, entity.getLocation(), killDistanceInterval) < minKillDistance) return;
         double percentage = BukkitExploits.getInstance().getEntityDamageByPlayerRemainderPercentage(entity, Math.min(entity.getHealth(), event.getFinalDamage()));
+        if (getSkills().hasDebugMode(player)) BukkitUtil.msg(player, "&eHunt Dmg=%.02f/%.02f Pct=%.02f", event.getFinalDamage(), entity.getMaxHealth(), percentage);
         giveReward(player, rewardForEntity(entity), percentage);
     }
 }
