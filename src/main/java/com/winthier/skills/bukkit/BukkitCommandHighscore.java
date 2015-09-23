@@ -74,7 +74,7 @@ class BukkitCommandHighscore implements CommandExecutor
                         "/hi total",
                         "&3&lTotal &f" + rankString,
                         formatHighscoreAroundPlayer(hi, uuid),
-                        "&r" + WordUtils.wrap("The total skill level is made of the average skill points of all skills.", 32),
+                        "&r" + WordUtils.wrap(getPlugin().getConfig().getString("total.Description", ""), 32),
                         "&7Click for more details"));
         for (BukkitSkill skill : getSkills().getSkills()) {
             if (!skill.isEnabled()) continue;
