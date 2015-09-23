@@ -1,41 +1,39 @@
 package com.winthier.skills.bukkit;
 
-import org.bukkit.entity.Entity;
+import com.winthier.exploits.bukkit.BukkitExploits;
+import lombok.Getter;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
-class BukkitSkillBrawl extends BukkitSkillAbstractEntityKill
+class BukkitSkillBrawl extends BukkitSkill implements Listener
 {
-    @lombok.Getter final BukkitSkillType skillType = BukkitSkillType.BRAWL;
-    final double KILL_DISTANCE = 16;
-    final long KILL_DISTANCE_SECONDS = 60L * 5;
+    @Getter final BukkitSkillType skillType = BukkitSkillType.BRAWL;
+    long killDistanceInterval = 300;
+    double minKillDistance = 16;
 
     @Override
-    boolean allowDamager(Entity entity, Player player)
+    public void configure()
     {
-        return entity == player;
+        super.configure();
+        killDistanceInterval = getConfig().getLong("KillDistanceInterval", 300);
+        minKillDistance = getConfig().getDouble("MinKillDistance", 16);
     }
 
-    @Override
-    boolean useKillDistance()
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+    public void onEntityDamageByEntity(EntityDamageByEntityEvent event)
     {
-        return true;
-    }
-
-    @Override
-    double minKillDistance()
-    {
-        return KILL_DISTANCE;
-    }
-
-    @Override
-    long killDistanceSeconds()
-    {
-        return KILL_DISTANCE_SECONDS;
-    }
-
-    @Override
-    double scoreMultiplier(Player player, Entity entity)
-    {
-        return 1.0;
+        if (!(event.getDamager() instanceof Player)) return;
+        Player player = (Player)event.getDamager();
+        if (!allowPlayer(player)) return;
+        LivingEntity entity = (LivingEntity)event.getEntity();
+        if (entity.getCustomName() != null) return;
+        if (BukkitExploits.getInstance().recentKillDistance(player, entity.getLocation(), killDistanceInterval) < minKillDistance) return;
+        double percentage = BukkitExploits.getInstance().getEntityDamageByPlayerRemainderPercentage(entity, Math.min(entity.getHealth(), event.getFinalDamage()));
+        if (getSkills().hasDebugMode(player)) BukkitUtil.msg(player, "&eBrawl Dmg=%.02f/%.02f Pct=%.02f", event.getFinalDamage(), entity.getMaxHealth(), percentage);
+        giveReward(player, rewardForEntity(entity), percentage);
     }
 }
