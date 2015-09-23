@@ -315,260 +315,274 @@ Harvest Block		Cocoa 11 -		1 1 1	.2
 # Stabilize market prices
 #===============================================================================
 
-Sacrifice Item		Iron_Ingot - -		1 1 1
-Sacrifice Item		Ink_Sack 4 -		1 1 1	.5	# Lapis Lazuli
-Sacrifice Item		Lapis_Ore - -		1 1 1
-Sacrifice Item		Diamond 0 -		5 70 5
-Sacrifice Item		Nether_Star - -		10 1000 10
-Sacrifice Item		Dragon_Egg - -		10 500 10
+Sacrifice Item		Iron_Ingot - -		1 1 0		1
+Sacrifice Item		Iron_Ore - -		1 1 0		1
+Sacrifice Item		Iron_Block - -		1 1 0		1
+Sacrifice Item		Ink_Sack 4 -		1 1 0		.5	# Lapis Lazuli
+Sacrifice Item		Lapis_Ore - -		1 1 0		1
 
-Sacrifice Item		Coal 0 -		1 1 1 .1
-Sacrifice Item		Coal_Ore - -		1 1 1 .25
+Sacrifice Item		Diamond 0 -		5 70 0		1
+Sacrifice Item		Diamond_Ore 0 -		5 70 0		1
+Sacrifice Item		Diamond_Block 0 -	5 70 0		9
 
-Sacrifice Item		Gold_Ore - -		1 1 1 2
+Sacrifice Item		Nether_Star - -		50 1000 0	1
+Sacrifice Item		Dragon_Egg - -		10 0 0		1
 
-Sacrifice Item		Emerald_Ore - -		1 1 1 5
+Sacrifice Item		Coal 0 -		1 0 0	.1
+Sacrifice Item		Coal_Ore - -		1 0 0	.25
 
-Sacrifice Item		Quartz - -		1 1 1
-Sacrifice Item		Quartz_Block - -	1 1 1 4
-Sacrifice Item		Quartz_Ore - -		1 1 1
+Sacrifice Item		Gold_Ore - -		1 0 0	2
 
-Sacrifice Item		Redstone_Ore - -	1 1 1	.05
-Sacrifice Item		Glowing_Redstone_Ore - - 1 1 1	.05
+Sacrifice Item		Emerald_Ore - -		1 0 0	5
 
-Sacrifice Item		Diamond_Ore 0 -		5 70 5	1
-Sacrifice Item		Diamond_Block 0 -	5 70 5	9
+Sacrifice Item		Quartz - -		1 0 0
+Sacrifice Item		Quartz_Block - -	1 0 0	4
+Sacrifice Item		Quartz_Ore - -		1 0 0
 
-Sacrifice Item		Iron_Ore - -		1 1 1	1
-Sacrifice Item		Iron_Block - -		1 1 1	1
+Sacrifice Item		Redstone_Ore - -	1 0 0	.05
+Sacrifice Item	Glowing_Redstone_Ore - - 	1 0 0	.05
 
-Sacrifice Item		Record_10 - -		1 1 1
-Sacrifice Item		Record_11 - -		1 1 1
-Sacrifice Item		Record_12 - -		1 1 1
-Sacrifice Item		Record_3 - -		1 1 1
-Sacrifice Item		Record_4 - -		1 1 1
-Sacrifice Item		Record_5 - -		1 1 1
-Sacrifice Item		Record_6 - -		1 1 1
-Sacrifice Item		Record_7 - -		1 1 1
-Sacrifice Item		Record_8 - -		1 1 1
-Sacrifice Item		Record_9 - -		1 1 1
+Sacrifice Item		Record_10 - -		1 0 0
+Sacrifice Item		Record_11 - -		1 0 0
+Sacrifice Item		Record_12 - -		1 0 0
+Sacrifice Item		Record_3 - -		1 0 0
+Sacrifice Item		Record_4 - -		1 0 0
+Sacrifice Item		Record_5 - -		1 0 0
+Sacrifice Item		Record_6 - -		1 0 0
+Sacrifice Item		Record_7 - -		1 0 0
+Sacrifice Item		Record_8 - -		1 0 0
+Sacrifice Item		Record_9 - -		1 0 0
 
-Sacrifice Item		Apple - -		1 1 1	.01
-Sacrifice Item		Arrow - -		1 1 1	.01
-Sacrifice Item		Baked_Potato - -	1 1 1	.01
-Sacrifice Item		Blaze_Powder - -	1 1 1	.01
-Sacrifice Item		Blaze_Rod - -		1 1 1	.01
-Sacrifice Item		Bone - -		1 1 1	.01
-Sacrifice Item		Book - -		1 1 1	.01
-Sacrifice Item		Bread - -		1 1 1	.01
-Sacrifice Item		Brown_Mushroom - -	1 1 1	.01
-Sacrifice Item		Cactus - -		1 1 1	.01
-Sacrifice Item		Cake - -		1 1 1	.01
-Sacrifice Item		Carrot_Item - -		1 1 1	.01
-Sacrifice Item		Clay - -		1 1 1	.01
-Sacrifice Item		Clay_Ball - -		1 1 1	.01
-Sacrifice Item		Clay_Brick - -		1 1 1	.01
-Sacrifice Item		Cobblestone - -		1 1 1	.01
-Sacrifice Item		Cocoa - -		1 1 1	.01
-Sacrifice Item		Cooked_Beef - -		1 1 1	.01
-Sacrifice Item		Cooked_Chicken - -	1 1 1	.01
-Sacrifice Item		Cooked_Fish - -		1 1 1	.01
-Sacrifice Item		Cookie - -		1 1 1	.01
-Sacrifice Item		Egg - -			1 1 1	.01
-Sacrifice Item		Emerald - -		1 1 1	.01
-Sacrifice Item		Emerald_Block - -	1 1 1	.01
-Sacrifice Item		Enchanted_Book - -	1 1 1	.01
-Sacrifice Item		Ender_Pearl - -		1 1 1	.01
-Sacrifice Item		Exp_Bottle - -		1 1 1	.01
-Sacrifice Item		Eye_Of_Ender - -	1 1 1	.01
-Sacrifice Item		Feather - -		1 1 1	.01
-Sacrifice Item	Fermented_Spider_Eye - -	1 1 1	.01
-Sacrifice Item		Ghast_Tear - -		1 1 1	.01
-Sacrifice Item		Glass - -		1 1 1	.01
-Sacrifice Item		Glowstone - -		1 1 1	.01
-Sacrifice Item		Glowstone_Dust - -	1 1 1	.01
-Sacrifice Item		Gold_Block - -		1 1 1	.01
-Sacrifice Item		Gold_Ingot - -		1 1 1	.01
-Sacrifice Item		Gold_Record - -		1 1 1	.01
-Sacrifice Item		Golden_Apple - -	1 1 1	.01
-Sacrifice Item		Golden_Carrot - -	1 1 1	.01
-Sacrifice Item		Green_Record - -	1 1 1	.01
-Sacrifice Item		Grilled_Pork - -	1 1 1	.01
-Sacrifice Item		Hay_Block - -		1 1 1	.01
-Sacrifice Item		Ink_Sack - -		1 1 1	.01
-Sacrifice Item		Jack_O_Lantern - -	1 1 1	.01
-Sacrifice Item		Leather - -		1 1 1	.01
-Sacrifice Item		Leaves - -		1 1 1	.01
-Sacrifice Item		Log - -			1 1 1	.01
-Sacrifice Item		Melon - -		1 1 1	.01
-Sacrifice Item		Melon_Block - -		1 1 1	.01
-Sacrifice Item		Melon_Seeds - -		1 1 1	.01
-Sacrifice Item		Mossy_Cobblestone - -	1 1 1	.01
-Sacrifice Item		Nether_Stalk - -	1 1 1	.01
-Sacrifice Item		Poisonous_Potato - -	1 1 1	.01
-Sacrifice Item		Pork - -		1 1 1	.01
-Sacrifice Item		Potato_Item - -		1 1 1	.01
-Sacrifice Item		Prismarine - -		1 1 1	.01
-Sacrifice Item	Prismarine_Crystals - -		1 1 1	.01
-Sacrifice Item	Prismarine_Shard - -		1 1 1	.01
-Sacrifice Item		Pumpkin - -		1 1 1	.01
-Sacrifice Item		Pumpkin_Pie - -		1 1 1	.01
-Sacrifice Item		Pumpkin_Seeds - -	1 1 1	.01
-Sacrifice Item		Raw_Beef - -		1 1 1	.01
-Sacrifice Item		Raw_Chicken - -		1 1 1	.01
-Sacrifice Item		Raw_Fish - -		1 1 1	.01
-Sacrifice Item		Red_Mushroom - -	1 1 1	.01
-Sacrifice Item		Red_Rose - -		1 1 1	.01
-Sacrifice Item		Sapling - -		1 1 1	.01
-Sacrifice Item		Sea_Lantern - -		1 1 1	.01
-Sacrifice Item		Seeds - -		1 1 1	.01
-Sacrifice Item		Skull_Item - -		1 1 1	.01
-Sacrifice Item		Smooth_Brick - -	1 1 1	.01
-Sacrifice Item		Snow_Ball - -		1 1 1	.01
-Sacrifice Item		Speckled_Melon - -	1 1 1	.01
-Sacrifice Item		Spider_Eye - -		1 1 1	.01
-Sacrifice Item		Stone - -		1 1 1	.01
-Sacrifice Item		String - -		1 1 1	.01
-Sacrifice Item		Sugar - -		1 1 1	.01
-Sacrifice Item		Sugar_Cane - -		1 1 1	.01
-Sacrifice Item		Sulphur - -		1 1 1	.01
-Sacrifice Item		TNT - -			1 1 1	.01
-Sacrifice Item		Vine - -		1 1 1	.01
-Sacrifice Item		Water_Lily - -		1 1 1	.01
-Sacrifice Item		Wheat - -		1 1 1	.01
-Sacrifice Item		Wool - -		1 1 1	.01
-Sacrifice Item		Yellow_Flower - -	1 1 1	.01
-Sacrifice Item		Coal 1 -		1 1 1	.01
+Sacrifice Item		Apple - -		1 0 0	.016
+Sacrifice Item		Arrow - -		1 0 0	.016
+Sacrifice Item		Baked_Potato - -	1 0 0	.016
+Sacrifice Item		Blaze_Powder - -	1 0 0	.016
+Sacrifice Item		Blaze_Rod - -		1 0 0	.016
+Sacrifice Item		Bone - -		1 0 0	.016
+Sacrifice Item		Book - -		1 0 0	.016
+Sacrifice Item		Bread - -		1 0 0	.016
+Sacrifice Item		Brown_Mushroom - -	1 0 0	.016
+Sacrifice Item		Cactus - -		1 0 0	.016
+Sacrifice Item		Cake - -		1 0 0	.016
+Sacrifice Item		Carrot_Item - -		1 0 0	.016
+Sacrifice Item		Clay - -		1 0 0	.016
+Sacrifice Item		Clay_Ball - -		1 0 0	.016
+Sacrifice Item		Clay_Brick - -		1 0 0	.016
+Sacrifice Item		Coal 1 -		1 0 0	.016
+Sacrifice Item		Cobblestone - -		1 0 0	.016
+Sacrifice Item		Cocoa - -		1 0 0	.016
+Sacrifice Item		Cooked_Beef - -		1 0 0	.016
+Sacrifice Item		Cooked_Chicken - -	1 0 0	.016
+Sacrifice Item		Cooked_Fish - -		1 0 0	.016
+Sacrifice Item		Cookie - -		1 0 0	.016
+Sacrifice Item		Egg - -			1 0 0	.016
+Sacrifice Item		Emerald - -		1 0 0	.016
+Sacrifice Item		Emerald_Block - -	1 0 0	.016
+Sacrifice Item		Enchanted_Book - -	1 0 0	.016
+Sacrifice Item		Ender_Pearl - -		1 0 0	.016
+Sacrifice Item		Exp_Bottle - -		1 0 0	.016
+Sacrifice Item		Eye_Of_Ender - -	1 0 0	.016
+Sacrifice Item		Feather - -		1 0 0	.016
+Sacrifice Item		Ghast_Tear - -		1 0 0	.016
+Sacrifice Item		Glass - -		1 0 0	.016
+Sacrifice Item		Glowstone - -		1 0 0	.016
+Sacrifice Item		Glowstone_Dust - -	1 0 0	.016
+Sacrifice Item		Gold_Block - -		1 0 0	.016
+Sacrifice Item		Gold_Ingot - -		1 0 0	.016
+Sacrifice Item		Gold_Record - -		1 0 0	.016
+Sacrifice Item		Golden_Apple - -	1 0 0	.016
+Sacrifice Item		Golden_Carrot - -	1 0 0	.016
+Sacrifice Item		Green_Record - -	1 0 0	.016
+Sacrifice Item		Grilled_Pork - -	1 0 0	.016
+Sacrifice Item		Hay_Block - -		1 0 0	.016
+Sacrifice Item		Ink_Sack - -		1 0 0	.016
+Sacrifice Item		Jack_O_Lantern - -	1 0 0	.016
+Sacrifice Item		Leather - -		1 0 0	.016
+Sacrifice Item		Leaves - -		1 0 0	.016
+Sacrifice Item		Log - -			1 0 0	.016
+Sacrifice Item		Melon - -		1 0 0	.016
+Sacrifice Item		Melon_Block - -		1 0 0	.016
+Sacrifice Item		Melon_Seeds - -		1 0 0	.016
+Sacrifice Item		Mossy_Cobblestone - -	1 0 0	.016
+Sacrifice Item		Mutton 0 -		1 1 1	.016
+Sacrifice Item		Nether_Stalk - -	1 0 0	.016
+Sacrifice Item		Poisonous_Potato - -	1 0 0	.016
+Sacrifice Item		Pork - -		1 0 0	.016
+Sacrifice Item		Potato_Item - -		1 0 0	.016
+Sacrifice Item		Prismarine - -		1 0 0	.016
+Sacrifice Item		Pumpkin - -		1 0 0	.016
+Sacrifice Item		Pumpkin_Pie - -		1 0 0	.016
+Sacrifice Item		Pumpkin_Seeds - -	1 0 0	.016
+Sacrifice Item		Raw_Beef - -		1 0 0	.016
+Sacrifice Item		Raw_Chicken - -		1 0 0	.016
+Sacrifice Item		Raw_Fish - -		1 0 0	.016
+Sacrifice Item		Red_Mushroom - -	1 0 0	.016
+Sacrifice Item		Red_Rose - -		1 0 0	.016
+Sacrifice Item		Sapling - -		1 0 0	.016
+Sacrifice Item		Sea_Lantern - -		1 0 0	.016
+Sacrifice Item		Seeds - -		1 0 0	.016
+Sacrifice Item		Skull_Item - -		1 0 0	.016
+Sacrifice Item		Smooth_Brick - -	1 0 0	.016
+Sacrifice Item		Snow_Ball - -		1 0 0	.016
+Sacrifice Item		Speckled_Melon - -	1 0 0	.016
+Sacrifice Item		Spider_Eye - -		1 0 0	.016
+Sacrifice Item		Stone - -		1 0 0	.016
+Sacrifice Item		String - -		1 0 0	.016
+Sacrifice Item		Sugar - -		1 0 0	.016
+Sacrifice Item		Sugar_Cane - -		1 0 0	.016
+Sacrifice Item		Sulphur - -		1 0 0	.016
+Sacrifice Item		TNT - -			1 0 0	.016
+Sacrifice Item		Vine - -		1 0 0	.016
+Sacrifice Item		Water_Lily - -		1 0 0	.016
+Sacrifice Item		Wheat - -		1 0 0	.016
+Sacrifice Item		Wool - -		1 0 0	.016
+Sacrifice Item		Yellow_Flower - -	1 0 0	.016
+Sacrifice Item	Fermented_Spider_Eye - -	1 0 0	.016
+Sacrifice Item	Prismarine_Crystals - -		1 0 0	.016
+Sacrifice Item	Prismarine_Shard - -		1 0 0	.016
 
-Sacrifice Item		Diamond_Helmet - -	1 1 1	.01
-Sacrifice Item		Diamond_Chestplate - -	1 1 1	.01
-Sacrifice Item		Diamond_Leggings - -	1 1 1	.01
-Sacrifice Item		Diamond_Boots - -	1 1 1	.01
-Sacrifice Item		Diamond_Pickaxe - -	1 1 1	.01
-Sacrifice Item		Diamond_Spade - -	1 1 1	.01
-Sacrifice Item		Diamond_Axe - -		1 1 1	.01
-Sacrifice Item		Diamond_Hoe - -		1 1 1	.01
-Sacrifice Item		Diamond_Sword - -	1 1 1	.01
-Sacrifice Item		Diamond_Barding - -	1 1 1	.01
+Sacrifice Item		Diamond_Helmet - -	5 0 0	1
+Sacrifice Item		Diamond_Chestplate - -	8 0 0	1
+Sacrifice Item		Diamond_Leggings - -	7 0 0	1
+Sacrifice Item		Diamond_Boots - -	4 0 0	1
+Sacrifice Item		Diamond_Pickaxe - -	3 0 0	1
+Sacrifice Item		Diamond_Spade - -	1 0 0	1
+Sacrifice Item		Diamond_Axe - -		3 0 0	1
+Sacrifice Item		Diamond_Hoe - -		2 0 0	1
+Sacrifice Item		Diamond_Sword - -	2 0 0	1
+Sacrifice Item		Diamond_Barding - -	6 0 0	1
 
-Sacrifice Item		Gold_Helmet - -		1 1 1	.01
-Sacrifice Item		Gold_Chestplate - -	1 1 1	.01
-Sacrifice Item		Gold_Leggings - -	1 1 1	.01
-Sacrifice Item		Gold_Boots - -		1 1 1	.01
-Sacrifice Item		Gold_Pickaxe - -	1 1 1	.01
-Sacrifice Item		Gold_Spade - -		1 1 1	.01
-Sacrifice Item		Gold_Axe - -		1 1 1	.01
-Sacrifice Item		Gold_Hoe - -		1 1 1	.01
-Sacrifice Item		Gold_Sword - -		1 1 1	.01
-Sacrifice Item		Gold_Barding - -	1 1 1	.01
+Sacrifice Item		Gold_Helmet - -		5 0 0	.3
+Sacrifice Item		Gold_Chestplate - -	8 0 0	.3
+Sacrifice Item		Gold_Leggings - -	7 0 0	.3
+Sacrifice Item		Gold_Boots - -		4 0 0	.3
+Sacrifice Item		Gold_Pickaxe - -	3 0 0	.3
+Sacrifice Item		Gold_Spade - -		1 0 0	.3
+Sacrifice Item		Gold_Axe - -		3 0 0	.3
+Sacrifice Item		Gold_Hoe - -		2 0 0	.3
+Sacrifice Item		Gold_Sword - -		2 0 0	.3
+Sacrifice Item		Gold_Barding - -	6 0 0	.3
 
-Sacrifice Item		Iron_Helmet - -		1 1 1	.01
-Sacrifice Item		Iron_Chestplate - -	1 1 1	.01
-Sacrifice Item		Iron_Leggings - -	1 1 1	.01
-Sacrifice Item		Iron_Boots - -		1 1 1	.01
-Sacrifice Item		Iron_Pickaxe - -	1 1 1	.01
-Sacrifice Item		Iron_Spade - -		1 1 1	.01
-Sacrifice Item		Iron_Axe - -		1 1 1	.01
-Sacrifice Item		Iron_Hoe - -		1 1 1	.01
-Sacrifice Item		Iron_Sword - -		1 1 1	.01
-Sacrifice Item		Iron_Barding - -	1 1 1	.01
+Sacrifice Item		Iron_Helmet - -		5 0 0	.1
+Sacrifice Item		Iron_Chestplate - -	8 0 0	.1
+Sacrifice Item		Iron_Leggings - -	7 0 0	.1
+Sacrifice Item		Iron_Boots - -		4 0 0	.1
+Sacrifice Item		Iron_Pickaxe - -	3 0 0	.1
+Sacrifice Item		Iron_Spade - -		1 0 0	.1
+Sacrifice Item		Iron_Axe - -		3 0 0	.1
+Sacrifice Item		Iron_Hoe - -		2 0 0	.1
+Sacrifice Item		Iron_Sword - -		2 0 0	.1
+Sacrifice Item		Iron_Barding - -	6 0 0	.1
 
-Sacrifice Item		Leather_Helmet - -	1 1 1	.01
-Sacrifice Item		Leather_Chestplate - -	1 1 1	.01
-Sacrifice Item		Leather_Leggings - -	1 1 1	.01
-Sacrifice Item		Leather_Boots - -	1 1 1	.01
+Sacrifice Item		Chainmail_Helmet - -	1 0 0	1
+Sacrifice Item	Chainmail_Chestplate - -	1 0 0	1
+Sacrifice Item		Chainmail_Leggings - -	1 0 0	1
+Sacrifice Item		Chainmail_Boots - -	1 0 0	1
 
-Sacrifice Item		Chainmail_Helmet - -	1 1 1	.01
-Sacrifice Item	Chainmail_Chestplate - -	1 1 1	.01
-Sacrifice Item		Chainmail_Leggings - -	1 1 1	.01
-Sacrifice Item		Chainmail_Boots - -	1 1 1	.01
+Sacrifice Item		Leather_Helmet - -	1 0 0	.1
+Sacrifice Item		Leather_Chestplate - -	1 0 0	.1
+Sacrifice Item		Leather_Leggings - -	1 0 0	.1
+Sacrifice Item		Leather_Boots - -	1 0 0	.1
 
-Sacrifice Item		Wood_Pickaxe - -	1 1 1	.01
-Sacrifice Item		Wood_Spade - -		1 1 1	.01
-Sacrifice Item		Wood_Axe - -		1 1 1	.01
-Sacrifice Item		Wood_Hoe - -		1 1 1	.01
-Sacrifice Item		Wood_Sword - -		1 1 1	.01
+Sacrifice Item		Wood_Pickaxe - -	1 0 0	.016
+Sacrifice Item		Wood_Spade - -		1 0 0	.016
+Sacrifice Item		Wood_Axe - -		1 0 0	.016
+Sacrifice Item		Wood_Hoe - -		1 0 0	.016
+Sacrifice Item		Wood_Sword - -		1 0 0	.016
 
-Sacrifice Enchantment	Protection_Environmental 1 -	1 0 0	.3
-Sacrifice Enchantment	Protection_Fire 1 -		1 0 0	.3
-Sacrifice Enchantment	Protection_Fall 1 -		1 0 0	.3
-Sacrifice Enchantment	Protection_Explosions 1 -	1 0 0	.3
-Sacrifice Enchantment	Protection_Projectile 1 -	1 0 0	.3
-Sacrifice Enchantment	Oxygen 1 -			1 0 0	.3
-Sacrifice Enchantment	Thorns 1 -			1 0 0	.3
-Sacrifice Enchantment	Depth_Strider 1 -		1 0 0	.3
-Sacrifice Enchantment	Damage_All 1 -			1 0 0	.3
-Sacrifice Enchantment	Damage_Undead 1 -		1 0 0	.3
-Sacrifice Enchantment	Damage_Arthropods 1 -		1 0 0	.3
-Sacrifice Enchantment	Knockback 1 -			1 0 0	.3
-Sacrifice Enchantment	Fire_Aspect 1 -			1 0 0	.3
-Sacrifice Enchantment	Loot_Bonus_Mobs 1 -		1 0 0	.3
-Sacrifice Enchantment	Dig_Speed 1 -			1 0 0	.3
-Sacrifice Enchantment	Durability 1 -			1 0 0	.3
-Sacrifice Enchantment	Loot_Bonus_Blocks 1 -		1 0 0	.3
-Sacrifice Enchantment	Arrow_Damage 1 -		1 0 0	.3
-Sacrifice Enchantment	Arrow_Knockback 1 -		1 0 0	.3
-Sacrifice Enchantment	Luck 1 -			1 0 0	.3
-Sacrifice Enchantment	Lure 1 -			1 0 0	.3
-Sacrifice Enchantment	Water_Worker 1 -		1 0 0	1
-Sacrifice Enchantment	Silk_Touch 1 -			1 0 0	1
-Sacrifice Enchantment	Arrow_Fire 1 -			1 0 0	1
-Sacrifice Enchantment	Arrow_Infinite 1 -		1 0 0	1
+Sacrifice Item		Gold_Record - -		1 0 0	5
+Sacrifice Item		Green_Record - -	1 0 0	5
+Sacrifice Item		Record_3 - -		1 0 0	5
+Sacrifice Item		Record_4 - -		1 0 0	5
+Sacrifice Item		Record_5 - -		1 0 0	5
+Sacrifice Item		Record_6 - -		1 0 0	5
+Sacrifice Item		Record_7 - -		1 0 0	5
+Sacrifice Item		Record_8 - -		1 0 0	5
+Sacrifice Item		Record_9 - -		1 0 0	5
+Sacrifice Item		Record_10 - -		1 0 0	5
+Sacrifice Item		Record_11 - -		1 0 0	5
+Sacrifice Item		Record_12 - -		1 0 0	5
 
-Sacrifice Enchantment	Protection_Environmental 2 -	1 0 0	.5
-Sacrifice Enchantment	Protection_Fire 2 -		1 0 0	.5
-Sacrifice Enchantment	Protection_Fall 2 -		1 0 0	.5
-Sacrifice Enchantment	Protection_Explosions 2 -	1 0 0	.5
-Sacrifice Enchantment	Protection_Projectile 2 -	1 0 0	.5
-Sacrifice Enchantment	Oxygen 2 -			1 0 0	.5
-Sacrifice Enchantment	Thorns 2 -			1 0 0	.5
-Sacrifice Enchantment	Depth_Strider 2 -		1 0 0	.5
-Sacrifice Enchantment	Damage_All 2 -			1 0 0	.5
-Sacrifice Enchantment	Damage_Undead 2 -		1 0 0	.5
-Sacrifice Enchantment	Damage_Arthropods 2 -		1 0 0	.5
-Sacrifice Enchantment	Loot_Bonus_Mobs 2 -		1 0 0	.5
-Sacrifice Enchantment	Dig_Speed 2 -			1 0 0	.5
-Sacrifice Enchantment	Durability 2 -			1 0 0	.5
-Sacrifice Enchantment	Loot_Bonus_Blocks 2 -		1 0 0	.5
-Sacrifice Enchantment	Arrow_Damage 2 -		1 0 0	.5
-Sacrifice Enchantment	Luck 2 -			1 0 0	.5
-Sacrifice Enchantment	Lure 2 -			1 0 0	.5
-Sacrifice Enchantment	Knockback 2 -			1 0 0	1
-Sacrifice Enchantment	Fire_Aspect 2 -			1 0 0	1
-Sacrifice Enchantment	Arrow_Knockback 2 -		1 0 0	1
+Sacrifice Enchantment	Protection_Environmental 1 -	1 0 0	.5
+Sacrifice Enchantment	Protection_Fire 1 -		1 0 0	.5
+Sacrifice Enchantment	Protection_Fall 1 -		1 0 0	.5
+Sacrifice Enchantment	Protection_Explosions 1 -	1 0 0	.5
+Sacrifice Enchantment	Protection_Projectile 1 -	1 0 0	.5
+Sacrifice Enchantment	Oxygen 1 -			1 0 0	.5
+Sacrifice Enchantment	Thorns 1 -			1 0 0	.5
+Sacrifice Enchantment	Depth_Strider 1 -		1 0 0	.5
+Sacrifice Enchantment	Damage_All 1 -			1 0 0	.5
+Sacrifice Enchantment	Damage_Undead 1 -		1 0 0	.5
+Sacrifice Enchantment	Damage_Arthropods 1 -		1 0 0	.5
+Sacrifice Enchantment	Knockback 1 -			1 0 0	.5
+Sacrifice Enchantment	Fire_Aspect 1 -			1 0 0	.5
+Sacrifice Enchantment	Loot_Bonus_Mobs 1 -		1 0 0	.5
+Sacrifice Enchantment	Dig_Speed 1 -			1 0 0	.5
+Sacrifice Enchantment	Durability 1 -			1 0 0	.5
+Sacrifice Enchantment	Loot_Bonus_Blocks 1 -		1 0 0	.5
+Sacrifice Enchantment	Arrow_Damage 1 -		1 0 0	.5
+Sacrifice Enchantment	Arrow_Knockback 1 -		1 0 0	.5
+Sacrifice Enchantment	Luck 1 -			1 0 0	.5
+Sacrifice Enchantment	Lure 1 -			1 0 0	.5
+Sacrifice Enchantment	Water_Worker 1 -		1 0 0	3
+Sacrifice Enchantment	Silk_Touch 1 -			1 0 0	3
+Sacrifice Enchantment	Arrow_Fire 1 -			1 0 0	3
+Sacrifice Enchantment	Arrow_Infinite 1 -		1 0 0	3
 
-Sacrifice Enchantment	Protection_Environmental 3 -	1 0 0	1
-Sacrifice Enchantment	Protection_Fire 3 -		1 0 0	1
-Sacrifice Enchantment	Protection_Fall 3 -		1 0 0	1
-Sacrifice Enchantment	Protection_Explosions 3 -	1 0 0	1
-Sacrifice Enchantment	Protection_Projectile 3 -	1 0 0	1
-Sacrifice Enchantment	Damage_All 3 -			1 0 0	1
-Sacrifice Enchantment	Damage_Undead 3 -		1 0 0	1
-Sacrifice Enchantment	Damage_Arthropods 3 -		1 0 0	1
-Sacrifice Enchantment	Dig_Speed 3 -			1 0 0	1
-Sacrifice Enchantment	Arrow_Damage 3 -		1 0 0	1
-Sacrifice Enchantment	Oxygen 3 -			1 0 0	3
-Sacrifice Enchantment	Thorns 3 -			1 0 0	3
-Sacrifice Enchantment	Depth_Strider 3 -		1 0 0	3
-Sacrifice Enchantment	Loot_Bonus_Mobs 3 -		1 0 0	3
-Sacrifice Enchantment	Durability 3 -			1 0 0	3
-Sacrifice Enchantment	Loot_Bonus_Blocks 3 -		1 0 0	3
-Sacrifice Enchantment	Luck 3 -			1 0 0	3
-Sacrifice Enchantment	Lure 3 -			1 0 0	3
+Sacrifice Enchantment	Protection_Environmental 2 -	1 0 0	1
+Sacrifice Enchantment	Protection_Fire 2 -		1 0 0	1
+Sacrifice Enchantment	Protection_Fall 2 -		1 0 0	1
+Sacrifice Enchantment	Protection_Explosions 2 -	1 0 0	1
+Sacrifice Enchantment	Protection_Projectile 2 -	1 0 0	1
+Sacrifice Enchantment	Oxygen 2 -			1 0 0	1
+Sacrifice Enchantment	Thorns 2 -			1 0 0	1
+Sacrifice Enchantment	Depth_Strider 2 -		1 0 0	1
+Sacrifice Enchantment	Damage_All 2 -			1 0 0	1
+Sacrifice Enchantment	Damage_Undead 2 -		1 0 0	1
+Sacrifice Enchantment	Damage_Arthropods 2 -		1 0 0	1
+Sacrifice Enchantment	Loot_Bonus_Mobs 2 -		1 0 0	1
+Sacrifice Enchantment	Dig_Speed 2 -			1 0 0	1
+Sacrifice Enchantment	Durability 2 -			1 0 0	1
+Sacrifice Enchantment	Loot_Bonus_Blocks 2 -		1 0 0	1
+Sacrifice Enchantment	Arrow_Damage 2 -		1 0 0	1
+Sacrifice Enchantment	Luck 2 -			1 0 0	1
+Sacrifice Enchantment	Lure 2 -			1 0 0	1
+Sacrifice Enchantment	Knockback 2 -			1 0 0	3
+Sacrifice Enchantment	Fire_Aspect 2 -			1 0 0	3
+Sacrifice Enchantment	Arrow_Knockback 2 -		1 0 0	3
 
-Sacrifice Enchantment	Damage_All 4 -			1 0 0	2
-Sacrifice Enchantment	Damage_Undead 4 -		1 0 0	2
-Sacrifice Enchantment	Damage_Arthropods 4 -		1 0 0	2
-Sacrifice Enchantment	Dig_Speed 4 -			1 0 0	2
-Sacrifice Enchantment	Arrow_Damage 4 -		1 0 0	2
-Sacrifice Enchantment	Protection_Environmental 4 -	1 0 0	3
-Sacrifice Enchantment	Protection_Fire 4 -		1 0 0	3
-Sacrifice Enchantment	Protection_Fall 4 -		1 0 0	3
-Sacrifice Enchantment	Protection_Explosions 4 -	1 0 0	3
-Sacrifice Enchantment	Protection_Projectile 4 -	1 0 0	3
+Sacrifice Enchantment	Protection_Environmental 3 -	1 0 0	3
+Sacrifice Enchantment	Protection_Fire 3 -		1 0 0	3
+Sacrifice Enchantment	Protection_Fall 3 -		1 0 0	3
+Sacrifice Enchantment	Protection_Explosions 3 -	1 0 0	3
+Sacrifice Enchantment	Protection_Projectile 3 -	1 0 0	3
+Sacrifice Enchantment	Damage_All 3 -			1 0 0	3
+Sacrifice Enchantment	Damage_Undead 3 -		1 0 0	3
+Sacrifice Enchantment	Damage_Arthropods 3 -		1 0 0	3
+Sacrifice Enchantment	Dig_Speed 3 -			1 0 0	3
+Sacrifice Enchantment	Arrow_Damage 3 -		1 0 0	3
+Sacrifice Enchantment	Oxygen 3 -			1 0 0	5
+Sacrifice Enchantment	Thorns 3 -			1 0 0	5
+Sacrifice Enchantment	Depth_Strider 3 -		1 0 0	5
+Sacrifice Enchantment	Loot_Bonus_Mobs 3 -		1 0 0	5
+Sacrifice Enchantment	Durability 3 -			1 0 0	5
+Sacrifice Enchantment	Loot_Bonus_Blocks 3 -		1 0 0	5
+Sacrifice Enchantment	Luck 3 -			1 0 0	5
+Sacrifice Enchantment	Lure 3 -			1 0 0	5
 
-Sacrifice Enchantment	Damage_All 5 -			1 0 0	3
-Sacrifice Enchantment	Damage_Undead 5 -		1 0 0	3
-Sacrifice Enchantment	Damage_Arthropods 5 -		1 0 0	3
-Sacrifice Enchantment	Dig_Speed 5 -			1 0 0	3
-Sacrifice Enchantment	Arrow_Damage 5 -		1 0 0	3
+Sacrifice Enchantment	Damage_All 4 -			1 0 0	4
+Sacrifice Enchantment	Damage_Undead 4 -		1 0 0	4
+Sacrifice Enchantment	Damage_Arthropods 4 -		1 0 0	4
+Sacrifice Enchantment	Dig_Speed 4 -			1 0 0	4
+Sacrifice Enchantment	Arrow_Damage 4 -		1 0 0	4
+Sacrifice Enchantment	Protection_Environmental 4 -	1 0 0	5
+Sacrifice Enchantment	Protection_Fire 4 -		1 0 0	5
+Sacrifice Enchantment	Protection_Fall 4 -		1 0 0	5
+Sacrifice Enchantment	Protection_Explosions 4 -	1 0 0	5
+Sacrifice Enchantment	Protection_Projectile 4 -	1 0 0	5
+
+Sacrifice Enchantment	Damage_All 5 -			1 0 0	5
+Sacrifice Enchantment	Damage_Undead 5 -		1 0 0	5
+Sacrifice Enchantment	Damage_Arthropods 5 -		1 0 0	5
+Sacrifice Enchantment	Dig_Speed 5 -			1 0 0	5
+Sacrifice Enchantment	Arrow_Damage 5 -		1 0 0	5
