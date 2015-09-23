@@ -535,7 +535,6 @@ Sacrifice Enchantment	Protection_Fall 2 -		1 0 0	1
 Sacrifice Enchantment	Protection_Explosions 2 -	1 0 0	1
 Sacrifice Enchantment	Protection_Projectile 2 -	1 0 0	1
 Sacrifice Enchantment	Oxygen 2 -			1 0 0	1
-Sacrifice Enchantment	Thorns 2 -			1 0 0	1
 Sacrifice Enchantment	Depth_Strider 2 -		1 0 0	1
 Sacrifice Enchantment	Damage_All 2 -			1 0 0	1
 Sacrifice Enchantment	Damage_Undead 2 -		1 0 0	1
@@ -550,6 +549,7 @@ Sacrifice Enchantment	Lure 2 -			1 0 0	1
 Sacrifice Enchantment	Knockback 2 -			1 0 0	3
 Sacrifice Enchantment	Fire_Aspect 2 -			1 0 0	3
 Sacrifice Enchantment	Arrow_Knockback 2 -		1 0 0	3
+Sacrifice Enchantment	Thorns 2 -			1 0 0	3
 
 Sacrifice Enchantment	Protection_Environmental 3 -	1 0 0	3
 Sacrifice Enchantment	Protection_Fire 3 -		1 0 0	3
