@@ -46,6 +46,8 @@ class BukkitPlayer
     Scoreboard scoreboard = null;
     Objective sidebarObjective = null;
     String lastProgressBar = null;
+    String lastSkillPoints = null;
+    String lastMoney = null;
     BukkitSkillType skillOnScoreboard = null;
     BukkitSkillType forcedSkillOnScoreboard = null;
     boolean sidebarEnabled = true;
@@ -134,6 +136,13 @@ class BukkitPlayer
         setupScoreboard(player);
     }
 
+    static String limit(String string)
+    {
+        if (string == null) return "";
+        if (string.length() > 32) return string.substring(0, 32);
+        return string;
+    }
+
     void setupScoreboard(Player player)
     {
         if (!sidebarEnabled) {
@@ -159,16 +168,29 @@ class BukkitPlayer
             int pointsInLevel = getSkills().getScore().pointsInLevel(skillPoints);
             int pointsToLevelUp = getSkills().getScore().pointsToLevelUpTo(skillLevel + 1);
             int pointsForNextLevel = getSkills().getScore().pointsForNextLevel(skillPoints);
-            sidebarObjective.setDisplayName(BukkitUtil.format("&3&l%s &blvl &f%d", skill.getDisplayName(), skillLevel));
-            String progressBar = BukkitUtil.progressBar(pointsInLevel, pointsToLevelUp);
-            if (!progressBar.equals(lastProgressBar)) {
-                sidebarObjective.getScore(progressBar).setScore(0);
+            // Title
+            sidebarObjective.setDisplayName(limit(BukkitUtil.format("&3&l%s &blvl &f%d", skill.getDisplayName(), skillLevel)));
+            // Progress Bar
+            String entryProgressBar = BukkitUtil.progressBar(pointsInLevel, pointsToLevelUp);
+            if (!entryProgressBar.equals(lastProgressBar)) {
+                sidebarObjective.getScore(entryProgressBar).setScore(2);
                 if (lastProgressBar != null) scoreboard.resetScores(lastProgressBar);
+                lastProgressBar = entryProgressBar;
             }
-            lastProgressBar = progressBar;
-            sidebarObjective.getScore(BukkitUtil.format("&aFor next level")).setScore(pointsForNextLevel);
-            sidebarObjective.getScore(BukkitUtil.format("&9Skill Points")).setScore((int)playerSkill.getSkillPoints());
-            sidebarObjective.getScore(BukkitUtil.format("&9Money")).setScore((int)playerSkill.getMoney());
+            // Skill Points
+            String entrySkillPoints = limit(BukkitUtil.format("&f%d&3/&f%d&3 Skill Points", pointsInLevel, pointsToLevelUp));
+            if (!entrySkillPoints.equals(lastSkillPoints)) {
+                sidebarObjective.getScore(entrySkillPoints).setScore(1);
+                if (lastSkillPoints != null) scoreboard.resetScores(lastSkillPoints);
+                lastSkillPoints = entrySkillPoints;
+            }
+            // Money
+            String entryMoney = limit(BukkitUtil.format("&f%.02f &3%s", playerSkill.money, BukkitSkillsPlugin.getInstance().getEconomy().currencyNamePlural()));
+            if (!entryMoney.equals(lastMoney)) {
+                sidebarObjective.getScore(entryMoney).setScore(0);
+                if (lastMoney != null) scoreboard.resetScores(lastMoney);
+                lastMoney = entryMoney;
+            }
             player.setScoreboard(scoreboard);
             if (!shown) {
                 shown = true;
