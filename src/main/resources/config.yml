@@ -123,7 +123,7 @@ travel:
   RewardFactors: [ 1, 1, 1 ]
   DisplayName: Traveling
   Shorthand: Travel
-  Description: Leave your home and travel out in the world on foot, boat, or horseback to explore the wide world of Winthier.
+  Description: Leave your home and travel out in the world on foot or horseback to explore the wide world of Winthier.
   DistanceStep: 16
   MaxTeleportDistance: 128
   MaxDistanceNoProgress: 128
