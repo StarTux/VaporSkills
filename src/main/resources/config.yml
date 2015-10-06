@@ -47,7 +47,7 @@ cook:
   RewardFactors: [ 1, 1, 1 ]
   DisplayName: Cooking
   Shorthand: Cook
-  Description: Prepare your meals in the oven to increase their effectiveness and tase.
+  Description: Prepare your meals in the oven to increase their effectiveness and taste.
 dig:
   Enabled: true
   RewardFactors: [ 1, 1, 1 ]
@@ -61,8 +61,8 @@ eat:
   DisplayName: Eating
   Shorthand: Eat
   Description: Eat healthy and tasty food to maintain your stamina, heal up and refresh.
-  FoodLevelFactor: 1
-  SaturationFactor: 1
+  FoodLevelFactor: 0.25
+  SaturationFactor: 1.75
 enchant:
   Enabled: true
   RewardFactors: [ 1, 1, 1 ]
@@ -94,14 +94,14 @@ mine:
   RewardFactors: [ 1, 1, 1 ]
   DisplayName: Mining
   Shorthand: Mine
-  Description: Grab your pickaxe and descend into the deep mines of this world to find precious ores and rare gems.
+  Description: Grab your pickaxe and descend into the deep mines of this world to find precious ores and rare gems. Most blocks mined under ground will give you skill points, but the rarest ores are by far the most valuable. Only naturally occuring blocks grant you rewards.
   RepeatInterval: 3600
 sacrifice:
   Enabled: true
   RewardFactors: [ 1, 2, 1 ]
   DisplayName: Sacrifice
   Shorthand: Sacrifice
-  Description: Sacrifice your precious offerings to the almighty Creeper Overlord in exchange for his blessing.
+  Description: Sacrifice your precious offerings to the almighty Creeper Overlord in exchange for his blessing. Sacrifice items by dropping them into fire, lava, or cacti. You may ask the Creeper Overlord whether he likes the item in your hand.
 shear:
   Enabled: true
   RewardFactors: [ 1, 1, 1 ]
@@ -125,7 +125,7 @@ travel:
   RewardFactors: [ 1, 1, 1 ]
   DisplayName: Traveling
   Shorthand: Travel
-  Description: Leave your home and travel out in the world on foot or horseback to explore the wide world of Winthier.
+  Description: Leave your home and travel out in the world on foot or horseback to explore the wide world of Winthier. You collect skill points regularly as you move around. The more distance you reach from your origin location, which you reached via public warps or homes, the more points you get.
   DistanceStep: 16
   MaxTeleportDistance: 128
   MaxDistanceNoProgress: 128
