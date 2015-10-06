@@ -27,12 +27,13 @@ class BukkitSkillHunt extends BukkitSkill implements Listener
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event)
     {
+        if (!(event.getEntity() instanceof LivingEntity)) return;
+        LivingEntity entity = (LivingEntity)event.getEntity();
         if (!(event.getDamager() instanceof Arrow)) return;
         Arrow arrow = (Arrow)event.getDamager();
         if (!(arrow.getShooter() instanceof Player)) return;
         Player player = (Player)arrow.getShooter();
         if (!allowPlayer(player)) return;
-        LivingEntity entity = (LivingEntity)event.getEntity();
         if (entity.getCustomName() != null) return;
         if (BukkitExploits.getInstance().recentKillDistance(player, entity.getLocation(), killDistanceInterval) < minKillDistance) return;
         double percentage = BukkitExploits.getInstance().getEntityDamageByPlayerRemainderPercentage(entity, Math.min(entity.getHealth(), event.getFinalDamage()));
