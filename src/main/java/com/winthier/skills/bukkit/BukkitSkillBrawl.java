@@ -27,6 +27,7 @@ class BukkitSkillBrawl extends BukkitSkill implements Listener
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event)
     {
         if (!(event.getDamager() instanceof Player)) return;
+        if (!(event.getEntity() instanceof LivingEntity)) return;
         Player player = (Player)event.getDamager();
         if (!allowPlayer(player)) return;
         LivingEntity entity = (LivingEntity)event.getEntity();
