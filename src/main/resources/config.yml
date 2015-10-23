@@ -1,7 +1,7 @@
 Enabled: true
 RewardFactors: [ 1, .5, 1 ]
 total:
-  Description: The total skill level is made of the average skill points of all skills.
+  Description: The total skill aggregates all other skill points and levels.
 blacksmith:
   Enabled: true
   RewardFactors: [ 1, 1, 1 ]
