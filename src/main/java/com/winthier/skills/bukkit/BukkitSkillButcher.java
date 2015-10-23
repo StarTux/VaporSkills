@@ -22,6 +22,7 @@ class BukkitSkillButcher extends BukkitSkill implements Listener
         if (entity instanceof Ageable && !((Ageable)entity).isAdult()) return;
         if (!(entity.getKiller() instanceof Player)) return;
         Player player = entity.getKiller();
+        if (!allowPlayer(player)) return;
         giveReward(player, rewardForEntity(entity));
     }
 }

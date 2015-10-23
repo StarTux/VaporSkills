@@ -139,13 +139,16 @@ class BukkitSkillTravel extends BukkitSkill implements Listener
     void onPlayerRespawn(PlayerRespawnEvent event)
     {
         Player player = event.getPlayer();
+        if (!allowPlayer(player)) return;
         getData(player).reset(player, event.getRespawnLocation());
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     void onPlayerQuit(PlayerQuitEvent event)
     {
-        Data data = players.remove(event.getPlayer().getUniqueId());
+        Player player = event.getPlayer();
+        if (!allowPlayer(player)) return;
+        Data data = players.remove(player.getUniqueId());
         if (data != null) data.store();
     }
     
