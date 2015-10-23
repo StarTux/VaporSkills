@@ -206,6 +206,7 @@ abstract class BukkitSkill implements Skill
         double maxs = max*max;
         double dist = maxs;
         for (Player player : loc.getWorld().getPlayers()) {
+            if (!allowPlayer(player)) continue;
             Location ploc = player.getLocation();
             if (!ploc.getWorld().equals(loc.getWorld())) continue;
             double newDist = loc.distanceSquared(ploc);
