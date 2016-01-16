@@ -3,6 +3,7 @@ package com.winthier.skills.bukkit;
 import com.avaje.ebean.EbeanServer;
 import com.winthier.skills.Skill;
 import com.winthier.skills.Skills;
+import com.winthier.skills.bukkit.event.SkillsLevelUpEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -114,6 +115,7 @@ public class BukkitSkills extends Skills
         if (skill instanceof BukkitSkill) {
             BukkitLevelUpEffect.launch(player, (BukkitSkill)skill, level);
             BukkitPlayer.of(player).displaySkill((BukkitSkill)skill, player);
+            Bukkit.getServer().getPluginManager().callEvent(new SkillsLevelUpEvent(player, (BukkitSkill)skill, level));
         }
     }
     

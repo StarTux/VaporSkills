@@ -3,6 +3,7 @@ package com.winthier.skills.bukkit;
 import com.winthier.skills.CustomReward;
 import com.winthier.skills.Reward;
 import com.winthier.skills.Skill;
+import com.winthier.skills.bukkit.event.SkillsRewardEvent;
 import com.winthier.skills.sql.SQLPlayerSetting;
 import com.winthier.skills.util.Strings;
 import java.io.File;
@@ -28,7 +29,7 @@ import org.bukkit.potion.PotionEffect;
  * Abstract class which implements Skill in a Bukkit-y manner.
  */
 @Getter
-abstract class BukkitSkill implements Skill
+public abstract class BukkitSkill implements Skill
 {
     boolean enabled = true;
     double skillPointsFactor = 1.0;
@@ -193,6 +194,7 @@ abstract class BukkitSkill implements Skill
         Reward outcome = new CustomReward((float)skillPoints, (float)money, (float)exp);
         BukkitPlayer.of(player).onReward(this, outcome);
         getSkills().getScore().logReward(reward, player.getUniqueId(), outcome);
+        Bukkit.getServer().getPluginManager().callEvent(new SkillsRewardEvent(player, this, outcome));
     }
 
     void giveReward(Player player, Reward reward)
