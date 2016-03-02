@@ -48,6 +48,9 @@ class BukkitPlayer
     String lastProgressBar = null;
     String lastSkillPoints = null;
     String lastMoney = null;
+    boolean totalHeaderSet = false;
+    double totalMoney = 0.0;
+    String lastTotalMoney = null;
     BukkitSkillType skillOnScoreboard = null;
     BukkitSkillType forcedSkillOnScoreboard = null;
     boolean sidebarEnabled = true;
@@ -90,6 +93,7 @@ class BukkitPlayer
     {
         if (!sidebarEnabled) return;
         skills.get(skill.getSkillType()).onReward(reward.getSkillPoints(), reward.getMoney(), reward.getExp());
+        totalMoney += reward.getMoney();
         // Make sure the scoreboard gets updated as soon as
         // possible for instant feedback.
         if (updateTask == null) {
@@ -173,23 +177,35 @@ class BukkitPlayer
             // Progress Bar
             String entryProgressBar = BukkitUtil.progressBar(pointsInLevel, pointsToLevelUp);
             if (!entryProgressBar.equals(lastProgressBar)) {
-                sidebarObjective.getScore(entryProgressBar).setScore(2);
+                sidebarObjective.getScore(entryProgressBar).setScore(4);
                 if (lastProgressBar != null) scoreboard.resetScores(lastProgressBar);
                 lastProgressBar = entryProgressBar;
             }
             // Skill Points
             String entrySkillPoints = limit(BukkitUtil.format("&f%d&3/&f%d&3 Skill Points", pointsInLevel, pointsToLevelUp));
             if (!entrySkillPoints.equals(lastSkillPoints)) {
-                sidebarObjective.getScore(entrySkillPoints).setScore(1);
+                sidebarObjective.getScore(entrySkillPoints).setScore(3);
                 if (lastSkillPoints != null) scoreboard.resetScores(lastSkillPoints);
                 lastSkillPoints = entrySkillPoints;
             }
             // Money
             String entryMoney = limit(BukkitUtil.format("&f%.02f &3%s", playerSkill.money, BukkitSkillsPlugin.getInstance().getEconomy().currencyNamePlural()));
             if (!entryMoney.equals(lastMoney)) {
-                sidebarObjective.getScore(entryMoney).setScore(0);
+                sidebarObjective.getScore(entryMoney).setScore(2);
                 if (lastMoney != null) scoreboard.resetScores(lastMoney);
                 lastMoney = entryMoney;
+            }
+            // Total
+            if (!totalHeaderSet) {
+                totalHeaderSet = true;
+                String totalHeader = limit(BukkitUtil.format("&3&oThis Session"));
+                sidebarObjective.getScore(totalHeader).setScore(1);
+            }
+            String entryTotalMoney = limit(BukkitUtil.format("&f%.02f &3&o%s", totalMoney, BukkitSkillsPlugin.getInstance().getEconomy().currencyNamePlural()));
+            if (!entryTotalMoney.equals(lastTotalMoney)) {
+                sidebarObjective.getScore(entryTotalMoney).setScore(0);
+                if (lastTotalMoney != null) scoreboard.resetScores(lastTotalMoney);
+                lastTotalMoney = entryTotalMoney;
             }
             player.setScoreboard(scoreboard);
             if (!shown) {
@@ -223,6 +239,12 @@ class BukkitPlayer
             forcedSkillOnScoreboard = null;
             skillOnScoreboard = null;
             for (BukkitPlayerSkill playerSkill : skills.values()) playerSkill.reset();
+            lastProgressBar = null;
+            lastSkillPoints = null;
+            lastMoney = null;
+            totalHeaderSet = false;
+            totalMoney = 0.0;
+            lastTotalMoney = null;
             if (updateTask != null) {
                 updateTask.cancel();
                 updateTask = null;

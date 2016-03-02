@@ -52,10 +52,10 @@ public class BukkitLevelUpEffect extends BukkitRunnable
             }
             if (ticks % 8 == 0) colorful(player, ticks, 0.1);
             if (ticks % 8 == 4) colorful(player, ticks, 2.3);
-            if (ticks == 20*2) player.getWorld().playSound(player.getEyeLocation(), Sound.FIREWORK_TWINKLE, .6f, 1);
-            if (ticks == 20*4) player.getWorld().playSound(player.getEyeLocation(), Sound.FIREWORK_TWINKLE, .5f, 1);
-            if (ticks == 20*6) player.getWorld().playSound(player.getEyeLocation(), Sound.FIREWORK_TWINKLE2, .6f, 1);
-            if (ticks == 20*8) player.getWorld().playSound(player.getEyeLocation(), Sound.FIREWORK_TWINKLE2, .5f, 1);
+            if (ticks == 20*2) player.getWorld().playSound(player.getEyeLocation(), Sound.ENTITY_FIREWORK_TWINKLE, .6f, 1);
+            if (ticks == 20*4) player.getWorld().playSound(player.getEyeLocation(), Sound.ENTITY_FIREWORK_TWINKLE, .5f, 1);
+            if (ticks == 20*6) player.getWorld().playSound(player.getEyeLocation(), Sound.ENTITY_FIREWORK_TWINKLE_FAR, .6f, 1);
+            if (ticks == 20*8) player.getWorld().playSound(player.getEyeLocation(), Sound.ENTITY_FIREWORK_TWINKLE_FAR, .5f, 1);
         } else {
             if (ticks == 0) {
                 informLevelUp(player);
@@ -64,8 +64,8 @@ public class BukkitLevelUpEffect extends BukkitRunnable
                 showLevelUpSubtitle(player, 1);
             }
         }
-        if (ticks == 0) player.getWorld().playSound(player.getEyeLocation(), Sound.LEVEL_UP, 1, 1);
-        if (ticks % 20 == 10) player.getWorld().playSound(player.getEyeLocation(), Sound.ENDERMAN_TELEPORT, .1f, .65f);
+        if (ticks == 0) player.getWorld().playSound(player.getEyeLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 1);
+        if (ticks % 20 == 10) player.getWorld().playSound(player.getEyeLocation(), Sound.ENTITY_ENDERMEN_TELEPORT, .1f, .65f);
         spiral(player, ticks);
     }
 
