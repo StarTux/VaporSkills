@@ -1,5 +1,5 @@
 name: Skills
-description: skills
+description: Skills system for Winthier
 author: StarTux
 version: 0.4
 main: com.winthier.skills.bukkit.BukkitSkillsPlugin
