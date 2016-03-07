@@ -102,6 +102,7 @@ class BukkitSkillTravel extends BukkitSkill implements Listener
     boolean allowPlayer(Player player)
     {
         if (!super.allowPlayer(player)) return false;
+        if (!player.isOnGround()) return false;
         if (player.isInsideVehicle()) {
             if (player.getVehicle().getType() == EntityType.HORSE ||
                 player.getVehicle().getType() == EntityType.PIG) {
