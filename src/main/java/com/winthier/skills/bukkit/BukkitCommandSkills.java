@@ -171,17 +171,7 @@ class BukkitCommandSkills implements CommandExecutor
             return;
         }
         Reward reward = ((BukkitSkillSacrifice)getSkills().skillByType(BukkitSkillType.SACRIFICE)).fullRewardForItem(item);
-        float pivot = reward.getSkillPoints();
-        if (pivot == 0.0) {
-            BukkitUtil.msg(player, prefix + "This item has no value to me");
-        } else if (pivot < 0.1) {
-            BukkitUtil.msg(player, prefix + "You will hardly level up if you sacrifice a lot of these.");
-        } else if (pivot < 1) {
-            BukkitUtil.msg(player, prefix + "You will level up slowly if you sacrifice a lot of these.");
-        } else if (pivot < 5) {
-            BukkitUtil.msg(player, prefix + "You will level up a bit for this item.");
-        } else {
-            BukkitUtil.msg(player, prefix + "Sacrificing this item will help you level up a lot.");
-        }
+        double money = (double)reward.getMoney() * (double)item.getAmount();
+        BukkitUtil.msg(player, prefix + "Sacrificing the %d item%s in your hand will grant you &a%s&r.", item.getAmount(), item.getAmount() == 1 ? "" : "s", BukkitSkillsPlugin.getInstance().getEconomy().format(money));
     }
 }
