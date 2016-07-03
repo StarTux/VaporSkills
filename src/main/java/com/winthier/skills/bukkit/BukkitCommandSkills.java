@@ -114,6 +114,15 @@ class BukkitCommandSkills implements CommandExecutor
                            BukkitUtil.format("&3Total Skill Points: &f%d", skillPoints),
                            BukkitUtil.format("&3For Next Level: &f%d",
                                              getSkills().getScore().pointsForNextLevel(skillPoints))));
+        // Bonus
+        int level = getSkills().getScore().getSkillLevel(player.getUniqueId(), skill);
+        int bonusFactor = level / 10;
+        int nextBonusLevel = ((level / 10) + 1) * 10;
+        BukkitUtil.raw(player,
+                       BukkitUtil.format(" &3Money Bonus: "),
+                       BukkitUtil.tooltip(
+                           BukkitUtil.format("%d%%", bonusFactor),
+                           BukkitUtil.format("&3Next Bonus Level: &f%d", nextBonusLevel)));
         // Highscore
         Highscore hi = getSkills().getScore().getHighscore(skill);
         int rank = hi.rankOfPlayer(uuid);
