@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import org.apache.commons.lang3.text.WordUtils;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -64,8 +65,10 @@ class BukkitCommandSkills implements CommandExecutor
             int pointsToLevelUp = getSkills().getScore().pointsToLevelUpTo(skillLevel + 1);
             if (!message.isEmpty()) message.add(" ");
             message.add(BukkitUtil.button(
+                            ChatColor.AQUA,
                             "&b" + skill.getShorthand() + "&3(&f"+skillLevel+"&3)",
                             "/sk " + skill.getKey(),
+                            "&a/sk " + skill.getKey(),
                             "&3&l" + skill.getDisplayName() + " " + BukkitUtil.progressBar(pointsInLevel, pointsToLevelUp),
                             "&3Skill Level: &b" + skillLevel,
                             "&3Skill Points: &f"+pointsInLevel+"&3/&f"+pointsToLevelUp,
@@ -75,9 +78,11 @@ class BukkitCommandSkills implements CommandExecutor
         BukkitUtil.raw(player, message);
         BukkitUtil.raw(player,
                        BukkitUtil.format(" &3Sidebar: "),
-                       BukkitUtil.button("&3[&fReset&3]", "/sk sidebar reset", "&7Reset the sidebar"), " ",
-                       BukkitUtil.button("&3[&fOn&3]", "/sk sidebar on", "&7Enable sidebar"), " ", 
-                       BukkitUtil.button("&3[&fOff&3]", "/sk sidebar off", "&7Disable sidebar"));
+                       BukkitUtil.button("&3[&fReset&3]", "/sk sidebar reset", "&a/sk sidebar reset", "&5&oReset the sidebar"),
+                       " ",
+                       BukkitUtil.button("&3[&fOn&3]", "/sk sidebar on", "&a/sk sidebar on", "&5&oEnable sidebar"),
+                       " ", 
+                       BukkitUtil.button("&3[&fOff&3]", "/sk sidebar off", "&a/sk sidebar off", "&5&oDisable sidebar"));
         BukkitUtil.msg(player, "");
     }
     
@@ -117,24 +122,29 @@ class BukkitCommandSkills implements CommandExecutor
                        BukkitUtil.format(" &3Your rank: "),
                        BukkitUtil.button("&f"+rankString+" &3[&fHighscore&3]",
                                          "/hi " + skill.getKey(),
+                                         "&a/hi " + skill.getKey(),
                                          "&3&l" + skill.getDisplayName() + " &f" + rankString,
                                          getPlugin().getHighscoreCommand().formatHighscoreAroundPlayer(hi, uuid),
                                          "&7Click for more details"));
         // Sidebar
         BukkitUtil.raw(player,
                        BukkitUtil.format(" &3Sidebar: "),
-                       BukkitUtil.button("&3[&fFocus&3]", "/sk sidebar "+skill.getKey(), "&7Focus "+skill.getDisplayName()+" in the sidebar"), " ",
-                       BukkitUtil.button("&3[&fReset&3]", "/sk sidebar reset", "&7Reset the sidebar"), " ",
-                       BukkitUtil.button("&3[&fOn&3]", "/sk sidebar on", "&7Turn sidebar on"), " ", 
-                       BukkitUtil.button("&3[&fOff&3]", "/sk sidebar off", "&7Turn sidebar off"));
+                       BukkitUtil.button("&3[&fFocus&3]", "/sk sidebar "+skill.getKey(), "&a/sk sidebar "+skill.getKey(), "&5&oFocus "+skill.getDisplayName()+" in the sidebar"),
+                       " ",
+                       BukkitUtil.button("&3[&fReset&3]", "/sk sidebar reset", "&a/sk sidebar reset", "&5&oReset the sidebar"),
+                       " ",
+                       BukkitUtil.button("&3[&fOn&3]", "/sk sidebar on", "&a/sk sidebar on", "&5&oTurn sidebar on"),
+                       " ", 
+                       BukkitUtil.button("&3[&fOff&3]", "/sk sidebar off", "&a/sk sidebar off", "&5&oTurn sidebar off"));
         // Sacrifice special
         if (skill.getSkillType() == BukkitSkillType.SACRIFICE) {
             BukkitUtil.raw(player,
                            BukkitUtil.format(" &3Check item in hand: "),
                            BukkitUtil.button("&3[&fCheck&3]", "/sk checkitem",
-                                             "&7Ask the Creeper Overlord",
-                                             "&7about the value of the item",
-                                             "&7in your hand"));
+                                             "&a/sk checkitem",
+                                             "&5&oAsk the Creeper Overlord",
+                                             "&5&oabout the value of the item",
+                                             "&5&oin your hand"));
         }
         // Description
         BukkitUtil.msg(player, " &r%s", skill.getDescription());

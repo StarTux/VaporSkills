@@ -62,24 +62,34 @@ class BukkitUtil
         }
     }
 
-    static Object button(String chat, String command, String... tooltip)
+    static Object button(ChatColor color, String chat, String command, String... tooltip)
     {
         Map<String, Object> map = new HashMap<>();
+        if (color != null) {
+            map.put("color", color.name().toLowerCase());
+        }
         map.put("text", format(chat));
-        Map<String, Object> map2 = new HashMap<>();
-        map.put("clickEvent", map2);
-        map2.put("action", "run_command");
-        map2.put("value", command);
-        map2 = new HashMap<>();
-        map.put("hoverEvent", map2);
-        map2.put("action", "show_text");
+        if (command != null) {
+            Map<String, Object> clickEvent = new HashMap<>();
+            map.put("clickEvent", clickEvent);
+            clickEvent.put("action", "run_command");
+            clickEvent.put("value", command);
+        }
+        Map<String, Object> hoverEvent = new HashMap<>();
+        map.put("hoverEvent", hoverEvent);
+        hoverEvent.put("action", "show_text");
         List<String> lines = new ArrayList<>();
         for (String line : tooltip) {
             if (!lines.isEmpty()) lines.add("\n");
             lines.add(format(line));
         }
-        map2.put("value", lines);
+        hoverEvent.put("value", lines);
         return map;
+    }
+
+    static Object button(String chat, String command, String... tooltip)
+    {
+        return button(null, chat, command, tooltip);
     }
 
     static Object tooltip(String chat, String... tooltip)

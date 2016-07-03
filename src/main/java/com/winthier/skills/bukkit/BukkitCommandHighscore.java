@@ -72,6 +72,7 @@ class BukkitCommandHighscore implements CommandExecutor
         message.add(BukkitUtil.button(
                         "&bTotal&3(&f"+rankString+"&3)",
                         "/hi total",
+                        "&a/hi total",
                         "&3&lTotal &f" + rankString,
                         formatHighscoreAroundPlayer(hi, uuid),
                         "&r" + WordUtils.wrap(getPlugin().getConfig().getString("total.Description", ""), 32),
@@ -85,6 +86,7 @@ class BukkitCommandHighscore implements CommandExecutor
             message.add(BukkitUtil.button(
                             "&b" + skill.getShorthand() + "&3(&f"+rankString+"&3)",
                             "/hi " + skill.getKey(),
+                            "&a/hi " + skill.getKey(),
                             "&3&l" + skill.getDisplayName() + " &f" + rankString,
                             formatHighscoreAroundPlayer(hi, uuid),
                             "&r" + WordUtils.wrap(skill.getDescription(), 32),
