@@ -173,7 +173,7 @@ public abstract class BukkitSkill implements Skill
     void giveReward(@NonNull Player player, Reward reward, double factor)
     {
         int level = getSkills().getScore().getSkillLevel(player.getUniqueId(), this);
-        double bonusFactor = 1.0 + (double)(level / 10) / 100.0;
+        double bonusFactor = getSkillType() == BukkitSkillType.SACRIFICE ? 1.0 : 1.0 + (double)(level / 10) / 100.0;
         if (reward == null) return;
         double skillPoints = reward.getSkillPoints() * factor * getSkillPointsFactor() * getSkills().getSkillPointsFactor();
         double money       = reward.getMoney()       * factor * getMoneyFactor()       * getSkills().getMoneyFactor()       * bonusFactor;
