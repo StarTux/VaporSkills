@@ -25,16 +25,15 @@ class BukkitSkillHarvest extends BukkitSkill implements Listener
         Player player = event.getPlayer();
 	if (!allowPlayer(player)) return;
         Block block = event.getBlock();
-        if (onBlockBroken(player, block)) {
-            Material mat = block.getType();
-            switch (mat) {
-            case CACTUS:
-            case SUGAR_CANE_BLOCK:
+        onBlockBroken(player, block);
+        Material mat = block.getType();
+        switch (mat) {
+        case CACTUS:
+        case SUGAR_CANE_BLOCK:
+            block = block.getRelative(0, 1, 0);
+            while (block.getType() == mat) {
+                onBlockBroken(player, block);
                 block = block.getRelative(0, 1, 0);
-                while (block.getType() == mat &&
-                       onBlockBroken(player, block)) {
-                    block = block.getRelative(0, 1, 0);
-                }
             }
         }
     }
