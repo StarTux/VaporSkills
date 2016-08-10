@@ -18,6 +18,7 @@ import java.util.UUID;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.ExperienceOrb;
 import org.bukkit.entity.Player;
 
 @Getter
@@ -155,10 +156,10 @@ public class BukkitSkills extends Skills
         } else {
             stored += amount;
         }
-        if (stored >= 1.0) {
-            int full = stored.intValue();
+        final int full = 10;
+        if (stored >= full) {
             stored -= (double)full;
-            player.giveExp(full);
+            player.getWorld().spawn(player.getLocation(), ExperienceOrb.class).setExperience(full);
         }
         exps.put(uuid, stored);
     }
