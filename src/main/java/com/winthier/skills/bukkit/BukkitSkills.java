@@ -1,6 +1,5 @@
 package com.winthier.skills.bukkit;
 
-import com.avaje.ebean.EbeanServer;
 import com.winthier.skills.Skill;
 import com.winthier.skills.Skills;
 import com.winthier.skills.bukkit.event.SkillsLevelUpEvent;
@@ -100,12 +99,6 @@ public class BukkitSkills extends Skills
     BukkitSkillsPlugin getPlugin()
     {
 	return BukkitSkillsPlugin.instance;
-    }
-
-    @Override
-    public EbeanServer getDatabase()
-    {
-	return getPlugin().getDatabase();
     }
 
     @Override

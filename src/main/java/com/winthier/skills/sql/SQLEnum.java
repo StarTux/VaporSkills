@@ -1,10 +1,8 @@
 package com.winthier.skills.sql;
 
-import com.avaje.ebean.validation.Length;
-import com.avaje.ebean.validation.NotEmpty;
-import com.avaje.ebean.validation.NotNull;
 import java.util.HashMap;
 import java.util.Map;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
@@ -31,8 +29,8 @@ public class SQLEnum
     final static Map<Enum, SQLEnum> cache = new HashMap<>();
     // Payload
     @Id int id;
-    @NotNull @ManyToOne SQLString namespace;
-    @NotNull @ManyToOne SQLString name;
+    @Column(nullable = false) @ManyToOne SQLString namespace;
+    @Column(nullable = false) @ManyToOne SQLString name;
 
     static String namespaceOf(Enum key)
     {

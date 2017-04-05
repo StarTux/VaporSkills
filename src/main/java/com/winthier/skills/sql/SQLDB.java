@@ -1,14 +1,14 @@
 package com.winthier.skills.sql;
 
-import com.avaje.ebean.EbeanServer;
-import com.winthier.skills.Skills;
+import com.winthier.skills.bukkit.BukkitSkillsPlugin;
+import com.winthier.sql.SQLDatabase;
 import java.util.Arrays;
 import java.util.List;
 import javax.persistence.PersistenceException;
 
 public class SQLDB {
-    static EbeanServer get() {
-        return Skills.getInstance().getDatabase();
+    static SQLDatabase get() {
+        return BukkitSkillsPlugin.getInstance().getDb();
     }
 
     static <E> E unique(List<E> list) {
@@ -18,16 +18,6 @@ public class SQLDB {
             Thread.dumpStack();
         }
         return list.get(0);
-    }
-
-    public static boolean isSetup()
-    {
-	try {
-	    for (Class<?> clazz : getDatabaseClasses()) get().find(clazz).findRowCount();
-	} catch (PersistenceException pe) {
-	    return false;
-	}
-	return true;
     }
 
     public static void clearAllCaches()

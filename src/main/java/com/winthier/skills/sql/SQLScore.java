@@ -1,12 +1,9 @@
 package com.winthier.skills.sql;
 
-import com.avaje.ebean.SqlQuery;
-import com.avaje.ebean.SqlRow;
-import com.avaje.ebean.validation.Length;
-import com.avaje.ebean.validation.NotEmpty;
-import com.avaje.ebean.validation.NotNull;
 import com.winthier.skills.Skill;
 import com.winthier.skills.Skills;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -16,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
@@ -45,10 +43,10 @@ public class SQLScore
     @Getter final static Set<SQLScore> dirties = new HashSet<>();
     // Content
     @Id Integer id;
-    @NotNull @ManyToOne SQLPlayer player;
-    @NotNull @ManyToOne SQLString skill;
-    @NotNull float skillPoints;
-    @NotNull int skillLevel;
+    @Column(nullable = false) @ManyToOne SQLPlayer player;
+    @Column(nullable = false) @ManyToOne SQLString skill;
+    @Column(nullable = false) float skillPoints;
+    @Column(nullable = false) int skillLevel;
     @Version Date version;
     transient float skillPointsAdded = 0;
 
@@ -83,10 +81,10 @@ public class SQLScore
         if (skill == null) return rank();
         List<Entry> result = new ArrayList<>();
         for (SQLScore score : SQLDB.get().find(SQLScore.class).where()
-                 .eq("skill_id", SQLString.of(skill.getKey()).getId())
+                 .eq("skill", SQLString.of(skill.getKey()))
                  .gt("skill_level", 0)
-                 .orderBy("skill_points DESC")
-                 .setMaxRows(100)
+                 .orderByDescending("skill_points")
+                 .limit(100)
                  .findList()) {
             result.add(new Entry(score.getPlayer().getUuid(), score.getSkillPoints(), score.getSkillLevel()));
         }
@@ -97,14 +95,26 @@ public class SQLScore
     {
         List<Integer> skillIds = new ArrayList<>();
         for (Skill skill : Skills.getInstance().getSkills()) skillIds.add(SQLString.of(skill.getKey()).getId());
-        SqlQuery query = SQLDB.get().createSqlQuery("SELECT player_id, uuid, SUM(skill_points) AS skill_points FROM scores JOIN players ON player_id = players.id WHERE skill_id IN (:skill_ids) GROUP BY player_id ORDER BY skill_points DESC LIMIT 100");
-        query.setParameter("skill_ids", skillIds);
+        StringBuilder sb = new StringBuilder();
+        sb.append("SELECT player_id, uuid, SUM(skill_points) AS skill_points FROM `")
+            .append(SQLDB.get().getTable(SQLScore.class).getTableName())
+            .append("` JOIN `")
+            .append(SQLDB.get().getTable(SQLPlayer.class).getTableName())
+            .append("` players ON player_id = players.id WHERE skill_id IN (")
+            .append(skillIds.get(0));
+        for (int i = 1; i < skillIds.size(); i += 1) sb.append(", ").append(skillIds.get(i)); 
+        sb.append(") GROUP BY player_id ORDER BY skill_points DESC LIMIT 100");
+        ResultSet row = SQLDB.get().executeQuery(sb.toString());
         List<Entry> result = new ArrayList<>();
-        for (SqlRow row : query.findList()) {
-            UUID uuid = UUID.fromString(row.getString("uuid"));
-            double skillPoints = (double)row.getFloat("skill_points") / (double)skillIds.size();
-            int skillLevel = Skills.getInstance().getScore().levelForPoints(skillPoints);
-            result.add(new Entry(uuid, skillPoints, skillLevel));
+        try {
+            while (row.next()) {
+                UUID uuid = UUID.fromString(row.getString("uuid"));
+                double skillPoints = (double)row.getFloat("skill_points") / (double)skillIds.size();
+                int skillLevel = Skills.getInstance().getScore().levelForPoints(skillPoints);
+                result.add(new Entry(uuid, skillPoints, skillLevel));
+            }
+        } catch (SQLException sqle) {
+            sqle.printStackTrace();
         }
         return result;
     }

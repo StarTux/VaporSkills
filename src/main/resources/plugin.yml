@@ -3,8 +3,7 @@ description: Skills system for Winthier
 author: StarTux
 version: 0.4
 main: com.winthier.skills.bukkit.BukkitSkillsPlugin
-depend: [ Vault, Exploits, PlayerCache ]
-database: true
+depend: [ SQL, Vault, Exploits, PlayerCache ]
 commands: {}
 permissions:
   skills.skill.*:

@@ -1,16 +1,14 @@
 package com.winthier.skills.sql;
 
-import com.avaje.ebean.ExpressionList;
-import com.avaje.ebean.validation.Length;
-import com.avaje.ebean.validation.NotEmpty;
-import com.avaje.ebean.validation.NotNull;
 import com.winthier.skills.Reward;
 import com.winthier.skills.Skill;
+import com.winthier.sql.SQLTable;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
@@ -40,15 +38,15 @@ public class SQLReward implements Reward
     final static Map<Key, List<SQLReward>> listCache = new HashMap<>();
     // Content
     @Id Integer id;
-    @NotNull @ManyToOne SQLString skill;
-    @NotNull @ManyToOne SQLString target;
+    @Column(nullable = false) @ManyToOne SQLString skill;
+    @Column(nullable = false) @ManyToOne SQLString target;
     Integer type;
     Integer data;
     @ManyToOne(optional=true) SQLString name;
     // Reward
-    @NotNull float skillPoints;
-    @NotNull float money;
-    @NotNull float exp;
+    @Column(nullable = false) float skillPoints;
+    @Column(nullable = false) float money;
+    @Column(nullable = false) float exp;
     // Version
     @Version Date version;
 
@@ -72,7 +70,7 @@ public class SQLReward implements Reward
     private static SQLReward find(Key key)
     {
         if (cache.containsKey(key)) return cache.get(key);
-        ExpressionList<SQLReward> expr = SQLDB.get().find(SQLReward.class).where();
+        SQLTable<SQLReward>.Finder expr = SQLDB.get().find(SQLReward.class).where();
         expr = expr.eq("skill", SQLString.of(key.skill));
         expr = expr.eq("target", SQLString.of(key.target.name()));
         expr = key.type != null ? expr.eq("type", key.type)               : expr.isNull("type");
@@ -86,7 +84,7 @@ public class SQLReward implements Reward
     private static List<SQLReward> findList(Key key)
     {
         if (listCache.containsKey(key)) return listCache.get(key);
-        ExpressionList<SQLReward> expr = SQLDB.get().find(SQLReward.class).where();
+        SQLTable<SQLReward>.Finder expr = SQLDB.get().find(SQLReward.class).where();
         expr = expr.eq("skill", SQLString.of(key.skill));
         expr = expr.eq("target", SQLString.of(key.target.name()));
         if (key.type != null) expr = expr.eq("type", key.type);
@@ -137,6 +135,6 @@ public class SQLReward implements Reward
     {
         cache.clear();
         listCache.clear();
-        SQLDB.get().createSqlUpdate("DELETE FROM rewards").execute();
+        SQLDB.get().executeUpdate("DELETE FROM rewards");
     }
 }

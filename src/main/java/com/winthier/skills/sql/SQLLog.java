@@ -1,15 +1,12 @@
 package com.winthier.skills.sql;
 
-import com.avaje.ebean.ExpressionList;
-import com.avaje.ebean.validation.Length;
-import com.avaje.ebean.validation.NotEmpty;
-import com.avaje.ebean.validation.NotNull;
 import com.winthier.skills.Reward;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.List;
 import java.util.UUID;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
@@ -38,14 +35,14 @@ public class SQLLog implements Reward
     @ManyToOne(optional = false) SQLString target;
     Integer type;
     Integer data;
-    @ManyToOne(optional=true) SQLString name;
+    @ManyToOne(optional = true) SQLString name;
     // Stats
     @ManyToOne(optional = false) SQLPlayer player;
     @ManyToOne(optional = false) Date time;
     // Reward
-    @NotNull float skillPoints;
-    @NotNull float money;
-    @NotNull float exp;
+    @Column(nullable = false) float skillPoints;
+    @Column(nullable = false) float money;
+    @Column(nullable = false) float exp;
 
     private SQLLog(SQLString skill, SQLString target, Integer type, Integer data, SQLString name,
                       SQLPlayer player, Date time,

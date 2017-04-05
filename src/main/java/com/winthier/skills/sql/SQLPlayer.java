@@ -1,11 +1,9 @@
 package com.winthier.skills.sql;
 
-import com.avaje.ebean.validation.Length;
-import com.avaje.ebean.validation.NotEmpty;
-import com.avaje.ebean.validation.NotNull;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -27,7 +25,7 @@ public class SQLPlayer
     final static Map<UUID, SQLPlayer> cache = new HashMap<>();
     // Content
     @Id Integer id;
-    @NotNull UUID uuid;
+    @Column(nullable = false) UUID uuid;
 
     private SQLPlayer(UUID uuid)
     {

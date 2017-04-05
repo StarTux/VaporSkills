@@ -1,6 +1,5 @@
 package com.winthier.skills;
 
-import com.avaje.ebean.EbeanServer;
 import java.util.Collection;
 import java.util.UUID;
 import lombok.Getter;
@@ -16,7 +15,6 @@ public abstract class Skills
 	score = new Score();
     }
     
-    public abstract EbeanServer getDatabase();
     public abstract void onLevelUp(UUID player, Skill skill, int level);
     public abstract Collection<? extends Skill> getSkills();
 }

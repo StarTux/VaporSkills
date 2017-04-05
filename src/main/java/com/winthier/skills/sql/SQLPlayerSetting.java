@@ -1,14 +1,12 @@
 package com.winthier.skills.sql;
 
-import com.avaje.ebean.validation.Length;
-import com.avaje.ebean.validation.NotEmpty;
-import com.avaje.ebean.validation.NotNull;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
@@ -36,10 +34,10 @@ public class SQLPlayerSetting
     final static List<SQLPlayerSetting> dirties = new ArrayList<>();
     // Content
     @Id Integer id;
-    @NotNull @ManyToOne SQLPlayer player;
-    @NotNull @ManyToOne SQLString category; // Usually a skill
-    @NotNull @ManyToOne SQLString key;
-    @Length(max=255) String value;
+    @Column(nullable = false) @ManyToOne SQLPlayer player;
+    @Column(nullable = false) @ManyToOne SQLString category; // Usually a skill
+    @Column(nullable = false) @ManyToOne SQLString key;
+    @Column(length = 255) String value;
     @Version Date version;
 
     private SQLPlayerSetting(SQLPlayer player, SQLString category, SQLString key)

@@ -1,11 +1,9 @@
 package com.winthier.skills.sql;
 
-import com.avaje.ebean.validation.Length;
-import com.avaje.ebean.validation.NotEmpty;
-import com.avaje.ebean.validation.NotNull;
 import com.winthier.skills.Skill;
 import java.util.HashMap;
 import java.util.Map;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -30,7 +28,7 @@ public class SQLString
     final static Map<String, SQLString> cache = new HashMap<>();
     // Payload
     @Id Integer id;
-    @NotNull @Length(max=255) String value;
+    @Column(nullable = false, length = 255) String value;
 
     private SQLString(String string)
     {

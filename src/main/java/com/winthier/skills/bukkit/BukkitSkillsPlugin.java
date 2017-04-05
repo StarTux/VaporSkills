@@ -1,6 +1,7 @@
 package com.winthier.skills.bukkit;
 
 import com.winthier.skills.sql.SQLDB;
+import com.winthier.sql.SQLDatabase;
 import java.io.File;
 import java.util.List;
 import javax.persistence.PersistenceException;
@@ -25,10 +26,11 @@ public class BukkitSkillsPlugin extends JavaPlugin implements Listener
     final BukkitCommandHighscore highscoreCommand = new BukkitCommandHighscore();
     static final String CONFIG_YML = "config.yml";
     static final String REWARDS_TXT = "rewards.txt";
+    private SQLDatabase db;
 
     public BukkitSkillsPlugin()
     {
-	instance = this;
+        instance = this;
     }
 
     @Override
@@ -38,17 +40,19 @@ public class BukkitSkillsPlugin extends JavaPlugin implements Listener
         writeDefaultFiles(false);
         reloadConfig();
         // Economy
-	if (!setupEconomy()) {
-	    getLogger().warning("Economy setup failed. Disabling skills.");
-	    getServer().getPluginManager().disablePlugin(this);
-	    return;
-	}
+        if (!setupEconomy()) {
+            getLogger().warning("Economy setup failed. Disabling skills.");
+            getServer().getPluginManager().disablePlugin(this);
+            return;
+        }
         // Database
-	if (!setupDatabase()) {
-	    getLogger().warning("Database setup failed. Disabling skills.");
-	    getServer().getPluginManager().disablePlugin(this);
-	    return;
-	}
+        db = new SQLDatabase(this);
+        for (Class<?> clazz: SQLDB.getDatabaseClasses()) db.registerTable(clazz);
+        if (!db.createAllTables()) {
+            getLogger().warning("Database setup failed. Disabling skills.");
+            getServer().getPluginManager().disablePlugin(this);
+            return;
+        }
         // Skills
         skills.configure();
         for (BukkitSkill skill : skills.getSkills()) {
@@ -136,30 +140,11 @@ public class BukkitSkillsPlugin extends JavaPlugin implements Listener
         skills.buildNameMap();
     }
 
-    @Override
-    public List<Class<?>> getDatabaseClasses()
-    {
-	return SQLDB.getDatabaseClasses();
-    }
-
     private boolean setupEconomy()
     {
         RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(Economy.class);
         if (economyProvider != null) economy = economyProvider.getProvider();
         return (economy != null);
-    }
-
-    private boolean setupDatabase()
-    {
-	if (!SQLDB.isSetup()) {
-	    try {
-		installDDL();
-	    } catch (PersistenceException pe) {
-		pe.printStackTrace();
-		return false;
-	    }
-	}
-        return true;
     }
 
     @EventHandler
