@@ -75,6 +75,7 @@ fish:
   DisplayName: Fishing
   Shorthand: Fish
   Description: Cast your fishing rod in bodies of water to catch different types of fish for food or brewing.
+  FishInterval: 15
 harvest:
   Enabled: true
   RewardFactors: [ 1, 1, 1 ]
