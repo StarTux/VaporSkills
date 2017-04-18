@@ -1,6 +1,8 @@
 package com.winthier.skills.bukkit;
 
 import com.winthier.exploits.bukkit.BukkitExploits;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -28,7 +30,9 @@ class BukkitSkillFish extends BukkitSkill implements Listener
         if (player == null) return;
         if (!allowPlayer(player)) return;
         if (!(event.getCaught() instanceof Item)) return;
-        if (BukkitExploits.getInstance().didRecentlyFish(player, event.getCaught().getLocation().getBlock(), fishInterval)) return;
+        if (BukkitExploits.getInstance().didRecentlyFish(player, event.getHook().getLocation().getBlock(), fishInterval)) return;
+        Block block = event.getHook().getLocation().getBlock();
+        if (block.getType() == Material.TRIPWIRE || block.getRelative(0, 1, 0).getType() == Material.TRIPWIRE) return;
         ItemStack item = ((Item)event.getCaught()).getItemStack();
         giveReward(player, rewardForItem(item));
     }
