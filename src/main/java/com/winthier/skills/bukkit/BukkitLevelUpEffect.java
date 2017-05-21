@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.text.WordUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Effect;
+import org.bukkit.Location;
 import org.bukkit.Sound; 
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -109,6 +110,23 @@ public class BukkitLevelUpEffect extends BukkitRunnable
                 // TODO: Put something more interesting here?
                 "&f&oSkill",
                 "&r" + WordUtils.wrap(skill.getDescription(), 32)));
+        Location la = player.getLocation();
+        for (Player nearby: player.getWorld().getPlayers()) {
+            if (nearby.equals(player)) continue;
+            Location lb = nearby.getLocation();
+            int dx = la.getBlockX() - lb.getBlockX();
+            int dy = la.getBlockY() - lb.getBlockY();
+            int dz = la.getBlockZ() - lb.getBlockZ();
+            if (dx * dx + dy * dy + dz * dz > 64 * 64) continue;
+            BukkitUtil.raw(nearby,
+                           BukkitUtil.format("&f%s reached level %d in ", player.getName(), level),
+                           BukkitUtil.button("&a[" + skill.getDisplayName() + "]",
+                                             "/sk " + skill.getShorthand(),
+                                             "&a" + skill.getDisplayName(),
+                                             // TODO: Put something more interesting here?
+                                             "&f&oSkill",
+                                             "&r" + WordUtils.wrap(skill.getDescription(), 32)));
+        }
     }
     
     void colorful(Player player, int ticks, double height) {
