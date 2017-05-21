@@ -12,6 +12,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
 import lombok.Getter;
@@ -19,6 +20,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.ExperienceOrb;
 import org.bukkit.entity.Player;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 @Getter
 public class BukkitSkills extends Skills
@@ -106,13 +109,77 @@ public class BukkitSkills extends Skills
     {
         Player player = Bukkit.getServer().getPlayer(uuid);
         if (player == null) return;
-        if (skill instanceof BukkitSkill) {
+        if (!(skill instanceof BukkitSkill)) return;
             BukkitLevelUpEffect.launch(player, (BukkitSkill)skill, level);
             BukkitPlayer.of(player).displaySkill((BukkitSkill)skill, player);
             Bukkit.getServer().getPluginManager().callEvent(new SkillsLevelUpEvent(player, (BukkitSkill)skill, level));
-        }
+            // Give bonus potion effect
+            Random random = new Random(System.currentTimeMillis());
+            int duration = 40 * (level + random.nextInt(level));
+            int power = level / 100;
+            int maxAmp = Math.min(4, power + 1);
+            switch (((BukkitSkill)skill).getSkillType()) {
+            case BLACKSMITH:
+                player.addPotionEffect(new PotionEffect(PotionEffectType.FAST_DIGGING, duration, random.nextInt(maxAmp), true), true);
+                if (power >= 1) player.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, duration, random.nextInt(maxAmp), true), true);
+                break;
+            case BRAWL:
+            case BUTCHER:
+                player.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, duration, random.nextInt(maxAmp), true), true);
+                if (power >= 1) player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, duration, random.nextInt(maxAmp), true), true);
+                if (power >= 2) player.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, duration, random.nextInt(maxAmp), true), true);
+                break;
+            case BREED:
+            case SHEAR:
+            case TAME:
+                player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, duration, random.nextInt(maxAmp), true), true);
+                if (power >= 1) player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, duration, random.nextInt(maxAmp), true), true);
+                break;
+            case BREW:
+            case ENCHANT:
+                player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, duration, random.nextInt(maxAmp), true), true);
+                if (power >= 1) player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, duration, random.nextInt(maxAmp), true), true);
+                if (power >= 2) player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, duration, random.nextInt(maxAmp), true), true);
+                break;
+            case BUILD:
+                player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, duration, random.nextInt(maxAmp), true), true);
+                if (power >= 1) player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, duration, random.nextInt(maxAmp), true), true);
+                break;
+            case EAT:
+            case COOK:
+            case SMELT:
+                player.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, duration / 2, random.nextInt(maxAmp), true), true);
+                if (power >= 1) player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, duration, random.nextInt(maxAmp), true), true);
+                break;
+            case DIG:
+            case MINE:
+            case SACRIFICE:
+                player.addPotionEffect(new PotionEffect(PotionEffectType.FAST_DIGGING, duration, random.nextInt(maxAmp), true), true);
+                if (power >= 1) player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, duration, random.nextInt(maxAmp), true), true);
+                if (power >= 2) player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, duration, random.nextInt(maxAmp), true), true);
+                if (power >= 3) player.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, duration, random.nextInt(maxAmp), true), true);
+                break;
+            case FISH:
+                player.addPotionEffect(new PotionEffect(PotionEffectType.LUCK, duration, random.nextInt(maxAmp), true), true);
+                if (power >= 1) player.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, duration, random.nextInt(maxAmp), true), true);
+                if (power >= 2) player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, duration, random.nextInt(maxAmp), true), true);
+                if (power >= 3) player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, duration, random.nextInt(maxAmp), true), true);
+                break;
+            case HUNT:
+            case TRAVEL:
+            case HARVEST:
+                player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, duration * 2, random.nextInt(maxAmp), true), true);
+                if (power >= 1) player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, duration, random.nextInt(maxAmp), true), true);
+                if (power >= 2) player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, duration, random.nextInt(maxAmp), true), true);
+                break;
+            case WOODCUT:
+                player.addPotionEffect(new PotionEffect(PotionEffectType.FAST_DIGGING, duration, random.nextInt(maxAmp), true), true);
+                if (power >= 1) player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, duration, random.nextInt(maxAmp), true), true);
+                break;
+            default: break;
+            }
     }
-    
+
     @Override
     public Collection<? extends BukkitSkill> getSkills()
     {
