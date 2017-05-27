@@ -198,13 +198,17 @@ public class BukkitSkills extends Skills
 
     void giveMoney(Player player, double amount) {
         if (amount < 0.01) return;
-        Double stored = moneys.get(player.getUniqueId());
-        if (stored == null) {
-            stored = amount;
+        Double total = moneys.remove(player.getUniqueId());
+        if (total == null) {
+            total = amount;
         } else {
-            stored += amount;
+            total += amount;
         }
-        moneys.put(player.getUniqueId(), stored);
+        if (total >= 5.0) {
+            getPlugin().getEconomy().depositPlayer(player, total);
+        } else {
+            moneys.put(player.getUniqueId(), total);
+        }
     }
 
     void giveExp(Player player, double amount) {
@@ -237,26 +241,6 @@ public class BukkitSkills extends Skills
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            moneys.clear();
-        }
-    }
-
-    void depositSomeMoneys()
-    {
-        try {
-            for (Iterator<Map.Entry<UUID, Double>> iter = moneys.entrySet().iterator(); iter.hasNext(); ) {
-                Map.Entry<UUID, Double> entry = iter.next();
-                Double amount = entry.getValue();
-                if (amount == null || amount < 100) continue;
-                OfflinePlayer player = Bukkit.getServer().getOfflinePlayer(entry.getKey());
-                if (player == null) continue;
-                getPlugin().getEconomy().depositPlayer(player, amount);
-                iter.remove();
-                return;
-            }
-        } catch (Exception e) {
-            System.err.println("Error delivering moneys. Clearing partial amounts.");
-            e.printStackTrace();
             moneys.clear();
         }
     }

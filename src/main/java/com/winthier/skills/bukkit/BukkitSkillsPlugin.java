@@ -120,7 +120,6 @@ public class BukkitSkillsPlugin extends JavaPlugin implements Listener
     {
         try {
             SQLDB.saveSome();
-            skills.depositSomeMoneys();
         } catch (Exception e) {
             e.printStackTrace();
         }
