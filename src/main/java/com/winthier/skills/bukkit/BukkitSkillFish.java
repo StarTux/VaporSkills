@@ -2,7 +2,6 @@ package com.winthier.skills.bukkit;
 
 import com.winthier.exploits.bukkit.BukkitExploits;
 import org.bukkit.Material;
-import org.bukkit.block.Block;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -22,7 +21,7 @@ class BukkitSkillFish extends BukkitSkill implements Listener
         fishInterval = getConfig().getLong("FishInterval", fishInterval);
     }
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onPlayerFish(PlayerFishEvent event)
     {
         if (event.getState() != PlayerFishEvent.State.CAUGHT_FISH) return;
@@ -30,9 +29,7 @@ class BukkitSkillFish extends BukkitSkill implements Listener
         if (player == null) return;
         if (!allowPlayer(player)) return;
         if (!(event.getCaught() instanceof Item)) return;
-        if (BukkitExploits.getInstance().didRecentlyFish(player, event.getHook().getLocation().getBlock(), fishInterval)) return;
-        Block block = event.getHook().getLocation().getBlock();
-        if (block.getType() == Material.TRIPWIRE || block.getRelative(0, 1, 0).getType() == Material.TRIPWIRE) return;
+        if (BukkitExploits.getInstance().didRecentlyFish(player, player.getLocation().getBlock(), fishInterval)) return;
         ItemStack item = ((Item)event.getCaught()).getItemStack();
         giveReward(player, rewardForItem(item));
     }

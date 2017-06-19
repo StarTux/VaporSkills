@@ -19,7 +19,7 @@ class BukkitSkillHarvest extends BukkitSkill implements Listener
     @Getter final BukkitSkillType skillType = BukkitSkillType.HARVEST;
     final double RADIUS = 100;
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onBlockBreak(BlockBreakEvent event)
     {
         Player player = event.getPlayer();

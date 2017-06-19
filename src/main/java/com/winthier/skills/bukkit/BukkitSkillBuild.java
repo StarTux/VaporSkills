@@ -84,7 +84,7 @@ class BukkitSkillBuild extends BukkitSkill implements Listener
         players.clear();
     }
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onBlockPlace(BlockPlaceEvent event)
     {
         Player player = event.getPlayer();

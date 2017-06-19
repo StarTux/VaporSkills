@@ -43,7 +43,7 @@ abstract class BukkitSkillAbstractBlockBreak extends BukkitSkill implements List
 	return true;
     }
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onBlockBreak(BlockBreakEvent event)
     {
         Player player = event.getPlayer();

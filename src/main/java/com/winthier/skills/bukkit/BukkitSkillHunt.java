@@ -23,7 +23,7 @@ final class BukkitSkillHunt extends BukkitSkill implements Listener {
         minKillDistance = getConfig().getDouble("MinKillDistance", 16);
     }
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
         if (!(event.getEntity() instanceof LivingEntity)) return;
         LivingEntity entity = (LivingEntity)event.getEntity();
