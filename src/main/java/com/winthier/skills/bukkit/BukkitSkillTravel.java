@@ -98,28 +98,21 @@ class BukkitSkillTravel extends BukkitSkill implements Listener
         return result;
     }
 
-    @Override
-    boolean allowPlayer(Player player)
-    {
-        if (!super.allowPlayer(player)) return false;
-        if (!player.isOnGround()) return false;
-        if (player.isInsideVehicle()) {
-            if (player.getVehicle().getType() == EntityType.HORSE ||
-                player.getVehicle().getType() == EntityType.PIG) {
-                if (player.getVehicle().isInsideVehicle()) return false;
-            } else {
-                return false;
-            }
-        }
-        return true;
-    }
-
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     void onPlayerMove(PlayerMoveEvent event)
     {
         if (event instanceof PlayerTeleportEvent) return;
         Player player = event.getPlayer();
         if (!allowPlayer(player)) return;
+        if (!player.isOnGround()) return;
+        if (player.isInsideVehicle()) {
+            if (player.getVehicle().getType() == EntityType.HORSE ||
+                player.getVehicle().getType() == EntityType.PIG) {
+                if (player.getVehicle().isInsideVehicle()) return;
+            } else {
+                return;
+            }
+        }
         getData(player).onPlayerMove(player, event.getTo());
     }
 
