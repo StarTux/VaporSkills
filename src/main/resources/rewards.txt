@@ -54,19 +54,23 @@ Dig Block		Clay 0 -		1 1 1	.5
 # 
 #===============================================================================
 
+Smelt Item		Diamond 0 -		1 1 0	1	# Vanilla: 1.0 exp
+Smelt Item		Emerald	0 -		1 1 0	1	# Vanilla: 1.0 exp
+Smelt Item		Gold_Ingot 0 -		1 1 0	1	# Vanilla: 1.0 exp
+Smelt Item		Iron_Ingot 0 -		1 1 0	.7	# Vanilla: 0.7 exp
+Smelt Item		Redstone 0 -		1 1 0	.7	# Vanilla: 0.7 exp
+Smelt Item		Hard_Clay 0 -		1 1 0	.35	# Vanilla: 0.35 exp
+Smelt Item		Clay_Brick 0 -		1 1 0	.3	# Vanilla: 0.3 exp
+Smelt Item		Quartz 0 -		1 1 0	.2	# Vanilla: 0.2 exp
+Smelt Item		Ink_Sack 4		1 1 0	.2	# Vanilla: 0.2 exp # Lapis Lazuli
 Smelt Item		Coal 0 -		1 1 0	.1	# Vanilla: 0.1 exp
-Smelt Item		Coal 1 -		1 1 0	.15	# Vanilla: 0.1 exp // Charcoal
-Smelt Item		Diamond 0 -		1 1 0	1	# Vanilla: 1 exp
-Smelt Item		Quartz 0 -		1 1 0	.2	# Vanilla: 1 exp
-Smelt Item		Iron_Ingot 0 -		.7 .7 0		# Vanilla: 0.7 exp
-Smelt Item		Gold_Ingot 0 -		1 1 0		# Vanilla: 1.0 exp
-Smelt Item		Stone 0 -		.1 .1 0		# Vanilla: 0.1 exp
-Smelt Item		Nether_Brick_Item 0 -	.1 .1 0		# Vanilla: 0.1 exp
-Smelt Item		Glass 0 -		.1 .1 0		# Vanilla: 0.1 exp
-Smelt Item		Clay_Brick 0 -		.3 .3 0		# Vanilla: 0.3 exp
-Smelt Item		Smooth_Brick 2 -	.1 .1 0		# Vanille: 0.1 exp // Cracked Stone Brick
-Smelt Item		Ink_Sack 2 -		.05 .05 0	# Vanilla: 0.2 exp // Green Dye
+Smelt Item		Coal 1 -		1 1 0	.1	# Vanilla: 0.1 exp # Charcoal
+Smelt Item		Stone 0 -		1 1 0	.1	# Vanilla: 0.1 exp
+Smelt Item		Nether_Brick_Item 0 -	1 1 0	.1	# Vanilla: 0.1 exp
+Smelt Item		Glass 0 -		1 1 0	.1	# Vanilla: 0.1 exp
+Smelt Item		Smooth_Brick 2 -	1 1 0	.1	# Vanille: 0.1 exp # Cracked Stone Brick
 Smelt Item		Chorus_Fruit_Popped - -	1 1 0	.1	# Vanilla: ???
+Smelt Item		Ink_Sack 2 -		1 1 0	.05	# Vanilla: 0.2 exp # Green Dye
 
 #===============================================================================
 # Brawling
@@ -74,8 +78,9 @@ Smelt Item		Chorus_Fruit_Popped - -	1 1 0	.1	# Vanilla: ???
 #===============================================================================
 
 Brawl Entity		- - Zombie		5 5 0		# Vanilla:  5 exp
-Brawl Entity		- - BabyZombie		12 12 0		# Vanilla: 12 exp
+Brawl Entity		- - Husk		5 5 0		# Vanilla:  5 exp
 Brawl Entity		- - Skeleton		5 5 0		# Vanilla:  5 exp
+Brawl Entity		- - Stray		5 5 0		# Vanilla:  5 exp
 Brawl Entity		- - WitherSkeleton	5 5 0		# Vanilla:  5 exp
 Brawl Entity		- - Creeper		5 5 0		# Vanilla:  5 exp
 Brawl Entity		- - Spider		5 5 0		# Vanilla:  5 exp
@@ -83,9 +88,11 @@ Brawl Entity		- - CaveSpider		5 5 0		# Vanilla:  5 exp
 Brawl Entity		- - Endermite		5 5 0		# Vanilla:  5 exp
 Brawl Entity		- - Silverfish		5 5 0		# Vanilla:  5 exp
 Brawl Entity		- - Enderman		5 5 0		# Vanilla:  5 exp
-Brawl Entity		- - Witch		5 5 0		# Vanilla:  5 exp
+Brawl Entity		- - Witch		10 10 0		# Vanilla:  5 exp
+Brawl Entity		- - Vindicator		10 10 0		# Vanilla:  5 exp
+Brawl Entity		- - Evoker		10 10 0		# Vanilla:  5 exp
+Brawl Entity		- - Vex			3 3 0		# Vanilla:  3 exp
 Brawl Entity		- - PigZombie		5 5 0		# Vanilla:  5 exp
-Brawl Entity		- - BabyPigZombie	12 12 0		# Vanilla: 12 exp
 Brawl Entity		- - Blaze		10 10 0		# Vanilla: 10 exp
 Brawl Entity		- - BigSlime		4 4 0		# Vanilla:  4 exp
 Brawl Entity		- - SmallSlime		2 2 0		# Vanilla:  2 exp
@@ -106,8 +113,9 @@ Brawl Entity		- - Giant		5 5 0		# Vanilla: 5 exp
 #===============================================================================
 
 Hunt Entity		- - Zombie		5 5 0		# Vanilla:  5 exp
-Hunt Entity		- - BabyZombie		12 12 0		# Vanilla: 12 exp
+Hunt Entity		- - Husk		5 5 0		# Vanilla:  5 exp
 Hunt Entity		- - Skeleton		5 5 0		# Vanilla:  5 exp
+Hunt Entity		- - Stray		5 5 0		# Vanilla:  5 exp
 Hunt Entity		- - WitherSkeleton	5 5 0		# Vanilla:  5 exp
 Hunt Entity		- - Creeper		5 5 0		# Vanilla:  5 exp
 Hunt Entity		- - Spider		5 5 0		# Vanilla:  5 exp
@@ -115,9 +123,11 @@ Hunt Entity		- - CaveSpider		5 5 0		# Vanilla:  5 exp
 Hunt Entity		- - Endermite		5 5 0		# Vanilla:  5 exp
 Hunt Entity		- - Silverfish		5 5 0		# Vanilla:  5 exp
 Hunt Entity		- - Enderman		5 5 0		# Vanilla:  5 exp
-Hunt Entity		- - Witch		5 5 0		# Vanilla:  5 exp
+Hunt Entity		- - Witch		10 10 0		# Vanilla:  5 exp
+Hunt Entity		- - Vindicator		10 10 0		# Vanilla:  5 exp
+Hunt Entity		- - Evoker		10 10 0		# Vanilla:  5 exp
+Hunt Entity		- - Vex			3 3 0		# Vanilla:  3 exp
 Hunt Entity		- - PigZombie		5 5 0		# Vanilla:  5 exp
-Hunt Entity		- - BabyPigZombie	12 12 0		# Vanilla: 12 exp
 Hunt Entity		- - Blaze		10 10 0		# Vanilla: 10 exp
 Hunt Entity		- - BigSlime		4 4 0		# Vanilla:  4 exp
 Hunt Entity		- - SmallSlime		2 2 0		# Vanilla:  2 exp
@@ -155,6 +165,7 @@ Tame Entity		- - Wolf		1 1 1	3
 Tame Entity		- - Ocelot		1 1 1	3
 Tame Entity		- - Horse		1 1 1	5
 Tame Entity		- - Llama		1 1 1	5
+Tame Entity		- - Parrot		1 1 1	5
 
 #===============================================================================
 # Shearing
@@ -200,13 +211,17 @@ Brew Item		Sulphur 0 -		1 1 1	2
 # Reward in intervals
 #===============================================================================
 
-Travel Name		- 128 distance		1 1 1	.25
-Travel Name		- 256 distance		1 1 1	.5
-Travel Name		- 512 distance		1 1 1	.75
-Travel Name		- 1024 distance		1 1 1	1
-Travel Name		- 2048 distance		1 1 1	1.25
-Travel Name		- 4096 distance		1 1 1	1.5
-Travel Name		- 8192 distance		1 1 1	2
+Travel Name		- 100 distance		1 1 1	.1
+Travel Name		- 250 distance		1 1 1	.2
+Travel Name		- 500 distance		1 1 1	.5
+Travel Name		- 1000 distance		1 1 1	1
+Travel Name		- 2000 distance		1 1 1	1.5
+Travel Name		- 3000 distance		1 1 1	2
+Travel Name		- 4000 distance		1 1 1	2.5
+Travel Name		- 5000 distance		1 1 1	3
+Travel Name		- 6000 distance		1 1 1	3.5
+Travel Name		- 7000 distance		1 1 1	4
+Travel Name		- 8000 distance		1 1 1	5
 
 #===============================================================================
 # Building
@@ -219,10 +234,30 @@ Build Name		- - progress		1 1 1
 # Fishing
 #===============================================================================
 
-Fish Item		Raw_Fish 0 -		3.5 3.5 0	# Vanilla: 1-6 exp (3.5 avg)
-Fish Item		Raw_Fish 1 -		3.5 3.5 0	# Vanilla: 1-6 exp (3.5 avg) // Salmon
-Fish Item		Raw_Fish 2 -		4 4 0		# Vanilla: Unknown exp       // Clownfish
-Fish Item		Raw_Fish 3 -		5 5 0		# Vanilla: Unknown exp       // Pufferfish
+Fish Item		Raw_Fish 0 -		3.5 3.5 0	2	# Vanilla: 1-6 exp (3.5 avg)
+Fish Item		Raw_Fish 1 -		3.5 3.5 0	2	# Vanilla: 1-6 exp (3.5 avg) // Salmon
+Fish Item		Raw_Fish 2 -		5 5 0		2	# Vanilla: Unknown exp       // Clownfish
+Fish Item		Raw_Fish 3 -		5 5 0		2	# Vanilla: Unknown exp       // Pufferfish
+
+Fish Item		Bow - -			1 1 0		10
+Fish Item		Enchanted_Book 0 -	1 1 0		10
+Fish Item		Fishing_Rod - -		1 1 0		10
+Fish Item		Name_Tag 0 - 		1 1 0		10
+Fish Item		Water_Lily 0 - 		1 1 0		10
+
+Fish Item		Bowl 0 - 		1 1 0		5
+Fish Item		Leather 0 - 		1 1 0		5
+Fish Item		Leather_Boots - -	1 1 0		5
+Fish Item		Rotten_Flesh 0 -	1 1 0		5
+Fish Item		Stick 0 -		1 1 0		5
+Fish Item		String 0 -		1 1 0		5
+Fish Item		Potion 0 -		1 1 0		5	# Water Bottle
+Fish Item		Bone 0 -		1 1 0		5
+Fish Item		Ink_Sack 0 -		1 1 0		5
+Fish Item		Tripwire_Hook 0 -	1 1 0		5
+
+Fish Item		Emerald 0 -		1 1 1		10
+Fish Item		Diamond 0 -		1 1 1		20
 
 #===============================================================================
 # Cooking
@@ -355,7 +390,7 @@ Sacrifice Item		Coal_Ore - -		1 0 0	.25
 
 Sacrifice Item		Gold_Ore - -		1 0 0	2
 
-Sacrifice Item		Emerald_Ore - -		1 0 0	5
+Sacrifice Item		Emerald_Ore - -		5 10 0
 
 Sacrifice Item		Quartz - -		1 0 0
 Sacrifice Item		Quartz_Block - -	1 0 0	4
