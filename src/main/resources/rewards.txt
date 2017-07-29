@@ -377,20 +377,20 @@ Sacrifice Item		Iron_Block - -		0 0 0		90
 Sacrifice Item		Ink_Sack 4 -		1 0 0		.25	# Lapis Lazuli
 Sacrifice Item		Lapis_Ore - -		1 0 0		1
 
-Sacrifice Item		Diamond 0 -		5 80 0		1
-Sacrifice Item		Diamond_Ore 0 -		5 80 0		1
-Sacrifice Item		Diamond_Block 0 -	5 80 0		9
+Sacrifice Item		Diamond 0 -		5 80 10		1
+Sacrifice Item		Diamond_Ore 0 -		5 80 10		1
+Sacrifice Item		Diamond_Block 0 -	5 80 10		9
 
-Sacrifice Item		Nether_Star - -		50 100 0	1
-Sacrifice Item		Beacon - -		50 100 0	1
-Sacrifice Item		Dragon_Egg - -		100 500 0	1
+Sacrifice Item		Nether_Star - -		50 100 10	1
+Sacrifice Item		Beacon - -		50 100 10	1
+Sacrifice Item		Dragon_Egg - -		100 500 50	1
 
 Sacrifice Item		Coal 0 -		1 0 0	.1
 Sacrifice Item		Coal_Ore - -		1 0 0	.25
 
 Sacrifice Item		Gold_Ore - -		1 0 0	2
 
-Sacrifice Item		Emerald_Ore - -		5 10 0
+Sacrifice Item		Emerald_Ore - -		5 10 10
 
 Sacrifice Item		Quartz - -		1 0 0
 Sacrifice Item		Quartz_Block - -	1 0 0	4
@@ -560,6 +560,22 @@ Sacrifice Item		Record_9 - -		1 0 0	5
 Sacrifice Item		Record_10 - -		1 0 0	5
 Sacrifice Item		Record_11 - -		1 0 0	5
 Sacrifice Item		Record_12 - -		1 0 0	5
+
+Sacrifice Entity	- - Creeper		1 1 1	10
+Sacrifice Entity	- - Zombie		1 1 1	10
+Sacrifice Entity	- - Skeleton		1 1 1	10
+Sacrifice Entity	- - Husk		1 1 1	10
+Sacrifice Entity	- - Stray		1 1 1	10
+Sacrifice Entity	- - Spider		1 1 1	10
+Sacrifice Entity	- - CaveSpider		1 1 1	10
+Sacrifice Entity	- - Enderman		1 1 1	10
+Sacrifice Entity	- - Creeper		1 1 1	10
+Sacrifice Entity	- - Guardian		1 1 1	10
+Sacrifice Entity	- - ElderGuardian	1 1 1	10
+Sacrifice Entity	- - PigZombie		1 1 1	10
+Sacrifice Entity	- - Endermite		1 1 1	10
+Sacrifice Entity	- - Wither		1 1 1	100
+Sacrifice Entity	- - EnderDragon		1 1 1	100
 
 Sacrifice Enchantment	Protection_Environmental 1 -	1 0 0	.5
 Sacrifice Enchantment	Protection_Fire 1 -		1 0 0	.5
