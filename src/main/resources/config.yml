@@ -1,34 +1,28 @@
 Enabled: true
-RewardFactors: [ 1, .5, 1 ]
 total:
   Description: The total skill aggregates all other skill points and levels.
 blacksmith:
   Enabled: true
-  RewardFactors: [ 1, 1, 1 ]
   DisplayName: Blacksmithing
   Shorthand: Blacksmith
   Description: Repair and refine items on an anvil.
 brawl:
   Enabled: true
-  RewardFactors: [ 1, 1, 1 ]
   DisplayName: Brawling
   Shorthand: Brawl
   Description: Fight hostile monsters in close combat, ideally with your sword.
 breed:
   Enabled: true
-  RewardFactors: [ 1, 1, 1 ]
   DisplayName: Breeding
   Shorthand: Breed
   Description: Feed your farm animals to make them breed and increase their numbers.
 brew:
   Enabled: true
-  RewardFactors: [ 1, 1, 1 ]
   DisplayName: Brewing
   Shorthand: Brew
   Description: Brew magic potions in the brewing stand to achieve epic effects to wreak havoc on your enemies.
 build:
   Enabled: true
-  RewardFactors: [ 1, 1, 1 ]
   DisplayName: Building
   Shorthand: Build
   Description: Place blocks in the world to make your own epic creations.
@@ -38,26 +32,22 @@ build:
   PlacementBlacklist: [ Soil ]
 butcher:
   Enabled: true
-  RewardFactors: [ 1, 1, 1 ]
   DisplayName: Butchery
   Shorthand: Butcher
   Description: Butcher your farm animals to harvest their precious drops.
 cook:
   Enabled: true
-  RewardFactors: [ 1, 1, 1 ]
   DisplayName: Cooking
   Shorthand: Cook
   Description: Prepare your meals in the oven to increase their effectiveness and taste.
 dig:
   Enabled: true
-  RewardFactors: [ 1, 1, 1 ]
   DisplayName: Digging
   Shorthand: Dig
   Description: Use your shovel to dig in the ground and find epic treasure hidden beneath.
   RepeatInterval: 3600
 eat:
   Enabled: true
-  RewardFactors: [ 1, 1, 1 ]
   DisplayName: Eating
   Shorthand: Eat
   Description: Eat healthy and tasty food to maintain your stamina, heal up and refresh.
@@ -65,26 +55,22 @@ eat:
   SaturationFactor: 1.75
 enchant:
   Enabled: true
-  RewardFactors: [ 1, 1, 1 ]
   DisplayName: Enchanting
   Shorthand: Enchant
   Description: Improve your weapons, tools and armor on the enchanting table to make them stronger, more effective and deadlier.
 fish:
   Enabled: true
-  RewardFactors: [ 1, 1, 1 ]
   DisplayName: Fishing
   Shorthand: Fish
   Description: Cast your fishing rod in bodies of water to catch different types of fish for food or brewing.
   FishInterval: 15
 harvest:
   Enabled: true
-  RewardFactors: [ 1, 1, 1 ]
   DisplayName: Harvesting
   Shorthand: Harvest
   Description: Reap the rewards of your hard gardening work by harvesting crops, fruit and vegetables.
 hunt:
   Enabled: true
-  RewardFactors: [ 1, 1, 1 ]
   DisplayName: Hunting
   Shorthand: Hunt
   Description: Snipe dangerous creatures from afar with your bow to stay out of harms way.
@@ -92,38 +78,32 @@ hunt:
   MinKillDistance: 16
 mine:
   Enabled: true
-  RewardFactors: [ 1, 1, 1 ]
   DisplayName: Mining
   Shorthand: Mine
   Description: Grab your pickaxe and descend into the deep mines of this world to find precious ores and rare gems. Most blocks mined under ground will give you skill points, but the rarest ores are by far the most valuable. Only naturally occuring blocks grant you rewards.
   RepeatInterval: 3600
 sacrifice:
   Enabled: true
-  RewardFactors: [ 1, 2, 1 ]
   DisplayName: Sacrifice
   Shorthand: Sacrifice
   Description: Sacrifice your precious offerings to the almighty Creeper Overlord in exchange for his blessing. Sacrifice items by dropping them into fire, lava, or cacti. You may ask the Creeper Overlord whether he likes the item in your hand.
 shear:
   Enabled: true
-  RewardFactors: [ 1, 1, 1 ]
   DisplayName: Shearing
   Shorthand: Shear
   Description: Use shears to harvest wool from sheep.
 smelt:
   Enabled: true
-  RewardFactors: [ 1, 1, 1 ]
   DisplayName: Smelting
   Shorthand: Smelt
   Description: Refine your ores and raw materials in a furnace to make them even more precious and useful.
 tame:
   Enabled: true
-  RewardFactors: [ 1, 1, 1 ]
   DisplayName: Taming
   Shorthand: Tame
   Description: Tame wild animals.
 travel:
   Enabled: true
-  RewardFactors: [ 1, 1, 1 ]
   DisplayName: Traveling
   Shorthand: Travel
   Description: Leave your home and travel out in the world on foot or horseback to explore the wide world of Winthier. You collect skill points regularly as you move around. The more distance you reach from your origin location, which you reached via public warps or homes, the more points you get.
@@ -132,7 +112,6 @@ travel:
   MaxDistanceNoProgress: 128
 woodcut:
   Enabled: true
-  RewardFactors: [ 1, 1, 1 ]
   DisplayName: Woodcutting
   Shorthand: Woodcut
   Description: Grab your axe and cut down trees to collect lumber for your building projects.

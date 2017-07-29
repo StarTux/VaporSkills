@@ -139,9 +139,6 @@ class BukkitSkillSacrifice extends BukkitSkill implements Listener
             money += reward.getMoney();
             exp += reward.getExp();
         }
-        skillPoints *= getSkillPointsFactor() * getSkills().getSkillPointsFactor();
-        money       *= getMoneyFactor()       * getSkills().getMoneyFactor();
-        exp         *= getExpFactor()         * getSkills().getExpFactor();
         return new CustomReward(skillPoints, money, exp);
     }
 }
