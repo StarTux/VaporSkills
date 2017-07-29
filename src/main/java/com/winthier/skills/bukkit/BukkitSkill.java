@@ -21,6 +21,7 @@ import org.bukkit.block.Block;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
@@ -134,6 +135,11 @@ public abstract class BukkitSkill implements Skill
     }
 
     Reward rewardForEntity(Entity e)
+    {
+        return getSkills().getScore().rewardForEntity(this, BukkitEntities.name(e));
+    }
+
+    Reward rewardForEntityType(EntityType e)
     {
         return getSkills().getScore().rewardForEntity(this, BukkitEntities.name(e));
     }

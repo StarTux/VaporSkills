@@ -23,6 +23,8 @@ import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.SpawnEggMeta;
 
 class BukkitSkillSacrifice extends BukkitSkill implements Listener
 {
@@ -50,7 +52,7 @@ class BukkitSkillSacrifice extends BukkitSkill implements Listener
         item.remove();
         for (Reward reward : rewards) giveReward(player, reward, factor);
     }
-    
+
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onEntityDamage(EntityDamageEvent event)
     {
@@ -63,7 +65,7 @@ class BukkitSkillSacrifice extends BukkitSkill implements Listener
         if (!(event.getEntity() instanceof Item)) return;
         onItemSacrificed((Item)event.getEntity());
     }
-    
+
     // Items removed from world
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
@@ -91,7 +93,7 @@ class BukkitSkillSacrifice extends BukkitSkill implements Listener
     }
 
     // Util
-    
+
     static void addReward(List<Reward> list, Reward reward)
     {
         if (reward == null) return;
@@ -106,9 +108,18 @@ class BukkitSkillSacrifice extends BukkitSkill implements Listener
         for (Map.Entry<Enchantment, Integer> entry : item.getEnchantments().entrySet()) {
             addReward(result, rewardForEnchantment(entry.getKey(), entry.getValue()));
         }
-        if (item.hasItemMeta() && item.getItemMeta() instanceof EnchantmentStorageMeta) {
-            for (Map.Entry<Enchantment, Integer> entry : ((EnchantmentStorageMeta)item.getItemMeta()).getStoredEnchants().entrySet()) {
-                addReward(result, rewardForEnchantment(entry.getKey(), entry.getValue()));
+        if (item.hasItemMeta()) {
+            ItemMeta meta = item.getItemMeta();
+            if (meta instanceof EnchantmentStorageMeta) {
+                for (Map.Entry<Enchantment, Integer> entry : ((EnchantmentStorageMeta)meta).getStoredEnchants().entrySet()) {
+                    addReward(result, rewardForEnchantment(entry.getKey(), entry.getValue()));
+                }
+            }
+            if (meta instanceof SpawnEggMeta) {
+                SpawnEggMeta spawnEggMeta = (SpawnEggMeta)meta;
+                if (spawnEggMeta.getSpawnedType() != null) {
+                    addReward(result, rewardForEntityType(spawnEggMeta.getSpawnedType()));
+                }
             }
         }
         return result;
