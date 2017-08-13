@@ -3,11 +3,15 @@ package com.winthier.skills.bukkit;
 import com.winthier.skills.Reward;
 import lombok.Getter;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
-class BukkitSkillEat extends BukkitSkillAbstractConsume
+class BukkitSkillEat extends BukkitSkill implements Listener
 {
     @Getter final BukkitSkillType skillType = BukkitSkillType.EAT;
     double foodLevelFactor = 1;
@@ -21,10 +25,13 @@ class BukkitSkillEat extends BukkitSkillAbstractConsume
         saturationFactor = getConfig().getDouble("SaturationFactor", 1);
     }
 
-    @Override
-    void onConsume(Player player, ItemStack item)
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+    public void onPlayerItemConsume(PlayerItemConsumeEvent event)
     {
-        Reward reward = rewardForItem(item);
+        if (!allowPlayer(event.getPlayer())) return;
+        Player player = event.getPlayer();
+        if (player.hasPotionEffect(PotionEffectType.HUNGER)) return;
+        Reward reward = rewardForItem(event.getItem());
         if (reward == null) return;
         final int foodLevel = player.getFoodLevel();
         final float saturation = player.getSaturation();
