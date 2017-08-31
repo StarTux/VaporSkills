@@ -171,8 +171,8 @@ Tame Entity		- - Parrot		1 1 1	5
 # Shearing
 #===============================================================================
 
-Shear Entity		- - Sheep		1 1 1	.5
-Shear Entity		- - MushroomCow		1 1 1	.5
+Shear Entity		- - Sheep		1 1 1	1
+Shear Entity		- - MushroomCow		1 1 1	1
 
 #===============================================================================
 # Butchering
@@ -195,16 +195,19 @@ Butcher Entity		- - Llama		1 1 0	2	# Vanilla: ?
 # Brewing
 #===============================================================================
 
-Brew Item		Nether_Stalk 0 -	1 1 1	1
-Brew Item		Redstone 0 -		1 1 1	2
-Brew Item		Glowstone_Dust 0 -	1 1 1	2
-Brew Item		Speckled_Melon 0 -	1 1 1	3
-Brew Item	Fermented_Spider_Eye 0 -	1 1 1	3
-Brew Item		Magma_Cream 0 -		1 1 1	3
-Brew Item		Spider_Eye 0 -		1 1 1	2
+Brew Item		Nether_Stalk 0 -	1 1 1	2
+Brew Item		Redstone 0 -		1 1 1	3
+Brew Item		Glowstone_Dust 0 -	1 1 1	3
+Brew Item		Sugar 0 -		1 1 1	3
+Brew Item		Sulphur 0 -		1 1 1	3
+Brew Item		Spider_Eye 0 -		1 1 1	3
+Brew Item		Magma_Cream 0 -		1 1 1	6
+Brew Item	Fermented_Spider_Eye 0 -	1 1 1	6
+Brew Item		Golden_Carrot 0 -	1 1 1	6
+Brew Item		Speckled_Melon 0 -	1 1 1	6
+Brew Item		Raw_Fish 3 - 		1 1 1	6
+Brew Item		Rabbit_Foot 0 - 	1 1 1	6
 Brew Item		Ghast_Tear 0 -		1 1 1	6
-Brew Item		Sugar 0 -		1 1 1	2
-Brew Item		Sulphur 0 -		1 1 1	2
 
 #===============================================================================
 # Traveling
@@ -377,13 +380,20 @@ Sacrifice Item		Iron_Block - -		0 0 0		90
 Sacrifice Item		Ink_Sack 4 -		1 0 0		.25	# Lapis Lazuli
 Sacrifice Item		Lapis_Ore - -		1 0 0		1
 
-Sacrifice Item		Diamond 0 -		5 80 10		1
-Sacrifice Item		Diamond_Ore 0 -		5 80 10		1
-Sacrifice Item		Diamond_Block 0 -	5 80 10		9
+Sacrifice Item		Diamond 0 -		5 80 20		1
+Sacrifice Item		Diamond_Ore 0 -		5 80 20		1
+Sacrifice Item		Diamond_Block 0 -	5 80 20		9
 
-Sacrifice Item		Nether_Star - -		50 100 10	1
-Sacrifice Item		Beacon - -		50 100 10	1
-Sacrifice Item		Dragon_Egg - -		100 500 50	1
+Sacrifice Item		Nether_Star - -		50 100 50	1
+Sacrifice Item		Beacon - -		50 100 50	1
+Sacrifice Item		Dragon_Egg - -		100 100 50	1
+
+Sacrifice Item		Skull_Item 0 -		10 100 50	1	# Skeleton Skull
+Sacrifice Item		Skull_Item 1 -		10 100 50	1	# Wither Skull
+Sacrifice Item		Skull_Item 2 -		10 100 50	1	# Zombie Head
+Sacrifice Item		Skull_Item 3 -		10 100 50	1	# Player Head
+Sacrifice Item		Skull_Item 4 -		10 100 50	1	# Creeper Head
+Sacrifice Item		Skull_Item 5 -		10 100 50	1	# Dragon Head
 
 Sacrifice Item		Coal 0 -		1 0 0	.1
 Sacrifice Item		Coal_Ore - -		1 0 0	.25
@@ -479,7 +489,6 @@ Sacrifice Item		Red_Rose - -		1 0 0	.016
 Sacrifice Item		Sapling - -		1 0 0	.016
 Sacrifice Item		Sea_Lantern - -		1 0 0	.016
 Sacrifice Item		Seeds - -		1 0 0	.016
-Sacrifice Item		Skull_Item - -		1 0 0	.016
 Sacrifice Item		Smooth_Brick - -	1 0 0	.016
 Sacrifice Item		Snow_Ball - -		1 0 0	.016
 Sacrifice Item		Speckled_Melon - -	1 0 0	.016
@@ -561,19 +570,20 @@ Sacrifice Item		Record_10 - -		1 0 0	5
 Sacrifice Item		Record_11 - -		1 0 0	5
 Sacrifice Item		Record_12 - -		1 0 0	5
 
-Sacrifice Entity	- - Creeper		1 1 1	10
-Sacrifice Entity	- - Zombie		1 1 1	10
-Sacrifice Entity	- - Skeleton		1 1 1	10
-Sacrifice Entity	- - Husk		1 1 1	10
-Sacrifice Entity	- - Stray		1 1 1	10
-Sacrifice Entity	- - Spider		1 1 1	10
-Sacrifice Entity	- - CaveSpider		1 1 1	10
-Sacrifice Entity	- - Enderman		1 1 1	10
-Sacrifice Entity	- - Creeper		1 1 1	10
-Sacrifice Entity	- - Guardian		1 1 1	10
-Sacrifice Entity	- - ElderGuardian	1 1 1	10
-Sacrifice Entity	- - PigZombie		1 1 1	10
-Sacrifice Entity	- - Endermite		1 1 1	10
+Sacrifice Entity	- - Creeper		1 1 1	5
+Sacrifice Entity	- - Zombie		1 1 1	5
+Sacrifice Entity	- - Skeleton		1 1 1	5
+Sacrifice Entity	- - Husk		1 1 1	5
+Sacrifice Entity	- - Stray		1 1 1	5
+Sacrifice Entity	- - Spider		1 1 1	5
+Sacrifice Entity	- - CaveSpider		1 1 1	5
+Sacrifice Entity	- - Enderman		1 1 1	1
+Sacrifice Entity	- - Creeper		1 1 1	5
+Sacrifice Entity	- - Guardian		1 1 1	5
+Sacrifice Entity	- - ElderGuardian	1 1 1	5
+Sacrifice Entity	- - PigZombie		1 1 1	5
+Sacrifice Entity	- - Endermite		1 1 1	5
+Sacrifice Entity	- - Villager		1 1 1	5
 Sacrifice Entity	- - Wither		1 1 1	100
 Sacrifice Entity	- - EnderDragon		1 1 1	100
 
