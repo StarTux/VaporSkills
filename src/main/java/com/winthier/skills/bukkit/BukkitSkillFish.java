@@ -17,7 +17,6 @@ class BukkitSkillFish extends BukkitSkill implements Listener
 
     @Override
     public void configure() {
-        super.configure();
         fishInterval = getConfig().getLong("FishInterval", fishInterval);
     }
 

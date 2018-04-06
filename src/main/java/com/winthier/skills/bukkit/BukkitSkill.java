@@ -7,10 +7,7 @@ import com.winthier.skills.bukkit.event.SkillsRewardEvent;
 import com.winthier.skills.sql.SQLPlayerSetting;
 import com.winthier.skills.util.Strings;
 import java.io.File;
-import java.io.IOException;
-import java.util.List;
 import java.util.UUID;
-import lombok.Getter;
 import lombok.Getter;
 import lombok.NonNull;
 import org.bukkit.Bukkit;
@@ -30,29 +27,25 @@ import org.bukkit.potion.PotionEffect;
  * Abstract class which implements Skill in a Bukkit-y manner.
  */
 @Getter
-public abstract class BukkitSkill implements Skill
-{
-    boolean enabled = true;
-    String displayName;
-    String shorthand;
-    String description;
+public abstract class BukkitSkill implements Skill {
+    private boolean enabled = true;
+    private String displayName;
+    private String shorthand;
+    private String description;
 
-    BukkitSkillsPlugin getPlugin()
-    {
-	return BukkitSkillsPlugin.instance;
+    final BukkitSkillsPlugin getPlugin() {
+        return BukkitSkillsPlugin.instance;
     }
 
-    BukkitSkills getSkills()
-    {
-	return BukkitSkills.instance;
+    final BukkitSkills getSkills() {
+        return BukkitSkills.getInstance();
     }
 
     /**
      * Called before onEnable() and on every command triggered
-     * reload. Call super.configure() if you override this method!
+     * reload.
      */
-    void configure()
-    {
+    final void configureSkill() {
         enabled = getConfig().getBoolean("Enabled", true);
         displayName = getConfig().getString("DisplayName", getKey());
         shorthand = getConfig().getString("Shorthand", getKey());
@@ -60,59 +53,52 @@ public abstract class BukkitSkill implements Skill
     }
 
     abstract BukkitSkillType getSkillType();
+    void configure() { };
+    void onEnable() { };
+    void onDisable() { };
 
-    void onEnable() {};
-    void onDisable() {};
-    
-    String getPermissionNode()
-    {
-	return "skills.skill." + getKey();
+    final String getPermissionNode() {
+        return "skills.skill." + getKey();
     }
 
-    boolean allowPlayer(Player player)
-    {
+    final boolean allowPlayer(Player player) {
         if (player == null) return false;
         if (!enabled || !getSkills().isEnabled()) return false;
         if (player.getGameMode() != GameMode.SURVIVAL) return false;
-	if (!player.hasPermission("skills.skill.*") && !player.hasPermission(getPermissionNode())) return false;
+        if (!player.hasPermission("skills.skill.*") && !player.hasPermission(getPermissionNode())) return false;
         return true;
     }
 
     @Override
-    public String getKey()
-    {
+    public final String getKey() {
         return getSkillType().name().toLowerCase();
     }
 
-    Reward rewardForBlock(Block block)
-    {
+    final Reward rewardForBlock(Block block) {
         @SuppressWarnings("deprecation")
-	int blockType = block.getType().getId();
+        int blockType = block.getType().getId();
         @SuppressWarnings("deprecation")
-	int blockData = (int)block.getData();
+        int blockData = (int)block.getData();
         return getSkills().getScore().rewardForBlock(this, blockType, blockData);
     }
 
-    Reward rewardForBlockNamed(Block block, String name)
-    {
+    final Reward rewardForBlockNamed(Block block, String name) {
         @SuppressWarnings("deprecation")
-	int blockType = block.getType().getId();
+        int blockType = block.getType().getId();
         @SuppressWarnings("deprecation")
-	int blockData = (int)block.getData();
+        int blockData = (int)block.getData();
         return getSkills().getScore().rewardForBlockNamed(this, blockType, blockData, name);
     }
-    
-    Reward rewardForItem(ItemStack item)
-    {
+
+    final Reward rewardForItem(ItemStack item) {
         @SuppressWarnings("deprecation")
-	int itemType = item.getType().getId();
+        int itemType = item.getType().getId();
         @SuppressWarnings("deprecation")
         int itemData = (int)item.getDurability();
         return getSkills().getScore().rewardForItem(this, itemType, itemData);
     }
 
-    Reward rewardForPotionEffect(PotionEffect effect)
-    {
+    final Reward rewardForPotionEffect(PotionEffect effect) {
         @SuppressWarnings("deprecation")
         int potionType = effect.getType().getId();
         @SuppressWarnings("deprecation")
@@ -120,46 +106,38 @@ public abstract class BukkitSkill implements Skill
         return getSkills().getScore().rewardForPotionEffect(this, potionType, potionData);
     }
 
-    Reward rewardForEnchantment(Enchantment enchant, int level)
-    {
+    final Reward rewardForEnchantment(Enchantment enchant, int level) {
         @SuppressWarnings("deprecation")
         int enchantType = enchant.getId();
         return getSkills().getScore().rewardForEnchantment(this, enchantType, level);
     }
 
-    Reward rewardForEntity(Entity e)
-    {
+    final Reward rewardForEntity(Entity e) {
         return getSkills().getScore().rewardForEntity(this, BukkitEntities.name(e));
     }
 
-    Reward rewardForEntityType(EntityType e)
-    {
+    final Reward rewardForEntityType(EntityType e) {
         return getSkills().getScore().rewardForEntity(this, BukkitEntities.name(e));
     }
 
-    Reward rewardForName(String name)
-    {
+    final Reward rewardForName(String name) {
         return getSkills().getScore().rewardForName(this, name);
     }
 
-    Reward rewardForName(String name, int data)
-    {
+    final Reward rewardForName(String name, int data) {
         return getSkills().getScore().rewardForName(this, name, data);
     }
 
-    Reward rewardForNameAndMaximum(String name, int dataMax)
-    {
+    final Reward rewardForNameAndMaximum(String name, int dataMax) {
         return getSkills().getScore().rewardForNameAndMaximum(this, name, dataMax);
     }
-    
-    private void giveSkillPoints(Player player, double skillPoints)
-    {
+
+    private void giveSkillPoints(Player player, double skillPoints) {
         if (skillPoints < 0.01) return;
-	getSkills().getScore().giveSkillPoints(player.getUniqueId(), this, skillPoints);
+        getSkills().getScore().giveSkillPoints(player.getUniqueId(), this, skillPoints);
     }
 
-    private void giveMoney(Player player, double money)
-    {
+    private void giveMoney(Player player, double money) {
         if (money < 0.01) return;
         getSkills().giveMoney(player, money);
     }
@@ -169,8 +147,7 @@ public abstract class BukkitSkill implements Skill
         getSkills().giveExp(player, exp);
     }
 
-    void giveReward(@NonNull Player player, Reward reward, double factor)
-    {
+    final void giveReward(@NonNull Player player, Reward reward, double factor) {
         int level = getSkills().getScore().getSkillLevel(player.getUniqueId(), this);
         double bonusFactor = getSkillType() == BukkitSkillType.SACRIFICE ? 1.0 : 1.0 + (double)(level / 10) / 100.0;
         if (reward == null) return;
@@ -198,15 +175,13 @@ public abstract class BukkitSkill implements Skill
         Bukkit.getServer().getPluginManager().callEvent(new SkillsRewardEvent(player, this, outcome));
     }
 
-    void giveReward(Player player, Reward reward)
-    {
+    final void giveReward(Player player, Reward reward) {
         giveReward(player, reward, 1.0);
     }
-    
-    Player getNearestPlayer(Location loc, double max)
-    {
+
+    final Player getNearestPlayer(Location loc, double max) {
         Player result = null;
-        double maxs = max*max;
+        double maxs = max * max;
         double dist = maxs;
         for (Player player : loc.getWorld().getPlayers()) {
             if (!allowPlayer(player)) continue;
@@ -222,43 +197,36 @@ public abstract class BukkitSkill implements Skill
         return result;
     }
 
-    Player getNearestPlayer(Entity e, double max)
-    {
+    final Player getNearestPlayer(Entity e, double max) {
         return getNearestPlayer(e.getLocation(), max);
     }
 
-    File getConfigFile()
-    {
+    final File getConfigFile() {
         return new File(getPlugin().getDataFolder(), getKey() + ".yml");
     }
 
-    ConfigurationSection getConfig()
-    {
+    final ConfigurationSection getConfig() {
         ConfigurationSection result = getPlugin().getConfig().getConfigurationSection(getKey());
         if (result == null) result = getPlugin().getConfig().createSection(getKey());
         return result;
     }
 
-    String getPlayerSettingString(UUID uuid, String key, String dfl)
-    {
+    final String getPlayerSettingString(UUID uuid, String key, String dfl) {
         String result = SQLPlayerSetting.getString(uuid, getKey(), key);
         return result != null ? result : dfl;
     }
 
-    int getPlayerSettingInt(UUID uuid, String key, int dfl)
-    {
+    final int getPlayerSettingInt(UUID uuid, String key, int dfl) {
         Integer result = SQLPlayerSetting.getInt(uuid, getKey(), key);
         return result != null ? result : dfl;
     }
 
-    double getPlayerSettingDouble(UUID uuid, String key, double dfl)
-    {
+    final double getPlayerSettingDouble(UUID uuid, String key, double dfl) {
         Double result = SQLPlayerSetting.getDouble(uuid, getKey(), key);
         return result != null ? result : dfl;
     }
 
-    Location getPlayerSettingLocation(UUID uuid, String key, Location dfl)
-    {
+    final Location getPlayerSettingLocation(UUID uuid, String key, Location dfl) {
         String serial = SQLPlayerSetting.getString(uuid, getKey(), key);
         if (serial == null) return dfl;
         String[] tokens = serial.split(",");
@@ -277,8 +245,7 @@ public abstract class BukkitSkill implements Skill
         }
     }
 
-    void setPlayerSetting(UUID uuid, String key, Object value)
-    {
+    final void setPlayerSetting(UUID uuid, String key, Object value) {
         if (value instanceof Location) {
             Location loc = (Location)value;
             value = String.format("%s,%f,%f,%f,%f,%f", loc.getWorld().getName(), loc.getX(), loc.getY(), loc.getZ(), loc.getYaw(), loc.getPitch());

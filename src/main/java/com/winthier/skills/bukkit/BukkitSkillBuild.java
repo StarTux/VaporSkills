@@ -61,9 +61,7 @@ class BukkitSkillBuild extends BukkitSkill implements Listener
     }
 
     @Override
-    void configure()
-    {
-        super.configure();
+    void configure() {
         placementThreshold = getConfig().getInt("PlacementThreshold", 5);
         placementInterval = getConfig().getLong("PlacementInterval", 10);
         repeatInterval = getConfig().getLong("RepeatInterval", 60*60);

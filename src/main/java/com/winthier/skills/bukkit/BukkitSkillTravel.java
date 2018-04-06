@@ -27,15 +27,13 @@ class BukkitSkillTravel extends BukkitSkill implements Listener
     double maxTeleportDistance = 128;
     double maxDistanceNoProgress = 96;
 
-    static double horizontalDistanceSquared(Location loc1, Location loc2)
-    {
+    static double horizontalDistanceSquared(Location loc1, Location loc2) {
         double x = loc2.getX() - loc1.getX();
         double z = loc2.getZ() - loc1.getZ();
         return x*x + z*z;
     }
 
-    static double horizontalDistance(Location loc1, Location loc2)
-    {
+    static double horizontalDistance(Location loc1, Location loc2) {
         return Math.sqrt(horizontalDistanceSquared(loc1, loc2));
     }
 
@@ -78,9 +76,7 @@ class BukkitSkillTravel extends BukkitSkill implements Listener
     }
 
     @Override
-    public void configure()
-    {
-        super.configure();
+    public void configure() {
         distanceStep = getConfig().getDouble("DistanceStep", 16);
         maxTeleportDistance = getConfig().getDouble("MaxTeleportDistance", 128);
         maxDistanceNoProgress = getConfig().getDouble("MaxDistanceNoProgress", 96);

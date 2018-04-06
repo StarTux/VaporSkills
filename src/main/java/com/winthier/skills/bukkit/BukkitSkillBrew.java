@@ -13,8 +13,7 @@ class BukkitSkillBrew extends BukkitSkill implements Listener
     final double RADIUS = 40.0;
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
-    public void onBrew(BrewEvent event)
-    {
+    public void onBrew(BrewEvent event) {
         final Player player = getNearestPlayer(event.getContents().getHolder().getLocation(), RADIUS);
         if (player == null) return;
         if (!allowPlayer(player)) return;

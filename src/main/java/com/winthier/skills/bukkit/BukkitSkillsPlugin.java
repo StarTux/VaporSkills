@@ -64,11 +64,11 @@ public class BukkitSkillsPlugin extends JavaPlugin implements Listener
         }
         // Double check skills
         for (BukkitSkillType type : BukkitSkillType.values()) {
-            BukkitSkill skill = skills.skillMap.get(type);
+            BukkitSkill skill = skills.getSkillMap().get(type);
             if (skill == null) {
                 getLogger().warning("Missing skill: " + type.name());
             } else {
-                skill.configure();
+                skill.configureSkill();
                 skill.onEnable();
             }
         }
@@ -124,7 +124,7 @@ public class BukkitSkillsPlugin extends JavaPlugin implements Listener
             e.printStackTrace();
         }
     }
-    
+
     void updateAllPlayers()
     {
         skills.updateAllPlayers();
@@ -150,6 +150,6 @@ public class BukkitSkillsPlugin extends JavaPlugin implements Listener
     public void onPlayerQuit(PlayerQuitEvent event)
     {
         saveAll();
-        skills.players.remove(event.getPlayer().getUniqueId());
+        skills.getPlayers().remove(event.getPlayer().getUniqueId());
     }
 }

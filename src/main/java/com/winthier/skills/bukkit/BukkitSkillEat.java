@@ -18,16 +18,13 @@ class BukkitSkillEat extends BukkitSkill implements Listener
     double saturationFactor = 1;
 
     @Override
-    void configure()
-    {
-        super.configure();
+    void configure() {
         foodLevelFactor = getConfig().getDouble("FoodLevelFactor", 1);
         saturationFactor = getConfig().getDouble("SaturationFactor", 1);
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
-    public void onPlayerItemConsume(PlayerItemConsumeEvent event)
-    {
+    public void onPlayerItemConsume(PlayerItemConsumeEvent event) {
         if (!allowPlayer(event.getPlayer())) return;
         Player player = event.getPlayer();
         if (player.hasPotionEffect(PotionEffectType.HUNGER)) return;
@@ -42,8 +39,7 @@ class BukkitSkillEat extends BukkitSkill implements Listener
         }.runTask(getPlugin());
     }
 
-    void onDidEat(Player player, Reward reward, int oldFoodLevel, float oldSaturation)
-    {
+    void onDidEat(Player player, Reward reward, int oldFoodLevel, float oldSaturation) {
         int foodLevelGain = player.getFoodLevel() - oldFoodLevel;
         float saturationGain = player.getSaturation() - oldSaturation;
         if (getSkills().hasDebugMode(player)) BukkitUtil.msg(player, "&eEat Food=%d Sat=%.02f", foodLevelGain, saturationGain);

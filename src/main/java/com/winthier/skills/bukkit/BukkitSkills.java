@@ -9,7 +9,6 @@ import java.util.Collection;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -24,20 +23,18 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 @Getter
-public class BukkitSkills extends Skills
-{
-    @Getter static BukkitSkills instance;
-    final Map<BukkitSkillType, BukkitSkill> skillMap = new EnumMap<>(BukkitSkillType.class);
-    final Map<String, BukkitSkill> nameMap = new HashMap<>();
-    final Map<UUID, Double> moneys = new HashMap<>();
-    final Map<UUID, Double> exps = new HashMap<>();
-    final Set<UUID> playersInDebugMode = new HashSet<>();
-    final Map<UUID, BukkitPlayer> players = new HashMap<>();
-    boolean enabled = true;
+public final class BukkitSkills extends Skills {
+    @Getter private static BukkitSkills instance;
+    private final Map<BukkitSkillType, BukkitSkill> skillMap = new EnumMap<>(BukkitSkillType.class);
+    private final Map<String, BukkitSkill> nameMap = new HashMap<>();
+    private final Map<UUID, Double> moneys = new HashMap<>();
+    private final Map<UUID, Double> exps = new HashMap<>();
+    private final Set<UUID> playersInDebugMode = new HashSet<>();
+    private final Map<UUID, BukkitPlayer> players = new HashMap<>();
+    private boolean enabled = true;
 
-    BukkitSkills()
-    {
-	instance = this;
+    BukkitSkills() {
+        instance = this;
         List<BukkitSkill> skills = Arrays.asList(
             new BukkitSkillBlacksmith(),
             new BukkitSkillBrawl(),
@@ -69,13 +66,11 @@ public class BukkitSkills extends Skills
         }
     }
 
-    void configure()
-    {
+    void configure() {
         enabled = getPlugin().getConfig().getBoolean("Enabled", true);
     }
 
-    void buildNameMap()
-    {
+    void buildNameMap() {
         nameMap.clear();
         // Put all the names in the map
         for (BukkitSkill skill : skillMap.values()) {
@@ -92,14 +87,12 @@ public class BukkitSkills extends Skills
         }
     }
 
-    BukkitSkillsPlugin getPlugin()
-    {
-	return BukkitSkillsPlugin.instance;
+    BukkitSkillsPlugin getPlugin() {
+        return BukkitSkillsPlugin.instance;
     }
 
     @Override
-    public void onLevelUp(UUID uuid, Skill skill, int level)
-    {
+    public void onLevelUp(UUID uuid, Skill skill, int level) {
         Player player = Bukkit.getServer().getPlayer(uuid);
         if (player == null) return;
         if (!(skill instanceof BukkitSkill)) return;
@@ -174,18 +167,15 @@ public class BukkitSkills extends Skills
     }
 
     @Override
-    public Collection<? extends BukkitSkill> getSkills()
-    {
+    public Collection<? extends BukkitSkill> getSkills() {
         return skillMap.values();
     }
 
-    BukkitSkill skillByName(String name)
-    {
+    BukkitSkill skillByName(String name) {
         return nameMap.get(name.toLowerCase());
     }
 
-    BukkitSkill skillByType(BukkitSkillType type)
-    {
+    BukkitSkill skillByType(BukkitSkillType type) {
         return skillMap.get(type);
     }
 
@@ -221,8 +211,7 @@ public class BukkitSkills extends Skills
         exps.put(uuid, stored);
     }
 
-    void depositAllMoneys()
-    {
+    void depositAllMoneys() {
         try {
             for (Map.Entry<UUID, Double> entry : moneys.entrySet()) {
                 Double amount = entry.getValue();
@@ -238,8 +227,7 @@ public class BukkitSkills extends Skills
         }
     }
 
-    boolean hasDebugMode(Player player)
-    {
+    boolean hasDebugMode(Player player) {
         return (playersInDebugMode.contains(player.getUniqueId()));
     }
 
@@ -251,8 +239,7 @@ public class BukkitSkills extends Skills
         }
     }
 
-    BukkitPlayer getBukkitPlayer(UUID uuid)
-    {
+    BukkitPlayer getBukkitPlayer(UUID uuid) {
         BukkitPlayer result = players.get(uuid);
         if (result == null) {
             result = new BukkitPlayer(uuid);
@@ -261,13 +248,11 @@ public class BukkitSkills extends Skills
         return result;
     }
 
-    BukkitPlayer getBukkitPlayer(Player player)
-    {
+    BukkitPlayer getBukkitPlayer(Player player) {
         return getBukkitPlayer(player.getUniqueId());
     }
 
-    void updateAllPlayers()
-    {
+    void updateAllPlayers() {
         for (BukkitPlayer player : players.values()) player.updateScoreboard();
     }
 }

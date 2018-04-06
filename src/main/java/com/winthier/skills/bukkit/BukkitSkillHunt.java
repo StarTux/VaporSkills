@@ -18,7 +18,6 @@ final class BukkitSkillHunt extends BukkitSkill implements Listener {
 
     @Override
     public void configure() {
-        super.configure();
         killDistanceInterval = getConfig().getLong("KillDistanceInterval", 300);
         minKillDistance = getConfig().getDouble("MinKillDistance", 16);
     }

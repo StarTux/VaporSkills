@@ -15,9 +15,7 @@ abstract class BukkitSkillAbstractBlockBreak extends BukkitSkill implements List
     long repeatInterval = 60*60;
 
     @Override
-    void configure()
-    {
-        super.configure();
+    void configure() {
         repeatInterval = getConfig().getLong("RepeatInterval", 60*60);
     }
 
