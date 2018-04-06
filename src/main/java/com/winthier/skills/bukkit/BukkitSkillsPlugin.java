@@ -8,6 +8,7 @@ import javax.persistence.PersistenceException;
 import lombok.Getter;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -94,6 +95,9 @@ public class BukkitSkillsPlugin extends JavaPlugin implements Listener
     {
         for (BukkitSkill skill : skills.getSkills()) {
             skill.onDisable();
+        }
+        for (Player player: getServer().getOnlinePlayers()) {
+            BukkitPlayer.of(player).onDisable();
         }
         saveAll();
         SQLDB.clearAllCaches();

@@ -97,7 +97,6 @@ public final class BukkitSkills extends Skills {
         if (player == null) return;
         if (!(skill instanceof BukkitSkill)) return;
             BukkitLevelUpEffect.launch(player, (BukkitSkill)skill, level);
-            BukkitPlayer.of(player).displaySkill((BukkitSkill)skill, player);
             Bukkit.getServer().getPluginManager().callEvent(new SkillsLevelUpEvent(player, (BukkitSkill)skill, level));
             // Give bonus potion effect
             Random random = new Random(System.currentTimeMillis());
@@ -253,6 +252,8 @@ public final class BukkitSkills extends Skills {
     }
 
     void updateAllPlayers() {
-        for (BukkitPlayer player : players.values()) player.updateScoreboard();
+        for (Player player : Bukkit.getServer().getOnlinePlayers()) {
+            getBukkitPlayer(player.getUniqueId()).on20Ticks();
+        }
     }
 }

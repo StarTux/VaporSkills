@@ -170,7 +170,7 @@ public abstract class BukkitSkill implements Skill {
         giveMoney(player, money);
         giveExp(player, exp);
         Reward outcome = new CustomReward((float)skillPoints, (float)money, (float)exp);
-        BukkitPlayer.of(player).onReward(this, outcome);
+        BukkitPlayer.of(player).onReward(player, this, outcome);
         getSkills().getScore().logReward(reward, player.getUniqueId(), outcome);
         Bukkit.getServer().getPluginManager().callEvent(new SkillsRewardEvent(player, this, outcome));
     }

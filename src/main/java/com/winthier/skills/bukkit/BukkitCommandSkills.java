@@ -15,21 +15,17 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-class BukkitCommandSkills implements CommandExecutor
-{
-    BukkitSkills getSkills()
-    {
+class BukkitCommandSkills implements CommandExecutor {
+    BukkitSkills getSkills() {
         return BukkitSkills.getInstance();
     }
 
-    BukkitSkillsPlugin getPlugin()
-    {
+    BukkitSkillsPlugin getPlugin() {
         return BukkitSkillsPlugin.getInstance();
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
-    {
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         final Player player = sender instanceof Player ? (Player)sender : null;
         if (player == null) {
             sender.sendMessage("Player expected");
@@ -38,9 +34,9 @@ class BukkitCommandSkills implements CommandExecutor
         String cmd = args.length > 0 ? args[0].toLowerCase() : "";
         if (args.length == 0) {
             listSkills(player);
-        } else if (args.length >= 1 && "sidebar".equals(cmd)) {
+        } else if (args.length >= 1 && "progressbar".equals(cmd)) {
             String sub = args.length == 2 ? args[1].toLowerCase() : "";
-            modifySidebar(player, sub);
+            modifyProgressBar(player, sub);
         } else if (args.length == 1 && "checkitem".equals(cmd)) {
             checkItem(player);
         } else if (args.length == 1) {
@@ -51,8 +47,7 @@ class BukkitCommandSkills implements CommandExecutor
         return true;
     }
 
-    void listSkills(Player player)
-    {
+    void listSkills(Player player) {
         UUID uuid = player.getUniqueId();
         BukkitUtil.msg(player, "");
         BukkitUtil.msg(player, "&3&lSkills &7&o(Click for more info)");
@@ -76,18 +71,16 @@ class BukkitCommandSkills implements CommandExecutor
                             "&7Click for more details"));
         }
         BukkitUtil.raw(player, message);
+        BukkitUtil.msg(player, "&3Session earnings:&r %s", BukkitSkillsPlugin.getInstance().getEconomy().format(BukkitPlayer.of(player).sessionMoney));
         BukkitUtil.raw(player,
-                       BukkitUtil.format(" &3Sidebar: "),
-                       BukkitUtil.button("&3[&fReset&3]", "/sk sidebar reset", "&a/sk sidebar reset", "&5&oReset the sidebar"),
+                       BukkitUtil.format("&3Progress Bar: "),
+                       BukkitUtil.button("&3[&fOn&3]", "/sk progressbar on", "&a/sk progressbar on", "&5&oEnable Progress Bar"),
                        " ",
-                       BukkitUtil.button("&3[&fOn&3]", "/sk sidebar on", "&a/sk sidebar on", "&5&oEnable sidebar"),
-                       " ", 
-                       BukkitUtil.button("&3[&fOff&3]", "/sk sidebar off", "&a/sk sidebar off", "&5&oDisable sidebar"));
+                       BukkitUtil.button("&3[&fOff&3]", "/sk progressbar off", "&a/sk progressbar off", "&5&oDisable Progress Bar"));
         BukkitUtil.msg(player, "");
     }
-    
-    void skillDetail(Player player, String name)
-    {
+
+    void skillDetail(Player player, String name) {
         BukkitSkill skill = getSkills().skillByName(name);
         if (skill == null) {
             BukkitUtil.msg(player, "&cSkill not found: %s", name);
@@ -137,16 +130,6 @@ class BukkitCommandSkills implements CommandExecutor
                                          "&3&l" + skill.getDisplayName() + " &f" + rankString,
                                          getPlugin().getHighscoreCommand().formatHighscoreAroundPlayer(hi, uuid),
                                          "&7Click for more details"));
-        // Sidebar
-        BukkitUtil.raw(player,
-                       BukkitUtil.format(" &3Sidebar: "),
-                       BukkitUtil.button("&3[&fFocus&3]", "/sk sidebar "+skill.getKey(), "&a/sk sidebar "+skill.getKey(), "&5&oFocus "+skill.getDisplayName()+" in the sidebar"),
-                       " ",
-                       BukkitUtil.button("&3[&fReset&3]", "/sk sidebar reset", "&a/sk sidebar reset", "&5&oReset the sidebar"),
-                       " ",
-                       BukkitUtil.button("&3[&fOn&3]", "/sk sidebar on", "&a/sk sidebar on", "&5&oTurn sidebar on"),
-                       " ", 
-                       BukkitUtil.button("&3[&fOff&3]", "/sk sidebar off", "&a/sk sidebar off", "&5&oTurn sidebar off"));
         // Sacrifice special
         if (skill.getSkillType() == BukkitSkillType.SACRIFICE) {
             BukkitUtil.raw(player,
@@ -162,29 +145,16 @@ class BukkitCommandSkills implements CommandExecutor
         BukkitUtil.msg(player, "");
     }
 
-    void modifySidebar(Player player, String arg)
-    {
-        if ("reset".equals(arg)) {
-            BukkitPlayer.of(player).setSidebarEnabled(player, false);
-            BukkitPlayer.of(player).setSidebarEnabled(player, true);
-            BukkitUtil.msg(player, "&bSidebar reset");
-        } else if ("off".equals(arg)) {
-            BukkitPlayer.of(player).setSidebarEnabled(player, false);
-            BukkitUtil.msg(player, "&bSidebar disabled");
+    void modifyProgressBar(Player player, String arg) {
+        if ("off".equals(arg)) {
+            BukkitPlayer.of(player).setProgressBarEnabled(false);
+            BukkitUtil.msg(player, "&bProgress bar disabled");
         } else if ("on".equals(arg)) {
-            BukkitPlayer.of(player).setSidebarEnabled(player, true);
-            BukkitUtil.msg(player, "&bSidebar enabled");
-        } else {
-            BukkitSkill skill = getSkills().skillByName(arg);
-            if (skill == null) return;
-            BukkitPlayer.of(player).setSidebarEnabled(player, true);
-            BukkitPlayer.of(player).setForcedSkill(skill);
-            BukkitUtil.msg(player, "&bDisplaying %s", skill.getDisplayName());
-        }
-    }
+            BukkitPlayer.of(player).setProgressBarEnabled(true);
+            BukkitUtil.msg(player, "&bProgress bar enabled");
+        }}
 
-    void checkItem(Player player)
-    {
+    void checkItem(Player player) {
         ItemStack item = player.getItemInHand();
         final String prefix = BukkitUtil.format("&r[&2Creeper Overlord&r] ");
         if (item == null || item.getType() == Material.AIR) {
