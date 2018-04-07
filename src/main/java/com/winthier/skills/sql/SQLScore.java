@@ -23,7 +23,6 @@ import javax.persistence.UniqueConstraint;
 import javax.persistence.Version;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
 import lombok.Setter;
 import lombok.Value;
 
@@ -33,51 +32,57 @@ import lombok.Value;
 @Getter
 @Setter
 @NoArgsConstructor
-public class SQLScore
-{
-    static final float SAVING_THRESHOLD = 200.0f;
+public final class SQLScore {
+    private static final float SAVING_THRESHOLD = 200.0f;
+
     // Cache
-    @Value public static class Entry { UUID player; double skillPoints; int skillLevel; }
-    @Value static class Key { UUID player; String skill; }
-    final static Map<Key, SQLScore> cache = new HashMap<>();
-    @Getter final static Set<SQLScore> dirties = new HashSet<>();
+    @Value public static class Entry {
+        final UUID player;
+        final double skillPoints;
+        final int skillLevel;
+    }
+
+    @Value private static class Key {
+        final UUID player;
+        final String skill;
+    }
+
+    static final Map<Key, SQLScore> CACHE = new HashMap<>();
+    @Getter private static final Set<SQLScore> DIRTIES = new HashSet<>();
     // Content
-    @Id Integer id;
-    @Column(nullable = false) @ManyToOne SQLPlayer player;
-    @Column(nullable = false) @ManyToOne SQLString skill;
-    @Column(nullable = false) float skillPoints;
-    @Column(nullable = false) int skillLevel;
-    @Version Date version;
-    transient float skillPointsAdded = 0;
+    @Id private Integer id;
+    @Column(nullable = false) @ManyToOne private SQLPlayer player;
+    @Column(nullable = false) @ManyToOne private SQLString skill;
+    @Column(nullable = false) private float skillPoints;
+    @Column(nullable = false) private int skillLevel;
+    @Version private Date version;
+    private transient float skillPointsAdded = 0;
 
-    private SQLScore(SQLPlayer player, SQLString skill)
-    {
-	setPlayer(player);
-	setSkill(skill);
-	setSkillPoints(0);
-	setSkillLevel(0);
+    private SQLScore(SQLPlayer player, SQLString skill) {
+        setPlayer(player);
+        setSkill(skill);
+        setSkillPoints(0);
+        setSkillLevel(0);
     }
 
-    public static SQLScore of(UUID uuid, Skill skill)
-    {
-	Key key = new Key(uuid, skill.getKey());
-	SQLScore result = cache.get(key);
-	if (result == null) {
-	    result = SQLDB.get().find(SQLScore.class).where()
-		.eq("player", SQLPlayer.of(uuid))
-		.eq("skill", SQLString.of(skill.getKey()))
-		.findUnique();
-	    if (result == null) {
-		result = new SQLScore(SQLPlayer.of(uuid), SQLString.of(skill.getKey()));
-		result.setDirty();
-	    }
-	    cache.put(key, result);
-	}
-	return result;
+    public static SQLScore of(UUID uuid, Skill skill) {
+        Key key = new Key(uuid, skill.getKey());
+        SQLScore result = CACHE.get(key);
+        if (result == null) {
+            result = SQLDB.get().find(SQLScore.class).where()
+                .eq("player", SQLPlayer.of(uuid))
+                .eq("skill", SQLString.of(skill.getKey()))
+                .findUnique();
+            if (result == null) {
+                result = new SQLScore(SQLPlayer.of(uuid), SQLString.of(skill.getKey()));
+                result.setDirty();
+            }
+            CACHE.put(key, result);
+        }
+        return result;
     }
 
-    public static List<Entry> rank(Skill skill)
-    {
+    public static List<Entry> rank(Skill skill) {
         if (skill == null) return rank();
         List<Entry> result = new ArrayList<>();
         for (SQLScore score : SQLDB.get().find(SQLScore.class).where()
@@ -91,8 +96,7 @@ public class SQLScore
         return result;
     }
 
-    public static List<Entry> rank()
-    {
+    public static List<Entry> rank() {
         List<Integer> skillIds = new ArrayList<>();
         for (Skill skill : Skills.getInstance().getSkills()) skillIds.add(SQLString.of(skill.getKey()).getId());
         StringBuilder sb = new StringBuilder();
@@ -102,7 +106,7 @@ public class SQLScore
             .append(SQLDB.get().getTable(SQLPlayer.class).getTableName())
             .append("` players ON player_id = players.id WHERE skill_id IN (")
             .append(skillIds.get(0));
-        for (int i = 1; i < skillIds.size(); i += 1) sb.append(", ").append(skillIds.get(i)); 
+        for (int i = 1; i < skillIds.size(); i += 1) sb.append(", ").append(skillIds.get(i));
         sb.append(") GROUP BY player_id ORDER BY skill_points DESC LIMIT 100");
         ResultSet row = SQLDB.get().executeQuery(sb.toString());
         List<Entry> result = new ArrayList<>();
@@ -119,32 +123,28 @@ public class SQLScore
         return result;
     }
 
-    public void setDirty(float val)
-    {
-	dirties.add(this);
+    public void setDirty(float val) {
+        DIRTIES.add(this);
         skillPointsAdded += val;
     }
 
-    public void setDirty()
-    {
+    public void setDirty() {
         setDirty(SAVING_THRESHOLD);
     }
 
-    public static void saveAll()
-    {
+    public static void saveAll() {
         try {
-            SQLDB.get().save(dirties);
+            SQLDB.get().save(DIRTIES);
         } catch (PersistenceException pe) {
             System.err.println("SQLScore saveAll throws PersistenceException. Clearing cache");
             pe.printStackTrace();
-            cache.clear();
+            CACHE.clear();
         }
-        dirties.clear();
+        DIRTIES.clear();
     }
 
-    public static void saveSome()
-    {
-        for (Iterator<SQLScore> iter = dirties.iterator(); iter.hasNext(); ) {
+    public static void saveSome() {
+        for (Iterator<SQLScore> iter = DIRTIES.iterator(); iter.hasNext();) {
             SQLScore score = iter.next();
             if (score.skillPointsAdded < SAVING_THRESHOLD) continue;
             score.skillPointsAdded = 0;

@@ -10,7 +10,6 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
 import lombok.Setter;
 
 /**
@@ -22,36 +21,32 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class SQLString
-{
+public final class SQLString {
     // Cache
-    final static Map<String, SQLString> cache = new HashMap<>();
+    static final Map<String, SQLString> CACHE = new HashMap<>();
     // Payload
-    @Id Integer id;
-    @Column(nullable = false, length = 255) String value;
+    @Id private Integer id;
+    @Column(nullable = false, length = 255) private String value;
 
-    private SQLString(String string)
-    {
+    private SQLString(String string) {
         setValue(string);
     }
 
-    public static SQLString of(String string)
-    {
+    public static SQLString of(String string) {
         if (string == null) return null;
-        SQLString result = cache.get(string);
+        SQLString result = CACHE.get(string);
         if (result == null) {
-	    result = SQLDB.get().find(SQLString.class).where().eq("value", string).findUnique();
-	    if (result == null) {
-		result = new SQLString(string);
-		SQLDB.get().save(result);
-	    }
-	    cache.put(string, result);
+            result = SQLDB.get().find(SQLString.class).where().eq("value", string).findUnique();
+            if (result == null) {
+                result = new SQLString(string);
+                SQLDB.get().save(result);
+            }
+            CACHE.put(string, result);
         }
         return result;
     }
 
-    public static SQLString of(Skill skill)
-    {
+    public static SQLString of(Skill skill) {
         return of(skill.getKey());
     }
 }

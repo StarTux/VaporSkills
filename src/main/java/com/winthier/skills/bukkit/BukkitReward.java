@@ -6,6 +6,7 @@ import com.winthier.skills.util.Strings;
 import java.util.Arrays;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.Value;
@@ -16,8 +17,7 @@ import org.bukkit.potion.PotionEffectType;
 @Data
 @AllArgsConstructor
 @RequiredArgsConstructor
-class BukkitReward implements Reward
-{
+class BukkitReward implements Reward {
     @Value
     static class Key {
         @NonNull final BukkitSkillType skill;
@@ -40,16 +40,19 @@ class BukkitReward implements Reward
                     return Enchantment.getByName(arg.toUpperCase()).getId();
                 case POTION_EFFECT:
                     return PotionEffectType.getByName(arg.toUpperCase()).getId();
+                default:
+                    return Integer.parseInt(arg);
                 }
-            } catch (IllegalArgumentException iae) {}
-            return Integer.parseInt(arg);
+            } catch (IllegalArgumentException iae) {
+                iae.printStackTrace();
+            }
+            return 0;
         }
         static String parseName(String arg) {
             if (arg.equals("-")) return null;
             return arg;
         }
-        static Key parse(String[] tokens)
-        {
+        static Key parse(String[] tokens) {
             if (tokens.length != 5) throw new IllegalArgumentException("5 items required");
             String skillTypeArg = tokens[0];
             String targetArg = tokens[1];
@@ -103,8 +106,12 @@ class BukkitReward implements Reward
                     return Enchantment.getById(type).getName();
                 case POTION_EFFECT:
                     return PotionEffectType.getById(type).getName();
+                default:
+                    return "?";
                 }
-            } catch (IllegalArgumentException iae) {}
+            } catch (IllegalArgumentException iae) {
+                iae.printStackTrace();
+            }
             return "?";
         }
         String typeAsString() {
@@ -123,13 +130,13 @@ class BukkitReward implements Reward
             return String.format("%s %s (%s) %s:%s {%s}", Strings.camelCase(skill.name()), Strings.camelCase(target.name()), typeAsPrettyString(), typeAsString(), dataAsString(), nameAsString());
         }
     }
-    final Key key;
-    float skillPoints = 0;
-    float money = 0;
-    float exp = 0;
 
-    static BukkitReward parse(String[] tokens)
-    {
+    @Getter final Key key;
+    @Getter private float skillPoints = 0;
+    @Getter private float money = 0;
+    @Getter private float exp = 0;
+
+    static BukkitReward parse(String[] tokens) {
         if (tokens.length != 8 && tokens.length != 9) throw new IllegalArgumentException("8 or 9 items required");
         String skillPointsArg = tokens[5];
         String moneyArg = tokens[6];
@@ -147,8 +154,7 @@ class BukkitReward implements Reward
         return new BukkitReward(key, skillPoints, money, exp);
     }
 
-    static BukkitReward of(Reward reward)
-    {
+    static BukkitReward of(Reward reward) {
         Key key = Key.of(reward);
         BukkitReward result = new BukkitReward(key);
         result.skillPoints = reward.getSkillPoints();
@@ -157,17 +163,16 @@ class BukkitReward implements Reward
         return result;
     }
 
-    void store()
-    {
+    void store() {
         SQLReward sqlReward = key.makeSQLReward();
         sqlReward.setSkillPoints(skillPoints);
         sqlReward.setMoney(money);
         sqlReward.setExp(exp);
         sqlReward.save();
     }
+
     @Override
-    public String toString()
-    {
+    public String toString() {
         return String.format("%s %.2f %.2f %.2f", key, skillPoints, money, exp);
     }
 }

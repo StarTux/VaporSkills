@@ -4,9 +4,10 @@ import com.winthier.skills.bukkit.BukkitSkillsPlugin;
 import com.winthier.sql.SQLDatabase;
 import java.util.Arrays;
 import java.util.List;
-import javax.persistence.PersistenceException;
 
-public class SQLDB {
+public final class SQLDB {
+    private SQLDB() { }
+
     static SQLDatabase get() {
         return BukkitSkillsPlugin.getInstance().getDb();
     }
@@ -20,38 +21,33 @@ public class SQLDB {
         return list.get(0);
     }
 
-    public static void clearAllCaches()
-    {
-        SQLPlayer.cache.clear();
-        SQLPlayerSetting.cache.clear();
-        SQLReward.cache.clear();
-        SQLReward.listCache.clear();
-        SQLScore.cache.clear();
-        SQLString.cache.clear();
+    public static void clearAllCaches() {
+        SQLPlayer.CACHE.clear();
+        SQLPlayerSetting.CACHE.clear();
+        SQLReward.CACHE.clear();
+        SQLReward.LIST_CACHE.clear();
+        SQLScore.CACHE.clear();
+        SQLString.CACHE.clear();
     }
 
-    public static void saveAll()
-    {
+    public static void saveAll() {
         SQLLog.saveAll();
         SQLPlayerSetting.saveAll();
         SQLScore.saveAll();
     }
 
-    public static void saveSome()
-    {
+    public static void saveSome() {
         SQLLog.saveSome();
         SQLScore.saveSome();
     }
 
-    public static List<Class<?>> getDatabaseClasses()
-    {
+    public static List<Class<?>> getDatabaseClasses() {
         return Arrays.asList(
             SQLLog.class,
             SQLPlayer.class,
             SQLPlayerSetting.class,
             SQLReward.class,
             SQLScore.class,
-            SQLString.class
-            );
+            SQLString.class);
     }
 }

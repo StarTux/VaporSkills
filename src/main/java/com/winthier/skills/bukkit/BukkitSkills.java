@@ -67,7 +67,7 @@ public final class BukkitSkills extends Skills {
     }
 
     void configure() {
-        enabled = getPlugin().getConfig().getBoolean("Enabled", true);
+        enabled = BukkitSkillsPlugin.getInstance().getConfig().getBoolean("Enabled", true);
     }
 
     void buildNameMap() {
@@ -85,10 +85,6 @@ public final class BukkitSkills extends Skills {
                 if (!nameMap.containsKey(name)) nameMap.put(name, skill);
             }
         }
-    }
-
-    BukkitSkillsPlugin getPlugin() {
-        return BukkitSkillsPlugin.instance;
     }
 
     @Override
@@ -187,7 +183,7 @@ public final class BukkitSkills extends Skills {
             total += amount;
         }
         if (total >= 5.0) {
-            getPlugin().getEconomy().depositPlayer(player, total);
+            BukkitSkillsPlugin.getInstance().getEconomy().depositPlayer(player, total);
         } else {
             moneys.put(player.getUniqueId(), total);
         }
@@ -217,7 +213,7 @@ public final class BukkitSkills extends Skills {
                 if (amount == null || amount < 0.01) continue;
                 OfflinePlayer player = Bukkit.getServer().getOfflinePlayer(entry.getKey());
                 if (player == null) continue;
-                getPlugin().getEconomy().depositPlayer(player, amount);
+                BukkitSkillsPlugin.getInstance().getEconomy().depositPlayer(player, amount);
             }
         } catch (Exception e) {
             e.printStackTrace();

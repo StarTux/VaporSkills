@@ -5,21 +5,24 @@ import java.util.ArrayList;
 import java.util.List;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.MagmaCube;
 import org.bukkit.entity.Slime;
 
 final class BukkitEntities {
+    private BukkitEntities() { }
+
     private static List<String> entityNames;
-    static enum SpecialNames {
+
+    enum SpecialNames {
         BIG_SLIME("BigSlime"),
         SMALL_SLIME("SmallSlime"),
         TINY_SLIME("TinySlime"),
         BIG_MAGMA_CUBE("BigMagmaCube"),
         SMALL_MAGMA_CUBE("SmallMagmaCube"),
-        TINY_MAGMA_CUBE("TinyMagmaCube"),
-        ;
+        TINY_MAGMA_CUBE("TinyMagmaCube");
         final String name;
-        SpecialNames(String name) { this.name = name; }
+        SpecialNames(String name) {
+            this.name = name;
+        }
     }
 
     static List<String> getEntityNames() {

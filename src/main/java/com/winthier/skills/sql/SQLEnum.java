@@ -10,7 +10,6 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
 import lombok.Setter;
 
 /**
@@ -23,44 +22,39 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class SQLEnum
-{
+public final class SQLEnum {
     // Cache
-    final static Map<Enum, SQLEnum> cache = new HashMap<>();
+    private static final Map<Enum, SQLEnum> CACHE = new HashMap<>();
     // Payload
-    @Id int id;
-    @Column(nullable = false) @ManyToOne SQLString namespace;
-    @Column(nullable = false) @ManyToOne SQLString name;
+    @Id private int id;
+    @Column(nullable = false) @ManyToOne private SQLString namespace;
+    @Column(nullable = false) @ManyToOne private SQLString name;
 
-    static String namespaceOf(Enum key)
-    {
-	return key.getDeclaringClass().getName();
+    static String namespaceOf(Enum key) {
+        return key.getDeclaringClass().getName();
     }
 
-    static String nameOf(Enum key)
-    {
-	return key.name();
+    static String nameOf(Enum key) {
+        return key.name();
     }
 
-    private SQLEnum(Enum key)
-    {
+    private SQLEnum(Enum key) {
         setNamespace(SQLString.of(namespaceOf(key)));
         setName(SQLString.of(nameOf(key)));
     }
 
-    static SQLEnum of(Enum key)
-    {
-        SQLEnum result = cache.get(key);
+    static SQLEnum of(Enum key) {
+        SQLEnum result = CACHE.get(key);
         if (result == null) {
-	    result = SQLDB.get().find(SQLEnum.class).where()
-		.eq("namespace", SQLString.of(namespaceOf(key)))
-		.eq("name", SQLString.of(nameOf(key)))
-		.findUnique();
-	    if (result == null) {
-		result = new SQLEnum(key);
-		SQLDB.get().save(result);
-	    }
-	    cache.put(key, result);
+            result = SQLDB.get().find(SQLEnum.class).where()
+                .eq("namespace", SQLString.of(namespaceOf(key)))
+                .eq("name", SQLString.of(nameOf(key)))
+                .findUnique();
+            if (result == null) {
+                result = new SQLEnum(key);
+                SQLDB.get().save(result);
+            }
+            CACHE.put(key, result);
         }
         return result;
     }

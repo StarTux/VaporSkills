@@ -8,7 +8,6 @@ import java.util.Set;
 import java.util.UUID;
 import lombok.Data;
 import lombok.Getter;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -17,20 +16,19 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
 
-class BukkitSkillBuild extends BukkitSkill implements Listener
-{
-    @Getter final BukkitSkillType skillType = BukkitSkillType.BUILD;
-    long repeatInterval = 60*60;
-    int placementThreshold = 5;
-    long placementInterval = 10;
-    final Set<Material> placementBlacklist = EnumSet.noneOf(Material.class);
-    Map<UUID, PlayerData> players = new HashMap<>();
+class BukkitSkillBuild extends BukkitSkill implements Listener {
+    @Getter private final BukkitSkillType skillType = BukkitSkillType.BUILD;
+    private long repeatInterval = 60 * 60;
+    private int placementThreshold = 5;
+    private long placementInterval = 10;
+    private final Set<Material> placementBlacklist = EnumSet.noneOf(Material.class);
+    private Map<UUID, PlayerData> players = new HashMap<>();
 
     @Data
     class PlayerData {
-        final UUID uuid;
-        long start;
-        int blocksPlaced = 0;
+        private final UUID uuid;
+        private long start;
+        private int blocksPlaced = 0;
         void reset() {
             blocksPlaced = 0;
             start = System.currentTimeMillis();
@@ -44,8 +42,7 @@ class BukkitSkillBuild extends BukkitSkill implements Listener
         }
     }
 
-    PlayerData getPlayerData(UUID uuid)
-    {
+    PlayerData getPlayerData(UUID uuid) {
         PlayerData result = players.get(uuid);
         if (result == null) {
             result = new PlayerData(uuid);
@@ -55,8 +52,7 @@ class BukkitSkillBuild extends BukkitSkill implements Listener
         return result;
     }
 
-    PlayerData getPlayerData(Player player)
-    {
+    PlayerData getPlayerData(Player player) {
         return getPlayerData(player.getUniqueId());
     }
 
@@ -64,30 +60,28 @@ class BukkitSkillBuild extends BukkitSkill implements Listener
     void configure() {
         placementThreshold = getConfig().getInt("PlacementThreshold", 5);
         placementInterval = getConfig().getLong("PlacementInterval", 10);
-        repeatInterval = getConfig().getLong("RepeatInterval", 60*60);
+        repeatInterval = getConfig().getLong("RepeatInterval", 60 * 60);
         placementBlacklist.clear();
         for (String i : getConfig().getStringList("PlacementBlacklist")) {
             try {
                 Material mat = Material.valueOf(i.toUpperCase());
                 placementBlacklist.add(mat);
             } catch (IllegalArgumentException iae) {
-                getPlugin().getLogger().warning("Build configure: Material not found: " + i);
+                BukkitSkillsPlugin.getInstance().getLogger().warning("Build configure: Material not found: " + i);
             }
         }
     }
-    
+
     @Override
-    public void onDisable()
-    {
+    public void onDisable() {
         players.clear();
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
-    public void onBlockPlace(BlockPlaceEvent event)
-    {
+    public void onBlockPlace(BlockPlaceEvent event) {
         Player player = event.getPlayer();
-	if (!allowPlayer(player)) return;
-	if (!allowPlacedBlock(event.getBlock(), player)) return;
+        if (!allowPlayer(player)) return;
+        if (!allowPlacedBlock(event.getBlock(), player)) return;
         PlayerData data = getPlayerData(player);
         if (data.age() >= placementInterval * 1000L) data.reset();
         if (data.addBlocksPlaced(1) == placementThreshold) {
@@ -95,8 +89,7 @@ class BukkitSkillBuild extends BukkitSkill implements Listener
         }
     }
 
-    boolean allowPlacedBlock(Block block, Player player)
-    {
+    boolean allowPlacedBlock(Block block, Player player) {
         if (!block.getType().isSolid()) return false;
         if (placementBlacklist.contains(block.getType())) return false;
         if (BukkitExploits.getInstance().didRecentlyPlace(player, block, repeatInterval)) return false;

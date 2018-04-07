@@ -12,9 +12,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
 final class BukkitSkillHunt extends BukkitSkill implements Listener {
-    @Getter final BukkitSkillType skillType = BukkitSkillType.HUNT;
-    long killDistanceInterval = 300;
-    double minKillDistance = 16;
+    @Getter private final BukkitSkillType skillType = BukkitSkillType.HUNT;
+    private long killDistanceInterval = 300;
+    private double minKillDistance = 16;
 
     @Override
     public void configure() {
@@ -34,7 +34,7 @@ final class BukkitSkillHunt extends BukkitSkill implements Listener {
         if (entity.getCustomName() != null && entity.getCustomName().startsWith("" + ChatColor.COLOR_CHAR)) return;
         if (BukkitExploits.getInstance().recentKillDistance(player, entity.getLocation(), killDistanceInterval) < minKillDistance) return;
         double percentage = BukkitExploits.getInstance().getEntityDamageByPlayerRemainderPercentage(entity, Math.min(entity.getHealth(), event.getFinalDamage()));
-        if (getSkills().hasDebugMode(player)) BukkitUtil.msg(player, "&eHunt Dmg=%.02f/%.02f Pct=%.02f", event.getFinalDamage(), entity.getMaxHealth(), percentage);
+        if (BukkitSkills.getInstance().hasDebugMode(player)) BukkitUtil.msg(player, "&eHunt Dmg=%.02f/%.02f Pct=%.02f", event.getFinalDamage(), entity.getMaxHealth(), percentage);
         giveReward(player, rewardForEntity(entity), percentage);
     }
 }

@@ -2,11 +2,9 @@ package com.winthier.skills.bukkit;
 
 import com.winthier.skills.Reward;
 import com.winthier.skills.Score;
-import java.util.EnumMap;
-import java.util.Map;
 import java.util.UUID;
-import java.util.WeakHashMap;
 import lombok.Data;
+import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.boss.BarColor;
@@ -17,12 +15,12 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 @Data
 class BukkitPlayer {
-    final UUID uuid;
-    double sessionMoney = 0.0;
-    boolean progressBarEnabled = true;
-    BukkitRunnable updateTask;
-    BossBar progressBar;
-    int noRewardTimer = 0;
+    private final UUID uuid;
+    @Getter private double sessionMoney = 0.0;
+    private boolean progressBarEnabled = true;
+    private BukkitRunnable updateTask;
+    private BossBar progressBar;
+    private int noRewardTimer = 0;
 
     BukkitPlayer(UUID uuid) {
         this.uuid = uuid;

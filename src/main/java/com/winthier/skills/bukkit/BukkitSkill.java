@@ -33,14 +33,6 @@ public abstract class BukkitSkill implements Skill {
     private String shorthand;
     private String description;
 
-    final BukkitSkillsPlugin getPlugin() {
-        return BukkitSkillsPlugin.instance;
-    }
-
-    final BukkitSkills getSkills() {
-        return BukkitSkills.getInstance();
-    }
-
     /**
      * Called before onEnable() and on every command triggered
      * reload.
@@ -63,7 +55,7 @@ public abstract class BukkitSkill implements Skill {
 
     final boolean allowPlayer(Player player) {
         if (player == null) return false;
-        if (!enabled || !getSkills().isEnabled()) return false;
+        if (!enabled || !BukkitSkills.getInstance().isEnabled()) return false;
         if (player.getGameMode() != GameMode.SURVIVAL) return false;
         if (!player.hasPermission("skills.skill.*") && !player.hasPermission(getPermissionNode())) return false;
         return true;
@@ -79,7 +71,7 @@ public abstract class BukkitSkill implements Skill {
         int blockType = block.getType().getId();
         @SuppressWarnings("deprecation")
         int blockData = (int)block.getData();
-        return getSkills().getScore().rewardForBlock(this, blockType, blockData);
+        return BukkitSkills.getInstance().getScore().rewardForBlock(this, blockType, blockData);
     }
 
     final Reward rewardForBlockNamed(Block block, String name) {
@@ -87,7 +79,7 @@ public abstract class BukkitSkill implements Skill {
         int blockType = block.getType().getId();
         @SuppressWarnings("deprecation")
         int blockData = (int)block.getData();
-        return getSkills().getScore().rewardForBlockNamed(this, blockType, blockData, name);
+        return BukkitSkills.getInstance().getScore().rewardForBlockNamed(this, blockType, blockData, name);
     }
 
     final Reward rewardForItem(ItemStack item) {
@@ -95,7 +87,7 @@ public abstract class BukkitSkill implements Skill {
         int itemType = item.getType().getId();
         @SuppressWarnings("deprecation")
         int itemData = (int)item.getDurability();
-        return getSkills().getScore().rewardForItem(this, itemType, itemData);
+        return BukkitSkills.getInstance().getScore().rewardForItem(this, itemType, itemData);
     }
 
     final Reward rewardForPotionEffect(PotionEffect effect) {
@@ -103,59 +95,59 @@ public abstract class BukkitSkill implements Skill {
         int potionType = effect.getType().getId();
         @SuppressWarnings("deprecation")
         int potionData = effect.getAmplifier();
-        return getSkills().getScore().rewardForPotionEffect(this, potionType, potionData);
+        return BukkitSkills.getInstance().getScore().rewardForPotionEffect(this, potionType, potionData);
     }
 
     final Reward rewardForEnchantment(Enchantment enchant, int level) {
         @SuppressWarnings("deprecation")
         int enchantType = enchant.getId();
-        return getSkills().getScore().rewardForEnchantment(this, enchantType, level);
+        return BukkitSkills.getInstance().getScore().rewardForEnchantment(this, enchantType, level);
     }
 
     final Reward rewardForEntity(Entity e) {
-        return getSkills().getScore().rewardForEntity(this, BukkitEntities.name(e));
+        return BukkitSkills.getInstance().getScore().rewardForEntity(this, BukkitEntities.name(e));
     }
 
     final Reward rewardForEntityType(EntityType e) {
-        return getSkills().getScore().rewardForEntity(this, BukkitEntities.name(e));
+        return BukkitSkills.getInstance().getScore().rewardForEntity(this, BukkitEntities.name(e));
     }
 
     final Reward rewardForName(String name) {
-        return getSkills().getScore().rewardForName(this, name);
+        return BukkitSkills.getInstance().getScore().rewardForName(this, name);
     }
 
     final Reward rewardForName(String name, int data) {
-        return getSkills().getScore().rewardForName(this, name, data);
+        return BukkitSkills.getInstance().getScore().rewardForName(this, name, data);
     }
 
     final Reward rewardForNameAndMaximum(String name, int dataMax) {
-        return getSkills().getScore().rewardForNameAndMaximum(this, name, dataMax);
+        return BukkitSkills.getInstance().getScore().rewardForNameAndMaximum(this, name, dataMax);
     }
 
     private void giveSkillPoints(Player player, double skillPoints) {
         if (skillPoints < 0.01) return;
-        getSkills().getScore().giveSkillPoints(player.getUniqueId(), this, skillPoints);
+        BukkitSkills.getInstance().getScore().giveSkillPoints(player.getUniqueId(), this, skillPoints);
     }
 
     private void giveMoney(Player player, double money) {
         if (money < 0.01) return;
-        getSkills().giveMoney(player, money);
+        BukkitSkills.getInstance().giveMoney(player, money);
     }
 
     private void giveExp(Player player, double exp) {
         if (exp < 0.01) return;
-        getSkills().giveExp(player, exp);
+        BukkitSkills.getInstance().giveExp(player, exp);
     }
 
     final void giveReward(@NonNull Player player, Reward reward, double factor) {
-        int level = getSkills().getScore().getSkillLevel(player.getUniqueId(), this);
+        int level = BukkitSkills.getInstance().getScore().getSkillLevel(player.getUniqueId(), this);
         double bonusFactor = getSkillType() == BukkitSkillType.SACRIFICE ? 1.0 : 1.0 + (double)(level / 10) / 100.0;
         if (reward == null) return;
         double skillPoints = reward.getSkillPoints() * factor;
         double money       = reward.getMoney()       * factor * bonusFactor;
         double exp         = reward.getExp()         * factor;
         if (skillPoints < 0.01 && money < 0.01 && exp < 0.01) return;
-        if (getSkills().hasDebugMode(player)) {
+        if (BukkitSkills.getInstance().hasDebugMode(player)) {
             BukkitReward br = BukkitReward.of(reward);
             BukkitUtil.msg(player, "[sk] &e%s &8%s &e%s %s&8:&e%s &8\"&e%s&8\" &6%.2f&8sp &6%.2f&8mo &6%.2f&8xp",
                            getShorthand(),
@@ -171,7 +163,7 @@ public abstract class BukkitSkill implements Skill {
         giveExp(player, exp);
         Reward outcome = new CustomReward((float)skillPoints, (float)money, (float)exp);
         BukkitPlayer.of(player).onReward(player, this, outcome);
-        getSkills().getScore().logReward(reward, player.getUniqueId(), outcome);
+        BukkitSkills.getInstance().getScore().logReward(reward, player.getUniqueId(), outcome);
         Bukkit.getServer().getPluginManager().callEvent(new SkillsRewardEvent(player, this, outcome));
     }
 
@@ -202,12 +194,12 @@ public abstract class BukkitSkill implements Skill {
     }
 
     final File getConfigFile() {
-        return new File(getPlugin().getDataFolder(), getKey() + ".yml");
+        return new File(BukkitSkillsPlugin.getInstance().getDataFolder(), getKey() + ".yml");
     }
 
     final ConfigurationSection getConfig() {
-        ConfigurationSection result = getPlugin().getConfig().getConfigurationSection(getKey());
-        if (result == null) result = getPlugin().getConfig().createSection(getKey());
+        ConfigurationSection result = BukkitSkillsPlugin.getInstance().getConfig().getConfigurationSection(getKey());
+        if (result == null) result = BukkitSkillsPlugin.getInstance().getConfig().createSection(getKey());
         return result;
     }
 

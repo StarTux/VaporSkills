@@ -7,7 +7,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -27,31 +26,35 @@ import lombok.Value;
 @Getter
 @Setter
 @NoArgsConstructor
-public class SQLReward implements Reward
-{
-    public static enum Target {
+public final class SQLReward implements Reward {
+    public enum Target {
         NAME, BLOCK, ITEM, ENTITY, ENCHANTMENT, POTION_EFFECT;
     }
     // Cache
-    @Value static class Key { @NonNull String skill; @NonNull Target target; Integer type; Integer data; String name; }
-    final static Map<Key, SQLReward> cache = new HashMap<>();
-    final static Map<Key, List<SQLReward>> listCache = new HashMap<>();
-    // Content
-    @Id Integer id;
-    @Column(nullable = false) @ManyToOne SQLString skill;
-    @Column(nullable = false) @ManyToOne SQLString target;
-    Integer type;
-    Integer data;
-    @ManyToOne(optional=true) SQLString name;
-    // Reward
-    @Column(nullable = false) float skillPoints;
-    @Column(nullable = false) float money;
-    @Column(nullable = false) float exp;
-    // Version
-    @Version Date version;
+    @Value static class Key { @NonNull final String skill;
+        @NonNull final Target target;
+        final Integer type;
+        final Integer data;
+        final String name;
+    }
 
-    private SQLReward(SQLString skill, SQLString target, Integer type, Integer data, SQLString name)
-    {
+    static final Map<Key, SQLReward> CACHE = new HashMap<>();
+    static final Map<Key, List<SQLReward>> LIST_CACHE = new HashMap<>();
+    // Content
+    @Id private Integer id;
+    @Column(nullable = false) @ManyToOne private SQLString skill;
+    @Column(nullable = false) @ManyToOne private SQLString target;
+    private Integer type;
+    private Integer data;
+    @ManyToOne(optional = true) private SQLString name;
+    // Reward
+    @Column(nullable = false) private float skillPoints;
+    @Column(nullable = false) private float money;
+    @Column(nullable = false) private float exp;
+    // Version
+    @Version private Date version;
+
+    private SQLReward(SQLString skill, SQLString target, Integer type, Integer data, SQLString name) {
         setSkill(skill);
         setTarget(target);
         setType(type);
@@ -67,9 +70,8 @@ public class SQLReward implements Reward
         this(SQLString.of(key.skill), SQLString.of(key.target.name()), key.type, key.data, SQLString.of(key.name));
     }
 
-    private static SQLReward find(Key key)
-    {
-        if (cache.containsKey(key)) return cache.get(key);
+    private static SQLReward find(Key key) {
+        if (CACHE.containsKey(key)) return CACHE.get(key);
         SQLTable<SQLReward>.Finder expr = SQLDB.get().find(SQLReward.class).where();
         expr = expr.eq("skill", SQLString.of(key.skill));
         expr = expr.eq("target", SQLString.of(key.target.name()));
@@ -77,13 +79,12 @@ public class SQLReward implements Reward
         expr = key.data != null ? expr.eq("data", key.data)               : expr.isNull("data");
         expr = key.name != null ? expr.eq("name", SQLString.of(key.name)) : expr.isNull("name");
         SQLReward result = SQLDB.unique(expr.findList());
-        cache.put(key, result); // may insert null
+        CACHE.put(key, result); // may insert null
         return result;
     }
 
-    private static List<SQLReward> findList(Key key)
-    {
-        if (listCache.containsKey(key)) return listCache.get(key);
+    private static List<SQLReward> findList(Key key) {
+        if (LIST_CACHE.containsKey(key)) return LIST_CACHE.get(key);
         SQLTable<SQLReward>.Finder expr = SQLDB.get().find(SQLReward.class).where();
         expr = expr.eq("skill", SQLString.of(key.skill));
         expr = expr.eq("target", SQLString.of(key.target.name()));
@@ -91,50 +92,43 @@ public class SQLReward implements Reward
         if (key.data != null) expr = expr.eq("data", key.data);
         if (key.name != null) expr = expr.eq("name", SQLString.of(key.name));
         List<SQLReward> result = expr.findList();
-        listCache.put(key, result);
+        LIST_CACHE.put(key, result);
         return result;
     }
-    
-    private static SQLReward of(Key key)
-    {
+
+    private static SQLReward of(Key key) {
         SQLReward result = find(key);
         if (result == null) {
             result = new SQLReward(key);
             SQLDB.get().save(result);
-            cache.put(key, result);
+            CACHE.put(key, result);
         }
         return result;
     }
 
-    public static SQLReward find(@NonNull Skill skill, @NonNull Target target, Integer type, Integer data, String name)
-    {
+    public static SQLReward find(@NonNull Skill skill, @NonNull Target target, Integer type, Integer data, String name) {
         return find(new Key(skill.getKey(), target, type, data, name));
     }
 
-    public static List<SQLReward> findList(@NonNull Skill skill, @NonNull Target target, Integer type, Integer data, String name)
-    {
+    public static List<SQLReward> findList(@NonNull Skill skill, @NonNull Target target, Integer type, Integer data, String name) {
         return findList(new Key(skill.getKey(), target, type, data, name));
     }
-    
-    public static SQLReward of(@NonNull Skill skill, @NonNull Target target, Integer type, Integer data, String name)
-    {
+
+    public static SQLReward of(@NonNull Skill skill, @NonNull Target target, Integer type, Integer data, String name) {
         return of(new Key(skill.getKey(), target, type, data, name));
     }
 
-    public static List<SQLReward> findList(@NonNull Skill skill)
-    {
+    public static List<SQLReward> findList(@NonNull Skill skill) {
         return SQLDB.get().find(SQLReward.class).where().eq("skill", SQLString.of(skill.getKey())).findList();
     }
 
-    public void save()
-    {
+    public void save() {
         SQLDB.get().save(this);
     }
 
-    public static void deleteAll()
-    {
-        cache.clear();
-        listCache.clear();
+    public static void deleteAll() {
+        CACHE.clear();
+        LIST_CACHE.clear();
         SQLDB.get().executeUpdate("DELETE FROM rewards");
     }
 }

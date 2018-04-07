@@ -18,21 +18,16 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-class BukkitCommandAdmin implements CommandExecutor
-{
-    BukkitSkills getSkills()
-    {
+class BukkitCommandAdmin implements CommandExecutor {
+    BukkitSkills getSkills() {
         return BukkitSkills.getInstance();
     }
 
-    BukkitSkillsPlugin getPlugin()
-    {
+    BukkitSkillsPlugin getPlugin() {
         return BukkitSkillsPlugin.getInstance();
     }
-    
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
-    {
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         String cmd = args.length == 0 ? "" : args[0].toLowerCase();
         final Player player = sender instanceof Player ? (Player)sender : null;
         try {
@@ -70,8 +65,7 @@ class BukkitCommandAdmin implements CommandExecutor
         return true;
     }
 
-    boolean onCommandTest(CommandSender sender, String[] args)
-    {
+    boolean onCommandTest(CommandSender sender, String[] args) {
         String cmd = args.length == 0 ? "" : args[0].toLowerCase();
         if (cmd.equals("levelup")) {
             Player player = getPlugin().getServer().getPlayer(args[1]);
@@ -87,7 +81,7 @@ class BukkitCommandAdmin implements CommandExecutor
             int skillLevel = 0;
             try {
                 skillLevel = Integer.parseInt(args[3]);
-            } catch (NumberFormatException nfe) {}
+            } catch (NumberFormatException nfe) { }
             if (skillLevel < 0) {
                 sender.sendMessage("Invalid level: " + args[3]);
                 return true;
@@ -95,8 +89,8 @@ class BukkitCommandAdmin implements CommandExecutor
             BukkitLevelUpEffect.launch(player, skill, skillLevel);
         } else if (cmd.equals("backlog")) {
             sender.sendMessage("Moneys: " + getSkills().getMoneys().size());
-            sender.sendMessage("Score: " + SQLScore.getDirties().size());
-            sender.sendMessage("Logs: " + SQLLog.getDirties().size());
+            sender.sendMessage("Score: " + SQLScore.getDIRTIES().size());
+            sender.sendMessage("Logs: " + SQLLog.getDIRTIES().size());
             sender.sendMessage("Drops: " + ((BukkitSkillSacrifice)getSkills().skillByType(BukkitSkillType.SACRIFICE)).dropped.size());
         } else {
             sender.sendMessage("skadmin test levelup <player> <skill> <level>");
@@ -105,8 +99,7 @@ class BukkitCommandAdmin implements CommandExecutor
         return true;
     }
 
-    boolean onCommandConfig(CommandSender sender, String[] args)
-    {
+    boolean onCommandConfig(CommandSender sender, String[] args) {
         String cmd = args.length == 0 ? "" : args[0].toLowerCase();
         if (cmd.equals("reload")) {
             getPlugin().reloadAll();
@@ -126,8 +119,7 @@ class BukkitCommandAdmin implements CommandExecutor
         return true;
     }
 
-    boolean onCommandReward(CommandSender sender, String[] args)
-    {
+    boolean onCommandReward(CommandSender sender, String[] args) {
         String cmd = args.length == 0 ? "" : args[0].toLowerCase();
         if (cmd.equals("list") && args.length == 2) {
             BukkitSkill skill = BukkitSkills.getInstance().skillByName(args[1]);
@@ -199,8 +191,7 @@ class BukkitCommandAdmin implements CommandExecutor
         return true;
     }
 
-    boolean onCommandScore(CommandSender sender, String[] args)
-    {
+    boolean onCommandScore(CommandSender sender, String[] args) {
         String cmd = args.length == 0 ? "" : args[0].toLowerCase();
         if (cmd.equals("list") && args.length == 2) {
             UUID uuid = PlayerCache.uuidForName(args[1]);
@@ -215,7 +206,6 @@ class BukkitCommandAdmin implements CommandExecutor
                 int pil = getSkills().getScore().pointsInLevel(sp);
                 int ptlut = getSkills().getScore().pointsToLevelUpTo(lvl + 1);
                 sender.sendMessage(String.format(" lvl:%d %s sp:%d (%d/%d)", lvl, skill.getShorthand(), sp, pil, ptlut));
-                                                 
             }
         } else if (cmd.equals("reset") && (args.length == 2 || args.length == 3)) {
             UUID uuid = PlayerCache.uuidForName(args[1]);
@@ -251,7 +241,7 @@ class BukkitCommandAdmin implements CommandExecutor
             int skillLevel = 0;
             try {
                 skillLevel = Integer.parseInt(args[3]);
-            } catch (NumberFormatException nfe) {}
+            } catch (NumberFormatException nfe) { }
             if (skillLevel < 0) {
                 sender.sendMessage("Invalid level: " + args[3]);
                 return true;
@@ -272,7 +262,7 @@ class BukkitCommandAdmin implements CommandExecutor
             int skillPoints = 0;
             try {
                 skillPoints = Integer.parseInt(args[3]);
-            } catch (NumberFormatException nfe) {}
+            } catch (NumberFormatException nfe) { }
             if (skillPoints <= 0) {
                 sender.sendMessage("Invalid points: " + args[3]);
                 return true;

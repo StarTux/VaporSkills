@@ -1,7 +1,6 @@
 package com.winthier.skills.bukkit;
 
-public enum BukkitSkillType
-{
+public enum BukkitSkillType {
     BLACKSMITH,
     BRAWL,
     BREED,
@@ -21,6 +20,5 @@ public enum BukkitSkillType
     SMELT,
     TAME,
     TRAVEL,
-    WOODCUT,
-    ;
+    WOODCUT;
 }

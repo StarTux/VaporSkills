@@ -1,6 +1,5 @@
 package com.winthier.skills.bukkit;
 
-import com.winthier.skills.Reward;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -17,20 +16,19 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
-class BukkitSkillTravel extends BukkitSkill implements Listener
-{
-    @Getter final BukkitSkillType skillType = BukkitSkillType.TRAVEL;
-    final static String ANCHOR = "anchor";
-    final static String DISTANCE = "distance";
-    final Map<UUID, Data> players = new HashMap<>();
-    double distanceStep = 16;
-    double maxTeleportDistance = 128;
-    double maxDistanceNoProgress = 96;
+class BukkitSkillTravel extends BukkitSkill implements Listener {
+    @Getter private final BukkitSkillType skillType = BukkitSkillType.TRAVEL;
+    private static final String ANCHOR = "anchor";
+    private static final String DISTANCE = "distance";
+    private final Map<UUID, Data> players = new HashMap<>();
+    private double distanceStep = 16;
+    private double maxTeleportDistance = 128;
+    private double maxDistanceNoProgress = 96;
 
     static double horizontalDistanceSquared(Location loc1, Location loc2) {
         double x = loc2.getX() - loc1.getX();
         double z = loc2.getZ() - loc1.getZ();
-        return x*x + z*z;
+        return x * x + z * z;
     }
 
     static double horizontalDistance(Location loc1, Location loc2) {
@@ -39,15 +37,16 @@ class BukkitSkillTravel extends BukkitSkill implements Listener
 
     @RequiredArgsConstructor
     class Data {
-        final UUID uuid;
-        Location anchor, last;
-        double distance;
+        private final UUID uuid;
+        private Location anchor, last;
+        private double distance;
         void store() {
             setPlayerSetting(uuid, ANCHOR, anchor);
             setPlayerSetting(uuid, DISTANCE, distance);
         }
         void load(Player player) {
-            last = anchor = getPlayerSettingLocation(uuid, ANCHOR, player.getLocation());
+            last = getPlayerSettingLocation(uuid, ANCHOR, player.getLocation());
+            anchor = last;
             distance = getPlayerSettingDouble(uuid, DISTANCE, 0);
         }
         void onPlayerMove(Player player, Location loc) {
@@ -61,15 +60,16 @@ class BukkitSkillTravel extends BukkitSkill implements Listener
                 last = loc;
                 distance = newDistance;
                 giveReward(player, rewardForNameAndMaximum("distance", (int)distance));
-            } else if (!loc.getWorld().equals(last.getWorld()) ||
-                       horizontalDistanceSquared(loc, last) > maxDistanceNoProgress*maxDistanceNoProgress) {
+            } else if (!loc.getWorld().equals(last.getWorld())
+                       || horizontalDistanceSquared(loc, last) > maxDistanceNoProgress * maxDistanceNoProgress) {
                 reset(player, loc);
             }
         }
         void reset(Player player, Location loc) {
-            last = anchor = loc;
+            last = loc;
+            anchor = loc;
             distance = 0;
-            if (getSkills().hasDebugMode(player)) {
+            if (BukkitSkills.getInstance().hasDebugMode(player)) {
                 BukkitUtil.msg(player, "&e%s Reset %d %d %d", getDisplayName(), anchor.getBlockX(), anchor.getBlockY(), anchor.getBlockZ());
             }
         }
@@ -82,8 +82,7 @@ class BukkitSkillTravel extends BukkitSkill implements Listener
         maxDistanceNoProgress = getConfig().getDouble("MaxDistanceNoProgress", 96);
     }
 
-    Data getData(Player player)
-    {
+    Data getData(Player player) {
         UUID uuid = player.getUniqueId();
         Data result = players.get(uuid);
         if (result == null) {
@@ -95,15 +94,14 @@ class BukkitSkillTravel extends BukkitSkill implements Listener
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
-    void onPlayerMove(PlayerMoveEvent event)
-    {
+    void onPlayerMove(PlayerMoveEvent event) {
         if (event instanceof PlayerTeleportEvent) return;
         Player player = event.getPlayer();
         if (!allowPlayer(player)) return;
         if (!player.isOnGround()) return;
         if (player.isInsideVehicle()) {
-            if (player.getVehicle().getType() == EntityType.HORSE ||
-                player.getVehicle().getType() == EntityType.PIG) {
+            if (player.getVehicle().getType() == EntityType.HORSE
+                || player.getVehicle().getType() == EntityType.PIG) {
                 if (player.getVehicle().isInsideVehicle()) return;
             } else {
                 return;
@@ -113,12 +111,11 @@ class BukkitSkillTravel extends BukkitSkill implements Listener
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
-    void onPlayerTeleport(PlayerTeleportEvent event)
-    {
+    void onPlayerTeleport(PlayerTeleportEvent event) {
         final Player player = event.getPlayer();
         if (!allowPlayer(player)) return;
-        if (!event.getFrom().getWorld().equals(event.getTo().getWorld()) ||
-            horizontalDistanceSquared(event.getFrom(), event.getTo()) > maxTeleportDistance*maxTeleportDistance) {
+        if (!event.getFrom().getWorld().equals(event.getTo().getWorld())
+            || horizontalDistanceSquared(event.getFrom(), event.getTo()) > maxTeleportDistance * maxTeleportDistance) {
             getData(player).reset(player, event.getTo());
         } else {
             getData(player).onPlayerMove(player, event.getTo());
@@ -126,25 +123,22 @@ class BukkitSkillTravel extends BukkitSkill implements Listener
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
-    void onPlayerRespawn(PlayerRespawnEvent event)
-    {
+    void onPlayerRespawn(PlayerRespawnEvent event) {
         Player player = event.getPlayer();
         if (!allowPlayer(player)) return;
         getData(player).reset(player, event.getRespawnLocation());
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
-    void onPlayerQuit(PlayerQuitEvent event)
-    {
+    void onPlayerQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
         if (!allowPlayer(player)) return;
         Data data = players.remove(player.getUniqueId());
         if (data != null) data.store();
     }
-    
+
     @Override
-    void onDisable()
-    {
+    void onDisable() {
         for (Data data : players.values()) data.store();
         players.clear();
     }

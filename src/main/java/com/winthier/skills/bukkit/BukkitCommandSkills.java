@@ -2,7 +2,6 @@ package com.winthier.skills.bukkit;
 
 import com.winthier.skills.Highscore;
 import com.winthier.skills.Reward;
-import com.winthier.skills.util.Strings;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -61,17 +60,17 @@ class BukkitCommandSkills implements CommandExecutor {
             if (!message.isEmpty()) message.add(" ");
             message.add(BukkitUtil.button(
                             ChatColor.AQUA,
-                            "&b" + skill.getShorthand() + "&3(&f"+skillLevel+"&3)",
+                            "&b" + skill.getShorthand() + "&3(&f" + skillLevel + "&3)",
                             "/sk " + skill.getKey(),
                             "&a/sk " + skill.getKey(),
                             "&3&l" + skill.getDisplayName() + " " + BukkitUtil.progressBar(pointsInLevel, pointsToLevelUp),
                             "&3Skill Level: &b" + skillLevel,
-                            "&3Skill Points: &f"+pointsInLevel+"&3/&f"+pointsToLevelUp,
+                            "&3Skill Points: &f" + pointsInLevel + "&3/&f" + pointsToLevelUp,
                             "&r" + WordUtils.wrap(skill.getDescription(), 32),
                             "&7Click for more details"));
         }
         BukkitUtil.raw(player, message);
-        BukkitUtil.msg(player, "&3Session earnings:&r %s", BukkitSkillsPlugin.getInstance().getEconomy().format(BukkitPlayer.of(player).sessionMoney));
+        BukkitUtil.msg(player, "&3Session earnings:&r %s", BukkitSkillsPlugin.getInstance().getEconomy().format(BukkitPlayer.of(player).getSessionMoney()));
         BukkitUtil.raw(player,
                        BukkitUtil.format("&3Progress Bar: "),
                        BukkitUtil.button("&3[&fOn&3]", "/sk progressbar on", "&a/sk progressbar on", "&5&oEnable Progress Bar"),
@@ -124,7 +123,7 @@ class BukkitCommandSkills implements CommandExecutor {
         String rankString = rank > 0 ? "#" + rank : "-";
         BukkitUtil.raw(player,
                        BukkitUtil.format(" &3Your rank: "),
-                       BukkitUtil.button("&f"+rankString+" &3[&fHighscore&3]",
+                       BukkitUtil.button("&f" + rankString + " &3[&fHighscore&3]",
                                          "/hi " + skill.getKey(),
                                          "&a/hi " + skill.getKey(),
                                          "&3&l" + skill.getDisplayName() + " &f" + rankString,
@@ -152,7 +151,8 @@ class BukkitCommandSkills implements CommandExecutor {
         } else if ("on".equals(arg)) {
             BukkitPlayer.of(player).setProgressBarEnabled(true);
             BukkitUtil.msg(player, "&bProgress bar enabled");
-        }}
+        }
+    }
 
     void checkItem(Player player) {
         ItemStack item = player.getItemInHand();

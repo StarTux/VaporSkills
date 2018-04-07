@@ -11,42 +11,37 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.json.simple.JSONValue;
 
-class BukkitUtil
-{
-    static void consoleCommand(String cmd, Object... args)
-    {
+final class BukkitUtil {
+    private BukkitUtil() { }
+
+    static void consoleCommand(String cmd, Object... args) {
         if (args.length > 0) cmd = String.format(cmd, args);
         // BukkitSkillsPlugin.getInstance().getLogger().info("Running console command: " + cmd);
         Bukkit.getServer().dispatchCommand(Bukkit.getServer().getConsoleSender(), cmd);
     }
 
-    static String format(String msg, Object... args)
-    {
+    static String format(String msg, Object... args) {
         msg = ChatColor.translateAlternateColorCodes('&', msg);
         if (args.length > 0) msg = String.format(msg, args);
         return msg;
     }
 
-    static void msg(CommandSender sender, String msg, Object... args)
-    {
+    static void msg(CommandSender sender, String msg, Object... args) {
         sender.sendMessage(format(msg, args));
     }
 
-    static void announce(String msg, Object... args)
-    {
+    static void announce(String msg, Object... args) {
         msg = format(msg, args);
         for (Player player : Bukkit.getServer().getOnlinePlayers()) {
             player.sendMessage(msg);
         }
     }
 
-    static void title(Player player, String title, String subtitle)
-    {
+    static void title(Player player, String title, String subtitle) {
         player.sendTitle(format(title), format(subtitle));
     }
 
-    static void raw(Player player, Object... obj)
-    {
+    static void raw(Player player, Object... obj) {
         if (obj.length == 0) return;
         if (obj.length == 1) {
             consoleCommand("minecraft:tellraw %s %s", player.getName(), JSONValue.toJSONString(obj[0]));
@@ -55,15 +50,13 @@ class BukkitUtil
         }
     }
 
-    static void announceRaw(Object... obj)
-    {
+    static void announceRaw(Object... obj) {
         for (Player player : Bukkit.getServer().getOnlinePlayers()) {
             raw(player, obj);
         }
     }
 
-    static Object button(ChatColor color, String chat, String command, String... tooltip)
-    {
+    static Object button(ChatColor color, String chat, String command, String... tooltip) {
         Map<String, Object> map = new HashMap<>();
         if (color != null) {
             map.put("color", color.name().toLowerCase());
@@ -87,13 +80,11 @@ class BukkitUtil
         return map;
     }
 
-    static Object button(String chat, String command, String... tooltip)
-    {
+    static Object button(String chat, String command, String... tooltip) {
         return button(null, chat, command, tooltip);
     }
 
-    static Object tooltip(String chat, String... tooltip)
-    {
+    static Object tooltip(String chat, String... tooltip) {
         Map<String, Object> map = new HashMap<>();
         map.put("text", format(chat));
         Map<String, Object> map2;
@@ -109,9 +100,7 @@ class BukkitUtil
         return map;
     }
 
-
-    static String progressBar(int has, int needs)
-    {
+    static String progressBar(int has, int needs) {
         final int len = 20;
         double percentage = Math.min(100.0, (double)has / (double)needs);
         has = (int)(percentage * (double)len);

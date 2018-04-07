@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import lombok.Getter;
+import org.bukkit.Bukkit;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
@@ -26,24 +27,21 @@ import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SpawnEggMeta;
 
-class BukkitSkillSacrifice extends BukkitSkill implements Listener
-{
+class BukkitSkillSacrifice extends BukkitSkill implements Listener {
     @Getter final BukkitSkillType skillType = BukkitSkillType.SACRIFICE;
-    final double RADIUS = 20;
+    static final double RADIUS = 20;
     final Map<UUID, UUID> dropped = new HashMap<>();
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
-    public void onPlayerDropItem(PlayerDropItemEvent event)
-    {
+    public void onPlayerDropItem(PlayerDropItemEvent event) {
         dropped.put(event.getItemDrop().getUniqueId(), event.getPlayer().getUniqueId());
     }
 
-    void onItemSacrificed(Item item)
-    {
+    void onItemSacrificed(Item item) {
         if (!item.isValid()) return;
         UUID uuid = dropped.remove(item.getUniqueId());
         if (uuid == null) return;
-        Player player = getPlugin().getServer().getPlayer(uuid);
+        Player player = Bukkit.getServer().getPlayer(uuid);
         if (player == null) return;
         if (!allowPlayer(player)) return;
         List<Reward> rewards = rewardsForItem(item.getItemStack());
@@ -54,8 +52,7 @@ class BukkitSkillSacrifice extends BukkitSkill implements Listener
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
-    public void onEntityDamage(EntityDamageEvent event)
-    {
+    public void onEntityDamage(EntityDamageEvent event) {
         if (!(event.getEntity() instanceof Item)) return;
         onItemSacrificed((Item)event.getEntity());
     }
@@ -69,39 +66,33 @@ class BukkitSkillSacrifice extends BukkitSkill implements Listener
     // Items removed from world
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
-    public void onInventoryPickupItem(InventoryPickupItemEvent event)
-    {
+    public void onInventoryPickupItem(InventoryPickupItemEvent event) {
         dropped.remove(event.getItem().getUniqueId());
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
-    public void onPlayerPickupItem(PlayerPickupItemEvent event)
-    {
+    public void onPlayerPickupItem(PlayerPickupItemEvent event) {
         dropped.remove(event.getItem().getUniqueId());
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
-    public void onItemDespawn(ItemDespawnEvent event)
-    {
+    public void onItemDespawn(ItemDespawnEvent event) {
         dropped.remove(event.getEntity().getUniqueId());
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
-    public void onItemMerge(ItemMergeEvent event)
-    {
+    public void onItemMerge(ItemMergeEvent event) {
         dropped.remove(event.getEntity().getUniqueId());
     }
 
     // Util
 
-    static void addReward(List<Reward> list, Reward reward)
-    {
+    static void addReward(List<Reward> list, Reward reward) {
         if (reward == null) return;
         list.add(reward);
     }
 
-    List<Reward> rewardsForItem(ItemStack item)
-    {
+    List<Reward> rewardsForItem(ItemStack item) {
         List<Reward> result = new ArrayList<>();
         if (item == null) return result;
         addReward(result, rewardForItem(item));
@@ -129,8 +120,7 @@ class BukkitSkillSacrifice extends BukkitSkill implements Listener
      * Utility function for the checkitem command. Do not use for
      * actual rewarding!
      */
-    public Reward fullRewardForItem(ItemStack item)
-    {
+    public Reward fullRewardForItem(ItemStack item) {
         float skillPoints = 0;
         float money = 0;
         float exp = 0;

@@ -7,23 +7,19 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockFromToEvent;
 
-class BukkitSkillHarvest extends BukkitSkill implements Listener
-{
+class BukkitSkillHarvest extends BukkitSkill implements Listener {
     @Getter final BukkitSkillType skillType = BukkitSkillType.HARVEST;
-    final double RADIUS = 100;
+    private static final double RADIUS = 100;
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
-    public void onBlockBreak(BlockBreakEvent event)
-    {
+    public void onBlockBreak(BlockBreakEvent event) {
         Player player = event.getPlayer();
-	if (!allowPlayer(player)) return;
+        if (!allowPlayer(player)) return;
         Block block = event.getBlock();
         onBlockBroken(player, block);
         Material mat = block.getType();
@@ -35,17 +31,18 @@ class BukkitSkillHarvest extends BukkitSkill implements Listener
                 onBlockBroken(player, block);
                 block = block.getRelative(0, 1, 0);
             }
+        default:
+            break;
         }
     }
 
-    boolean onBlockBroken(Player player, Block block)
-    {
+    boolean onBlockBroken(Player player, Block block) {
         if (BukkitExploits.getInstance().isPlayerPlaced(block)) return false;
         giveReward(player, rewardForBlock(block));
         return true;
     }
-    
-    @EventHandler(ignoreCancelled=true, priority=EventPriority.MONITOR)
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onBlockFromTo(BlockFromToEvent event) {
         // In addition to block breaks, the Harvest Skill also
         // rewards crops broken by water.
@@ -56,7 +53,7 @@ class BukkitSkillHarvest extends BukkitSkill implements Listener
         if (reward == null) return;
         Player player = getNearestPlayer(block.getLocation(), RADIUS);
         if (player == null) return;
-	if (!allowPlayer(player)) return;
+        if (!allowPlayer(player)) return;
         giveReward(player, reward);
     }
 }

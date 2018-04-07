@@ -1,7 +1,6 @@
 package com.winthier.skills;
 
-public interface Skill
-{
+public interface Skill {
     /**
      * A persistent key used for storage to refer to this
      * particular skill.

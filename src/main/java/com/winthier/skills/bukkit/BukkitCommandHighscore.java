@@ -2,7 +2,6 @@ package com.winthier.skills.bukkit;
 
 import com.winthier.playercache.PlayerCache;
 import com.winthier.skills.Highscore;
-import com.winthier.skills.util.Strings;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -12,21 +11,17 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-class BukkitCommandHighscore implements CommandExecutor
-{
-    BukkitSkills getSkills()
-    {
+class BukkitCommandHighscore implements CommandExecutor {
+    BukkitSkills getSkills() {
         return BukkitSkills.getInstance();
     }
 
-    BukkitSkillsPlugin getPlugin()
-    {
+    BukkitSkillsPlugin getPlugin() {
         return BukkitSkillsPlugin.getInstance();
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
-    {
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         final Player player = sender instanceof Player ? (Player)sender : null;
         if (player == null) {
             sender.sendMessage("Player expected");
@@ -42,8 +37,7 @@ class BukkitCommandHighscore implements CommandExecutor
         return true;
     }
 
-    String formatHighscoreAroundPlayer(Highscore hi, UUID uuid)
-    {
+    String formatHighscoreAroundPlayer(Highscore hi, UUID uuid) {
         int rank = hi.rankOfPlayer(uuid);
         int index = hi.indexOfPlayer(uuid);
         if (index < 0) index = 2;
@@ -60,8 +54,7 @@ class BukkitCommandHighscore implements CommandExecutor
         return sb.toString();
     }
 
-    void listSkills(Player player)
-    {
+    void listSkills(Player player) {
         UUID uuid = player.getUniqueId();
         BukkitUtil.msg(player, "");
         BukkitUtil.msg(player, "&3&lHighscore &7&o(Click for more info)");
@@ -70,7 +63,7 @@ class BukkitCommandHighscore implements CommandExecutor
         int rank = hi.rankOfPlayer(uuid);
         String rankString = rank > 0 ? "#" + rank : "-";
         message.add(BukkitUtil.button(
-                        "&bTotal&3(&f"+rankString+"&3)",
+                        "&bTotal&3(&f" + rankString + "&3)",
                         "/hi total",
                         "&a/hi total",
                         "&3&lTotal &f" + rankString,
@@ -84,7 +77,7 @@ class BukkitCommandHighscore implements CommandExecutor
             rankString = rank > 0 ? "#" + rank : "-";
             message.add(" ");
             message.add(BukkitUtil.button(
-                            "&b" + skill.getShorthand() + "&3(&f"+rankString+"&3)",
+                            "&b" + skill.getShorthand() + "&3(&f" + rankString + "&3)",
                             "/hi " + skill.getKey(),
                             "&a/hi " + skill.getKey(),
                             "&3&l" + skill.getDisplayName() + " &f" + rankString,
@@ -97,8 +90,7 @@ class BukkitCommandHighscore implements CommandExecutor
     }
 
     // TODO page numbers
-    void skillDetail(Player player, String name)
-    {
+    void skillDetail(Player player, String name) {
         Highscore hi;
         String displayName;
         if ("total".equals(name)) {

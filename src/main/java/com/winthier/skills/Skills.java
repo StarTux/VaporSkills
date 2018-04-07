@@ -5,8 +5,8 @@ import java.util.UUID;
 import lombok.Getter;
 
 public abstract class Skills {
-    @Getter static Skills instance;
-    @Getter final Score score;
+    @Getter private static Skills instance;
+    @Getter private final Score score;
 
     protected Skills() {
         instance = this;

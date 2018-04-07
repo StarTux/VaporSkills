@@ -12,13 +12,12 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
-class BukkitSkillBlacksmith extends BukkitSkill implements Listener
-{
+class BukkitSkillBlacksmith extends BukkitSkill implements Listener {
     @Getter final BukkitSkillType skillType = BukkitSkillType.BLACKSMITH;
-    final static int INPUT_SLOT_1 = 0;
-    final static int INPUT_SLOT_2 = 1;
-    final static int OUTPUT_SLOT = 2;
-    
+    static final int INPUT_SLOT_1 = 0;
+    static final int INPUT_SLOT_2 = 1;
+    static final int OUTPUT_SLOT = 2;
+
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onInventoryClick(InventoryClickEvent event) {
         final Inventory inv = event.getInventory();
@@ -38,7 +37,7 @@ class BukkitSkillBlacksmith extends BukkitSkill implements Listener
             @Override public void run() {
                 onAnvilUsed(player, inv, level);
             }
-        }.runTask(getPlugin());
+        }.runTask(BukkitSkillsPlugin.getInstance());
     }
 
     void onAnvilUsed(Player player, Inventory inv, int oldLevel) {

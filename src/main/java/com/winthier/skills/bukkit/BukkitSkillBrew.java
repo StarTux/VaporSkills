@@ -7,10 +7,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.BrewEvent;
 import org.bukkit.inventory.ItemStack;
 
-class BukkitSkillBrew extends BukkitSkill implements Listener
-{
+class BukkitSkillBrew extends BukkitSkill implements Listener {
     @lombok.Getter final BukkitSkillType skillType = BukkitSkillType.BREW;
-    final double RADIUS = 40.0;
+    static final double RADIUS = 40.0;
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onBrew(BrewEvent event) {

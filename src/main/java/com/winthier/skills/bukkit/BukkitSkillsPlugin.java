@@ -2,12 +2,8 @@ package com.winthier.skills.bukkit;
 
 import com.winthier.skills.sql.SQLDB;
 import com.winthier.sql.SQLDatabase;
-import java.io.File;
-import java.util.List;
-import javax.persistence.PersistenceException;
 import lombok.Getter;
 import net.milkbowl.vault.economy.Economy;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -17,26 +13,23 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 @Getter
-public class BukkitSkillsPlugin extends JavaPlugin implements Listener
-{
-    @Getter static BukkitSkillsPlugin instance;
-    Economy economy;
-    final BukkitSkills skills = new BukkitSkills();
-    final BukkitCommandAdmin adminCommand = new BukkitCommandAdmin();
-    final BukkitCommandSkills skillsCommand = new BukkitCommandSkills();
-    final BukkitCommandHighscore highscoreCommand = new BukkitCommandHighscore();
+public final class BukkitSkillsPlugin extends JavaPlugin implements Listener {
+    @Getter private static BukkitSkillsPlugin instance;
+    private Economy economy;
+    private final BukkitSkills skills = new BukkitSkills();
+    private final BukkitCommandAdmin adminCommand = new BukkitCommandAdmin();
+    private final BukkitCommandSkills skillsCommand = new BukkitCommandSkills();
+    private final BukkitCommandHighscore highscoreCommand = new BukkitCommandHighscore();
     static final String CONFIG_YML = "config.yml";
     static final String REWARDS_TXT = "rewards.txt";
     private SQLDatabase db;
 
-    public BukkitSkillsPlugin()
-    {
+    public BukkitSkillsPlugin() {
         instance = this;
     }
 
     @Override
-    public void onEnable()
-    {
+    public void onEnable() {
         // Files
         writeDefaultFiles(false);
         reloadConfig();
@@ -91,8 +84,7 @@ public class BukkitSkillsPlugin extends JavaPlugin implements Listener
     }
 
     @Override
-    public void onDisable()
-    {
+    public void onDisable() {
         for (BukkitSkill skill : skills.getSkills()) {
             skill.onDisable();
         }
@@ -103,15 +95,13 @@ public class BukkitSkillsPlugin extends JavaPlugin implements Listener
         SQLDB.clearAllCaches();
     }
 
-    void writeDefaultFiles(boolean force)
-    {
+    void writeDefaultFiles(boolean force) {
         if (!force) saveDefaultConfig();
         if (force) saveResource(CONFIG_YML, force);
         saveResource(REWARDS_TXT, force);
     }
 
-    void saveAll()
-    {
+    void saveAll() {
         try {
             SQLDB.saveAll();
             skills.depositAllMoneys();
@@ -120,8 +110,7 @@ public class BukkitSkillsPlugin extends JavaPlugin implements Listener
         }
     }
 
-    void saveSome()
-    {
+    void saveSome() {
         try {
             SQLDB.saveSome();
         } catch (Exception e) {
@@ -129,13 +118,11 @@ public class BukkitSkillsPlugin extends JavaPlugin implements Listener
         }
     }
 
-    void updateAllPlayers()
-    {
+    void updateAllPlayers() {
         skills.updateAllPlayers();
     }
 
-    void reloadAll()
-    {
+    void reloadAll() {
         writeDefaultFiles(false);
         reloadConfig();
         skills.configure();
@@ -143,16 +130,14 @@ public class BukkitSkillsPlugin extends JavaPlugin implements Listener
         skills.buildNameMap();
     }
 
-    private boolean setupEconomy()
-    {
+    private boolean setupEconomy() {
         RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(Economy.class);
         if (economyProvider != null) economy = economyProvider.getProvider();
         return (economy != null);
     }
 
     @EventHandler
-    public void onPlayerQuit(PlayerQuitEvent event)
-    {
+    public void onPlayerQuit(PlayerQuitEvent event) {
         saveAll();
         skills.getPlayers().remove(event.getPlayer().getUniqueId());
     }

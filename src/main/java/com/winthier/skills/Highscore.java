@@ -8,23 +8,21 @@ import lombok.Getter;
 import lombok.Value;
 
 @Getter
-public class Highscore
-{
+public final class Highscore {
+    private Highscore() { }
+
     @Value
     public static class Row {
-        int rank;
-        UUID player;
-        int skillPoints;
-        int skillLevel;
+        final int rank;
+        final UUID player;
+        final int skillPoints;
+        final int skillLevel;
     }
 
     final long timestamp = System.currentTimeMillis();
     final List<Row> rows = new ArrayList<>();
 
-    private Highscore() {}
-
-    static Highscore create(Skill skill)
-    {
+    static Highscore create(Skill skill) {
         Highscore result = new Highscore();
         int lastLevel = -1;
         int rank = 0;
@@ -41,8 +39,7 @@ public class Highscore
         return result;
     }
 
-    public int rankOfPlayer(UUID player)
-    {
+    public int rankOfPlayer(UUID player) {
         if (rows.isEmpty()) return -1;
         for (Row row : rows) {
             if (row.player.equals(player)) return row.rank;
@@ -50,8 +47,7 @@ public class Highscore
         return -1;
     }
 
-    public int indexOfPlayer(UUID player)
-    {
+    public int indexOfPlayer(UUID player) {
         if (rows.isEmpty()) return -1;
         int i = 0;
         for (Row row : rows) {
@@ -61,18 +57,15 @@ public class Highscore
         return -1;
     }
 
-    public Row rowAt(int index)
-    {
+    public Row rowAt(int index) {
         return rows.get(index);
     }
 
-    public int size()
-    {
+    public int size() {
         return rows.size();
     }
 
-    public long ageInSeconds()
-    {
+    public long ageInSeconds() {
         return (System.currentTimeMillis() - timestamp) / 1000;
     }
 }
