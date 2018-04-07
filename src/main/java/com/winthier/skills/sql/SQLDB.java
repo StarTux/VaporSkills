@@ -1,6 +1,6 @@
 package com.winthier.skills.sql;
 
-import com.winthier.skills.bukkit.BukkitSkillsPlugin;
+import com.winthier.skills.BukkitSkillsPlugin;
 import com.winthier.sql.SQLDatabase;
 import java.util.Arrays;
 import java.util.List;
