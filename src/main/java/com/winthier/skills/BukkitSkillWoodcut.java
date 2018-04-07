@@ -1,7 +1,0 @@
-package com.winthier.skills;
-
-import lombok.Getter;
-
-class BukkitSkillWoodcut extends BukkitSkillAbstractBlockBreak {
-    @Getter final BukkitSkillType skillType = BukkitSkillType.WOODCUT;
-}

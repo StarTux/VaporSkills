@@ -1,6 +1,6 @@
 package com.winthier.skills.sql;
 
-import com.winthier.skills.BukkitSkillsPlugin;
+import com.winthier.skills.SkillsPlugin;
 import com.winthier.sql.SQLDatabase;
 import java.util.Arrays;
 import java.util.List;
@@ -9,7 +9,7 @@ public final class SQLDB {
     private SQLDB() { }
 
     static SQLDatabase get() {
-        return BukkitSkillsPlugin.getInstance().getDb();
+        return SkillsPlugin.getInstance().getDb();
     }
 
     static <E> E unique(List<E> list) {
