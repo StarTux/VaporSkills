@@ -1,7 +1,7 @@
 package com.winthier.skills.sql;
 
 import com.winthier.skills.Skill;
-import com.winthier.skills.Skills;
+import com.winthier.skills.SkillsPlugin;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -98,7 +98,7 @@ public final class SQLScore {
 
     public static List<Entry> rank() {
         List<Integer> skillIds = new ArrayList<>();
-        for (Skill skill : Skills.getInstance().getSkills()) skillIds.add(SQLString.of(skill.getKey()).getId());
+        for (Skill skill : SkillsPlugin.getInstance().getSkills()) skillIds.add(SQLString.of(skill.getKey()).getId());
         StringBuilder sb = new StringBuilder();
         sb.append("SELECT player_id, uuid, SUM(skill_points) AS skill_points FROM `")
             .append(SQLDB.get().getTable(SQLScore.class).getTableName())
@@ -114,7 +114,7 @@ public final class SQLScore {
             while (row.next()) {
                 UUID uuid = UUID.fromString(row.getString("uuid"));
                 double skillPoints = (double)row.getFloat("skill_points") / (double)skillIds.size();
-                int skillLevel = Skills.getInstance().getScore().levelForPoints(skillPoints);
+                int skillLevel = SkillsPlugin.getInstance().getScore().levelForPoints(skillPoints);
                 result.add(new Entry(uuid, skillPoints, skillLevel));
             }
         } catch (SQLException sqle) {

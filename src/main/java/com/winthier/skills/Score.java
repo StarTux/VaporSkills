@@ -21,7 +21,7 @@ public final class Score {
         int newSkillLevel = levelForPoints(newSkillPoints);
         // Call hook(s)
         if (newSkillLevel > skillLevel) {
-            Skills.getInstance().onLevelUp(player, skill, newSkillLevel);
+            SkillsPlugin.getInstance().onLevelUp(player, skill, newSkillLevel);
         }
         // "Write" data
         row.setSkillPoints((float)newSkillPoints);
