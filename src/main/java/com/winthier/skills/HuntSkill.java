@@ -3,6 +3,7 @@ package com.winthier.skills;
 import com.winthier.exploits.bukkit.BukkitExploits;
 import lombok.Getter;
 import org.bukkit.ChatColor;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -34,7 +35,7 @@ final class HuntSkill extends Skill implements Listener {
         if (entity.getCustomName() != null && entity.getCustomName().startsWith("" + ChatColor.COLOR_CHAR)) return;
         if (BukkitExploits.getInstance().recentKillDistance(player, entity.getLocation(), killDistanceInterval) < minKillDistance) return;
         double percentage = BukkitExploits.getInstance().getEntityDamageByPlayerRemainderPercentage(entity, Math.min(entity.getHealth(), event.getFinalDamage()));
-        if (SkillsPlugin.getInstance().hasDebugMode(player)) Msg.msg(player, "&eHunt Dmg=%.02f/%.02f Pct=%.02f", event.getFinalDamage(), entity.getMaxHealth(), percentage);
+        if (SkillsPlugin.getInstance().hasDebugMode(player)) Msg.msg(player, "&eHunt Dmg=%.02f/%.02f Pct=%.02f", event.getFinalDamage(), entity.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue(), percentage);
         giveReward(player, rewardForEntity(entity), percentage);
     }
 }

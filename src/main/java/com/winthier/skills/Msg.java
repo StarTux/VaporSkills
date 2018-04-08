@@ -37,6 +37,7 @@ final class Msg {
         }
     }
 
+    @SuppressWarnings("deprecation")
     static void title(Player player, String title, String subtitle) {
         player.sendTitle(format(title), format(subtitle));
     }

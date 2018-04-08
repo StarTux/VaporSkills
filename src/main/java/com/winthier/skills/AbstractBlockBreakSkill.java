@@ -42,7 +42,7 @@ abstract class AbstractBlockBreakSkill extends Skill implements Listener {
         Player player = event.getPlayer();
         Block block = event.getBlock();
         if (!allowPlayer(player)) return;
-        if (!allowItemInHand(player.getItemInHand())) return;
+        if (!allowItemInHand(player.getInventory().getItemInMainHand())) return;
         if (!allowBrokenBlock(player, block)) return;
         giveReward(player, rewardForBlock(block));
     }

@@ -153,7 +153,7 @@ class SkillsCommand implements CommandExecutor {
     }
 
     void checkItem(Player player) {
-        ItemStack item = player.getItemInHand();
+        ItemStack item = player.getInventory().getItemInMainHand();
         final String prefix = Msg.format("&r[&2Creeper Overlord&r] ");
         if (item == null || item.getType() == Material.AIR) {
             Msg.msg(player, prefix + "&cThere is no item in your hand");
