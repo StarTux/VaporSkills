@@ -388,12 +388,12 @@ Sacrifice Item		Nether_Star - -		50 100 50	1
 Sacrifice Item		Beacon - -		50 100 50	1
 Sacrifice Item		Dragon_Egg - -		100 100 50	1
 
-Sacrifice Item		Skull_Item 0 -		10 100 50	1	# Skeleton Skull
-Sacrifice Item		Skull_Item 1 -		10 100 50	1	# Wither Skull
-Sacrifice Item		Skull_Item 2 -		10 100 50	1	# Zombie Head
-Sacrifice Item		Skull_Item 3 -		10 100 50	1	# Player Head
-Sacrifice Item		Skull_Item 4 -		10 100 50	1	# Creeper Head
-Sacrifice Item		Skull_Item 5 -		10 100 50	1	# Dragon Head
+Sacrifice Item		Skull_Item 0 -		10 50 20	1	# Skeleton Skull
+Sacrifice Item		Skull_Item 1 -		10 50 20	1	# Wither Skull
+Sacrifice Item		Skull_Item 2 -		10 50 20	1	# Zombie Head
+Sacrifice Item		Skull_Item 3 -		10 50 20	1	# Player Head
+Sacrifice Item		Skull_Item 4 -		10 50 20	1	# Creeper Head
+Sacrifice Item		Skull_Item 5 -		20 100 20	1	# Dragon Head
 
 Sacrifice Item		Coal 0 -		1 0 0	.1
 Sacrifice Item		Coal_Ore - -		1 0 0	.25
