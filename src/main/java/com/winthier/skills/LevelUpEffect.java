@@ -42,8 +42,7 @@ final class LevelUpEffect extends BukkitRunnable {
                 announceLevelUp(player);
                 showLevelUpTitle(player);
             }
-            if (ticks % 8 == 0) colorful(player, ticks, 0.1);
-            if (ticks % 8 == 4) colorful(player, ticks, 2.3);
+            if (ticks % 10 == 0) colorful(player, ticks, 3 * (double)ticks / (double)MAX_TICKS);
             if (ticks == 20 * 2) player.getWorld().playSound(player.getEyeLocation(), Sound.ENTITY_FIREWORK_TWINKLE, .6f, 1);
             if (ticks == 20 * 4) player.getWorld().playSound(player.getEyeLocation(), Sound.ENTITY_FIREWORK_TWINKLE, .5f, 1);
             if (ticks == 20 * 6) player.getWorld().playSound(player.getEyeLocation(), Sound.ENTITY_FIREWORK_TWINKLE_FAR, .6f, 1);
@@ -117,7 +116,7 @@ final class LevelUpEffect extends BukkitRunnable {
         World world = player.getWorld();
         world.spawnParticle(Particle.SPELL_MOB,
                             player.getLocation().add(0, height, 0),
-                            Math.min(100, level / 5 + 5), // count
+                            Math.min(50, level / 10 + 5), // count
                             .35f, 0f, .35f, // offset
                             -1f); // extra (color?)
     }
@@ -126,9 +125,9 @@ final class LevelUpEffect extends BukkitRunnable {
         World world = player.getWorld();
         double frac = Math.PI * (double)ticks / (double)13;
         world.spawnParticle(Particle.FIREWORKS_SPARK,
-                            player.getLocation().add(Math.cos(frac),
+                            player.getLocation().add(Math.cos(frac) * 2,
                                                      2.3 * (double)ticks / (double)MAX_TICKS,
-                                                     Math.sin(frac)),
+                                                     Math.sin(frac) * 2),
                             1, // count
                             0f, 0f, 0f, // offset
                             .0001f); // extra (speed?)
