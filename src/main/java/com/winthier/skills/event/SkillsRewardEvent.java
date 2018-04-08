@@ -1,7 +1,7 @@
 package com.winthier.skills.event;
 
-import com.winthier.skills.Skill;
 import com.winthier.skills.Reward;
+import com.winthier.skills.Skill;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.entity.Player;
