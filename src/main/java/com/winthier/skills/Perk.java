@@ -1,0 +1,26 @@
+package com.winthier.skills;
+
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
+public enum Perk {
+    // Base Smithing Improvements
+    SMITH_IMPROVE_LEATHER(SkillType.SMITH, null),
+    SMITH_IMPROVE_GOLD(SkillType.SMITH, Perk.SMITH_IMPROVE_LEATHER),
+    SMITH_IMPROVE_MAIL(SkillType.SMITH, Perk.SMITH_IMPROVE_GOLD),
+    SMITH_IMPROVE_IRON(SkillType.SMITH, Perk.SMITH_IMPROVE_MAIL),
+    SMITH_IMPROVE_DIAMOND(SkillType.SMITH, Perk.SMITH_IMPROVE_IRON),
+    // Smithing Armor Perks
+    SMITH_LEATHER_ARMOR_SPEED(SkillType.SMITH, Perk.SMITH_IMPROVE_LEATHER),
+    SMITH_GOLD_ARMOR_HEALTH(SkillType.SMITH, Perk.SMITH_IMPROVE_GOLD),
+    SMITH_MAIL_ARMOR_DAMAGE(SkillType.SMITH, Perk.SMITH_IMPROVE_MAIL),
+    SMITH_IRON_ARMOR_ARMOR(SkillType.SMITH, Perk.SMITH_IMPROVE_IRON),
+    SMITH_DIAMOND_ARMOR_ARMOR(SkillType.SMITH, Perk.SMITH_IMPROVE_DIAMOND),
+    SMITH_DIAMOND_ARMOR_TOUGH(SkillType.SMITH, Perk.SMITH_DIAMOND_ARMOR_ARMOR),
+    SMITH_SHIELD_ARMOR(SkillType.SMITH, Perk.SMITH_IMPROVE_IRON),
+    SMITH_SWORD_DAMAGE(SkillType.SMITH, Perk.SMITH_IMPROVE_IRON),
+    ;
+
+    final SkillType skillType;
+    final Perk depends;
+}

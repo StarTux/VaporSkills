@@ -313,14 +313,14 @@ Enchant Name		- 2 exp_level_cost	2 2 0
 Enchant Name		- 3 exp_level_cost	5 5 0
 
 #===============================================================================
-# Blacksmithing
+# Smithing
 #===============================================================================
-Blacksmith Name		- 1 exp_level_cost	1 1 0	.5
-Blacksmith Name		- 2 exp_level_cost	1 1 0	1
-Blacksmith Name		- 3 exp_level_cost	1 1 0	2.5
-Blacksmith Name		- 5 exp_level_cost	1 1 0	5
-Blacksmith Name		- 10 exp_level_cost	1 1 0	10
-Blacksmith Name		- 30 exp_level_cost	1 1 0	30
+Smith Name		- 1 exp_level_cost	1 1 0	.5
+Smith Name		- 2 exp_level_cost	1 1 0	1
+Smith Name		- 3 exp_level_cost	1 1 0	2.5
+Smith Name		- 5 exp_level_cost	1 1 0	5
+Smith Name		- 10 exp_level_cost	1 1 0	10
+Smith Name		- 30 exp_level_cost	1 1 0	30
 
 #===============================================================================
 # Woodcutting

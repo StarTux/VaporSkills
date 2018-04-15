@@ -48,6 +48,7 @@ public final class SQLDB {
             SQLPlayerSetting.class,
             SQLReward.class,
             SQLScore.class,
-            SQLString.class);
+            SQLString.class,
+            SQLPerk.class);
     }
 }

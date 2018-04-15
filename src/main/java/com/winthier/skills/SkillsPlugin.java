@@ -76,7 +76,7 @@ public final class SkillsPlugin extends JavaPlugin implements Listener {
             return;
         }
         // Skills
-        List<Skill> skills = Arrays.asList(new BlacksmithSkill(),
+        List<Skill> skills = Arrays.asList(new SmithSkill(),
                                            new BrawlSkill(),
                                            new BreedSkill(),
                                            new BrewSkill(),
@@ -176,6 +176,7 @@ public final class SkillsPlugin extends JavaPlugin implements Listener {
         reloadConfig();
         for (Skill skill : getSkills()) skill.configure();
         buildNameMap();
+        score.clear();
     }
 
     private boolean setupEconomy() {
@@ -219,7 +220,7 @@ public final class SkillsPlugin extends JavaPlugin implements Listener {
         int power = level / 100;
         int maxAmp = Math.min(4, power + 1);
         switch (((Skill)skill).getSkillType()) {
-        case BLACKSMITH:
+        case SMITH:
             player.addPotionEffect(new PotionEffect(PotionEffectType.FAST_DIGGING, duration, random.nextInt(maxAmp), true), true);
             if (power >= 1) player.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, duration, random.nextInt(maxAmp), true), true);
             break;

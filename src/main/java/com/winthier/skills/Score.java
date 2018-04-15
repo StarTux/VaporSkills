@@ -1,15 +1,19 @@
 package com.winthier.skills;
 
 import com.winthier.skills.sql.SQLLog;
+import com.winthier.skills.sql.SQLPerk;
 import com.winthier.skills.sql.SQLReward;
 import com.winthier.skills.sql.SQLScore;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 public final class Score {
     private final Map<String, Highscore> highscores = new HashMap<>();
     private Highscore totalHighscore = null;
+    private final Map <UUID, Set<Perk>> perks = new HashMap<>();
 
     public void giveSkillPoints(UUID player, Skill skill, double points) {
         if (points <= 0) return;
@@ -149,5 +153,39 @@ public final class Score {
             }
             return result;
         }
+    }
+
+    Set<Perk> getPerks(UUID player) {
+        Set<Perk> result = perks.get(player);
+        if (result == null) {
+            result = EnumSet.noneOf(Perk.class);
+            for (SQLPerk sqlPerk: SQLPerk.find(player)) {
+                try {
+                    Perk perk = Perk.valueOf(sqlPerk.getPerk().toUpperCase());
+                    result.add(perk);
+                } catch (IllegalArgumentException iae) {}
+            }
+            perks.put(player, result);
+        }
+        return result;
+    }
+
+    boolean hasPerk(UUID player, Perk perk) {
+        //        return getPerks(player).contains(perk);
+        return true;
+    }
+
+    boolean unlockPerk(UUID player, Perk perk) {
+        Set<Perk> perks = getPerks(player);
+        if (perks.contains(perk)) return false;
+        perks.add(perk);
+        SQLPerk.unlock(player, perk.name().toLowerCase());
+        return true;
+    }
+
+    void clear() {
+        highscores.clear();
+        totalHighscore = null;
+        perks.clear();
     }
 }

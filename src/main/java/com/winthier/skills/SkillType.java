@@ -1,7 +1,7 @@
 package com.winthier.skills;
 
 public enum SkillType {
-    BLACKSMITH,
+    SMITH,
     BRAWL,
     BREED,
     BREW,

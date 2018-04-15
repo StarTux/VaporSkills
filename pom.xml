@@ -64,6 +64,13 @@
       <version>0.1</version>
       <scope>provided</scope>
     </dependency>
+    <!-- Custom -->
+    <dependency>
+      <groupId>com.winthier.custom</groupId>
+      <artifactId>custom</artifactId>
+      <version>0.1</version>
+      <scope>provided</scope>
+    </dependency>
     <!-- Apache Commons Lang3 -->
     <dependency>
       <groupId>org.apache.commons</groupId>
