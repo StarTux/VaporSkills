@@ -1,6 +1,5 @@
-package com.winthier.skills.sql;
+package com.winthier.skills;
 
-import com.winthier.skills.SkillsPlugin;
 import com.winthier.sql.SQLDatabase;
 import java.util.Arrays;
 import java.util.List;

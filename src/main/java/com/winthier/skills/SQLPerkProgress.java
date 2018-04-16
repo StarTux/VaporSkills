@@ -1,4 +1,4 @@
-package com.winthier.skills.sql;
+package com.winthier.skills;
 
 import java.util.Date;
 import java.util.List;

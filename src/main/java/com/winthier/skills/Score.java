@@ -1,9 +1,5 @@
 package com.winthier.skills;
 
-import com.winthier.skills.sql.SQLLog;
-import com.winthier.skills.sql.SQLPerk;
-import com.winthier.skills.sql.SQLReward;
-import com.winthier.skills.sql.SQLScore;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;

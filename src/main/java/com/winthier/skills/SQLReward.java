@@ -1,7 +1,5 @@
-package com.winthier.skills.sql;
+package com.winthier.skills;
 
-import com.winthier.skills.Reward;
-import com.winthier.skills.SkillType;
 import com.winthier.sql.SQLTable;
 import java.util.Date;
 import java.util.HashMap;

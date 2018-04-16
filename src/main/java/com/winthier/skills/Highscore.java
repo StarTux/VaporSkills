@@ -1,6 +1,5 @@
 package com.winthier.skills;
 
-import com.winthier.skills.sql.SQLScore;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;

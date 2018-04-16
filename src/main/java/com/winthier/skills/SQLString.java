@@ -1,6 +1,5 @@
-package com.winthier.skills.sql;
+package com.winthier.skills;
 
-import com.winthier.skills.SkillType;
 import java.util.HashMap;
 import java.util.Map;
 import javax.persistence.Column;

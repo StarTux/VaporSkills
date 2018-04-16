@@ -1,7 +1,5 @@
 package com.winthier.skills;
 
-import com.winthier.skills.event.SkillsRewardEvent;
-import com.winthier.skills.sql.SQLPlayerSetting;
 import java.io.File;
 import java.util.UUID;
 import lombok.Getter;

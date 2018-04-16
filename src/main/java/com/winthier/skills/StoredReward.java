@@ -1,6 +1,5 @@
 package com.winthier.skills;
 
-import com.winthier.skills.sql.SQLReward;
 import java.util.Arrays;
 import lombok.AllArgsConstructor;
 import lombok.Data;

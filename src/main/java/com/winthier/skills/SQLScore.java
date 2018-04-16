@@ -1,7 +1,5 @@
-package com.winthier.skills.sql;
+package com.winthier.skills;
 
-import com.winthier.skills.SkillType;
-import com.winthier.skills.SkillsPlugin;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;

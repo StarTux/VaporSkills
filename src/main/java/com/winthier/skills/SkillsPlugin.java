@@ -1,7 +1,5 @@
 package com.winthier.skills;
 
-import com.winthier.skills.event.SkillsLevelUpEvent;
-import com.winthier.skills.sql.SQLDB;
 import com.winthier.sql.SQLDatabase;
 import java.io.File;
 import java.io.InputStreamReader;

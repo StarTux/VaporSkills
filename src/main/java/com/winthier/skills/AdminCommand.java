@@ -1,10 +1,6 @@
 package com.winthier.skills;
 
 import com.winthier.playercache.PlayerCache;
-import com.winthier.skills.sql.SQLDB;
-import com.winthier.skills.sql.SQLLog;
-import com.winthier.skills.sql.SQLReward;
-import com.winthier.skills.sql.SQLScore;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;

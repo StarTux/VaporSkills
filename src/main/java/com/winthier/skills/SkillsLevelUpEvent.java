@@ -1,7 +1,5 @@
-package com.winthier.skills.event;
+package com.winthier.skills;
 
-import com.winthier.skills.Reward;
-import com.winthier.skills.Skill;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.entity.Player;
@@ -10,10 +8,10 @@ import org.bukkit.event.HandlerList;
 
 @Getter
 @RequiredArgsConstructor
-public class SkillsRewardEvent extends Event {
+public class SkillsLevelUpEvent extends Event {
     final Player player;
     final Skill skill;
-    final Reward reward;
+    final int level;
     private static HandlerList handlers = new HandlerList();
 
     public static HandlerList getHandlerList() {
