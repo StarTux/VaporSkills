@@ -49,16 +49,16 @@ class SkillsCommand implements CommandExecutor {
         List<Object> message = new ArrayList<>();
         for (Skill skill : getSkills().getSkills()) {
             if (!skill.isEnabled()) continue;
-            int skillPoints = (int)getSkills().getScore().getSkillPoints(uuid, skill);
-            int skillLevel = getSkills().getScore().getSkillLevel(uuid, skill);
+            int skillPoints = (int)getSkills().getScore().getSkillPoints(uuid, skill.skillType);
+            int skillLevel = getSkills().getScore().getSkillLevel(uuid, skill.skillType);
             int pointsInLevel = getSkills().getScore().pointsInLevel(skillPoints);
             int pointsToLevelUp = getSkills().getScore().pointsToLevelUpTo(skillLevel + 1);
             if (!message.isEmpty()) message.add(" ");
             message.add(Msg.button(
                             ChatColor.AQUA,
                             "&b" + skill.getShorthand() + "&3(&f" + skillLevel + "&3)",
-                            "/sk " + skill.getKey(),
-                            "&a/sk " + skill.getKey(),
+                            "/sk " + skill.skillType.key,
+                            "&a/sk " + skill.skillType.key,
                             "&3&l" + skill.getDisplayName() + " " + Msg.progressBar(pointsInLevel, pointsToLevelUp),
                             "&3Skill Level: &b" + skillLevel,
                             "&3Skill Points: &f" + pointsInLevel + "&3/&f" + pointsToLevelUp,
@@ -82,8 +82,8 @@ class SkillsCommand implements CommandExecutor {
             return;
         }
         final UUID uuid = player.getUniqueId();
-        int skillPoints = (int)getSkills().getScore().getSkillPoints(uuid, skill);
-        int skillLevel = getSkills().getScore().getSkillLevel(uuid, skill);
+        int skillPoints = (int)getSkills().getScore().getSkillPoints(uuid, skill.skillType);
+        int skillLevel = getSkills().getScore().getSkillLevel(uuid, skill.skillType);
         int pointsInLevel = getSkills().getScore().pointsInLevel(skillPoints);
         int pointsToLevelUp = getSkills().getScore().pointsToLevelUpTo(skillLevel + 1);
         Msg.msg(player, "");
@@ -103,7 +103,7 @@ class SkillsCommand implements CommandExecutor {
                            Msg.format("&3For Next Level: &f%d",
                                              getSkills().getScore().pointsForNextLevel(skillPoints))));
         // Bonus
-        int level = getSkills().getScore().getSkillLevel(player.getUniqueId(), skill);
+        int level = getSkills().getScore().getSkillLevel(player.getUniqueId(), skill.skillType);
         int bonusFactor = level / 10;
         int nextBonusLevel = ((level / 10) + 1) * 10;
         Msg.raw(player,
@@ -112,14 +112,14 @@ class SkillsCommand implements CommandExecutor {
                     Msg.format("%d%%", bonusFactor),
                     Msg.format("&3Next Bonus Level: &f%d", nextBonusLevel)));
         // Highscore
-        Highscore hi = getSkills().getScore().getHighscore(skill);
+        Highscore hi = getSkills().getScore().getHighscore(skill.skillType);
         int rank = hi.rankOfPlayer(uuid);
         String rankString = rank > 0 ? "#" + rank : "-";
         Msg.raw(player,
                        Msg.format(" &3Your rank: "),
                        Msg.button("&f" + rankString + " &3[&fHighscore&3]",
-                                         "/hi " + skill.getKey(),
-                                         "&a/hi " + skill.getKey(),
+                                         "/hi " + skill.skillType.key,
+                                         "&a/hi " + skill.skillType.key,
                                          "&3&l" + skill.getDisplayName() + " &f" + rankString,
                                          getPlugin().getHighscoreCommand().formatHighscoreAroundPlayer(hi, uuid),
                                          "&7Click for more details"));

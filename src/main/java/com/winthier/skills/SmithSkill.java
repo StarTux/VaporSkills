@@ -19,10 +19,13 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 
 class SmithSkill extends Skill implements Listener {
-    @Getter final SkillType skillType = SkillType.SMITH;
     static final int INPUT_SLOT_1 = 0;
     static final int INPUT_SLOT_2 = 1;
     static final int OUTPUT_SLOT = 2;
+
+    SmithSkill() {
+        super(SkillType.SMITH);
+    }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onInventoryClick(InventoryClickEvent event) {
@@ -158,7 +161,7 @@ class SmithSkill extends Skill implements Listener {
     public void onPrepareAnvil(PrepareAnvilEvent event) {
         final Player player = (Player)event.getView().getPlayer();
         final UUID uuid = player.getUniqueId();
-        int skillLevel = SkillsPlugin.getInstance().getScore().getSkillLevel(uuid, this);
+        int skillLevel = SkillsPlugin.getInstance().getScore().getSkillLevel(uuid, skillType);
         final ItemStack itemA = event.getInventory().getItem(0);
         final ItemStack itemB = event.getInventory().getItem(1);
         if (itemA == null || itemA.getType() == Material.AIR) return;

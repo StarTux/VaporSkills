@@ -8,8 +8,11 @@ import org.bukkit.event.inventory.BrewEvent;
 import org.bukkit.inventory.ItemStack;
 
 class BrewSkill extends Skill implements Listener {
-    @lombok.Getter final SkillType skillType = SkillType.BREW;
     static final double RADIUS = 40.0;
+
+    BrewSkill() {
+        super(SkillType.BREW);
+    }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onBrew(BrewEvent event) {

@@ -7,8 +7,11 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 
 class BreedSkill extends Skill implements Listener {
-    @lombok.Getter final SkillType skillType = SkillType.BREED;
     static final double RADIUS = 10.0;
+
+    BreedSkill() {
+        super(SkillType.BREED);
+    }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onCreatureSpawn(CreatureSpawnEvent event) {

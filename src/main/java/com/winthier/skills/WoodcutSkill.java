@@ -11,8 +11,11 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 
 class WoodcutSkill extends Skill implements Listener {
-    @Getter final SkillType skillType = SkillType.WOODCUT;
     private long repeatInterval = 60 * 60;
+
+    WoodcutSkill() {
+        super(SkillType.WOODCUT);
+    }
 
     @Override
     void configure() {

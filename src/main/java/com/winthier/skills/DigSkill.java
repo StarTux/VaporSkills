@@ -11,8 +11,11 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 
 class DigSkill extends Skill implements Listener {
-    @Getter final SkillType skillType = SkillType.DIG;
     private long repeatInterval = 60 * 60;
+
+    DigSkill() {
+        super(SkillType.DIG);
+    }
 
     @Override
     void configure() {

@@ -15,7 +15,7 @@ public final class Score {
     private Highscore totalHighscore = null;
     private final Map <UUID, Set<Perk>> perks = new HashMap<>();
 
-    public void giveSkillPoints(UUID player, Skill skill, double points) {
+    public void giveSkillPoints(UUID player, SkillType skill, double points) {
         if (points <= 0) return;
         SQLScore row = SQLScore.of(player, skill);
         double skillPoints = row.getSkillPoints();
@@ -33,7 +33,7 @@ public final class Score {
         row.setDirty((float)points);
     }
 
-    public void setSkillLevel(UUID player, Skill skill, int skillLevel) {
+    public void setSkillLevel(UUID player, SkillType skill, int skillLevel) {
         if (skillLevel < 0) throw new IllegalArgumentException("Skill level cannot be less than 0");
         SQLScore row = SQLScore.of(player, skill);
         int skillPoints = pointsForLevel(skillLevel);
@@ -42,11 +42,11 @@ public final class Score {
         row.setDirty();
     }
 
-    public double getSkillPoints(UUID player, Skill skill) {
+    public double getSkillPoints(UUID player, SkillType skill) {
         return SQLScore.of(player, skill).getSkillPoints();
     }
 
-    public int getSkillLevel(UUID player, Skill skill) {
+    public int getSkillLevel(UUID player, SkillType skill) {
         return SQLScore.of(player, skill).getSkillLevel();
     }
 
@@ -80,7 +80,7 @@ public final class Score {
         return pointsForLevel(level + 1) - skillPoints;
     }
 
-    private Reward rewardForTypeAndData(Skill skill, SQLReward.Target target, int type, int data) {
+    private Reward rewardForTypeAndData(SkillType skill, SQLReward.Target target, int type, int data) {
         Reward result = SQLReward.find(skill, target, type, data, null);
         if (result == null) {
             result = SQLReward.find(skill, target, type, null, null);
@@ -88,39 +88,39 @@ public final class Score {
         return result;
     }
 
-    public Reward rewardForBlock(Skill skill, int blockType, int blockData) {
+    public Reward rewardForBlock(SkillType skill, int blockType, int blockData) {
         return rewardForTypeAndData(skill, SQLReward.Target.BLOCK, blockType, blockData);
     }
 
-    public Reward rewardForItem(Skill skill, int blockType, int blockData) {
+    public Reward rewardForItem(SkillType skill, int blockType, int blockData) {
         return rewardForTypeAndData(skill, SQLReward.Target.ITEM, blockType, blockData);
     }
 
-    public Reward rewardForBlockNamed(Skill skill, int blockType, int blockData, String name) {
+    public Reward rewardForBlockNamed(SkillType skill, int blockType, int blockData, String name) {
         return SQLReward.find(skill, SQLReward.Target.BLOCK, blockType, blockData, name);
     }
 
-    public Reward rewardForEntity(Skill skill, String entityType) {
+    public Reward rewardForEntity(SkillType skill, String entityType) {
         return SQLReward.find(skill, SQLReward.Target.ENTITY, null, null, entityType);
     }
 
-    public Reward rewardForPotionEffect(Skill skill, int effectType, int effectAmplifier) {
+    public Reward rewardForPotionEffect(SkillType skill, int effectType, int effectAmplifier) {
         return rewardForTypeAndData(skill, SQLReward.Target.POTION_EFFECT, effectType, effectAmplifier);
     }
 
-    public Reward rewardForEnchantment(Skill skill, int enchantType, int enchantLevel) {
+    public Reward rewardForEnchantment(SkillType skill, int enchantType, int enchantLevel) {
         return rewardForTypeAndData(skill, SQLReward.Target.ENCHANTMENT, enchantType, enchantLevel);
     }
 
-    public Reward rewardForName(Skill skill, String name) {
+    public Reward rewardForName(SkillType skill, String name) {
         return SQLReward.find(skill, SQLReward.Target.NAME, null, null, name);
     }
 
-    public Reward rewardForName(Skill skill, String name, int data) {
+    public Reward rewardForName(SkillType skill, String name, int data) {
         return SQLReward.find(skill, SQLReward.Target.NAME, null, data, name);
     }
 
-    public Reward rewardForNameAndMaximum(Skill skill, String name, int dataMax) {
+    public Reward rewardForNameAndMaximum(SkillType skill, String name, int dataMax) {
         Reward result = null;
         int data = 0;
         for (SQLReward reward : SQLReward.findList(skill, SQLReward.Target.NAME, null, null, name)) {
@@ -137,7 +137,7 @@ public final class Score {
         SQLLog.log((SQLReward)reward, player, outcome);
     }
 
-    public Highscore getHighscore(Skill skill) {
+    public Highscore getHighscore(SkillType skill) {
         if (skill == null) {
             Highscore result = totalHighscore;
             if (result == null || result.ageInSeconds() > 60 * 10) {
@@ -149,7 +149,7 @@ public final class Score {
             Highscore result = highscores.get(skill);
             if (result == null || result.ageInSeconds() > 60) {
                 result = Highscore.create(skill);
-                highscores.put(skill.getKey(), result);
+                highscores.put(skill.key, result);
             }
             return result;
         }

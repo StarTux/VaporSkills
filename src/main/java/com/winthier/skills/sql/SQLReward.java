@@ -1,7 +1,7 @@
 package com.winthier.skills.sql;
 
 import com.winthier.skills.Reward;
-import com.winthier.skills.Skill;
+import com.winthier.skills.SkillType;
 import com.winthier.sql.SQLTable;
 import java.util.Date;
 import java.util.HashMap;
@@ -31,7 +31,8 @@ public final class SQLReward implements Reward {
         NAME, BLOCK, ITEM, ENTITY, ENCHANTMENT, POTION_EFFECT;
     }
     // Cache
-    @Value static class Key { @NonNull final String skill;
+    @Value static class Key {
+        @NonNull final String skill;
         @NonNull final Target target;
         final Integer type;
         final Integer data;
@@ -106,20 +107,20 @@ public final class SQLReward implements Reward {
         return result;
     }
 
-    public static SQLReward find(@NonNull Skill skill, @NonNull Target target, Integer type, Integer data, String name) {
-        return find(new Key(skill.getKey(), target, type, data, name));
+    public static SQLReward find(@NonNull SkillType skill, @NonNull Target target, Integer type, Integer data, String name) {
+        return find(new Key(skill.key, target, type, data, name));
     }
 
-    public static List<SQLReward> findList(@NonNull Skill skill, @NonNull Target target, Integer type, Integer data, String name) {
-        return findList(new Key(skill.getKey(), target, type, data, name));
+    public static List<SQLReward> findList(@NonNull SkillType skill, @NonNull Target target, Integer type, Integer data, String name) {
+        return findList(new Key(skill.key, target, type, data, name));
     }
 
-    public static SQLReward of(@NonNull Skill skill, @NonNull Target target, Integer type, Integer data, String name) {
-        return of(new Key(skill.getKey(), target, type, data, name));
+    public static SQLReward of(@NonNull SkillType skill, @NonNull Target target, Integer type, Integer data, String name) {
+        return of(new Key(skill.key, target, type, data, name));
     }
 
-    public static List<SQLReward> findList(@NonNull Skill skill) {
-        return SQLDB.get().find(SQLReward.class).where().eq("skill", SQLString.of(skill.getKey())).findList();
+    public static List<SQLReward> findList(@NonNull SkillType skill) {
+        return SQLDB.get().find(SQLReward.class).where().eq("skill", SQLString.of(skill.key)).findList();
     }
 
     public void save() {

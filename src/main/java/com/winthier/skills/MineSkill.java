@@ -11,8 +11,11 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 
 class MineSkill extends Skill implements Listener {
-    @Getter final SkillType skillType = SkillType.MINE;
     private long repeatInterval = 60 * 60;
+
+    MineSkill() {
+        super(SkillType.MINE);
+    }
 
     @Override
     void configure() {

@@ -126,7 +126,7 @@ class AdminCommand implements CommandExecutor {
             if (skill == null) throw new IllegalArgumentException("Skill not found: " + args[1]);
             sender.sendMessage("Rewards of " + skill.getDisplayName() + ":");
             int count = 0;
-            for (SQLReward sqlReward : SQLReward.findList(skill)) {
+            for (SQLReward sqlReward : SQLReward.findList(skill.skillType)) {
                 sender.sendMessage(StoredReward.of(sqlReward).toString());
                 count++;
             }
@@ -201,8 +201,8 @@ class AdminCommand implements CommandExecutor {
             }
             sender.sendMessage("Scores of " + PlayerCache.nameForUuid(uuid) + ":");
             for (Skill skill : SkillsPlugin.getInstance().getSkills()) {
-                int lvl = SkillsPlugin.getInstance().getScore().getSkillLevel(uuid, skill);
-                int sp = (int)SkillsPlugin.getInstance().getScore().getSkillPoints(uuid, skill);
+                int lvl = SkillsPlugin.getInstance().getScore().getSkillLevel(uuid, skill.skillType);
+                int sp = (int)SkillsPlugin.getInstance().getScore().getSkillPoints(uuid, skill.skillType);
                 int pil = SkillsPlugin.getInstance().getScore().pointsInLevel(sp);
                 int ptlut = SkillsPlugin.getInstance().getScore().pointsToLevelUpTo(lvl + 1);
                 sender.sendMessage(String.format(" lvl:%d %s sp:%d (%d/%d)", lvl, skill.getShorthand(), sp, pil, ptlut));
@@ -219,11 +219,11 @@ class AdminCommand implements CommandExecutor {
                     sender.sendMessage("Skill not found: " + args[2]);
                     return true;
                 }
-                SkillsPlugin.getInstance().getScore().setSkillLevel(uuid, skill, 0);
+                SkillsPlugin.getInstance().getScore().setSkillLevel(uuid, skill.skillType, 0);
                 sender.sendMessage("Score reset: " + PlayerCache.nameForUuid(uuid) + ", " + skill.getDisplayName());
             } else {
                 for (Skill skill : SkillsPlugin.getInstance().getSkills()) {
-                    SkillsPlugin.getInstance().getScore().setSkillLevel(uuid, skill, 0);
+                    SkillsPlugin.getInstance().getScore().setSkillLevel(uuid, skill.skillType, 0);
                 }
                 sender.sendMessage("Scores reset: " + PlayerCache.nameForUuid(uuid));
             }
@@ -246,7 +246,7 @@ class AdminCommand implements CommandExecutor {
                 sender.sendMessage("Invalid level: " + args[3]);
                 return true;
             }
-            SkillsPlugin.getInstance().getScore().setSkillLevel(uuid, skill, skillLevel);
+            SkillsPlugin.getInstance().getScore().setSkillLevel(uuid, skill.skillType, skillLevel);
             sender.sendMessage("Skill level set: " + PlayerCache.nameForUuid(uuid) + ", " + skill.getDisplayName() + ": " + skillLevel);
         } else if (cmd.equals("givepoints") && args.length == 4) {
             UUID uuid = PlayerCache.uuidForName(args[1]);
@@ -267,7 +267,7 @@ class AdminCommand implements CommandExecutor {
                 sender.sendMessage("Invalid points: " + args[3]);
                 return true;
             }
-            SkillsPlugin.getInstance().getScore().giveSkillPoints(uuid, skill, skillPoints);
+            SkillsPlugin.getInstance().getScore().giveSkillPoints(uuid, skill.skillType, skillPoints);
             sender.sendMessage("Points given: " + PlayerCache.nameForUuid(uuid) + ", " + skill.getDisplayName() + ": " + skillPoints);
         } else {
             sender.sendMessage("/skadmin score list <player>");

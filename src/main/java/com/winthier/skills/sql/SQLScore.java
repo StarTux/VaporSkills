@@ -1,6 +1,6 @@
 package com.winthier.skills.sql;
 
-import com.winthier.skills.Skill;
+import com.winthier.skills.SkillType;
 import com.winthier.skills.SkillsPlugin;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -65,16 +65,16 @@ public final class SQLScore {
         setSkillLevel(0);
     }
 
-    public static SQLScore of(UUID uuid, Skill skill) {
-        Key key = new Key(uuid, skill.getKey());
+    public static SQLScore of(UUID uuid, SkillType skill) {
+        Key key = new Key(uuid, skill.key);
         SQLScore result = CACHE.get(key);
         if (result == null) {
             result = SQLDB.get().find(SQLScore.class).where()
                 .eq("player", SQLPlayer.of(uuid))
-                .eq("skill", SQLString.of(skill.getKey()))
+                .eq("skill", SQLString.of(skill.key))
                 .findUnique();
             if (result == null) {
-                result = new SQLScore(SQLPlayer.of(uuid), SQLString.of(skill.getKey()));
+                result = new SQLScore(SQLPlayer.of(uuid), SQLString.of(skill.key));
                 result.setDirty();
             }
             CACHE.put(key, result);
@@ -82,11 +82,11 @@ public final class SQLScore {
         return result;
     }
 
-    public static List<Entry> rank(Skill skill) {
+    public static List<Entry> rank(SkillType skill) {
         if (skill == null) return rank();
         List<Entry> result = new ArrayList<>();
         for (SQLScore score : SQLDB.get().find(SQLScore.class).where()
-                 .eq("skill", SQLString.of(skill.getKey()))
+                 .eq("skill", SQLString.of(skill.key))
                  .gt("skill_level", 0)
                  .orderByDescending("skill_points")
                  .limit(100)
@@ -98,7 +98,7 @@ public final class SQLScore {
 
     public static List<Entry> rank() {
         List<Integer> skillIds = new ArrayList<>();
-        for (Skill skill : SkillsPlugin.getInstance().getSkills()) skillIds.add(SQLString.of(skill.getKey()).getId());
+        for (SkillType skill : SkillType.values()) skillIds.add(SQLString.of(skill.key).getId());
         StringBuilder sb = new StringBuilder();
         sb.append("SELECT player_id, uuid, SUM(skill_points) AS skill_points FROM `")
             .append(SQLDB.get().getTable(SQLScore.class).getTableName())

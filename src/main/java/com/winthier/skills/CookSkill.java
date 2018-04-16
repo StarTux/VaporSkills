@@ -8,7 +8,9 @@ import org.bukkit.event.inventory.FurnaceSmeltEvent;
 import org.bukkit.inventory.ItemStack;
 
 class CookSkill extends Skill implements Listener {
-    @lombok.Getter final SkillType skillType = SkillType.COOK;
+    CookSkill() {
+        super(SkillType.COOK);
+    }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onFurnaceSmelt(FurnaceSmeltEvent event) {

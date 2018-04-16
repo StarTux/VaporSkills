@@ -13,9 +13,12 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
 final class HuntSkill extends Skill implements Listener {
-    @Getter private final SkillType skillType = SkillType.HUNT;
     private long killDistanceInterval = 300;
     private double minKillDistance = 16;
+
+    HuntSkill() {
+        super(SkillType.HUNT);
+    }
 
     @Override
     public void configure() {

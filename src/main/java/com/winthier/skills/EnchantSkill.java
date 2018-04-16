@@ -9,7 +9,9 @@ import org.bukkit.event.enchantment.EnchantItemEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
 class EnchantSkill extends Skill implements Listener {
-    @Getter final SkillType skillType = SkillType.ENCHANT;
+    EnchantSkill() {
+        super(SkillType.ENCHANT);
+    }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onEnchantItem(EnchantItemEvent event) {

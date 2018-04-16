@@ -24,8 +24,10 @@ public enum SkillType {
     }
 
     public final Category category;
+    public final String key;
 
     SkillType(Category category) {
         this.category = category;
+        this.key = name().toLowerCase();
     }
 }

@@ -10,8 +10,11 @@ import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.inventory.ItemStack;
 
 class FishSkill extends Skill implements Listener {
-    @lombok.Getter final SkillType skillType = SkillType.FISH;
     private long fishInterval = 15;
+
+    FishSkill() {
+        super(SkillType.FISH);
+    }
 
     @Override
     public void configure() {

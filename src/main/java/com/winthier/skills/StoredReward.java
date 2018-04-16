@@ -77,10 +77,10 @@ class StoredReward implements Reward {
             return null;
         }
         SQLReward findSQLReward() {
-            return SQLReward.find(SkillsPlugin.getInstance().skillByType(skill), target, type, data, name);
+            return SQLReward.find(skill, target, type, data, name);
         }
         SQLReward makeSQLReward() {
-            return SQLReward.of(SkillsPlugin.getInstance().skillByType(skill), target, type, data, name);
+            return SQLReward.of(skill, target, type, data, name);
         }
         StoredReward find() {
             SQLReward sqlReward = findSQLReward();

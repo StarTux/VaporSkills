@@ -12,8 +12,11 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockFromToEvent;
 
 class GardenSkill extends Skill implements Listener {
-    @Getter final SkillType skillType = SkillType.GARDEN;
     private static final double RADIUS = 100;
+
+    GardenSkill() {
+        super(SkillType.GARDEN);
+    }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onBlockBreak(BlockBreakEvent event) {

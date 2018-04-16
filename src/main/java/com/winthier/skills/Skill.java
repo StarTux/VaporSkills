@@ -21,10 +21,15 @@ import org.bukkit.potion.PotionEffect;
 
 @Getter
 public abstract class Skill {
+    public final SkillType skillType;
     private boolean enabled = true;
     private String displayName;
     private String shorthand;
     private String description;
+
+    Skill(SkillType skillType) {
+        this.skillType = skillType;
+    }
 
     /**
      * Called before onEnable() and on every command triggered
@@ -32,18 +37,17 @@ public abstract class Skill {
      */
     final void configureSkill() {
         enabled = getConfig().getBoolean("Enabled", true);
-        displayName = getConfig().getString("DisplayName", getKey());
-        shorthand = getConfig().getString("Shorthand", getKey());
+        displayName = getConfig().getString("DisplayName", skillType.key);
+        shorthand = getConfig().getString("Shorthand", skillType.key);
         description = getConfig().getString("Description", "This is a default skill description. Slap StarTux around so he will finally implement proper skill descriptions and not this dribble.");
     }
 
-    abstract SkillType getSkillType();
     void configure() { };
     void onEnable() { };
     void onDisable() { };
 
     final String getPermissionNode() {
-        return "skills.skill." + getKey();
+        return "skills.skill." + skillType.key;
     }
 
     final boolean allowPlayer(Player player) {
@@ -53,16 +57,12 @@ public abstract class Skill {
         return true;
     }
 
-    public final String getKey() {
-        return getSkillType().name().toLowerCase();
-    }
-
     final Reward rewardForBlock(Block block) {
         @SuppressWarnings("deprecation")
         int blockType = block.getType().getId();
         @SuppressWarnings("deprecation")
         int blockData = (int)block.getData();
-        return SkillsPlugin.getInstance().getScore().rewardForBlock(this, blockType, blockData);
+        return SkillsPlugin.getInstance().getScore().rewardForBlock(skillType, blockType, blockData);
     }
 
     final Reward rewardForBlockNamed(Block block, String name) {
@@ -70,7 +70,7 @@ public abstract class Skill {
         int blockType = block.getType().getId();
         @SuppressWarnings("deprecation")
         int blockData = (int)block.getData();
-        return SkillsPlugin.getInstance().getScore().rewardForBlockNamed(this, blockType, blockData, name);
+        return SkillsPlugin.getInstance().getScore().rewardForBlockNamed(skillType, blockType, blockData, name);
     }
 
     final Reward rewardForItem(ItemStack item) {
@@ -78,7 +78,7 @@ public abstract class Skill {
         int itemType = item.getType().getId();
         @SuppressWarnings("deprecation")
         int itemData = (int)item.getDurability();
-        return SkillsPlugin.getInstance().getScore().rewardForItem(this, itemType, itemData);
+        return SkillsPlugin.getInstance().getScore().rewardForItem(skillType, itemType, itemData);
     }
 
     final Reward rewardForPotionEffect(PotionEffect effect) {
@@ -86,38 +86,38 @@ public abstract class Skill {
         int potionType = effect.getType().getId();
         @SuppressWarnings("deprecation")
         int potionData = effect.getAmplifier();
-        return SkillsPlugin.getInstance().getScore().rewardForPotionEffect(this, potionType, potionData);
+        return SkillsPlugin.getInstance().getScore().rewardForPotionEffect(skillType, potionType, potionData);
     }
 
     final Reward rewardForEnchantment(Enchantment enchant, int level) {
         @SuppressWarnings("deprecation")
         int enchantType = enchant.getId();
-        return SkillsPlugin.getInstance().getScore().rewardForEnchantment(this, enchantType, level);
+        return SkillsPlugin.getInstance().getScore().rewardForEnchantment(skillType, enchantType, level);
     }
 
     final Reward rewardForEntity(Entity e) {
-        return SkillsPlugin.getInstance().getScore().rewardForEntity(this, Entities.name(e));
+        return SkillsPlugin.getInstance().getScore().rewardForEntity(skillType, Entities.name(e));
     }
 
     final Reward rewardForEntityType(EntityType e) {
-        return SkillsPlugin.getInstance().getScore().rewardForEntity(this, Entities.name(e));
+        return SkillsPlugin.getInstance().getScore().rewardForEntity(skillType, Entities.name(e));
     }
 
     final Reward rewardForName(String name) {
-        return SkillsPlugin.getInstance().getScore().rewardForName(this, name);
+        return SkillsPlugin.getInstance().getScore().rewardForName(skillType, name);
     }
 
     final Reward rewardForName(String name, int data) {
-        return SkillsPlugin.getInstance().getScore().rewardForName(this, name, data);
+        return SkillsPlugin.getInstance().getScore().rewardForName(skillType, name, data);
     }
 
     final Reward rewardForNameAndMaximum(String name, int dataMax) {
-        return SkillsPlugin.getInstance().getScore().rewardForNameAndMaximum(this, name, dataMax);
+        return SkillsPlugin.getInstance().getScore().rewardForNameAndMaximum(skillType, name, dataMax);
     }
 
     private void giveSkillPoints(Player player, double skillPoints) {
         if (skillPoints < 0.01) return;
-        SkillsPlugin.getInstance().getScore().giveSkillPoints(player.getUniqueId(), this, skillPoints);
+        SkillsPlugin.getInstance().getScore().giveSkillPoints(player.getUniqueId(), skillType, skillPoints);
     }
 
     private void giveMoney(Player player, double money) {
@@ -131,7 +131,7 @@ public abstract class Skill {
     }
 
     final void giveReward(@NonNull Player player, Reward reward, double factor) {
-        int level = SkillsPlugin.getInstance().getScore().getSkillLevel(player.getUniqueId(), this);
+        int level = SkillsPlugin.getInstance().getScore().getSkillLevel(player.getUniqueId(), skillType);
         double bonusFactor = 1.0 + (double)(level / 10) / 100.0;
         if (reward == null) return;
         double skillPoints = reward.getSkillPoints() * factor;
@@ -185,32 +185,32 @@ public abstract class Skill {
     }
 
     final File getConfigFile() {
-        return new File(SkillsPlugin.getInstance().getDataFolder(), getKey() + ".yml");
+        return new File(SkillsPlugin.getInstance().getDataFolder(), skillType.key + ".yml");
     }
 
     final ConfigurationSection getConfig() {
-        ConfigurationSection result = SkillsPlugin.getInstance().getConfig().getConfigurationSection(getKey());
-        if (result == null) result = SkillsPlugin.getInstance().getConfig().createSection(getKey());
+        ConfigurationSection result = SkillsPlugin.getInstance().getConfig().getConfigurationSection(skillType.key);
+        if (result == null) result = SkillsPlugin.getInstance().getConfig().createSection(skillType.key);
         return result;
     }
 
     final String getPlayerSettingString(UUID uuid, String key, String dfl) {
-        String result = SQLPlayerSetting.getString(uuid, getKey(), key);
+        String result = SQLPlayerSetting.getString(uuid, skillType.key, key);
         return result != null ? result : dfl;
     }
 
     final int getPlayerSettingInt(UUID uuid, String key, int dfl) {
-        Integer result = SQLPlayerSetting.getInt(uuid, getKey(), key);
+        Integer result = SQLPlayerSetting.getInt(uuid, skillType.key, key);
         return result != null ? result : dfl;
     }
 
     final double getPlayerSettingDouble(UUID uuid, String key, double dfl) {
-        Double result = SQLPlayerSetting.getDouble(uuid, getKey(), key);
+        Double result = SQLPlayerSetting.getDouble(uuid, skillType.key, key);
         return result != null ? result : dfl;
     }
 
     final Location getPlayerSettingLocation(UUID uuid, String key, Location dfl) {
-        String serial = SQLPlayerSetting.getString(uuid, getKey(), key);
+        String serial = SQLPlayerSetting.getString(uuid, skillType.key, key);
         if (serial == null) return dfl;
         String[] tokens = serial.split(",");
         if (tokens.length != 6) return dfl;
@@ -233,6 +233,6 @@ public abstract class Skill {
             Location loc = (Location)value;
             value = String.format("%s,%f,%f,%f,%f,%f", loc.getWorld().getName(), loc.getX(), loc.getY(), loc.getZ(), loc.getYaw(), loc.getPitch());
         }
-        SQLPlayerSetting.set(uuid, getKey(), key, value);
+        SQLPlayerSetting.set(uuid, skillType.key, key, value);
     }
 }

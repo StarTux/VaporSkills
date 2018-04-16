@@ -29,7 +29,7 @@ class Session {
         if (!progressBarEnabled) return;
         sessionMoney += reward.getMoney();
         Score score = SkillsPlugin.getInstance().getScore();
-        int points = (int)score.getSkillPoints(uuid, skill);
+        int points = (int)score.getSkillPoints(uuid, skill.skillType);
         int level = score.levelForPoints(points);
         int pointsA = score.pointsForLevel(level);
         int pointsB = score.pointsForLevel(level + 1);

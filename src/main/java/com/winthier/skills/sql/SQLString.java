@@ -1,6 +1,6 @@
 package com.winthier.skills.sql;
 
-import com.winthier.skills.Skill;
+import com.winthier.skills.SkillType;
 import java.util.HashMap;
 import java.util.Map;
 import javax.persistence.Column;
@@ -46,7 +46,7 @@ public final class SQLString {
         return result;
     }
 
-    public static SQLString of(Skill skill) {
-        return of(skill.getKey());
+    public static SQLString of(SkillType skill) {
+        return of(skill.key);
     }
 }

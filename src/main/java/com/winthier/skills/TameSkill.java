@@ -8,7 +8,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityTameEvent;
 
 class TameSkill extends Skill implements Listener {
-    @Getter final SkillType skillType = SkillType.TAME;
+    TameSkill() {
+        super(SkillType.TAME);
+    }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onEntityTame(EntityTameEvent event) {

@@ -206,7 +206,7 @@ public final class SkillsPlugin extends JavaPlugin implements Listener {
         nameMap.clear();
         // Put all the names in the map
         for (Skill skill : skillMap.values()) {
-            nameMap.put(skill.getKey().toLowerCase(), skill);
+            nameMap.put(skill.skillType.key, skill);
             nameMap.put(skill.getDisplayName().toLowerCase(), skill);
             nameMap.put(skill.getShorthand().toLowerCase(), skill);
         }
@@ -219,10 +219,11 @@ public final class SkillsPlugin extends JavaPlugin implements Listener {
         }
     }
 
-    public void onLevelUp(UUID uuid, Skill skill, int level) {
-        Player player = Bukkit.getServer().getPlayer(uuid);
+    public void onLevelUp(UUID uuid, SkillType skillType, int level) {
+        final Player player = Bukkit.getServer().getPlayer(uuid);
+        final Skill skill = getSkill(skillType);
         if (player == null) return;
-        if (!(skill instanceof Skill)) return;
+        if (skill == null) return;
         LevelUpEffect.launch(player, (Skill)skill, level);
         Bukkit.getServer().getPluginManager().callEvent(new SkillsLevelUpEvent(player, (Skill)skill, level));
     }
@@ -231,11 +232,11 @@ public final class SkillsPlugin extends JavaPlugin implements Listener {
         return skillMap.values();
     }
 
-    Skill skillByName(String name) {
+    public Skill skillByName(String name) {
         return nameMap.get(name.toLowerCase());
     }
 
-    Skill skillByType(SkillType type) {
+    public Skill getSkill(SkillType type) {
         return skillMap.get(type);
     }
 

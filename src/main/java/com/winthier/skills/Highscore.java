@@ -22,7 +22,7 @@ public final class Highscore {
     final long timestamp = System.currentTimeMillis();
     final List<Row> rows = new ArrayList<>();
 
-    static Highscore create(Skill skill) {
+    static Highscore create(SkillType skill) {
         Highscore result = new Highscore();
         int lastLevel = -1;
         int rank = 0;

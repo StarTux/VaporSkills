@@ -71,14 +71,14 @@ class HighscoreCommand implements CommandExecutor {
                         "&7Click for more details"));
         for (Skill skill : getSkills().getSkills()) {
             if (!skill.isEnabled()) continue;
-            hi = getSkills().getScore().getHighscore(skill);
+            hi = getSkills().getScore().getHighscore(skill.skillType);
             rank = hi.rankOfPlayer(uuid);
             rankString = rank > 0 ? "#" + rank : "-";
             message.add(" ");
             message.add(Msg.button(
                             "&b" + skill.getShorthand() + "&3(&f" + rankString + "&3)",
-                            "/hi " + skill.getKey(),
-                            "&a/hi " + skill.getKey(),
+                            "/hi " + skill.skillType.key,
+                            "&a/hi " + skill.skillType.key,
                             "&3&l" + skill.getDisplayName() + " &f" + rankString,
                             formatHighscoreAroundPlayer(hi, uuid),
                             "&r" + WordUtils.wrap(skill.getDescription(), 32),
@@ -101,7 +101,7 @@ class HighscoreCommand implements CommandExecutor {
                 player.sendMessage("Skill not found: " + name);
                 return;
             }
-            hi = getSkills().getScore().getHighscore(skill);
+            hi = getSkills().getScore().getHighscore(skill.skillType);
             displayName = skill.getDisplayName();
         }
         final UUID uuid = player.getUniqueId();

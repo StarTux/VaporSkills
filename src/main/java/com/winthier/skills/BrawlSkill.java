@@ -12,9 +12,12 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
 final class BrawlSkill extends Skill implements Listener {
-    @Getter final SkillType skillType = SkillType.BRAWL;
     private long killDistanceInterval = 300;
     private double minKillDistance = 16;
+
+    BrawlSkill() {
+        super(SkillType.BRAWL);
+    }
 
     @Override
     public void configure() {
