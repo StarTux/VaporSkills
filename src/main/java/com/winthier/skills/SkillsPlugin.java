@@ -3,6 +3,8 @@ package com.winthier.skills;
 import com.winthier.skills.event.SkillsLevelUpEvent;
 import com.winthier.skills.sql.SQLDB;
 import com.winthier.sql.SQLDatabase;
+import java.io.File;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -18,6 +20,8 @@ import lombok.Getter;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.ExperienceOrb;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -34,6 +38,7 @@ public final class SkillsPlugin extends JavaPlugin implements Listener {
     // Constants
     static final String CONFIG_YML = "config.yml";
     static final String REWARDS_TXT = "rewards.txt";
+    static final String PERKS_YML = "perks.yml";
     // Singleton
     @Getter private static SkillsPlugin instance;
     // External Data
@@ -51,6 +56,7 @@ public final class SkillsPlugin extends JavaPlugin implements Listener {
     private final Map<UUID, Double> exps = new HashMap<>();
     private final Set<UUID> playersInDebugMode = new HashSet<>();
     private final Map<UUID, Session> sessions = new HashMap<>();
+    private ConfigurationSection perksConfig = null;
 
     public SkillsPlugin() {
         instance = this;
@@ -76,26 +82,20 @@ public final class SkillsPlugin extends JavaPlugin implements Listener {
             return;
         }
         // Skills
-        List<Skill> skills = Arrays.asList(new SmithSkill(),
-                                           new BrawlSkill(),
-                                           new BreedSkill(),
-                                           new BrewSkill(),
-                                           new BuildSkill(),
-                                           new ButcherSkill(),
-                                           new CookSkill(),
-                                           new DigSkill(),
-                                           new EatSkill(),
-                                           new EnchantSkill(),
-                                           new FishSkill(),
-                                           new HarvestSkill(),
-                                           new HuntSkill(),
-                                           new MineSkill(),
-                                           new SacrificeSkill(),
-                                           new ShearSkill(),
-                                           new SmeltSkill(),
-                                           new TameSkill(),
-                                           new TravelSkill(),
-                                           new WoodcutSkill());
+        List<Skill> skills = Arrays.asList(
+            new BrawlSkill(),
+            new BreedSkill(),
+            new BrewSkill(),
+            new CookSkill(),
+            new DigSkill(),
+            new EnchantSkill(),
+            new FishSkill(),
+            new GardenSkill(),
+            new HuntSkill(),
+            new MineSkill(),
+            new SmithSkill(),
+            new TameSkill(),
+            new WoodcutSkill());
         for (Skill skill : skills) {
             SkillType type = skill.getSkillType();
             if (skillMap.containsKey(type)) {
@@ -149,9 +149,9 @@ public final class SkillsPlugin extends JavaPlugin implements Listener {
     }
 
     void writeDefaultFiles(boolean force) {
-        if (!force) saveDefaultConfig();
-        if (force) saveResource(CONFIG_YML, force);
+        saveResource(CONFIG_YML, force);
         saveResource(REWARDS_TXT, force);
+        saveResource(PERKS_YML, force);
     }
 
     void saveAll() {
@@ -171,9 +171,20 @@ public final class SkillsPlugin extends JavaPlugin implements Listener {
         }
     }
 
+    public ConfigurationSection getPerksConfig() {
+        if (perksConfig == null) {
+            YamlConfiguration tmp;
+            tmp = YamlConfiguration.loadConfiguration(new File(getDataFolder(), "perks.yml"));
+            tmp.setDefaults(YamlConfiguration.loadConfiguration(new InputStreamReader(getResource("perks.yml"))));
+            this.perksConfig = tmp;
+        }
+        return perksConfig;
+    }
+
     void reloadAll() {
         writeDefaultFiles(false);
         reloadConfig();
+        perksConfig = null;
         for (Skill skill : getSkills()) skill.configure();
         buildNameMap();
         score.clear();
@@ -214,71 +225,6 @@ public final class SkillsPlugin extends JavaPlugin implements Listener {
         if (!(skill instanceof Skill)) return;
         LevelUpEffect.launch(player, (Skill)skill, level);
         Bukkit.getServer().getPluginManager().callEvent(new SkillsLevelUpEvent(player, (Skill)skill, level));
-        // Give bonus potion effect
-        Random random = new Random(System.currentTimeMillis());
-        int duration = 40 * (level + random.nextInt(level));
-        int power = level / 100;
-        int maxAmp = Math.min(4, power + 1);
-        switch (((Skill)skill).getSkillType()) {
-        case SMITH:
-            player.addPotionEffect(new PotionEffect(PotionEffectType.FAST_DIGGING, duration, random.nextInt(maxAmp), true), true);
-            if (power >= 1) player.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, duration, random.nextInt(maxAmp), true), true);
-            break;
-        case BRAWL:
-        case BUTCHER:
-            player.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, duration, random.nextInt(maxAmp), true), true);
-            if (power >= 1) player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, duration, random.nextInt(maxAmp), true), true);
-            if (power >= 2) player.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, duration, random.nextInt(maxAmp), true), true);
-            break;
-        case BREED:
-        case SHEAR:
-        case TAME:
-            player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, duration, random.nextInt(maxAmp), true), true);
-            if (power >= 1) player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, duration, random.nextInt(maxAmp), true), true);
-            break;
-        case BREW:
-        case ENCHANT:
-            player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, duration, random.nextInt(maxAmp), true), true);
-            if (power >= 1) player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, duration, random.nextInt(maxAmp), true), true);
-            if (power >= 2) player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, duration, random.nextInt(maxAmp), true), true);
-            break;
-        case BUILD:
-            player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, duration, random.nextInt(maxAmp), true), true);
-            if (power >= 1) player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, duration, random.nextInt(maxAmp), true), true);
-            break;
-        case EAT:
-        case COOK:
-        case SMELT:
-            player.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, duration / 2, random.nextInt(maxAmp), true), true);
-            if (power >= 1) player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, duration, random.nextInt(maxAmp), true), true);
-            break;
-        case DIG:
-        case MINE:
-        case SACRIFICE:
-            player.addPotionEffect(new PotionEffect(PotionEffectType.FAST_DIGGING, duration, random.nextInt(maxAmp), true), true);
-            if (power >= 1) player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, duration, random.nextInt(maxAmp), true), true);
-            if (power >= 2) player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, duration, random.nextInt(maxAmp), true), true);
-            if (power >= 3) player.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, duration, random.nextInt(maxAmp), true), true);
-            break;
-        case FISH:
-            player.addPotionEffect(new PotionEffect(PotionEffectType.LUCK, duration, random.nextInt(maxAmp), true), true);
-            if (power >= 1) player.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, duration, random.nextInt(maxAmp), true), true);
-            if (power >= 2) player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, duration, random.nextInt(maxAmp), true), true);
-            if (power >= 3) player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, duration, random.nextInt(maxAmp), true), true);
-            break;
-        case HUNT:
-        case TRAVEL:
-        case HARVEST:
-            player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, duration * 2, random.nextInt(maxAmp), true), true);
-            if (power >= 1) player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, duration, random.nextInt(maxAmp), true), true);
-            if (power >= 2) player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, duration, random.nextInt(maxAmp), true), true);
-            break;
-        case WOODCUT:
-            player.addPotionEffect(new PotionEffect(PotionEffectType.FAST_DIGGING, duration, random.nextInt(maxAmp), true), true);
-            if (power >= 1) player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, duration, random.nextInt(maxAmp), true), true);
-            break;
-        default: break;
-        }
     }
 
     public Collection<? extends Skill> getSkills() {

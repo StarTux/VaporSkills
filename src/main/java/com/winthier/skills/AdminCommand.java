@@ -92,7 +92,6 @@ class AdminCommand implements CommandExecutor {
             sender.sendMessage("Moneys: " + SkillsPlugin.getInstance().getMoneys().size());
             sender.sendMessage("Score: " + SQLScore.getDIRTIES().size());
             sender.sendMessage("Logs: " + SQLLog.getDIRTIES().size());
-            sender.sendMessage("Drops: " + ((SacrificeSkill)SkillsPlugin.getInstance().skillByType(SkillType.SACRIFICE)).dropped.size());
         } else {
             sender.sendMessage("skadmin test levelup <player> <skill> <level>");
             sender.sendMessage("skadmin test backlog");
@@ -281,12 +280,12 @@ class AdminCommand implements CommandExecutor {
 
     private void makeAdvancement(File root, String perkName, String depends) throws IOException {
         File file = new File(root, perkName + ".json");
-        Map map = new HashMap<>();
-        Map displayMap = new HashMap<>();
+        Map<String, Object> map = new HashMap<>();
+        Map<String, Object> displayMap = new HashMap<>();
         map.put("display", displayMap);
-        Map iconMap = new HashMap<>();
+        Map<String, Object> iconMap = new HashMap<>();
         displayMap.put("icon", iconMap);
-        ConfigurationSection config = SkillsPlugin.getInstance().getConfig().getConfigurationSection("perks." + perkName);
+        ConfigurationSection config = SkillsPlugin.getInstance().getPerksConfig().getConfigurationSection("perks." + perkName);
         iconMap.put("item", config.getString("Icon.Item", "minecraft:diamond"));
         if (config.isSet("Icon.Data")) iconMap.put("data", config.getInt("Icon.Data"));
         displayMap.put("title", config.getString("DisplayName", perkName));
@@ -299,9 +298,9 @@ class AdminCommand implements CommandExecutor {
         if (depends != null) {
             map.put("parent", "winthier:skills/" + depends);
         }
-        Map criteriaMap = new HashMap<>();
+        Map<String, Object> criteriaMap = new HashMap<>();
         map.put("criteria", criteriaMap);
-        Map impossibleMap = new HashMap<>();
+        Map<String, Object> impossibleMap = new HashMap<>();
         criteriaMap.put("impossible", impossibleMap);
         impossibleMap.put("trigger", "minecraft:location");
         //impossibleMap.put("trigger", "minecraft:impossible");

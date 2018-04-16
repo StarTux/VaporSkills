@@ -34,8 +34,6 @@ class SkillsCommand implements CommandExecutor {
         } else if (args.length >= 1 && "progressbar".equals(cmd)) {
             String sub = args.length == 2 ? args[1].toLowerCase() : "";
             modifyProgressBar(player, sub);
-        } else if (args.length == 1 && "checkitem".equals(cmd)) {
-            checkItem(player);
         } else if (args.length == 1) {
             skillDetail(player, cmd);
         } else {
@@ -105,16 +103,14 @@ class SkillsCommand implements CommandExecutor {
                            Msg.format("&3For Next Level: &f%d",
                                              getSkills().getScore().pointsForNextLevel(skillPoints))));
         // Bonus
-        if (skill.getSkillType() != SkillType.SACRIFICE) {
-            int level = getSkills().getScore().getSkillLevel(player.getUniqueId(), skill);
-            int bonusFactor = level / 10;
-            int nextBonusLevel = ((level / 10) + 1) * 10;
-            Msg.raw(player,
-                           Msg.format(" &3Money Bonus: "),
-                           Msg.tooltip(
-                               Msg.format("%d%%", bonusFactor),
-                               Msg.format("&3Next Bonus Level: &f%d", nextBonusLevel)));
-        }
+        int level = getSkills().getScore().getSkillLevel(player.getUniqueId(), skill);
+        int bonusFactor = level / 10;
+        int nextBonusLevel = ((level / 10) + 1) * 10;
+        Msg.raw(player,
+                Msg.format(" &3Money Bonus: "),
+                Msg.tooltip(
+                    Msg.format("%d%%", bonusFactor),
+                    Msg.format("&3Next Bonus Level: &f%d", nextBonusLevel)));
         // Highscore
         Highscore hi = getSkills().getScore().getHighscore(skill);
         int rank = hi.rankOfPlayer(uuid);
@@ -127,16 +123,6 @@ class SkillsCommand implements CommandExecutor {
                                          "&3&l" + skill.getDisplayName() + " &f" + rankString,
                                          getPlugin().getHighscoreCommand().formatHighscoreAroundPlayer(hi, uuid),
                                          "&7Click for more details"));
-        // Sacrifice special
-        if (skill.getSkillType() == SkillType.SACRIFICE) {
-            Msg.raw(player,
-                           Msg.format(" &3Check item in hand: "),
-                           Msg.button("&3[&fCheck&3]", "/sk checkitem",
-                                             "&a/sk checkitem",
-                                             "&5&oAsk the Creeper Overlord",
-                                             "&5&oabout the value of the item",
-                                             "&5&oin your hand"));
-        }
         // Description
         Msg.msg(player, " &r%s", skill.getDescription());
         Msg.msg(player, "");
@@ -150,17 +136,5 @@ class SkillsCommand implements CommandExecutor {
             Session.of(player).setProgressBarEnabled(true);
             Msg.msg(player, "&bProgress bar enabled");
         }
-    }
-
-    void checkItem(Player player) {
-        ItemStack item = player.getInventory().getItemInMainHand();
-        final String prefix = Msg.format("&r[&2Creeper Overlord&r] ");
-        if (item == null || item.getType() == Material.AIR) {
-            Msg.msg(player, prefix + "&cThere is no item in your hand");
-            return;
-        }
-        Reward reward = ((SacrificeSkill)getSkills().skillByType(SkillType.SACRIFICE)).fullRewardForItem(item);
-        double money = (double)reward.getMoney() * (double)item.getAmount();
-        Msg.msg(player, prefix + "Sacrificing the %d item%s in your hand will grant you &a%s&r.", item.getAmount(), item.getAmount() == 1 ? "" : "s", SkillsPlugin.getInstance().getEconomy().format(money));
     }
 }

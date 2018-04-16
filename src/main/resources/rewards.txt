@@ -332,42 +332,32 @@ Woodcut Block		Leaves - -		1 1 1	.1
 Woodcut Block		Leaves_2 - -		1 1 1	.1
 
 #===============================================================================
-# Harvesting
+# Gardening
 #===============================================================================
 
-# Automatic harvesting with water
-Harvest Block		Crops 7 water		.1 .1 .1
-Harvest Block		Potato 7 water		.1 .1 .1
-Harvest Block		Carrot 7 water		.1 .1 .1
-Harvest Block		Red_Mushroom 0 water	.1 .1 .1
-Harvest Block		Brown_Mushroom 0 water	.1 .1 .1
-Harvest Block		Nether_Warts 3 water	.1 .1 .1
-Harvest Block		Beetroot_Block 3 water	.1 .1 .1
+Garden Block		Crops 7 -		1 1 1	.2
+Garden Block		Potato 7 -		1 1 1	.2
+Garden Block		Carrot 7 -		1 1 1	.2
+Garden Block		Red_Mushroom 0 -	1 1 1	.2
+Garden Block		Brown_Mushroom 0 -	1 1 1	.2
+Garden Block		Cactus - -		1 1 1	.2
+Garden Block		Sugar_Cane_Block - -	1 1 1	.1
+Garden Block		Pumpkin - -		1 1 1	.2
+Garden Block		Melon_Block - -		1 1 1	.2
+Garden Block		Nether_Warts 3 -	1 1 1	.2
+Garden Block		Huge_Mushroom_1 - -     1 1 1	.2
+Garden Block		Huge_Mushroom_2 - -     1 1 1	.2
+Garden Block		Vine - -		1 1 1	.5
+Garden Block		Water_Lily - -		1 1 1	.5
 
-# Manual harvesting
-Harvest Block		Crops 7 -		1 1 1	.2
-Harvest Block		Potato 7 -		1 1 1	.2
-Harvest Block		Carrot 7 -		1 1 1	.2
-Harvest Block		Red_Mushroom 0 -	1 1 1	.2
-Harvest Block		Brown_Mushroom 0 -	1 1 1	.2
-Harvest Block		Cactus - -		1 1 1	.2
-Harvest Block		Sugar_Cane_Block - -	1 1 1	.1
-Harvest Block		Pumpkin - -		1 1 1	.2
-Harvest Block		Melon_Block - -		1 1 1	.2
-Harvest Block		Nether_Warts 3 -	1 1 1	.2
-Harvest Block		Huge_Mushroom_1 - -     1 1 1	.2
-Harvest Block		Huge_Mushroom_2 - -     1 1 1	.2
-Harvest Block		Vine - -		1 1 1	.5
-Harvest Block		Water_Lily - -		1 1 1	.5
+Garden Block		Cocoa 8 -		1 1 1	.2
+Garden Block		Cocoa 9 -		1 1 1	.2
+Garden Block		Cocoa 10 -		1 1 1	.2
+Garden Block		Cocoa 11 -		1 1 1	.2
 
-Harvest Block		Cocoa 8 -		1 1 1	.2
-Harvest Block		Cocoa 9 -		1 1 1	.2
-Harvest Block		Cocoa 10 -		1 1 1	.2
-Harvest Block		Cocoa 11 -		1 1 1	.2
-
-Harvest Block		Chorus_Plant - -	1 1 1	.1
-Harvest Block		Chorus_Flower - -	1 1 1 	.1
-Harvest Block		Beetroot_Block 3 -	1 1 1	.1
+Garden Block		Chorus_Plant - -	1 1 1	.1
+Garden Block		Chorus_Flower - -	1 1 1 	.1
+Garden Block		Beetroot_Block 3 -	1 1 1	.1
 
 #===============================================================================
 # Sacrifice

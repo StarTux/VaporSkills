@@ -132,7 +132,7 @@ public abstract class Skill {
 
     final void giveReward(@NonNull Player player, Reward reward, double factor) {
         int level = SkillsPlugin.getInstance().getScore().getSkillLevel(player.getUniqueId(), this);
-        double bonusFactor = getSkillType() == SkillType.SACRIFICE ? 1.0 : 1.0 + (double)(level / 10) / 100.0;
+        double bonusFactor = 1.0 + (double)(level / 10) / 100.0;
         if (reward == null) return;
         double skillPoints = reward.getSkillPoints() * factor;
         double money       = reward.getMoney()       * factor * bonusFactor;
