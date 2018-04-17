@@ -82,7 +82,6 @@ public final class SkillsPlugin extends JavaPlugin implements Listener {
         // Skills
         List<Skill> skills = Arrays.asList(
             new BrawlSkill(this),
-            new BreedSkill(this),
             new BrewSkill(this),
             new CookSkill(this),
             new DigSkill(this),
@@ -91,6 +90,7 @@ public final class SkillsPlugin extends JavaPlugin implements Listener {
             new GardenSkill(this),
             new HuntSkill(this),
             new MineSkill(this),
+            new RanchSkill(this),
             new SmithSkill(this),
             new TameSkill(this),
             new WoodcutSkill(this));

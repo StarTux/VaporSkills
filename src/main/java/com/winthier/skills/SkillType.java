@@ -11,7 +11,7 @@ public enum SkillType {
     ENCHANT(Category.CRAFT),
     SMITH(Category.CRAFT),
     // Farming Skills
-    BREED(Category.FARM),
+    RANCH(Category.FARM),
     FISH(Category.FARM),
     GARDEN(Category.FARM),
     // Mining Skills

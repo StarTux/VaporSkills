@@ -6,11 +6,11 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 
-class BreedSkill extends Skill implements Listener {
+class RanchSkill extends Skill implements Listener {
     static final double RADIUS = 10.0;
 
-    BreedSkill(SkillsPlugin plugin) {
-        super(plugin, SkillType.BREED);
+    RanchSkill(SkillsPlugin plugin) {
+        super(plugin, SkillType.RANCH);
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
