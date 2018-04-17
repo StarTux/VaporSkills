@@ -113,4 +113,56 @@ final class Msg {
         sb.append("&3]");
         return format(sb.toString());
     }
+
+
+    private static List<String> wrapInternal(String what, int maxLineLength) {
+        String[] words = what.split("\\s+");
+        List<String> lines = new ArrayList<>();
+        if (words.length == 0) return lines;
+        StringBuilder line = new StringBuilder(words[0]);
+        int lineLength = ChatColor.stripColor(words[0]).length();
+        for (int i = 1; i < words.length; ++i) {
+            String word = words[i];
+            int wordLength = ChatColor.stripColor(word).length();
+            if (lineLength + wordLength + 1 > maxLineLength) {
+                lines.add(line.toString());
+                line = new StringBuilder(word);
+                lineLength = wordLength;
+            } else {
+                line.append(" ");
+                line.append(word);
+                lineLength += wordLength + 1;
+            }
+        }
+        if (line.length() > 0) lines.add(line.toString());
+        return lines;
+    }
+
+    public static List<String> wrap(String what, int maxLineLength) {
+        List<String> lines = new ArrayList<>();
+        for (String string: what.split("\n")) {
+            if (string.isEmpty()) {
+                lines.add("");
+            } else {
+                lines.addAll(wrapInternal(string, maxLineLength));
+            }
+        }
+        return lines;
+    }
+
+    public static String wrap(String what, int maxLineLength, String endl) {
+        List<String> lines = wrap(what, maxLineLength);
+        return fold(lines, endl);
+    }
+
+    public static String fold(List<String> ls, String glue) {
+        if (ls.isEmpty()) return "";
+        StringBuilder sb = new StringBuilder(ls.get(0));
+        for (int i = 1; i < ls.size(); ++i) sb.append(glue).append(ls.get(i));
+        return sb.toString();
+    }
+
+    public static String camelCase(String input) {
+        return input.substring(0, 1).toUpperCase() + input.substring(1, input.length()).toLowerCase();
+    }
 }

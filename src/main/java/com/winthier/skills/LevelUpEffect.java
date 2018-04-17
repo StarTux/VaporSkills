@@ -2,7 +2,6 @@ package com.winthier.skills;
 
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.text.WordUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Particle;
@@ -82,7 +81,7 @@ final class LevelUpEffect extends BukkitRunnable {
                 "/sk " + skill.getShorthand(),
                 "&a" + skill.getDisplayName(),
                 "&f&oSkill",
-                "&r" + WordUtils.wrap(skill.getDescription(), 32)));
+                "&r" + Msg.wrap(skill.getDescription(), 32)));
     }
 
     void informLevelUp(Player player) {
@@ -94,7 +93,7 @@ final class LevelUpEffect extends BukkitRunnable {
                 "/sk " + skill.getShorthand(),
                 "&a" + skill.getDisplayName(),
                 "&f&oSkill",
-                "&r" + WordUtils.wrap(skill.getDescription(), 32)));
+                "&r" + Msg.wrap(skill.getDescription(), 32)));
         Location la = player.getLocation();
         for (Player nearby: player.getWorld().getPlayers()) {
             if (nearby.equals(player)) continue;
@@ -109,7 +108,7 @@ final class LevelUpEffect extends BukkitRunnable {
                                              "/sk " + skill.getShorthand(),
                                              "&a" + skill.getDisplayName(),
                                              "&f&oSkill",
-                                             "&r" + WordUtils.wrap(skill.getDescription(), 32)));
+                                             "&r" + Msg.wrap(skill.getDescription(), 32)));
         }
     }
 

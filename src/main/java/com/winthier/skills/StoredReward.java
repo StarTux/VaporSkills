@@ -124,7 +124,7 @@ class StoredReward implements Reward {
             return name;
         }
         @Override public String toString() {
-            return String.format("%s %s (%s) %s:%s {%s}", Strings.camelCase(skill.name()), Strings.camelCase(target.name()), typeAsPrettyString(), typeAsString(), dataAsString(), nameAsString());
+            return String.format("%s %s (%s) %s:%s {%s}", Msg.camelCase(skill.name()), Msg.camelCase(target.name()), typeAsPrettyString(), typeAsString(), dataAsString(), nameAsString());
         }
     }
 

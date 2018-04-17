@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.text.WordUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
@@ -58,7 +57,7 @@ class SkillsCommand implements CommandExecutor {
                             "&3&l" + skill.getDisplayName() + " " + Msg.progressBar(pointsInLevel, pointsToLevelUp),
                             "&3Skill Level: &b" + skillLevel,
                             "&3Skill Points: &f" + pointsInLevel + "&3/&f" + pointsToLevelUp,
-                            "&r" + WordUtils.wrap(skill.getDescription(), 32),
+                            "&r" + Msg.wrap(skill.getDescription(), 32),
                             "&7Click for more details"));
         }
         Msg.raw(player, message);

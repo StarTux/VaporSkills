@@ -142,8 +142,8 @@ public abstract class Skill {
             StoredReward br = StoredReward.of(reward);
             Msg.msg(player, "[sk] &e%s &8%s &e%s %s&8:&e%s &8\"&e%s&8\" &6%.2f&8sp &6%.2f&8mo &6%.2f&8xp",
                            getShorthand(),
-                           Strings.camelCase(br.key.getTarget().name()),
-                           Strings.camelCase(br.key.typeAsPrettyString()),
+                           Msg.camelCase(br.key.getTarget().name()),
+                           Msg.camelCase(br.key.typeAsPrettyString()),
                            br.key.typeAsString(),
                            br.key.dataAsString(),
                            br.key.nameAsString(),

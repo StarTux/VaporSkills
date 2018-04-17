@@ -1,6 +1,7 @@
 package com.winthier.skills;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -58,7 +59,7 @@ final class Entities {
 
     static String name(EntityType et) {
         String[] ls = et.name().split("_");
-        for (int i = 0; i < ls.length; ++i) ls[i] = Strings.camelCase(ls[i]);
-        return Strings.fold(ls, "");
+        for (int i = 0; i < ls.length; ++i) ls[i] = Msg.camelCase(ls[i]);
+        return Msg.fold(Arrays.asList(ls), "");
     }
 }

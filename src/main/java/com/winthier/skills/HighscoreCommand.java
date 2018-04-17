@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.text.WordUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -63,7 +62,7 @@ class HighscoreCommand implements CommandExecutor {
                         "&a/hi total",
                         "&3&lTotal &f" + rankString,
                         formatHighscoreAroundPlayer(hi, uuid),
-                        "&r" + WordUtils.wrap(plugin.getConfig().getString("total.Description", ""), 32),
+                        "&r" + Msg.wrap(plugin.getConfig().getString("total.Description", ""), 32),
                         "&7Click for more details"));
         for (Skill skill : plugin.getSkills()) {
             if (!skill.isEnabled()) continue;
@@ -77,7 +76,7 @@ class HighscoreCommand implements CommandExecutor {
                             "&a/hi " + skill.skillType.key,
                             "&3&l" + skill.getDisplayName() + " &f" + rankString,
                             formatHighscoreAroundPlayer(hi, uuid),
-                            "&r" + WordUtils.wrap(skill.getDescription(), 32),
+                            "&r" + Msg.wrap(skill.getDescription(), 32),
                             "&7Click for more details"));
         }
         Msg.raw(player, message);
