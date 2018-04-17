@@ -3,8 +3,11 @@ package com.winthier.skills;
 import com.winthier.custom.util.Dirty;
 import java.util.UUID;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -16,12 +19,17 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.metadata.MetadataValue;
 import org.bukkit.scheduler.BukkitRunnable;
 
 class SmithSkill extends Skill implements Listener {
-    static final int INPUT_SLOT_1 = 0;
-    static final int INPUT_SLOT_2 = 1;
-    static final int OUTPUT_SLOT = 2;
+    @RequiredArgsConstructor
+    private static class Metadata {
+        final static String key = "com.winthier.skill.SmithSkill";
+        final UUID uuid;
+        final ItemStack inputA, inputB, result;
+    }
 
     SmithSkill() {
         super(SkillType.SMITH);
@@ -35,24 +43,61 @@ class SmithSkill extends Skill implements Listener {
         final Player player = (Player)event.getWhoClicked();
         if (!allowPlayer(player)) return;
         // Input and output slot must not be empty
-        ItemStack inputItem1 = inv.getItem(INPUT_SLOT_1);
-        ItemStack inputItem2 = inv.getItem(INPUT_SLOT_2);
-        ItemStack outputItem = inv.getItem(OUTPUT_SLOT);
-        if (inputItem1 == null || inputItem1.getType() == Material.AIR) return;
-        if (inputItem2 == null || inputItem2.getType() == Material.AIR) return;
-        if (outputItem == null || outputItem.getType() == Material.AIR) return;
-        final int level = player.getLevel();
-        new BukkitRunnable() {
-            @Override public void run() {
-                onAnvilUsed(player, inv, level);
+        ItemStack inputA = inv.getItem(0);
+        ItemStack inputB = inv.getItem(1);
+        ItemStack result = inv.getItem(2);
+        if (inputA == null || inputA.getType() == Material.AIR) return;
+        if (inputB == null || inputB.getType() == Material.AIR) return;
+        if (result == null || result.getType() == Material.AIR) return;
+        final Location anvilLoc = event.getInventory().getLocation();
+        if (anvilLoc == null) return;
+        final Block anvilBlock = anvilLoc.getBlock();
+        Metadata metadata = null;
+        for (MetadataValue v: anvilBlock.getMetadata(Metadata.key)) {
+            if (v.getOwningPlugin() == SkillsPlugin.getInstance()) {
+                metadata = (Metadata)v.value();
+                break;
             }
-        }.runTask(SkillsPlugin.getInstance());
+        }
+        anvilBlock.removeMetadata(Metadata.key, SkillsPlugin.getInstance());
+        if (metadata != null
+            && metadata.uuid.equals(player.getUniqueId())
+            && metadata.inputA.equals(inputA)
+            && metadata.inputB.equals(inputB)
+            && metadata.result.equals(result)) {
+            if (event.isShiftClick()) {
+                event.getInventory().setItem(2, null);
+                if (player.getInventory().addItem(metadata.result).isEmpty()) {
+                    event.getInventory().setItem(0, null);
+                    event.getInventory().setItem(1, null);
+                    onDidImprove(player, metadata);
+                }
+            } else if (event.getCursor() == null
+                       || event.getCursor().getType() == Material.AIR) {
+                event.getInventory().setItem(0, null);
+                event.getInventory().setItem(1, null);
+                event.getInventory().setItem(2, null);
+                event.setCursor(metadata.result);
+                onDidImprove(player, metadata);
+            }
+        } else {
+            final int level = player.getLevel();
+            new BukkitRunnable() {
+                @Override public void run() {
+                    onAnvilUsed(player, inv, level);
+                }
+            }.runTask(SkillsPlugin.getInstance());
+        }
+    }
+
+    void onDidImprove(Player player, Metadata metadata) {
+        // TODO
     }
 
     void onAnvilUsed(Player player, Inventory inv, int oldLevel) {
         // Was the output item removed?
-        ItemStack outputItem = inv.getItem(OUTPUT_SLOT);
-        if (outputItem != null && outputItem.getType() != Material.AIR) return;
+        ItemStack result = inv.getItem(2);
+        if (result != null && result.getType() != Material.AIR) return;
         // Were levels used up?
         int levelsUsed = oldLevel - player.getLevel();
         if (levelsUsed <= 0) return;
@@ -159,24 +204,29 @@ class SmithSkill extends Skill implements Listener {
 
     @EventHandler
     public void onPrepareAnvil(PrepareAnvilEvent event) {
+        final Location anvilLoc = event.getInventory().getLocation();
+        if (anvilLoc == null) return;
+        final Block anvilBlock = anvilLoc.getBlock();
+        anvilBlock.removeMetadata(Metadata.key, SkillsPlugin.getInstance());
         final Player player = (Player)event.getView().getPlayer();
         final UUID uuid = player.getUniqueId();
         int skillLevel = SkillsPlugin.getInstance().getScore().getSkillLevel(uuid, skillType);
-        final ItemStack itemA = event.getInventory().getItem(0);
-        final ItemStack itemB = event.getInventory().getItem(1);
-        if (itemA == null || itemA.getType() == Material.AIR) return;
-        if (itemB == null || itemB.getType() == Material.AIR) return;
-        if (!new ItemStack(itemA.getType()).equals(itemA)) return;
-        if (!new ItemStack(itemB.getType()).equals(itemB)) return;
+        final ItemStack inputA = event.getInventory().getItem(0);
+        final ItemStack inputB = event.getInventory().getItem(1);
+        if (event.getInventory().getRenameText() != null && event.getInventory().getRenameText().length() > 0) return;
+        if (inputA == null || inputA.getType() == Material.AIR) return;
+        if (inputB == null || inputB.getType() == Material.AIR) return;
+        if (!new ItemStack(inputA.getType()).equals(inputA)) return;
+        if (!new ItemStack(inputB.getType()).equals(inputB)) return;
         ItemStack result = null;
-        switch (itemA.getType()) {
+        switch (inputA.getType()) {
         case LEATHER_HELMET:
         case LEATHER_CHESTPLATE:
         case LEATHER_LEGGINGS:
         case LEATHER_BOOTS:
-            if (itemB.getType() == Material.LEATHER
+            if (inputB.getType() == Material.LEATHER
                 && SkillsPlugin.getInstance().getScore().hasPerk(uuid, Perk.SMITH_IMPROVE_LEATHER)) {
-                result = new ItemStack(itemA.getType());
+                result = new ItemStack(inputA.getType());
                 ItemMeta meta = result.getItemMeta();
                 meta.setUnbreakable(true);
                 result.setItemMeta(meta);
@@ -187,9 +237,9 @@ class SmithSkill extends Skill implements Listener {
                     double armor = getDefaultArmor(result.getType());
                     addAttribute(result, null, Attribute.GENERIC_ARMOR, armor, 0, null);
                 }
-            } else if (itemB.getType() == Material.IRON_INGOT
+            } else if (inputB.getType() == Material.IRON_INGOT
                 && SkillsPlugin.getInstance().getScore().hasPerk(uuid, Perk.SMITH_IMPROVE_MAIL)) {
-                switch (itemA.getType()) {
+                switch (inputA.getType()) {
                 case LEATHER_HELMET: result = new ItemStack(Material.CHAINMAIL_HELMET); break;
                 case LEATHER_CHESTPLATE: result = new ItemStack(Material.CHAINMAIL_CHESTPLATE); break;
                 case LEATHER_LEGGINGS: result = new ItemStack(Material.CHAINMAIL_LEGGINGS); break;
@@ -212,9 +262,9 @@ class SmithSkill extends Skill implements Listener {
         case GOLD_CHESTPLATE:
         case GOLD_LEGGINGS:
         case GOLD_BOOTS:
-            if (itemB.getType() == Material.GOLD_INGOT
+            if (inputB.getType() == Material.GOLD_INGOT
                 && SkillsPlugin.getInstance().getScore().hasPerk(uuid, Perk.SMITH_IMPROVE_GOLD)) {
-                result = new ItemStack(itemA.getType());
+                result = new ItemStack(inputA.getType());
                 ItemMeta meta = result.getItemMeta();
                 meta.setUnbreakable(true);
                 result.setItemMeta(meta);
@@ -231,9 +281,9 @@ class SmithSkill extends Skill implements Listener {
         case IRON_CHESTPLATE:
         case IRON_LEGGINGS:
         case IRON_BOOTS:
-            if (itemB.getType() == Material.IRON_INGOT
+            if (inputB.getType() == Material.IRON_INGOT
                 && SkillsPlugin.getInstance().getScore().hasPerk(uuid, Perk.SMITH_IMPROVE_IRON)) {
-                result = new ItemStack(itemA.getType());
+                result = new ItemStack(inputA.getType());
                 ItemMeta meta = result.getItemMeta();
                 meta.setUnbreakable(true);
                 result.setItemMeta(meta);
@@ -249,9 +299,9 @@ class SmithSkill extends Skill implements Listener {
         case DIAMOND_CHESTPLATE:
         case DIAMOND_LEGGINGS:
         case DIAMOND_BOOTS:
-            if (itemB.getType() == Material.DIAMOND
+            if (inputB.getType() == Material.DIAMOND
                 && SkillsPlugin.getInstance().getScore().hasPerk(uuid, Perk.SMITH_IMPROVE_DIAMOND)) {
-                result = new ItemStack(itemA.getType());
+                result = new ItemStack(inputA.getType());
                 ItemMeta meta = result.getItemMeta();
                 meta.setUnbreakable(true);
                 result.setItemMeta(meta);
@@ -274,9 +324,9 @@ class SmithSkill extends Skill implements Listener {
         case GOLD_PICKAXE:
         case GOLD_SPADE:
         case GOLD_SWORD:
-            if (itemB.getType() == Material.GOLD_INGOT
+            if (inputB.getType() == Material.GOLD_INGOT
                 && SkillsPlugin.getInstance().getScore().hasPerk(uuid, Perk.SMITH_IMPROVE_GOLD)) {
-                result = new ItemStack(itemA.getType());
+                result = new ItemStack(inputA.getType());
                 ItemMeta meta = result.getItemMeta();
                 meta.setUnbreakable(true);
                 result.setItemMeta(meta);
@@ -288,9 +338,9 @@ class SmithSkill extends Skill implements Listener {
         case IRON_PICKAXE:
         case IRON_SPADE:
         case IRON_SWORD:
-            if (itemB.getType() == Material.IRON_INGOT
+            if (inputB.getType() == Material.IRON_INGOT
                 && SkillsPlugin.getInstance().getScore().hasPerk(uuid, Perk.SMITH_IMPROVE_IRON)) {
-                result = new ItemStack(itemA.getType());
+                result = new ItemStack(inputA.getType());
                 ItemMeta meta = result.getItemMeta();
                 meta.setUnbreakable(true);
                 result.setItemMeta(meta);
@@ -302,18 +352,18 @@ class SmithSkill extends Skill implements Listener {
         case DIAMOND_PICKAXE:
         case DIAMOND_SPADE:
         case DIAMOND_SWORD:
-            if (itemB.getType() == Material.DIAMOND
+            if (inputB.getType() == Material.DIAMOND
                 && SkillsPlugin.getInstance().getScore().hasPerk(uuid, Perk.SMITH_IMPROVE_DIAMOND)) {
-                result = new ItemStack(itemA.getType());
+                result = new ItemStack(inputA.getType());
                 ItemMeta meta = result.getItemMeta();
                 meta.setUnbreakable(true);
                 result.setItemMeta(meta);
             }
             break;
         case SHIELD:
-            if (itemB.getType() == Material.IRON_INGOT
+            if (inputB.getType() == Material.IRON_INGOT
                 && SkillsPlugin.getInstance().getScore().hasPerk(uuid, Perk.SMITH_IMPROVE_IRON)) {
-                result = new ItemStack(itemA.getType());
+                result = new ItemStack(inputA.getType());
                 ItemMeta meta = result.getItemMeta();
                 meta.setUnbreakable(true);
                 result.setItemMeta(meta);
@@ -329,5 +379,7 @@ class SmithSkill extends Skill implements Listener {
         }
         if (result == null) return;
         event.setResult(result);
+        Metadata metadata = new Metadata(player.getUniqueId(), inputA, inputB, result);
+        anvilBlock.setMetadata(Metadata.key, new FixedMetadataValue(SkillsPlugin.getInstance(), metadata));
     }
 }
