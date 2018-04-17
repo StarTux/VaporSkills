@@ -19,13 +19,15 @@ import org.bukkit.potion.PotionEffect;
 
 @Getter
 public abstract class Skill {
+    protected final SkillsPlugin plugin;
     public final SkillType skillType;
     private boolean enabled = true;
     private String displayName;
     private String shorthand;
     private String description;
 
-    Skill(SkillType skillType) {
+    Skill(SkillsPlugin plugin, SkillType skillType) {
+        this.plugin = plugin;
         this.skillType = skillType;
     }
 
@@ -60,7 +62,7 @@ public abstract class Skill {
         int blockType = block.getType().getId();
         @SuppressWarnings("deprecation")
         int blockData = (int)block.getData();
-        return SkillsPlugin.getInstance().getScore().rewardForBlock(skillType, blockType, blockData);
+        return plugin.getScore().rewardForBlock(skillType, blockType, blockData);
     }
 
     final Reward rewardForBlockNamed(Block block, String name) {
@@ -68,7 +70,7 @@ public abstract class Skill {
         int blockType = block.getType().getId();
         @SuppressWarnings("deprecation")
         int blockData = (int)block.getData();
-        return SkillsPlugin.getInstance().getScore().rewardForBlockNamed(skillType, blockType, blockData, name);
+        return plugin.getScore().rewardForBlockNamed(skillType, blockType, blockData, name);
     }
 
     final Reward rewardForItem(ItemStack item) {
@@ -76,7 +78,7 @@ public abstract class Skill {
         int itemType = item.getType().getId();
         @SuppressWarnings("deprecation")
         int itemData = (int)item.getDurability();
-        return SkillsPlugin.getInstance().getScore().rewardForItem(skillType, itemType, itemData);
+        return plugin.getScore().rewardForItem(skillType, itemType, itemData);
     }
 
     final Reward rewardForPotionEffect(PotionEffect effect) {
@@ -84,59 +86,59 @@ public abstract class Skill {
         int potionType = effect.getType().getId();
         @SuppressWarnings("deprecation")
         int potionData = effect.getAmplifier();
-        return SkillsPlugin.getInstance().getScore().rewardForPotionEffect(skillType, potionType, potionData);
+        return plugin.getScore().rewardForPotionEffect(skillType, potionType, potionData);
     }
 
     final Reward rewardForEnchantment(Enchantment enchant, int level) {
         @SuppressWarnings("deprecation")
         int enchantType = enchant.getId();
-        return SkillsPlugin.getInstance().getScore().rewardForEnchantment(skillType, enchantType, level);
+        return plugin.getScore().rewardForEnchantment(skillType, enchantType, level);
     }
 
     final Reward rewardForEntity(Entity e) {
-        return SkillsPlugin.getInstance().getScore().rewardForEntity(skillType, Entities.name(e));
+        return plugin.getScore().rewardForEntity(skillType, Entities.name(e));
     }
 
     final Reward rewardForEntityType(EntityType e) {
-        return SkillsPlugin.getInstance().getScore().rewardForEntity(skillType, Entities.name(e));
+        return plugin.getScore().rewardForEntity(skillType, Entities.name(e));
     }
 
     final Reward rewardForName(String name) {
-        return SkillsPlugin.getInstance().getScore().rewardForName(skillType, name);
+        return plugin.getScore().rewardForName(skillType, name);
     }
 
     final Reward rewardForName(String name, int data) {
-        return SkillsPlugin.getInstance().getScore().rewardForName(skillType, name, data);
+        return plugin.getScore().rewardForName(skillType, name, data);
     }
 
     final Reward rewardForNameAndMaximum(String name, int dataMax) {
-        return SkillsPlugin.getInstance().getScore().rewardForNameAndMaximum(skillType, name, dataMax);
+        return plugin.getScore().rewardForNameAndMaximum(skillType, name, dataMax);
     }
 
     private void giveSkillPoints(Player player, double skillPoints) {
         if (skillPoints < 0.01) return;
-        SkillsPlugin.getInstance().getScore().giveSkillPoints(player.getUniqueId(), skillType, skillPoints);
+        plugin.getScore().giveSkillPoints(player.getUniqueId(), skillType, skillPoints);
     }
 
     private void giveMoney(Player player, double money) {
         if (money < 0.01) return;
-        SkillsPlugin.getInstance().giveMoney(player, money);
+        plugin.giveMoney(player, money);
     }
 
     private void giveExp(Player player, double exp) {
         if (exp < 0.01) return;
-        SkillsPlugin.getInstance().giveExp(player, exp);
+        plugin.giveExp(player, exp);
     }
 
     final void giveReward(@NonNull Player player, Reward reward, double factor) {
-        int level = SkillsPlugin.getInstance().getScore().getSkillLevel(player.getUniqueId(), skillType);
+        int level = plugin.getScore().getSkillLevel(player.getUniqueId(), skillType);
         double bonusFactor = 1.0 + (double)(level / 10) / 100.0;
         if (reward == null) return;
         double skillPoints = reward.getSkillPoints() * factor;
         double money       = reward.getMoney()       * factor * bonusFactor;
         double exp         = reward.getExp()         * factor;
         if (skillPoints < 0.01 && money < 0.01 && exp < 0.01) return;
-        if (SkillsPlugin.getInstance().hasDebugMode(player)) {
+        if (plugin.hasDebugMode(player)) {
             StoredReward br = StoredReward.of(reward);
             Msg.msg(player, "[sk] &e%s &8%s &e%s %s&8:&e%s &8\"&e%s&8\" &6%.2f&8sp &6%.2f&8mo &6%.2f&8xp",
                            getShorthand(),
@@ -151,8 +153,8 @@ public abstract class Skill {
         giveMoney(player, money);
         giveExp(player, exp);
         Reward outcome = new CustomReward((float)skillPoints, (float)money, (float)exp);
-        Session.of(player).onReward(player, this, outcome);
-        SkillsPlugin.getInstance().getScore().logReward(reward, player.getUniqueId(), outcome);
+        plugin.getSession(player).onReward(player, this, outcome);
+        plugin.getScore().logReward(reward, player.getUniqueId(), outcome);
         Bukkit.getServer().getPluginManager().callEvent(new SkillsRewardEvent(player, this, outcome));
     }
 
@@ -183,12 +185,12 @@ public abstract class Skill {
     }
 
     final File getConfigFile() {
-        return new File(SkillsPlugin.getInstance().getDataFolder(), skillType.key + ".yml");
+        return new File(plugin.getDataFolder(), skillType.key + ".yml");
     }
 
     final ConfigurationSection getConfig() {
-        ConfigurationSection result = SkillsPlugin.getInstance().getConfig().getConfigurationSection(skillType.key);
-        if (result == null) result = SkillsPlugin.getInstance().getConfig().createSection(skillType.key);
+        ConfigurationSection result = plugin.getConfig().getConfigurationSection(skillType.key);
+        if (result == null) result = plugin.getConfig().createSection(skillType.key);
         return result;
     }
 

@@ -12,8 +12,8 @@ import org.bukkit.inventory.ItemStack;
 class FishSkill extends Skill implements Listener {
     private long fishInterval = 15;
 
-    FishSkill() {
-        super(SkillType.FISH);
+    FishSkill(SkillsPlugin plugin) {
+        super(plugin, SkillType.FISH);
     }
 
     @Override

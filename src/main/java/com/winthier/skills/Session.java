@@ -13,6 +13,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 @Data
 class Session {
+    private final SkillsPlugin plugin;
     private final UUID uuid;
     @Getter private double sessionMoney = 0.0;
     private boolean progressBarEnabled = true;
@@ -20,7 +21,8 @@ class Session {
     private BossBar progressBar;
     private int noRewardTimer = 0;
 
-    Session(UUID uuid) {
+    Session(SkillsPlugin plugin, UUID uuid) {
+        this.plugin = plugin;
         this.uuid = uuid;
         this.progressBar = Bukkit.getServer().createBossBar("Skills", BarColor.PINK, BarStyle.SEGMENTED_20);
     }
@@ -28,11 +30,10 @@ class Session {
     void onReward(Player player, Skill skill, Reward reward) {
         if (!progressBarEnabled) return;
         sessionMoney += reward.getMoney();
-        Score score = SkillsPlugin.getInstance().getScore();
-        int points = (int)score.getSkillPoints(uuid, skill.skillType);
-        int level = score.levelForPoints(points);
-        int pointsA = score.pointsForLevel(level);
-        int pointsB = score.pointsForLevel(level + 1);
+        int points = (int)plugin.getScore().getSkillPoints(uuid, skill.skillType);
+        int level = Score.levelForPoints(points);
+        int pointsA = Score.pointsForLevel(level);
+        int pointsB = Score.pointsForLevel(level + 1);
         points -= pointsA;
         pointsB -= pointsA;
         double progress = (double)points / (double)pointsB;
@@ -56,10 +57,6 @@ class Session {
         if (noRewardTimer == 10) {
             progressBar.setVisible(false);
         }
-    }
-
-    public static Session of(Player player) {
-        return SkillsPlugin.getInstance().getSession(player);
     }
 
     void onDisable() {

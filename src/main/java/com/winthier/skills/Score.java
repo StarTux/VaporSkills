@@ -5,8 +5,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
 public final class Score {
+    private final SkillsPlugin plugin;
     private final Map<String, Highscore> highscores = new HashMap<>();
     private Highscore totalHighscore = null;
     private final Map <UUID, Set<Perk>> perks = new HashMap<>();
@@ -21,7 +24,7 @@ public final class Score {
         int newSkillLevel = levelForPoints(newSkillPoints);
         // Call hook(s)
         if (newSkillLevel > skillLevel) {
-            SkillsPlugin.getInstance().onLevelUp(player, skill, newSkillLevel);
+            plugin.onLevelUp(player, skill, newSkillLevel);
         }
         // "Write" data
         row.setSkillPoints((float)newSkillPoints);
@@ -46,19 +49,19 @@ public final class Score {
         return SQLScore.of(player, skill).getSkillLevel();
     }
 
-    public int levelForPoints(double skillPointsDouble) {
+    public static int levelForPoints(double skillPointsDouble) {
         int skillPoints = (int)skillPointsDouble;
         int level = 0;
         while (pointsForLevel(level + 1) <= skillPoints) level += 1;
         return level;
     }
 
-    public int pointsToLevelUpTo(int i) {
+    public static int pointsToLevelUpTo(int i) {
         if (i <= 0) return 0;
         return i * 10;
     }
 
-    public int pointsForLevel(int skillLevel) {
+    public static int pointsForLevel(int skillLevel) {
         int points = 0;
         for (int i = 1; i <= skillLevel; ++i) {
             points += pointsToLevelUpTo(i);
@@ -66,12 +69,12 @@ public final class Score {
         return points;
     }
 
-    public int pointsInLevel(int skillPoints) {
+    public static int pointsInLevel(int skillPoints) {
         int level = levelForPoints(skillPoints);
         return skillPoints - pointsForLevel(level);
     }
 
-    public int pointsForNextLevel(int skillPoints) {
+    public static int pointsForNextLevel(int skillPoints) {
         int level = levelForPoints(skillPoints);
         return pointsForLevel(level + 1) - skillPoints;
     }

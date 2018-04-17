@@ -13,8 +13,8 @@ import org.bukkit.event.block.BlockBreakEvent;
 class DigSkill extends Skill implements Listener {
     private long repeatInterval = 60 * 60;
 
-    DigSkill() {
-        super(SkillType.DIG);
+    DigSkill(SkillsPlugin plugin) {
+        super(plugin, SkillType.DIG);
     }
 
     @Override

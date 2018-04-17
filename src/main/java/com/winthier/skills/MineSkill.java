@@ -13,8 +13,8 @@ import org.bukkit.event.block.BlockBreakEvent;
 class MineSkill extends Skill implements Listener {
     private long repeatInterval = 60 * 60;
 
-    MineSkill() {
-        super(SkillType.MINE);
+    MineSkill(SkillsPlugin plugin) {
+        super(plugin, SkillType.MINE);
     }
 
     @Override

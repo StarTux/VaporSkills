@@ -16,8 +16,8 @@ final class HuntSkill extends Skill implements Listener {
     private long killDistanceInterval = 300;
     private double minKillDistance = 16;
 
-    HuntSkill() {
-        super(SkillType.HUNT);
+    HuntSkill(SkillsPlugin plugin) {
+        super(plugin, SkillType.HUNT);
     }
 
     @Override
@@ -38,7 +38,7 @@ final class HuntSkill extends Skill implements Listener {
         if (entity.getCustomName() != null && entity.getCustomName().startsWith("" + ChatColor.COLOR_CHAR)) return;
         if (BukkitExploits.getInstance().recentKillDistance(player, entity.getLocation(), killDistanceInterval) < minKillDistance) return;
         double percentage = BukkitExploits.getInstance().getEntityDamageByPlayerRemainderPercentage(entity, Math.min(entity.getHealth(), event.getFinalDamage()));
-        if (SkillsPlugin.getInstance().hasDebugMode(player)) Msg.msg(player, "&eHunt Dmg=%.02f/%.02f Pct=%.02f", event.getFinalDamage(), entity.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue(), percentage);
+        if (plugin.hasDebugMode(player)) Msg.msg(player, "&eHunt Dmg=%.02f/%.02f Pct=%.02f", event.getFinalDamage(), entity.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue(), percentage);
         giveReward(player, rewardForEntity(entity), percentage);
     }
 }

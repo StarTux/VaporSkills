@@ -14,8 +14,8 @@ import org.bukkit.event.block.BlockFromToEvent;
 class GardenSkill extends Skill implements Listener {
     private static final double RADIUS = 100;
 
-    GardenSkill() {
-        super(SkillType.GARDEN);
+    GardenSkill(SkillsPlugin plugin) {
+        super(plugin, SkillType.GARDEN);
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)

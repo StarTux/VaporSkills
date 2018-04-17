@@ -9,8 +9,8 @@ import org.bukkit.event.enchantment.EnchantItemEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
 class EnchantSkill extends Skill implements Listener {
-    EnchantSkill() {
-        super(SkillType.ENCHANT);
+    EnchantSkill(SkillsPlugin plugin) {
+        super(plugin, SkillType.ENCHANT);
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
@@ -23,7 +23,7 @@ class EnchantSkill extends Skill implements Listener {
             @Override public void run() {
                 onEnchanted(player, level, event.getExpLevelCost());
             }
-        }.runTask(SkillsPlugin.getInstance());
+        }.runTask(plugin);
     }
 
     void onEnchanted(Player player, int oldLevel, int levelUsed) {

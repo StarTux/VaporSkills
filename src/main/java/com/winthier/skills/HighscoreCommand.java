@@ -4,20 +4,16 @@ import com.winthier.playercache.PlayerCache;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.text.WordUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+@RequiredArgsConstructor
 class HighscoreCommand implements CommandExecutor {
-    SkillsPlugin getSkills() {
-        return SkillsPlugin.getInstance();
-    }
-
-    SkillsPlugin getPlugin() {
-        return SkillsPlugin.getInstance();
-    }
+    private final SkillsPlugin plugin;
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -58,7 +54,7 @@ class HighscoreCommand implements CommandExecutor {
         Msg.msg(player, "");
         Msg.msg(player, "&3&lHighscore &7&o(Click for more info)");
         List<Object> message = new ArrayList<>();
-        Highscore hi = getSkills().getScore().getHighscore(null);
+        Highscore hi = plugin.getScore().getHighscore(null);
         int rank = hi.rankOfPlayer(uuid);
         String rankString = rank > 0 ? "#" + rank : "-";
         message.add(Msg.button(
@@ -67,11 +63,11 @@ class HighscoreCommand implements CommandExecutor {
                         "&a/hi total",
                         "&3&lTotal &f" + rankString,
                         formatHighscoreAroundPlayer(hi, uuid),
-                        "&r" + WordUtils.wrap(getPlugin().getConfig().getString("total.Description", ""), 32),
+                        "&r" + WordUtils.wrap(plugin.getConfig().getString("total.Description", ""), 32),
                         "&7Click for more details"));
-        for (Skill skill : getSkills().getSkills()) {
+        for (Skill skill : plugin.getSkills()) {
             if (!skill.isEnabled()) continue;
-            hi = getSkills().getScore().getHighscore(skill.skillType);
+            hi = plugin.getScore().getHighscore(skill.skillType);
             rank = hi.rankOfPlayer(uuid);
             rankString = rank > 0 ? "#" + rank : "-";
             message.add(" ");
@@ -93,15 +89,15 @@ class HighscoreCommand implements CommandExecutor {
         Highscore hi;
         String displayName;
         if ("total".equals(name)) {
-            hi = getSkills().getScore().getHighscore(null);
+            hi = plugin.getScore().getHighscore(null);
             displayName = "Total";
         } else {
-            Skill skill = getSkills().skillByName(name);
+            Skill skill = plugin.skillByName(name);
             if (skill == null) {
                 player.sendMessage("Skill not found: " + name);
                 return;
             }
-            hi = getSkills().getScore().getHighscore(skill.skillType);
+            hi = plugin.getScore().getHighscore(skill.skillType);
             displayName = skill.getDisplayName();
         }
         final UUID uuid = player.getUniqueId();

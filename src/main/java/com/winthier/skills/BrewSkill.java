@@ -10,8 +10,8 @@ import org.bukkit.inventory.ItemStack;
 class BrewSkill extends Skill implements Listener {
     static final double RADIUS = 40.0;
 
-    BrewSkill() {
-        super(SkillType.BREW);
+    BrewSkill(SkillsPlugin plugin) {
+        super(plugin, SkillType.BREW);
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)

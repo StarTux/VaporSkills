@@ -13,6 +13,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 @RequiredArgsConstructor
 final class LevelUpEffect extends BukkitRunnable {
+    private final SkillsPlugin plugin;
     private final UUID uuid;
     private final Skill skill;
     private final int level;
@@ -20,9 +21,9 @@ final class LevelUpEffect extends BukkitRunnable {
     private int tickCounter = 0;
     private static final int MAX_TICKS = 20 * 8;
 
-    static void launch(Player player, Skill skill, int level) {
+    static void launch(SkillsPlugin plugin, Player player, Skill skill, int level) {
         boolean special = level > 100 || (level > 50 && level % 5 == 0) || level % 10 == 0;
-        new LevelUpEffect(player.getUniqueId(), skill, level, special).runTaskTimer(SkillsPlugin.getInstance(), 0, 1);
+        new LevelUpEffect(plugin, player.getUniqueId(), skill, level, special).runTaskTimer(plugin, 0, 1);
     }
 
     @Override

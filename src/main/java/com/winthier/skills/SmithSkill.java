@@ -31,8 +31,8 @@ class SmithSkill extends Skill implements Listener {
         final ItemStack inputA, inputB, result;
     }
 
-    SmithSkill() {
-        super(SkillType.SMITH);
+    SmithSkill(SkillsPlugin plugin) {
+        super(plugin, SkillType.SMITH);
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
@@ -54,12 +54,12 @@ class SmithSkill extends Skill implements Listener {
         final Block anvilBlock = anvilLoc.getBlock();
         Metadata metadata = null;
         for (MetadataValue v: anvilBlock.getMetadata(Metadata.key)) {
-            if (v.getOwningPlugin() == SkillsPlugin.getInstance()) {
+            if (v.getOwningPlugin() == plugin) {
                 metadata = (Metadata)v.value();
                 break;
             }
         }
-        anvilBlock.removeMetadata(Metadata.key, SkillsPlugin.getInstance());
+        anvilBlock.removeMetadata(Metadata.key, plugin);
         if (metadata != null
             && metadata.uuid.equals(player.getUniqueId())
             && metadata.inputA.equals(inputA)
@@ -86,7 +86,7 @@ class SmithSkill extends Skill implements Listener {
                 @Override public void run() {
                     onAnvilUsed(player, inv, level);
                 }
-            }.runTask(SkillsPlugin.getInstance());
+            }.runTask(plugin);
         }
     }
 
@@ -207,10 +207,10 @@ class SmithSkill extends Skill implements Listener {
         final Location anvilLoc = event.getInventory().getLocation();
         if (anvilLoc == null) return;
         final Block anvilBlock = anvilLoc.getBlock();
-        anvilBlock.removeMetadata(Metadata.key, SkillsPlugin.getInstance());
+        anvilBlock.removeMetadata(Metadata.key, plugin);
         final Player player = (Player)event.getView().getPlayer();
         final UUID uuid = player.getUniqueId();
-        int skillLevel = SkillsPlugin.getInstance().getScore().getSkillLevel(uuid, skillType);
+        int skillLevel = plugin.getScore().getSkillLevel(uuid, skillType);
         final ItemStack inputA = event.getInventory().getItem(0);
         final ItemStack inputB = event.getInventory().getItem(1);
         if (event.getInventory().getRenameText() != null && event.getInventory().getRenameText().length() > 0) return;
@@ -225,12 +225,12 @@ class SmithSkill extends Skill implements Listener {
         case LEATHER_LEGGINGS:
         case LEATHER_BOOTS:
             if (inputB.getType() == Material.LEATHER
-                && SkillsPlugin.getInstance().getScore().hasPerk(uuid, Perk.SMITH_IMPROVE_LEATHER)) {
+                && plugin.getScore().hasPerk(uuid, Perk.SMITH_IMPROVE_LEATHER)) {
                 result = new ItemStack(inputA.getType());
                 ItemMeta meta = result.getItemMeta();
                 meta.setUnbreakable(true);
                 result.setItemMeta(meta);
-                if (SkillsPlugin.getInstance().getScore().hasPerk(uuid, Perk.SMITH_LEATHER_ARMOR_SPEED)) {
+                if (plugin.getScore().hasPerk(uuid, Perk.SMITH_LEATHER_ARMOR_SPEED)) {
                     result = Dirty.assertItemTag(result);
                     double speed = Math.min(0.02, (double)skillLevel * 0.03 / 100.0);
                     addAttribute(result, null, Attribute.GENERIC_MOVEMENT_SPEED, speed, 0, null);
@@ -238,7 +238,7 @@ class SmithSkill extends Skill implements Listener {
                     addAttribute(result, null, Attribute.GENERIC_ARMOR, armor, 0, null);
                 }
             } else if (inputB.getType() == Material.IRON_INGOT
-                && SkillsPlugin.getInstance().getScore().hasPerk(uuid, Perk.SMITH_IMPROVE_MAIL)) {
+                && plugin.getScore().hasPerk(uuid, Perk.SMITH_IMPROVE_MAIL)) {
                 switch (inputA.getType()) {
                 case LEATHER_HELMET: result = new ItemStack(Material.CHAINMAIL_HELMET); break;
                 case LEATHER_CHESTPLATE: result = new ItemStack(Material.CHAINMAIL_CHESTPLATE); break;
@@ -249,7 +249,7 @@ class SmithSkill extends Skill implements Listener {
                 ItemMeta meta = result.getItemMeta();
                 meta.setUnbreakable(true);
                 result.setItemMeta(meta);
-                if (SkillsPlugin.getInstance().getScore().hasPerk(uuid, Perk.SMITH_MAIL_ARMOR_DAMAGE)) {
+                if (plugin.getScore().hasPerk(uuid, Perk.SMITH_MAIL_ARMOR_DAMAGE)) {
                     result = Dirty.assertItemTag(result);
                     double damage = Math.min(1.0, (double)skillLevel * 0.01);
                     addAttribute(result, null, Attribute.GENERIC_ATTACK_DAMAGE, damage, 1, null);
@@ -263,12 +263,12 @@ class SmithSkill extends Skill implements Listener {
         case GOLD_LEGGINGS:
         case GOLD_BOOTS:
             if (inputB.getType() == Material.GOLD_INGOT
-                && SkillsPlugin.getInstance().getScore().hasPerk(uuid, Perk.SMITH_IMPROVE_GOLD)) {
+                && plugin.getScore().hasPerk(uuid, Perk.SMITH_IMPROVE_GOLD)) {
                 result = new ItemStack(inputA.getType());
                 ItemMeta meta = result.getItemMeta();
                 meta.setUnbreakable(true);
                 result.setItemMeta(meta);
-                if (SkillsPlugin.getInstance().getScore().hasPerk(uuid, Perk.SMITH_GOLD_ARMOR_HEALTH)) {
+                if (plugin.getScore().hasPerk(uuid, Perk.SMITH_GOLD_ARMOR_HEALTH)) {
                     result = Dirty.assertItemTag(result);
                     double health = Math.min(20, (double)(skillLevel * 2 * 20 / 100));
                     addAttribute(result, null, Attribute.GENERIC_MAX_HEALTH, health, 0, null);
@@ -282,12 +282,12 @@ class SmithSkill extends Skill implements Listener {
         case IRON_LEGGINGS:
         case IRON_BOOTS:
             if (inputB.getType() == Material.IRON_INGOT
-                && SkillsPlugin.getInstance().getScore().hasPerk(uuid, Perk.SMITH_IMPROVE_IRON)) {
+                && plugin.getScore().hasPerk(uuid, Perk.SMITH_IMPROVE_IRON)) {
                 result = new ItemStack(inputA.getType());
                 ItemMeta meta = result.getItemMeta();
                 meta.setUnbreakable(true);
                 result.setItemMeta(meta);
-                if (SkillsPlugin.getInstance().getScore().hasPerk(uuid, Perk.SMITH_IRON_ARMOR_ARMOR)) {
+                if (plugin.getScore().hasPerk(uuid, Perk.SMITH_IRON_ARMOR_ARMOR)) {
                     result = Dirty.assertItemTag(result);
                     double armor = getDefaultArmor(result.getType());
                     armor += Math.min(armor, (double)((int)armor * 10 * skillLevel / 100) * 0.1);
@@ -300,18 +300,18 @@ class SmithSkill extends Skill implements Listener {
         case DIAMOND_LEGGINGS:
         case DIAMOND_BOOTS:
             if (inputB.getType() == Material.DIAMOND
-                && SkillsPlugin.getInstance().getScore().hasPerk(uuid, Perk.SMITH_IMPROVE_DIAMOND)) {
+                && plugin.getScore().hasPerk(uuid, Perk.SMITH_IMPROVE_DIAMOND)) {
                 result = new ItemStack(inputA.getType());
                 ItemMeta meta = result.getItemMeta();
                 meta.setUnbreakable(true);
                 result.setItemMeta(meta);
-                if (SkillsPlugin.getInstance().getScore().hasPerk(uuid, Perk.SMITH_DIAMOND_ARMOR_ARMOR)) {
+                if (plugin.getScore().hasPerk(uuid, Perk.SMITH_DIAMOND_ARMOR_ARMOR)) {
                     result = Dirty.assertItemTag(result);
                     double armor = getDefaultArmor(result.getType());
                     armor += Math.min(armor, (double)((int)armor * 10 * skillLevel / 100) * 0.1);
                     addAttribute(result, null, Attribute.GENERIC_ARMOR, armor, 0, null);
                     double armorToughness = 2;
-                    if (SkillsPlugin.getInstance().getScore().hasPerk(uuid, Perk.SMITH_DIAMOND_ARMOR_TOUGH)) {
+                    if (plugin.getScore().hasPerk(uuid, Perk.SMITH_DIAMOND_ARMOR_TOUGH)) {
                         armorToughness *= 1.0 + Math.min(1.0, (double)skillLevel * 2.0 / 100.0);
                     }
                     addAttribute(result, null, Attribute.GENERIC_ARMOR_TOUGHNESS, armorToughness, 0, null);
@@ -325,7 +325,7 @@ class SmithSkill extends Skill implements Listener {
         case GOLD_SPADE:
         case GOLD_SWORD:
             if (inputB.getType() == Material.GOLD_INGOT
-                && SkillsPlugin.getInstance().getScore().hasPerk(uuid, Perk.SMITH_IMPROVE_GOLD)) {
+                && plugin.getScore().hasPerk(uuid, Perk.SMITH_IMPROVE_GOLD)) {
                 result = new ItemStack(inputA.getType());
                 ItemMeta meta = result.getItemMeta();
                 meta.setUnbreakable(true);
@@ -339,7 +339,7 @@ class SmithSkill extends Skill implements Listener {
         case IRON_SPADE:
         case IRON_SWORD:
             if (inputB.getType() == Material.IRON_INGOT
-                && SkillsPlugin.getInstance().getScore().hasPerk(uuid, Perk.SMITH_IMPROVE_IRON)) {
+                && plugin.getScore().hasPerk(uuid, Perk.SMITH_IMPROVE_IRON)) {
                 result = new ItemStack(inputA.getType());
                 ItemMeta meta = result.getItemMeta();
                 meta.setUnbreakable(true);
@@ -353,7 +353,7 @@ class SmithSkill extends Skill implements Listener {
         case DIAMOND_SPADE:
         case DIAMOND_SWORD:
             if (inputB.getType() == Material.DIAMOND
-                && SkillsPlugin.getInstance().getScore().hasPerk(uuid, Perk.SMITH_IMPROVE_DIAMOND)) {
+                && plugin.getScore().hasPerk(uuid, Perk.SMITH_IMPROVE_DIAMOND)) {
                 result = new ItemStack(inputA.getType());
                 ItemMeta meta = result.getItemMeta();
                 meta.setUnbreakable(true);
@@ -362,12 +362,12 @@ class SmithSkill extends Skill implements Listener {
             break;
         case SHIELD:
             if (inputB.getType() == Material.IRON_INGOT
-                && SkillsPlugin.getInstance().getScore().hasPerk(uuid, Perk.SMITH_IMPROVE_IRON)) {
+                && plugin.getScore().hasPerk(uuid, Perk.SMITH_IMPROVE_IRON)) {
                 result = new ItemStack(inputA.getType());
                 ItemMeta meta = result.getItemMeta();
                 meta.setUnbreakable(true);
                 result.setItemMeta(meta);
-                if (SkillsPlugin.getInstance().getScore().hasPerk(uuid, Perk.SMITH_SHIELD_ARMOR)) {
+                if (plugin.getScore().hasPerk(uuid, Perk.SMITH_SHIELD_ARMOR)) {
                     result = Dirty.assertItemTag(result);
                     double armor = Math.min(8.0, (double)(8 * 10 * skillLevel / 100) * 0.1);
                     addAttribute(result, null, Attribute.GENERIC_ARMOR, armor, 0, null);
@@ -380,6 +380,6 @@ class SmithSkill extends Skill implements Listener {
         if (result == null) return;
         event.setResult(result);
         Metadata metadata = new Metadata(player.getUniqueId(), inputA, inputB, result);
-        anvilBlock.setMetadata(Metadata.key, new FixedMetadataValue(SkillsPlugin.getInstance(), metadata));
+        anvilBlock.setMetadata(Metadata.key, new FixedMetadataValue(plugin, metadata));
     }
 }

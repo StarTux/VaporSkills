@@ -9,8 +9,8 @@ import org.bukkit.event.entity.CreatureSpawnEvent;
 class BreedSkill extends Skill implements Listener {
     static final double RADIUS = 10.0;
 
-    BreedSkill() {
-        super(SkillType.BREED);
+    BreedSkill(SkillsPlugin plugin) {
+        super(plugin, SkillType.BREED);
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)

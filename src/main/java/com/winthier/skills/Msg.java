@@ -16,7 +16,6 @@ final class Msg {
 
     static void consoleCommand(String cmd, Object... args) {
         if (args.length > 0) cmd = String.format(cmd, args);
-        // SkillsPlugin.getInstance().getLogger().info("Running console command: " + cmd);
         Bukkit.getServer().dispatchCommand(Bukkit.getServer().getConsoleSender(), cmd);
     }
 

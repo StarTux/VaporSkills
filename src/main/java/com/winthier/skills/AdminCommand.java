@@ -12,6 +12,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import lombok.RequiredArgsConstructor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -19,7 +20,10 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.json.simple.JSONValue;
 
+@RequiredArgsConstructor
 class AdminCommand implements CommandExecutor {
+    private final SkillsPlugin plugin;
+
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         String cmd = args.length == 0 ? "" : args[0].toLowerCase();
@@ -40,11 +44,11 @@ class AdminCommand implements CommandExecutor {
                     sender.sendMessage("Player expected");
                     return true;
                 }
-                if (SkillsPlugin.getInstance().hasDebugMode(player)) {
-                    SkillsPlugin.getInstance().setDebugMode(player, false);
+                if (plugin.hasDebugMode(player)) {
+                    plugin.setDebugMode(player, false);
                     player.sendMessage("Debug mode disabled");
                 } else {
-                    SkillsPlugin.getInstance().setDebugMode(player, true);
+                    plugin.setDebugMode(player, true);
                     player.sendMessage("Debug mode enabled");
                 }
             } else {
@@ -65,12 +69,12 @@ class AdminCommand implements CommandExecutor {
     boolean onCommandTest(CommandSender sender, String[] args) {
         String cmd = args.length == 0 ? "" : args[0].toLowerCase();
         if (cmd.equals("levelup")) {
-            Player player = SkillsPlugin.getInstance().getServer().getPlayer(args[1]);
+            Player player = plugin.getServer().getPlayer(args[1]);
             if (player == null) {
                 sender.sendMessage("Player not found: " + args[1]);
                 return true;
             }
-            Skill skill = SkillsPlugin.getInstance().skillByName(args[2]);
+            Skill skill = plugin.skillByName(args[2]);
             if (skill == null) {
                 sender.sendMessage("Skill not found: " + args[2]);
                 return true;
@@ -83,9 +87,9 @@ class AdminCommand implements CommandExecutor {
                 sender.sendMessage("Invalid level: " + args[3]);
                 return true;
             }
-            LevelUpEffect.launch(player, skill, skillLevel);
+            LevelUpEffect.launch(plugin, player, skill, skillLevel);
         } else if (cmd.equals("backlog")) {
-            sender.sendMessage("Moneys: " + SkillsPlugin.getInstance().getMoneys().size());
+            sender.sendMessage("Moneys: " + plugin.getMoneys().size());
             sender.sendMessage("Score: " + SQLScore.getDIRTIES().size());
             sender.sendMessage("Logs: " + SQLLog.getDIRTIES().size());
         } else {
@@ -98,14 +102,14 @@ class AdminCommand implements CommandExecutor {
     boolean onCommandConfig(CommandSender sender, String[] args) {
         String cmd = args.length == 0 ? "" : args[0].toLowerCase();
         if (cmd.equals("reload")) {
-            SkillsPlugin.getInstance().reloadAll();
+            plugin.reloadAll();
             sender.sendMessage("[Skills] Configuration reloaded");
         } else if (cmd.equals("save")) {
-            SkillsPlugin.getInstance().writeDefaultFiles(false);
-            SkillsPlugin.getInstance().saveAll();
+            plugin.writeDefaultFiles(false);
+            plugin.saveAll();
             sender.sendMessage("[Skills] All data saved to disk");
         } else if (cmd.equals("overwrite")) {
-            SkillsPlugin.getInstance().writeDefaultFiles(true);
+            plugin.writeDefaultFiles(true);
             sender.sendMessage("[Skills] All config files overwritten with plugin defaults");
         } else {
             sender.sendMessage("/skadmin config reload");
@@ -118,7 +122,7 @@ class AdminCommand implements CommandExecutor {
     boolean onCommandReward(CommandSender sender, String[] args) {
         String cmd = args.length == 0 ? "" : args[0].toLowerCase();
         if (cmd.equals("list") && args.length == 2) {
-            Skill skill = SkillsPlugin.getInstance().skillByName(args[1]);
+            Skill skill = plugin.skillByName(args[1]);
             if (skill == null) throw new IllegalArgumentException("Skill not found: " + args[1]);
             sender.sendMessage("Rewards of " + skill.getDisplayName() + ":");
             int count = 0;
@@ -139,7 +143,7 @@ class AdminCommand implements CommandExecutor {
         } else if (cmd.equals("import") && args.length == 1) {
             SQLDB.saveAll();
             SQLDB.clearAllCaches();
-            File file = new File(SkillsPlugin.getInstance().getDataFolder(), SkillsPlugin.REWARDS_TXT);
+            File file = new File(plugin.getDataFolder(), SkillsPlugin.REWARDS_TXT);
             if (!file.exists()) {
                 sender.sendMessage(SkillsPlugin.REWARDS_TXT + " not found");
                 return true;
@@ -196,11 +200,11 @@ class AdminCommand implements CommandExecutor {
                 return true;
             }
             sender.sendMessage("Scores of " + PlayerCache.nameForUuid(uuid) + ":");
-            for (Skill skill : SkillsPlugin.getInstance().getSkills()) {
-                int lvl = SkillsPlugin.getInstance().getScore().getSkillLevel(uuid, skill.skillType);
-                int sp = (int)SkillsPlugin.getInstance().getScore().getSkillPoints(uuid, skill.skillType);
-                int pil = SkillsPlugin.getInstance().getScore().pointsInLevel(sp);
-                int ptlut = SkillsPlugin.getInstance().getScore().pointsToLevelUpTo(lvl + 1);
+            for (Skill skill : plugin.getSkills()) {
+                int lvl = plugin.getScore().getSkillLevel(uuid, skill.skillType);
+                int sp = (int)plugin.getScore().getSkillPoints(uuid, skill.skillType);
+                int pil = Score.pointsInLevel(sp);
+                int ptlut = Score.pointsToLevelUpTo(lvl + 1);
                 sender.sendMessage(String.format(" lvl:%d %s sp:%d (%d/%d)", lvl, skill.getShorthand(), sp, pil, ptlut));
             }
         } else if (cmd.equals("reset") && (args.length == 2 || args.length == 3)) {
@@ -210,16 +214,16 @@ class AdminCommand implements CommandExecutor {
                 return true;
             }
             if (args.length >= 3) {
-                Skill skill = SkillsPlugin.getInstance().skillByName(args[2]);
+                Skill skill = plugin.skillByName(args[2]);
                 if (skill == null) {
                     sender.sendMessage("Skill not found: " + args[2]);
                     return true;
                 }
-                SkillsPlugin.getInstance().getScore().setSkillLevel(uuid, skill.skillType, 0);
+                plugin.getScore().setSkillLevel(uuid, skill.skillType, 0);
                 sender.sendMessage("Score reset: " + PlayerCache.nameForUuid(uuid) + ", " + skill.getDisplayName());
             } else {
-                for (Skill skill : SkillsPlugin.getInstance().getSkills()) {
-                    SkillsPlugin.getInstance().getScore().setSkillLevel(uuid, skill.skillType, 0);
+                for (Skill skill : plugin.getSkills()) {
+                    plugin.getScore().setSkillLevel(uuid, skill.skillType, 0);
                 }
                 sender.sendMessage("Scores reset: " + PlayerCache.nameForUuid(uuid));
             }
@@ -229,7 +233,7 @@ class AdminCommand implements CommandExecutor {
                 sender.sendMessage("Player not found: " + args[1]);
                 return true;
             }
-            Skill skill = SkillsPlugin.getInstance().skillByName(args[2]);
+            Skill skill = plugin.skillByName(args[2]);
             if (skill == null) {
                 sender.sendMessage("Skill not found: " + args[2]);
                 return true;
@@ -242,7 +246,7 @@ class AdminCommand implements CommandExecutor {
                 sender.sendMessage("Invalid level: " + args[3]);
                 return true;
             }
-            SkillsPlugin.getInstance().getScore().setSkillLevel(uuid, skill.skillType, skillLevel);
+            plugin.getScore().setSkillLevel(uuid, skill.skillType, skillLevel);
             sender.sendMessage("Skill level set: " + PlayerCache.nameForUuid(uuid) + ", " + skill.getDisplayName() + ": " + skillLevel);
         } else if (cmd.equals("givepoints") && args.length == 4) {
             UUID uuid = PlayerCache.uuidForName(args[1]);
@@ -250,7 +254,7 @@ class AdminCommand implements CommandExecutor {
                 sender.sendMessage("Player not found: " + args[1]);
                 return true;
             }
-            Skill skill = SkillsPlugin.getInstance().skillByName(args[2]);
+            Skill skill = plugin.skillByName(args[2]);
             if (skill == null) {
                 sender.sendMessage("Skill not found: " + args[2]);
                 return true;
@@ -263,7 +267,7 @@ class AdminCommand implements CommandExecutor {
                 sender.sendMessage("Invalid points: " + args[3]);
                 return true;
             }
-            SkillsPlugin.getInstance().getScore().giveSkillPoints(uuid, skill.skillType, skillPoints);
+            plugin.getScore().giveSkillPoints(uuid, skill.skillType, skillPoints);
             sender.sendMessage("Points given: " + PlayerCache.nameForUuid(uuid) + ", " + skill.getDisplayName() + ": " + skillPoints);
         } else {
             sender.sendMessage("/skadmin score list <player>");
@@ -281,7 +285,7 @@ class AdminCommand implements CommandExecutor {
         map.put("display", displayMap);
         Map<String, Object> iconMap = new HashMap<>();
         displayMap.put("icon", iconMap);
-        ConfigurationSection config = SkillsPlugin.getInstance().getPerksConfig().getConfigurationSection("perks." + perkName);
+        ConfigurationSection config = plugin.getPerksConfig().getConfigurationSection("perks." + perkName);
         iconMap.put("item", config.getString("Icon.Item", "minecraft:diamond"));
         if (config.isSet("Icon.Data")) iconMap.put("data", config.getInt("Icon.Data"));
         displayMap.put("title", config.getString("DisplayName", perkName));
@@ -307,7 +311,7 @@ class AdminCommand implements CommandExecutor {
 
     boolean onCommandPerks(CommandSender sender, String[] args) {
         if (args.length == 1 && args[0].equals("adv")) {
-            File root = SkillsPlugin.getInstance().getDataFolder();
+            File root = plugin.getDataFolder();
             root = new File(root, "advancements");
             root = new File(root, "winthier");
             root = new File(root, "skills");

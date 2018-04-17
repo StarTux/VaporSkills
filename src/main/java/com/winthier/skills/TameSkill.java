@@ -8,8 +8,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityTameEvent;
 
 class TameSkill extends Skill implements Listener {
-    TameSkill() {
-        super(SkillType.TAME);
+    TameSkill(SkillsPlugin plugin) {
+        super(plugin, SkillType.TAME);
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)

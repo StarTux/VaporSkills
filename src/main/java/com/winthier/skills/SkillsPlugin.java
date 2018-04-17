@@ -43,11 +43,11 @@ public final class SkillsPlugin extends JavaPlugin implements Listener {
     private Economy economy;
     private SQLDatabase db;
     // Commands
-    private final AdminCommand adminCommand = new AdminCommand();
-    private final SkillsCommand skillsCommand = new SkillsCommand();
-    private final HighscoreCommand highscoreCommand = new HighscoreCommand();
+    private final AdminCommand adminCommand = new AdminCommand(this);
+    private final SkillsCommand skillsCommand = new SkillsCommand(this);
+    private final HighscoreCommand highscoreCommand = new HighscoreCommand(this);
     // Internal Data
-    private final Score score = new Score();
+    private final Score score = new Score(this);
     private final Map<SkillType, Skill> skillMap = new EnumMap<>(SkillType.class);
     private final Map<String, Skill> nameMap = new HashMap<>();
     private final Map<UUID, Double> moneys = new HashMap<>();
@@ -81,19 +81,19 @@ public final class SkillsPlugin extends JavaPlugin implements Listener {
         }
         // Skills
         List<Skill> skills = Arrays.asList(
-            new BrawlSkill(),
-            new BreedSkill(),
-            new BrewSkill(),
-            new CookSkill(),
-            new DigSkill(),
-            new EnchantSkill(),
-            new FishSkill(),
-            new GardenSkill(),
-            new HuntSkill(),
-            new MineSkill(),
-            new SmithSkill(),
-            new TameSkill(),
-            new WoodcutSkill());
+            new BrawlSkill(this),
+            new BreedSkill(this),
+            new BrewSkill(this),
+            new CookSkill(this),
+            new DigSkill(this),
+            new EnchantSkill(this),
+            new FishSkill(this),
+            new GardenSkill(this),
+            new HuntSkill(this),
+            new MineSkill(this),
+            new SmithSkill(this),
+            new TameSkill(this),
+            new WoodcutSkill(this));
         for (Skill skill : skills) {
             SkillType type = skill.getSkillType();
             if (skillMap.containsKey(type)) {
@@ -140,7 +140,7 @@ public final class SkillsPlugin extends JavaPlugin implements Listener {
             skill.onDisable();
         }
         for (Player player: getServer().getOnlinePlayers()) {
-            Session.of(player).onDisable();
+            getSession(player).onDisable();
         }
         saveAll();
         SQLDB.clearAllCaches();
@@ -222,7 +222,7 @@ public final class SkillsPlugin extends JavaPlugin implements Listener {
         final Skill skill = getSkill(skillType);
         if (player == null) return;
         if (skill == null) return;
-        LevelUpEffect.launch(player, (Skill)skill, level);
+        LevelUpEffect.launch(this, player, (Skill)skill, level);
         Bukkit.getServer().getPluginManager().callEvent(new SkillsLevelUpEvent(player, (Skill)skill, level));
     }
 
@@ -301,7 +301,7 @@ public final class SkillsPlugin extends JavaPlugin implements Listener {
     Session getSession(UUID uuid) {
         Session result = sessions.get(uuid);
         if (result == null) {
-            result = new Session(uuid);
+            result = new Session(this, uuid);
             sessions.put(uuid, result);
         }
         return result;

@@ -3,6 +3,7 @@ package com.winthier.skills;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.text.WordUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -12,14 +13,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+@RequiredArgsConstructor
 class SkillsCommand implements CommandExecutor {
-    SkillsPlugin getSkills() {
-        return SkillsPlugin.getInstance();
-    }
-
-    SkillsPlugin getPlugin() {
-        return SkillsPlugin.getInstance();
-    }
+    private final SkillsPlugin plugin;
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -47,12 +43,12 @@ class SkillsCommand implements CommandExecutor {
         Msg.msg(player, "");
         Msg.msg(player, "&3&lSkills &7&o(Click for more info)");
         List<Object> message = new ArrayList<>();
-        for (Skill skill : getSkills().getSkills()) {
+        for (Skill skill : plugin.getSkills()) {
             if (!skill.isEnabled()) continue;
-            int skillPoints = (int)getSkills().getScore().getSkillPoints(uuid, skill.skillType);
-            int skillLevel = getSkills().getScore().getSkillLevel(uuid, skill.skillType);
-            int pointsInLevel = getSkills().getScore().pointsInLevel(skillPoints);
-            int pointsToLevelUp = getSkills().getScore().pointsToLevelUpTo(skillLevel + 1);
+            int skillPoints = (int)plugin.getScore().getSkillPoints(uuid, skill.skillType);
+            int skillLevel = plugin.getScore().getSkillLevel(uuid, skill.skillType);
+            int pointsInLevel = Score.pointsInLevel(skillPoints);
+            int pointsToLevelUp = Score.pointsToLevelUpTo(skillLevel + 1);
             if (!message.isEmpty()) message.add(" ");
             message.add(Msg.button(
                             ChatColor.AQUA,
@@ -66,7 +62,7 @@ class SkillsCommand implements CommandExecutor {
                             "&7Click for more details"));
         }
         Msg.raw(player, message);
-        Msg.msg(player, "&3Session earnings:&r %s", SkillsPlugin.getInstance().getEconomy().format(Session.of(player).getSessionMoney()));
+        Msg.msg(player, "&3Session earnings:&r %s", plugin.getEconomy().format(plugin.getSession(player).getSessionMoney()));
         Msg.raw(player,
                        Msg.format("&3Progress Bar: "),
                        Msg.button("&3[&fOn&3]", "/sk progressbar on", "&a/sk progressbar on", "&5&oEnable Progress Bar"),
@@ -76,16 +72,16 @@ class SkillsCommand implements CommandExecutor {
     }
 
     void skillDetail(Player player, String name) {
-        Skill skill = getSkills().skillByName(name);
+        Skill skill = plugin.skillByName(name);
         if (skill == null) {
             Msg.msg(player, "&cSkill not found: %s", name);
             return;
         }
         final UUID uuid = player.getUniqueId();
-        int skillPoints = (int)getSkills().getScore().getSkillPoints(uuid, skill.skillType);
-        int skillLevel = getSkills().getScore().getSkillLevel(uuid, skill.skillType);
-        int pointsInLevel = getSkills().getScore().pointsInLevel(skillPoints);
-        int pointsToLevelUp = getSkills().getScore().pointsToLevelUpTo(skillLevel + 1);
+        int skillPoints = (int)plugin.getScore().getSkillPoints(uuid, skill.skillType);
+        int skillLevel = plugin.getScore().getSkillLevel(uuid, skill.skillType);
+        int pointsInLevel = Score.pointsInLevel(skillPoints);
+        int pointsToLevelUp = Score.pointsToLevelUpTo(skillLevel + 1);
         Msg.msg(player, "");
         // Title
         Msg.msg(player, "&3&l%s &bLevel &f%d %s",
@@ -101,9 +97,9 @@ class SkillsCommand implements CommandExecutor {
                                              pointsToLevelUp),
                            Msg.format("&3Total Skill Points: &f%d", skillPoints),
                            Msg.format("&3For Next Level: &f%d",
-                                             getSkills().getScore().pointsForNextLevel(skillPoints))));
+                                             Score.pointsForNextLevel(skillPoints))));
         // Bonus
-        int level = getSkills().getScore().getSkillLevel(player.getUniqueId(), skill.skillType);
+        int level = plugin.getScore().getSkillLevel(player.getUniqueId(), skill.skillType);
         int bonusFactor = level / 10;
         int nextBonusLevel = ((level / 10) + 1) * 10;
         Msg.raw(player,
@@ -112,7 +108,7 @@ class SkillsCommand implements CommandExecutor {
                     Msg.format("%d%%", bonusFactor),
                     Msg.format("&3Next Bonus Level: &f%d", nextBonusLevel)));
         // Highscore
-        Highscore hi = getSkills().getScore().getHighscore(skill.skillType);
+        Highscore hi = plugin.getScore().getHighscore(skill.skillType);
         int rank = hi.rankOfPlayer(uuid);
         String rankString = rank > 0 ? "#" + rank : "-";
         Msg.raw(player,
@@ -121,7 +117,7 @@ class SkillsCommand implements CommandExecutor {
                                          "/hi " + skill.skillType.key,
                                          "&a/hi " + skill.skillType.key,
                                          "&3&l" + skill.getDisplayName() + " &f" + rankString,
-                                         getPlugin().getHighscoreCommand().formatHighscoreAroundPlayer(hi, uuid),
+                                         plugin.getHighscoreCommand().formatHighscoreAroundPlayer(hi, uuid),
                                          "&7Click for more details"));
         // Description
         Msg.msg(player, " &r%s", skill.getDescription());
@@ -130,10 +126,10 @@ class SkillsCommand implements CommandExecutor {
 
     void modifyProgressBar(Player player, String arg) {
         if ("off".equals(arg)) {
-            Session.of(player).setProgressBarEnabled(false);
+            plugin.getSession(player).setProgressBarEnabled(false);
             Msg.msg(player, "&bProgress bar disabled");
         } else if ("on".equals(arg)) {
-            Session.of(player).setProgressBarEnabled(true);
+            plugin.getSession(player).setProgressBarEnabled(true);
             Msg.msg(player, "&bProgress bar enabled");
         }
     }

@@ -112,7 +112,7 @@ public final class SQLScore {
             while (row.next()) {
                 UUID uuid = UUID.fromString(row.getString("uuid"));
                 double skillPoints = (double)row.getFloat("skill_points") / (double)skillIds.size();
-                int skillLevel = SkillsPlugin.getInstance().getScore().levelForPoints(skillPoints);
+                int skillLevel = Score.levelForPoints(skillPoints);
                 result.add(new Entry(uuid, skillPoints, skillLevel));
             }
         } catch (SQLException sqle) {
