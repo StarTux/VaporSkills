@@ -12,7 +12,7 @@ public final class Score {
     private final SkillsPlugin plugin;
     private final Map<String, Highscore> highscores = new HashMap<>();
     private Highscore totalHighscore = null;
-    private final Map <UUID, Set<Perk>> perks = new HashMap<>();
+    private final Map<UUID, Set<Perk>> perks = new HashMap<>();
 
     public void giveSkillPoints(UUID player, SkillType skill, double points) {
         if (points <= 0) return;
@@ -162,7 +162,7 @@ public final class Score {
                 try {
                     Perk perk = Perk.valueOf(sqlPerk.getPerk().toUpperCase());
                     result.add(perk);
-                } catch (IllegalArgumentException iae) {}
+                } catch (IllegalArgumentException iae) { }
             }
             perks.put(player, result);
         }
@@ -175,9 +175,9 @@ public final class Score {
     }
 
     boolean unlockPerk(UUID player, Perk perk) {
-        Set<Perk> perks = getPerks(player);
-        if (perks.contains(perk)) return false;
-        perks.add(perk);
+        Set<Perk> playerPerks = getPerks(player);
+        if (playerPerks.contains(perk)) return false;
+        playerPerks.add(perk);
         SQLPerk.unlock(player, perk.name().toLowerCase());
         return true;
     }

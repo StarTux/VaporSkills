@@ -1,7 +1,6 @@
 package com.winthier.skills;
 
 import com.winthier.exploits.bukkit.BukkitExploits;
-import lombok.Getter;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;

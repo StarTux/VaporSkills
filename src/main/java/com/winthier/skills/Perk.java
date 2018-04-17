@@ -93,10 +93,8 @@ public enum Perk {
     DIG_RADIUS(SkillType.DIG, null),
     // Enchanting
     ENCHANT_TOP_OPTIONS(SkillType.ENCHANT, null),
-    ENCHANT_(SkillType.ENCHANT, null),
+    ENCHANT_(SkillType.ENCHANT, null);
     // Fishing
-    // 
-    ;
 
     final SkillType skillType;
     final Perk depends;

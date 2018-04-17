@@ -2,7 +2,6 @@ package com.winthier.skills;
 
 import com.winthier.custom.util.Dirty;
 import java.util.UUID;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -26,7 +25,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 class SmithSkill extends Skill implements Listener {
     @RequiredArgsConstructor
     private static class Metadata {
-        final static String key = "com.winthier.skill.SmithSkill";
+        static final String KEY = "com.winthier.skill.SmithSkill";
         final UUID uuid;
         final ItemStack inputA, inputB, result;
     }
@@ -53,13 +52,13 @@ class SmithSkill extends Skill implements Listener {
         if (anvilLoc == null) return;
         final Block anvilBlock = anvilLoc.getBlock();
         Metadata metadata = null;
-        for (MetadataValue v: anvilBlock.getMetadata(Metadata.key)) {
+        for (MetadataValue v: anvilBlock.getMetadata(Metadata.KEY)) {
             if (v.getOwningPlugin() == plugin) {
                 metadata = (Metadata)v.value();
                 break;
             }
         }
-        anvilBlock.removeMetadata(Metadata.key, plugin);
+        anvilBlock.removeMetadata(Metadata.KEY, plugin);
         if (metadata != null
             && metadata.uuid.equals(player.getUniqueId())
             && metadata.inputA.equals(inputA)
@@ -104,21 +103,30 @@ class SmithSkill extends Skill implements Listener {
         giveReward(player, rewardForNameAndMaximum("exp_level_cost", levelsUsed));
     }
 
-    private final void addAttribute(ItemStack item, EquipmentSlot slot, Attribute attribute, double amount, int operation, UUID uuid) {
+    private static void addAttribute(ItemStack item, EquipmentSlot slot, Attribute attribute, double amount, int operation, UUID uuid) {
         Dirty.TagWrapper itemTag = Dirty.TagWrapper.getItemTagOf(item);
         Dirty.TagListWrapper attrList = itemTag.getList("AttributeModifiers");
         if (attrList == null) attrList = itemTag.createList("AttributeModifiers");
         Dirty.TagWrapper attrTag = attrList.createCompound();
         final String slotName;
         if (slot == null) {
-            if (item.getType().name().contains("HELMET")) slot = EquipmentSlot.HEAD;
-            else if (item.getType().name().contains("CHESTPLATE")) slot = EquipmentSlot.CHEST;
-            else if (item.getType().name().contains("LEGGINGS")) slot = EquipmentSlot.LEGS;
-            else if (item.getType().name().contains("BOOTS")) slot = EquipmentSlot.FEET;
-            else if (item.getType().name().contains("SHIELD")) slot = EquipmentSlot.OFF_HAND;
-            else if (item.getType().name().contains("SWORD")) slot = EquipmentSlot.HAND;
-            else if (item.getType().name().contains("AXE")) slot = EquipmentSlot.HAND;
-            else slot = EquipmentSlot.HAND;
+            if (item.getType().name().contains("HELMET")) {
+                slot = EquipmentSlot.HEAD;
+            } else if (item.getType().name().contains("CHESTPLATE")) {
+                slot = EquipmentSlot.CHEST;
+            } else if (item.getType().name().contains("LEGGINGS")) {
+                slot = EquipmentSlot.LEGS;
+            } else if (item.getType().name().contains("BOOTS")) {
+                slot = EquipmentSlot.FEET;
+            } else if (item.getType().name().contains("SHIELD")) {
+                slot = EquipmentSlot.OFF_HAND;
+            } else if (item.getType().name().contains("SWORD")) {
+                slot = EquipmentSlot.HAND;
+            } else if (item.getType().name().contains("AXE")) {
+                slot = EquipmentSlot.HAND;
+            } else {
+                slot = EquipmentSlot.HAND;
+            }
         }
         switch (slot) {
         case HAND: slotName = "mainhand"; break;
@@ -207,7 +215,7 @@ class SmithSkill extends Skill implements Listener {
         final Location anvilLoc = event.getInventory().getLocation();
         if (anvilLoc == null) return;
         final Block anvilBlock = anvilLoc.getBlock();
-        anvilBlock.removeMetadata(Metadata.key, plugin);
+        anvilBlock.removeMetadata(Metadata.KEY, plugin);
         final Player player = (Player)event.getView().getPlayer();
         final UUID uuid = player.getUniqueId();
         int skillLevel = plugin.getScore().getSkillLevel(uuid, skillType);
@@ -380,6 +388,6 @@ class SmithSkill extends Skill implements Listener {
         if (result == null) return;
         event.setResult(result);
         Metadata metadata = new Metadata(player.getUniqueId(), inputA, inputB, result);
-        anvilBlock.setMetadata(Metadata.key, new FixedMetadataValue(plugin, metadata));
+        anvilBlock.setMetadata(Metadata.KEY, new FixedMetadataValue(plugin, metadata));
     }
 }

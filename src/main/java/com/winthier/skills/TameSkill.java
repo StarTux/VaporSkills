@@ -1,6 +1,5 @@
 package com.winthier.skills;
 
-import lombok.Getter;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;

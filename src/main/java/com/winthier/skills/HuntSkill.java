@@ -1,7 +1,6 @@
 package com.winthier.skills;
 
 import com.winthier.exploits.bukkit.BukkitExploits;
-import lombok.Getter;
 import org.bukkit.ChatColor;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Arrow;
