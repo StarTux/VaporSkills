@@ -22,7 +22,7 @@ import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
 import org.bukkit.scheduler.BukkitRunnable;
 
-class SmithSkill extends Skill implements Listener {
+final class SmithSkill extends Skill implements Listener {
     @RequiredArgsConstructor
     private static class Metadata {
         static final String KEY = "com.winthier.skill.SmithSkill";
@@ -69,6 +69,7 @@ class SmithSkill extends Skill implements Listener {
                 if (player.getInventory().addItem(metadata.result).isEmpty()) {
                     event.getInventory().setItem(0, null);
                     event.getInventory().setItem(1, null);
+                    event.getInventory().setItem(2, null);
                     onDidImprove(player, metadata);
                 }
             } else if (event.getCursor() == null
@@ -323,6 +324,10 @@ class SmithSkill extends Skill implements Listener {
                         armorToughness *= 1.0 + Math.min(1.0, (double)skillLevel * 2.0 / 100.0);
                     }
                     addAttribute(result, null, Attribute.GENERIC_ARMOR_TOUGHNESS, armorToughness, 0, null);
+                    if (plugin.getScore().hasPerk(uuid, Perk.SMITH_DIAMOND_ARMOR_KNOCKBACK_RESIST)) {
+                        double knockbackResist = Math.min(0.2, (double)skillLevel * 0.01 * 0.2);
+                        addAttribute(result, null, Attribute.GENERIC_KNOCKBACK_RESISTANCE, knockbackResist, 0, null);
+                    }
                 }
             }
             break;
@@ -338,6 +343,7 @@ class SmithSkill extends Skill implements Listener {
                 ItemMeta meta = result.getItemMeta();
                 meta.setUnbreakable(true);
                 result.setItemMeta(meta);
+                result = improveWeapon(uuid, inputA, inputB, result);
             }
             break;
         case IRON_AXE:
@@ -352,6 +358,7 @@ class SmithSkill extends Skill implements Listener {
                 ItemMeta meta = result.getItemMeta();
                 meta.setUnbreakable(true);
                 result.setItemMeta(meta);
+                result = improveWeapon(uuid, inputA, inputB, result);
             }
             break;
         case DIAMOND_AXE:
@@ -366,6 +373,7 @@ class SmithSkill extends Skill implements Listener {
                 ItemMeta meta = result.getItemMeta();
                 meta.setUnbreakable(true);
                 result.setItemMeta(meta);
+                result = improveWeapon(uuid, inputA, inputB, result);
             }
             break;
         case SHIELD:
@@ -379,6 +387,10 @@ class SmithSkill extends Skill implements Listener {
                     result = Dirty.assertItemTag(result);
                     double armor = Math.min(8.0, (double)(8 * 10 * skillLevel / 100) * 0.1);
                     addAttribute(result, null, Attribute.GENERIC_ARMOR, armor, 0, null);
+                    if (plugin.getScore().hasPerk(uuid, Perk.SMITH_SHIELD_KNOCKBACK_RESIST)) {
+                        double knockbackResist = Math.min(0.5, (double)skillLevel * 0.01 * 0.5);
+                        addAttribute(result, null, Attribute.GENERIC_KNOCKBACK_RESISTANCE, knockbackResist, 0, null);
+                    }
                 }
             }
             break;
@@ -389,5 +401,36 @@ class SmithSkill extends Skill implements Listener {
         event.setResult(result);
         Metadata metadata = new Metadata(player.getUniqueId(), inputA, inputB, result);
         anvilBlock.setMetadata(Metadata.KEY, new FixedMetadataValue(plugin, metadata));
+    }
+
+    private ItemStack improveWeapon(UUID uuid, ItemStack inputA, ItemStack inputB, ItemStack result) {
+        switch (inputA.getType()) {
+        case IRON_SWORD:
+        case GOLD_SWORD:
+        case DIAMOND_SWORD:
+            if (plugin.getScore().hasPerk(uuid, Perk.SMITH_SWORD_DAMAGE)) {
+                int skillLevel = plugin.getScore().getSkillLevel(uuid, skillType);
+                result = Dirty.assertItemTag(result);
+                double damage = getDefaultDamage(inputA.getType());
+                damage *= Math.min(2.0, (double)skillLevel * 2.0 * 0.01);
+                addAttribute(result, null, Attribute.GENERIC_ATTACK_DAMAGE, damage, 0, null);
+            }
+            break;
+        case IRON_AXE:
+        case GOLD_AXE:
+        case DIAMOND_AXE:
+            if (plugin.getScore().hasPerk(uuid, Perk.SMITH_AXE_DAMAGE)) {
+                result = Dirty.assertItemTag(result);
+                int skillLevel = plugin.getScore().getSkillLevel(uuid, skillType);
+                result = Dirty.assertItemTag(result);
+                double damage = getDefaultDamage(inputA.getType());
+                damage *= Math.min(2.0, (double)skillLevel * 2.0 * 0.01);
+                addAttribute(result, null, Attribute.GENERIC_ATTACK_DAMAGE, damage, 0, null);
+            }
+            break;
+        default:
+            break;
+        }
+        return result;
     }
 }
