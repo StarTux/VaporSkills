@@ -8,7 +8,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 
-class DigSkill extends Skill implements Listener {
+final class DigSkill extends Skill implements Listener {
     private long repeatInterval = 60 * 60;
 
     DigSkill(SkillsPlugin plugin) {

@@ -150,7 +150,7 @@ final class SmithSkill extends Skill implements Listener {
         attrTag.setLong("UUIDLeast", uuid.getLeastSignificantBits());
     }
 
-    static final int getDefaultArmor(Material mat) {
+    static int getDefaultArmor(Material mat) {
         switch (mat) {
         case LEATHER_HELMET: return 1;
         case LEATHER_CHESTPLATE: return 3;
@@ -176,7 +176,7 @@ final class SmithSkill extends Skill implements Listener {
         }
     }
 
-    static final int getDefaultDamage(Material mat) {
+    static int getDefaultDamage(Material mat) {
         switch (mat) {
         case WOOD_SWORD: return 4;
         case GOLD_SWORD: return 4;
@@ -193,7 +193,7 @@ final class SmithSkill extends Skill implements Listener {
         }
     }
 
-    static final double getDefaultAttackSpeed(Material mat) {
+    static double getDefaultAttackSpeed(Material mat) {
         switch (mat) {
         case WOOD_SWORD:
         case GOLD_SWORD:

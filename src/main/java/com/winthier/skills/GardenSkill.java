@@ -10,7 +10,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockFromToEvent;
 
-class GardenSkill extends Skill implements Listener {
+final class GardenSkill extends Skill implements Listener {
     private static final double RADIUS = 100;
 
     GardenSkill(SkillsPlugin plugin) {

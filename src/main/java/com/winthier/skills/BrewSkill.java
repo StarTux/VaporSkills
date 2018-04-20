@@ -7,7 +7,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.BrewEvent;
 import org.bukkit.inventory.ItemStack;
 
-class BrewSkill extends Skill implements Listener {
+final class BrewSkill extends Skill implements Listener {
     static final double RADIUS = 40.0;
 
     BrewSkill(SkillsPlugin plugin) {

@@ -9,7 +9,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.inventory.ItemStack;
 
-class FishSkill extends Skill implements Listener {
+final class FishSkill extends Skill implements Listener {
     private long fishInterval = 15;
 
     FishSkill(SkillsPlugin plugin) {

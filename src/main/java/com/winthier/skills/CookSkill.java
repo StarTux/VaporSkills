@@ -7,7 +7,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.FurnaceSmeltEvent;
 import org.bukkit.inventory.ItemStack;
 
-class CookSkill extends Skill implements Listener {
+final class CookSkill extends Skill implements Listener {
     CookSkill(SkillsPlugin plugin) {
         super(plugin, SkillType.COOK);
     }

@@ -7,7 +7,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.enchantment.EnchantItemEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
-class EnchantSkill extends Skill implements Listener {
+final class EnchantSkill extends Skill implements Listener {
     EnchantSkill(SkillsPlugin plugin) {
         super(plugin, SkillType.ENCHANT);
     }

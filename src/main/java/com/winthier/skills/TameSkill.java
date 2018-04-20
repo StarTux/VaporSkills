@@ -6,7 +6,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityTameEvent;
 
-class TameSkill extends Skill implements Listener {
+final class TameSkill extends Skill implements Listener {
     TameSkill(SkillsPlugin plugin) {
         super(plugin, SkillType.TAME);
     }

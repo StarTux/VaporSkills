@@ -6,7 +6,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 
-class RanchSkill extends Skill implements Listener {
+final class RanchSkill extends Skill implements Listener {
     static final double RADIUS = 10.0;
 
     RanchSkill(SkillsPlugin plugin) {
