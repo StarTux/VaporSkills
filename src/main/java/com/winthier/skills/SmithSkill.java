@@ -241,7 +241,7 @@ final class SmithSkill extends Skill implements Listener {
                 result.setItemMeta(meta);
                 if (plugin.getScore().hasPerk(uuid, Perk.SMITH_LEATHER_ARMOR_SPEED)) {
                     result = Dirty.assertItemTag(result);
-                    double speed = Math.min(0.02, (double)skillLevel * 0.03 / 100.0);
+                    double speed = linearSkillBonus(0.03, skillLevel);
                     addAttribute(result, null, Attribute.GENERIC_MOVEMENT_SPEED, speed, 0, null);
                     double armor = getDefaultArmor(result.getType());
                     addAttribute(result, null, Attribute.GENERIC_ARMOR, armor, 0, null);
@@ -260,7 +260,7 @@ final class SmithSkill extends Skill implements Listener {
                 result.setItemMeta(meta);
                 if (plugin.getScore().hasPerk(uuid, Perk.SMITH_MAIL_ARMOR_DAMAGE)) {
                     result = Dirty.assertItemTag(result);
-                    double damage = Math.min(1.0, (double)skillLevel * 0.01);
+                    double damage = linearSkillBonus(1.0, skillLevel);
                     addAttribute(result, null, Attribute.GENERIC_ATTACK_DAMAGE, damage, 1, null);
                     double armor = getDefaultArmor(result.getType());
                     addAttribute(result, null, Attribute.GENERIC_ARMOR, armor, 0, null);
@@ -279,7 +279,7 @@ final class SmithSkill extends Skill implements Listener {
                 result.setItemMeta(meta);
                 if (plugin.getScore().hasPerk(uuid, Perk.SMITH_GOLD_ARMOR_HEALTH)) {
                     result = Dirty.assertItemTag(result);
-                    double health = Math.min(20, (double)(skillLevel * 2 * 20 / 100));
+                    double health = linearSkillBonus(20, skillLevel);
                     addAttribute(result, null, Attribute.GENERIC_MAX_HEALTH, health, 0, null);
                     double armor = getDefaultArmor(result.getType());
                     addAttribute(result, null, Attribute.GENERIC_ARMOR, armor, 0, null);
@@ -299,8 +299,12 @@ final class SmithSkill extends Skill implements Listener {
                 if (plugin.getScore().hasPerk(uuid, Perk.SMITH_IRON_ARMOR_ARMOR)) {
                     result = Dirty.assertItemTag(result);
                     double armor = getDefaultArmor(result.getType());
-                    armor += Math.min(armor, (double)((int)armor * 10 * skillLevel / 100) * 0.1);
+                    armor += linearSkillBonus(armor, skillLevel);
                     addAttribute(result, null, Attribute.GENERIC_ARMOR, armor, 0, null);
+                }
+                if (plugin.getScore().hasPerk(uuid, Perk.SMITH_IRON_ARMOR_KNOCKBACK_RESIST)) {
+                    double knockbackResist = linearSkillBonus(2.0, skillLevel);
+                    addAttribute(result, null, Attribute.GENERIC_KNOCKBACK_RESISTANCE, knockbackResist, 0, null);
                 }
             }
             break;
@@ -317,17 +321,13 @@ final class SmithSkill extends Skill implements Listener {
                 if (plugin.getScore().hasPerk(uuid, Perk.SMITH_DIAMOND_ARMOR_ARMOR)) {
                     result = Dirty.assertItemTag(result);
                     double armor = getDefaultArmor(result.getType());
-                    armor += Math.min(armor, (double)((int)armor * 10 * skillLevel / 100) * 0.1);
+                    armor += linearSkillBonus(armor, skillLevel);
                     addAttribute(result, null, Attribute.GENERIC_ARMOR, armor, 0, null);
                     double armorToughness = 2;
                     if (plugin.getScore().hasPerk(uuid, Perk.SMITH_DIAMOND_ARMOR_TOUGH)) {
-                        armorToughness *= 1.0 + Math.min(1.0, (double)skillLevel * 2.0 / 100.0);
+                        armorToughness += linearSkillBonus(armorToughness, skillLevel);
                     }
                     addAttribute(result, null, Attribute.GENERIC_ARMOR_TOUGHNESS, armorToughness, 0, null);
-                    if (plugin.getScore().hasPerk(uuid, Perk.SMITH_DIAMOND_ARMOR_KNOCKBACK_RESIST)) {
-                        double knockbackResist = Math.min(0.2, (double)skillLevel * 0.01 * 0.2);
-                        addAttribute(result, null, Attribute.GENERIC_KNOCKBACK_RESISTANCE, knockbackResist, 0, null);
-                    }
                 }
             }
             break;
@@ -385,10 +385,10 @@ final class SmithSkill extends Skill implements Listener {
                 result.setItemMeta(meta);
                 if (plugin.getScore().hasPerk(uuid, Perk.SMITH_SHIELD_ARMOR)) {
                     result = Dirty.assertItemTag(result);
-                    double armor = Math.min(8.0, (double)(8 * 10 * skillLevel / 100) * 0.1);
+                    double armor = linearSkillBonus(8.0, skillLevel);
                     addAttribute(result, null, Attribute.GENERIC_ARMOR, armor, 0, null);
                     if (plugin.getScore().hasPerk(uuid, Perk.SMITH_SHIELD_KNOCKBACK_RESIST)) {
-                        double knockbackResist = Math.min(0.5, (double)skillLevel * 0.01 * 0.5);
+                        double knockbackResist = linearSkillBonus(0.5, skillLevel);
                         addAttribute(result, null, Attribute.GENERIC_KNOCKBACK_RESISTANCE, knockbackResist, 0, null);
                     }
                 }
@@ -412,7 +412,7 @@ final class SmithSkill extends Skill implements Listener {
                 int skillLevel = plugin.getScore().getSkillLevel(uuid, skillType);
                 result = Dirty.assertItemTag(result);
                 double damage = getDefaultDamage(inputA.getType());
-                damage *= Math.min(2.0, (double)skillLevel * 2.0 * 0.01);
+                damage += linearSkillBonus(damage, skillLevel);
                 addAttribute(result, null, Attribute.GENERIC_ATTACK_DAMAGE, damage, 0, null);
             }
             break;
@@ -424,7 +424,7 @@ final class SmithSkill extends Skill implements Listener {
                 int skillLevel = plugin.getScore().getSkillLevel(uuid, skillType);
                 result = Dirty.assertItemTag(result);
                 double damage = getDefaultDamage(inputA.getType());
-                damage *= Math.min(2.0, (double)skillLevel * 2.0 * 0.01);
+                damage += linearSkillBonus(damage, skillLevel);
                 addAttribute(result, null, Attribute.GENERIC_ATTACK_DAMAGE, damage, 0, null);
             }
             break;

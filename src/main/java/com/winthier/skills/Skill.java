@@ -15,6 +15,9 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.metadata.MetadataValue;
+import org.bukkit.metadata.Metadatable;
 import org.bukkit.potion.PotionEffect;
 
 @Getter
@@ -234,5 +237,24 @@ public abstract class Skill {
             value = String.format("%s,%f,%f,%f,%f,%f", loc.getWorld().getName(), loc.getX(), loc.getY(), loc.getZ(), loc.getYaw(), loc.getPitch());
         }
         SQLPlayerSetting.set(uuid, skillType.key, key, value);
+    }
+
+    final static double linearSkillBonus(double max, int skillLevel) {
+        return Math.min(max, (double)skillLevel * max / 200.0);
+    }
+
+    final void setMetadata(Metadatable metadatable, String key, Object value) {
+        metadatable.setMetadata(key, new FixedMetadataValue(plugin, value));
+    }
+
+    final void removeMetadata(Metadatable metadatable, String key) {
+        metadatable.removeMetadata(key, plugin);
+    }
+
+    final MetadataValue getMetadata(Metadatable metadatable, String key) {
+        for (MetadataValue value: metadatable.getMetadata(key)) {
+            if (value.getOwningPlugin() == plugin) return value;
+        }
+        return null;
     }
 }
