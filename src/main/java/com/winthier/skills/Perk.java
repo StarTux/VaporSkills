@@ -27,7 +27,7 @@ public enum Perk {
     BRAWL_SWORD_DAMAGE_2(SkillType.BRAWL, null),
     BRAWL_IRON_SWORD_KNOCKOUT(SkillType.BRAWL, null),
     BRAWL_GOLD_SWORD_LIFE_STEAL(SkillType.BRAWL, null),
-    BRAWL_DIAMOND_SWORD_PIERCE(SkillType.BRAWL, null),
+    BRAWL_DIAMOND_SWORD_BLEED(SkillType.BRAWL, null),
     // Brawl Axes
     BRAWL_AXE_AOE(SkillType.BRAWL, null),
     BRAWL_AXE_KNOCKBACK(SkillType.BRAWL, null),

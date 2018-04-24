@@ -240,7 +240,7 @@ public abstract class Skill {
     }
 
     final static double linearSkillBonus(double max, int skillLevel) {
-        return Math.min(max, (double)skillLevel * max / 200.0);
+        return Math.min(max, (double)skillLevel * max / 100.0);
     }
 
     final void setMetadata(Metadatable metadatable, String key, Object value) {
