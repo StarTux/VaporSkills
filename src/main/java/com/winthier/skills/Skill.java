@@ -239,7 +239,7 @@ public abstract class Skill {
         SQLPlayerSetting.set(uuid, skillType.key, key, value);
     }
 
-    final static double linearSkillBonus(double max, int skillLevel) {
+    static final double linearSkillBonus(double max, int skillLevel) {
         return Math.min(max, (double)skillLevel * max / 100.0);
     }
 

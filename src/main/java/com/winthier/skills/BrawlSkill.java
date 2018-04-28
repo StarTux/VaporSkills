@@ -8,7 +8,6 @@ import java.util.UUID;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
-import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Monster;
@@ -182,6 +181,7 @@ final class BrawlSkill extends Skill implements Listener {
                     }
                 }
                 if (!attempted && plugin.getScore().hasPerk(uuid, Perk.BRAWL_UNARMED_STEAL)) {
+                    // TODO
                 }
             }
             break;
