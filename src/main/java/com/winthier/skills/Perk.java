@@ -1,8 +1,5 @@
 package com.winthier.skills;
 
-import lombok.RequiredArgsConstructor;
-
-@RequiredArgsConstructor
 public enum Perk {
     // Base Smithing Improvements
     SMITH_IMPROVE_LEATHER(SkillType.SMITH, null),
@@ -98,4 +95,11 @@ public enum Perk {
 
     final SkillType skillType;
     final Perk depends;
+    final String key;
+
+    Perk(SkillType skillType, Perk depends) {
+        this.skillType = skillType;
+        this.depends = depends;
+        this.key = name().toLowerCase();
+    }
 }

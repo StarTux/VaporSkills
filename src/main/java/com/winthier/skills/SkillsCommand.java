@@ -59,7 +59,6 @@ class SkillsCommand implements CommandExecutor {
                             "&7Click for more details"));
         }
         Msg.raw(player, message);
-        Msg.msg(player, "&3Session earnings:&r %s", plugin.getEconomy().format(plugin.getSession(player).getSessionMoney()));
         Msg.raw(player,
                        Msg.format("&3Progress Bar: "),
                        Msg.button("&3[&fOn&3]", "/sk progressbar on", "&a/sk progressbar on", "&5&oEnable Progress Bar"),

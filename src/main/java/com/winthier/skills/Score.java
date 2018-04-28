@@ -1,24 +1,28 @@
 package com.winthier.skills;
 
+import java.util.EnumMap;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 @RequiredArgsConstructor
 public final class Score {
     private final SkillsPlugin plugin;
-    private final Map<String, Highscore> highscores = new HashMap<>();
-    private Highscore totalHighscore = null;
+    private final Map<SkillType, Highscore> highscores = new HashMap<>();
+    private final Map<UUID, Map<SkillType, SQLScore>> scores = new HashMap<>();
     private final Map<UUID, Set<Perk>> perks = new HashMap<>();
+    @Getter @Setter private Map<Reward.Key, Reward> rewards = new HashMap<>();
 
     public void giveSkillPoints(UUID player, SkillType skill, double points) {
         if (points <= 0) return;
-        SQLScore row = SQLScore.of(player, skill);
-        double skillPoints = row.getSkillPoints();
-        int skillLevel = row.getSkillLevel();
+        SQLScore score = getScore(player, skill);
+        double skillPoints = score.getSkillPoints();
+        int skillLevel = score.getSkillLevel();
         // Calculate new
         double newSkillPoints = skillPoints + points;
         int newSkillLevel = levelForPoints(newSkillPoints);
@@ -27,26 +31,52 @@ public final class Score {
             plugin.onLevelUp(player, skill, newSkillLevel);
         }
         // "Write" data
-        row.setSkillPoints((float)newSkillPoints);
-        row.setSkillLevel(newSkillLevel);
-        row.setDirty((float)points);
+        score.setSkillPoints(newSkillPoints);
+        score.setSkillLevel(newSkillLevel);
+        plugin.getDb().save(score);
     }
 
     public void setSkillLevel(UUID player, SkillType skill, int skillLevel) {
         if (skillLevel < 0) throw new IllegalArgumentException("Skill level cannot be less than 0");
-        SQLScore row = SQLScore.of(player, skill);
+        SQLScore score = getScore(player, skill);
         int skillPoints = pointsForLevel(skillLevel);
-        row.setSkillPoints((float)skillPoints);
-        row.setSkillLevel(skillLevel);
-        row.setDirty();
+        score.setSkillPoints(skillPoints);
+        score.setSkillLevel(skillLevel);
+        plugin.getDb().save(score);
+    }
+
+    private Map<SkillType, SQLScore> getScore(UUID player) {
+        Map<SkillType, SQLScore> result = scores.get(player);
+        if (result == null) {
+            result = new EnumMap<>(SkillType.class);
+            scores.put(player, result);
+            for (SQLScore score: plugin.getDb().find(SQLScore.class).where().eq("player", player).findList()) {
+                try {
+                    SkillType skillType = SkillType.valueOf(score.getSkill().toUpperCase());
+                    result.put(skillType, score);
+                } catch (IllegalArgumentException iae) { }
+            }
+            for (SkillType skillType: SkillType.values()) {
+                if (!result.containsKey(skillType)) {
+                    SQLScore score = new SQLScore(player, skillType.key);
+                    plugin.getDb().save(score);
+                    result.put(skillType, score);
+                }
+            }
+        }
+        return result;
+    }
+
+    private SQLScore getScore(UUID player, SkillType skill) {
+        return getScore(player).get(skill);
     }
 
     public double getSkillPoints(UUID player, SkillType skill) {
-        return SQLScore.of(player, skill).getSkillPoints();
+        return getScore(player, skill).getSkillPoints();
     }
 
     public int getSkillLevel(UUID player, SkillType skill) {
-        return SQLScore.of(player, skill).getSkillLevel();
+        return getScore(player, skill).getSkillLevel();
     }
 
     public static int levelForPoints(double skillPointsDouble) {
@@ -79,86 +109,56 @@ public final class Score {
         return pointsForLevel(level + 1) - skillPoints;
     }
 
-    private Reward rewardForTypeAndData(SkillType skill, SQLReward.Target target, int type, int data) {
-        Reward result = SQLReward.find(skill, target, type, data, null);
-        if (result == null) {
-            result = SQLReward.find(skill, target, type, null, null);
-        }
-        return result;
+    private Reward rewardForTypeAndData(SkillType skill, Reward.Target target, int type, int data) {
+        return rewards.get(new Reward.Key(skill, target, type, data, null));
     }
 
     public Reward rewardForBlock(SkillType skill, int blockType, int blockData) {
-        return rewardForTypeAndData(skill, SQLReward.Target.BLOCK, blockType, blockData);
+        return rewardForTypeAndData(skill, Reward.Target.BLOCK, blockType, blockData);
     }
 
     public Reward rewardForItem(SkillType skill, int blockType, int blockData) {
-        return rewardForTypeAndData(skill, SQLReward.Target.ITEM, blockType, blockData);
+        return rewardForTypeAndData(skill, Reward.Target.ITEM, blockType, blockData);
     }
 
     public Reward rewardForBlockNamed(SkillType skill, int blockType, int blockData, String name) {
-        return SQLReward.find(skill, SQLReward.Target.BLOCK, blockType, blockData, name);
+        return rewards.get(new Reward.Key(skill, Reward.Target.BLOCK, blockType, blockData, name));
     }
 
     public Reward rewardForEntity(SkillType skill, String entityType) {
-        return SQLReward.find(skill, SQLReward.Target.ENTITY, null, null, entityType);
+        return rewards.get(new Reward.Key(skill, Reward.Target.ENTITY, null, null, entityType));
     }
 
     public Reward rewardForPotionEffect(SkillType skill, int effectType, int effectAmplifier) {
-        return rewardForTypeAndData(skill, SQLReward.Target.POTION_EFFECT, effectType, effectAmplifier);
+        return rewards.get(new Reward.Key(skill, Reward.Target.POTION_EFFECT, effectType, effectAmplifier, null));
     }
 
     public Reward rewardForEnchantment(SkillType skill, int enchantType, int enchantLevel) {
-        return rewardForTypeAndData(skill, SQLReward.Target.ENCHANTMENT, enchantType, enchantLevel);
+        return rewardForTypeAndData(skill, Reward.Target.ENCHANTMENT, enchantType, enchantLevel);
     }
 
     public Reward rewardForName(SkillType skill, String name) {
-        return SQLReward.find(skill, SQLReward.Target.NAME, null, null, name);
+        return rewards.get(new Reward.Key(skill, Reward.Target.NAME, null, null, name));
     }
 
     public Reward rewardForName(SkillType skill, String name, int data) {
-        return SQLReward.find(skill, SQLReward.Target.NAME, null, data, name);
-    }
-
-    public Reward rewardForNameAndMaximum(SkillType skill, String name, int dataMax) {
-        Reward result = null;
-        int data = 0;
-        for (SQLReward reward : SQLReward.findList(skill, SQLReward.Target.NAME, null, null, name)) {
-            if (reward.getData() > data && reward.getData() <= dataMax) {
-                result = reward;
-                data = reward.getData();
-            }
-        }
-        return result;
-    }
-
-    public void logReward(Reward reward, UUID player, Reward outcome) {
-        if (!(reward instanceof SQLReward)) return;
-        SQLLog.log((SQLReward)reward, player, outcome);
+        return rewards.get(new Reward.Key(skill, Reward.Target.NAME, null, data, name));
     }
 
     public Highscore getHighscore(SkillType skill) {
-        if (skill == null) {
-            Highscore result = totalHighscore;
-            if (result == null || result.ageInSeconds() > 60 * 10) {
-                result = Highscore.create(null);
-                totalHighscore = result;
-            }
-            return result;
-        } else {
-            Highscore result = highscores.get(skill);
-            if (result == null || result.ageInSeconds() > 60) {
-                result = Highscore.create(skill);
-                highscores.put(skill.key, result);
-            }
-            return result;
+        Highscore result = highscores.get(skill);
+        if (result == null || result.ageInSeconds() > 60) {
+            result = Highscore.create(plugin, skill);
+            highscores.put(skill, result);
         }
+        return result;
     }
 
     Set<Perk> getPerks(UUID player) {
         Set<Perk> result = perks.get(player);
         if (result == null) {
             result = EnumSet.noneOf(Perk.class);
-            for (SQLPerk sqlPerk: SQLPerk.find(player)) {
+            for (SQLPerk sqlPerk: plugin.getDb().find(SQLPerk.class).where().eq("player", player).findList()) {
                 try {
                     Perk perk = Perk.valueOf(sqlPerk.getPerk().toUpperCase());
                     result.add(perk);
@@ -178,13 +178,13 @@ public final class Score {
         Set<Perk> playerPerks = getPerks(player);
         if (playerPerks.contains(perk)) return false;
         playerPerks.add(perk);
-        SQLPerk.unlock(player, perk.name().toLowerCase());
+        plugin.getDb().saveIgnore(new SQLPerk(player, perk.key));
         return true;
     }
 
     void clear() {
         highscores.clear();
-        totalHighscore = null;
         perks.clear();
+        rewards.clear();
     }
 }

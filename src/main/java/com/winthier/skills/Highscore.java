@@ -4,11 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.Value;
 
-@Getter
+@Getter @RequiredArgsConstructor
 public final class Highscore {
-    private Highscore() { }
+    private final SkillsPlugin plugin;
 
     @Value
     public static class Row {
@@ -21,11 +22,11 @@ public final class Highscore {
     final long timestamp = System.currentTimeMillis();
     final List<Row> rows = new ArrayList<>();
 
-    static Highscore create(SkillType skill) {
-        Highscore result = new Highscore();
+    static Highscore create(SkillsPlugin plugin, SkillType skill) {
+        Highscore result = new Highscore(plugin);
         int lastLevel = -1;
         int rank = 0;
-        for (SQLScore.Entry score : SQLScore.rank(skill)) {
+        for (SQLScore score : plugin.getDb().find(SQLScore.class).where().eq("skill", skill.key).orderByDescending("skillLevel").findList()) {
             UUID player = score.getPlayer();
             int skillPoints = (int)score.getSkillPoints();
             int skillLevel = score.getSkillLevel();

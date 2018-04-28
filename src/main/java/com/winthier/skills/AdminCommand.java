@@ -1,16 +1,12 @@
 package com.winthier.skills;
 
 import com.winthier.playercache.PlayerCache;
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.command.Command;
@@ -88,13 +84,8 @@ class AdminCommand implements CommandExecutor {
                 return true;
             }
             LevelUpEffect.launch(plugin, player, skill, skillLevel);
-        } else if (cmd.equals("backlog")) {
-            sender.sendMessage("Moneys: " + plugin.getMoneys().size());
-            sender.sendMessage("Score: " + SQLScore.getDIRTIES().size());
-            sender.sendMessage("Logs: " + SQLLog.getDIRTIES().size());
         } else {
             sender.sendMessage("skadmin test levelup <player> <skill> <level>");
-            sender.sendMessage("skadmin test backlog");
         }
         return true;
     }
@@ -106,8 +97,7 @@ class AdminCommand implements CommandExecutor {
             sender.sendMessage("[Skills] Configuration reloaded");
         } else if (cmd.equals("save")) {
             plugin.writeDefaultFiles(false);
-            plugin.saveAll();
-            sender.sendMessage("[Skills] All data saved to disk");
+            sender.sendMessage("[Skills] Default files saved to disk");
         } else if (cmd.equals("overwrite")) {
             plugin.writeDefaultFiles(true);
             sender.sendMessage("[Skills] All config files overwritten with plugin defaults");
@@ -124,69 +114,22 @@ class AdminCommand implements CommandExecutor {
         if (cmd.equals("list") && args.length == 2) {
             Skill skill = plugin.skillByName(args[1]);
             if (skill == null) throw new IllegalArgumentException("Skill not found: " + args[1]);
+            SkillType skillType = skill.getSkillType();
             sender.sendMessage("Rewards of " + skill.getDisplayName() + ":");
             int count = 0;
-            for (SQLReward sqlReward : SQLReward.findList(skill.skillType)) {
-                sender.sendMessage(StoredReward.of(sqlReward).toString());
-                count++;
-            }
-            sender.sendMessage("end of list (" + count + ")");
-        } else if (cmd.equals("flush") && args.length == 1) {
-            SQLDB.saveAll();
-            SQLDB.clearAllCaches();
-            sender.sendMessage("Databases flushed");
-        } else if (cmd.equals("clear") && args.length == 1) {
-            SQLDB.saveAll();
-            SQLDB.clearAllCaches();
-            SQLReward.deleteAll();
-            sender.sendMessage("All rewards cleared");
-        } else if (cmd.equals("import") && args.length == 1) {
-            SQLDB.saveAll();
-            SQLDB.clearAllCaches();
-            File file = new File(plugin.getDataFolder(), SkillsPlugin.REWARDS_TXT);
-            if (!file.exists()) {
-                sender.sendMessage(SkillsPlugin.REWARDS_TXT + " not found");
-                return true;
-            }
-            int linum = 0;
-            int count = 0;
-            BufferedReader in = null;
-            StoredReward reward = null;
-            try {
-                Set<StoredReward.Key> keys = new HashSet<>();
-                in = new BufferedReader(new FileReader(file));
-                String line = null;
-                while (null != (line = in.readLine())) {
-                    linum++;
-                    line = line.split("#")[0];
-                    if (line.isEmpty()) continue;
-                    String[] tokens = line.split("\\s+");
-                    reward = StoredReward.parse(tokens);
-                    if (keys.contains(reward.key)) sender.sendMessage("Warning: Duplicate key '" + reward.key + "' in line " + linum);
-                    reward.store();
-                    sender.sendMessage("" + reward);
+            for (Reward reward: plugin.getScore().getRewards().values()) {
+                if (reward.key.getSkill() == skillType) {
+                    sender.sendMessage(reward.toString());
                     count++;
                 }
-                sender.sendMessage("Imported " + count + " rewards from " + SkillsPlugin.REWARDS_TXT);
-            } catch (IOException ioe) {
-                sender.sendMessage("Error reading " + SkillsPlugin.REWARDS_TXT + ". See console.");
-                ioe.printStackTrace();
-            } catch (RuntimeException re) {
-                sender.sendMessage("Error parsing " + SkillsPlugin.REWARDS_TXT + ", line " + linum + ". See console.");
-                sender.sendMessage("" + reward);
-                re.printStackTrace();
-            } finally {
-                try {
-                    in.close();
-                } catch (IOException ioe) {
-                    ioe.printStackTrace();
-                }
             }
+            sender.sendMessage("end of list (" + count + ")");
+        } else if (cmd.equals("reload") && args.length == 1) {
+            plugin.importRewards();
+            sender.sendMessage("Rewards imported");
         } else {
             sender.sendMessage("/skadmin reward list <skill>");
-            sender.sendMessage("/skadmin reward flush");
-            sender.sendMessage("/skadmin reward clear");
-            sender.sendMessage("/skadmin reward import");
+            sender.sendMessage("/skadmin reward reload");
         }
         return true;
     }

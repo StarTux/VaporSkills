@@ -1,7 +1,6 @@
 package com.winthier.skills;
 
 import java.util.Date;
-import java.util.List;
 import java.util.UUID;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,7 +14,7 @@ import lombok.Setter;
 
 @Entity
 @Table(name = "perks",
-       uniqueConstraints = @UniqueConstraint(columnNames = {"player", "perk"}))
+       uniqueConstraints = @UniqueConstraint(columnNames = {"player", "skill"}))
 @Getter
 @Setter
 @NoArgsConstructor
@@ -26,8 +25,4 @@ public final class SQLPerkProgress {
     @Column(nullable = false) private Integer perkPoints;
     @Column(nullable = false) private Integer perks;
     @Version private Date version;
-
-    public static List<SQLPerk> find(UUID queryPlayer) {
-        return SQLDB.get().find(SQLPerk.class).where().eq("player", queryPlayer).findList();
-    }
 }

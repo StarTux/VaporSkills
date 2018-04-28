@@ -1,7 +1,10 @@
 package com.winthier.skills;
 
 import com.winthier.sql.SQLDatabase;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -14,9 +17,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import lombok.Getter;
-import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.ExperienceOrb;
@@ -24,7 +25,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -37,7 +37,6 @@ public final class SkillsPlugin extends JavaPlugin implements Listener {
     // Singleton
     @Getter private static SkillsPlugin instance;
     // External Data
-    private Economy economy;
     private SQLDatabase db;
     // Commands
     private final AdminCommand adminCommand = new AdminCommand(this);
@@ -47,7 +46,6 @@ public final class SkillsPlugin extends JavaPlugin implements Listener {
     private final Score score = new Score(this);
     private final Map<SkillType, Skill> skillMap = new EnumMap<>(SkillType.class);
     private final Map<String, Skill> nameMap = new HashMap<>();
-    private final Map<UUID, Double> moneys = new HashMap<>();
     private final Map<UUID, Double> exps = new HashMap<>();
     private final Set<UUID> playersInDebugMode = new HashSet<>();
     private final Map<UUID, Session> sessions = new HashMap<>();
@@ -57,20 +55,20 @@ public final class SkillsPlugin extends JavaPlugin implements Listener {
         instance = this;
     }
 
+    static List<Class<?>> getDatabaseClasses() {
+        return Arrays.asList(SQLScore.class,
+                             SQLPerk.class,
+                             SQLPerkProgress.class);
+    }
+
     @Override
     public void onEnable() {
         // Files
         writeDefaultFiles(false);
         reloadConfig();
-        // Economy
-        if (!setupEconomy()) {
-            getLogger().warning("Economy setup failed. Disabling skills.");
-            getServer().getPluginManager().disablePlugin(this);
-            return;
-        }
         // Database
         db = new SQLDatabase(this);
-        for (Class<?> clazz: SQLDB.getDatabaseClasses()) db.registerTable(clazz);
+        for (Class<?> clazz: getDatabaseClasses()) db.registerTable(clazz);
         if (!db.createAllTables()) {
             getLogger().warning("Database setup failed. Disabling skills.");
             getServer().getPluginManager().disablePlugin(this);
@@ -127,8 +125,9 @@ public final class SkillsPlugin extends JavaPlugin implements Listener {
                 on20Ticks();
             }
         }.runTaskTimer(this, 20, 20);
-        //
+        // Cache
         buildNameMap();
+        importRewards();
     }
 
     @Override
@@ -139,31 +138,12 @@ public final class SkillsPlugin extends JavaPlugin implements Listener {
         for (Player player: getServer().getOnlinePlayers()) {
             getSession(player).onDisable();
         }
-        saveAll();
-        SQLDB.clearAllCaches();
     }
 
     void writeDefaultFiles(boolean force) {
         saveResource(CONFIG_YML, force);
         saveResource(REWARDS_TXT, force);
         saveResource(PERKS_YML, force);
-    }
-
-    void saveAll() {
-        try {
-            SQLDB.saveAll();
-            depositAllMoneys();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    void saveSome() {
-        try {
-            SQLDB.saveSome();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     public ConfigurationSection getPerksConfig() {
@@ -183,17 +163,11 @@ public final class SkillsPlugin extends JavaPlugin implements Listener {
         for (Skill skill : getSkills()) skill.configure();
         buildNameMap();
         score.clear();
-    }
-
-    private boolean setupEconomy() {
-        RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(Economy.class);
-        if (economyProvider != null) economy = economyProvider.getProvider();
-        return (economy != null);
+        importRewards();
     }
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
-        saveAll();
         sessions.remove(event.getPlayer().getUniqueId());
     }
 
@@ -235,21 +209,6 @@ public final class SkillsPlugin extends JavaPlugin implements Listener {
         return skillMap.get(type);
     }
 
-    void giveMoney(Player player, double amount) {
-        if (amount < 0.01) return;
-        Double total = moneys.remove(player.getUniqueId());
-        if (total == null) {
-            total = amount;
-        } else {
-            total += amount;
-        }
-        if (total >= 5.0) {
-            getEconomy().depositPlayer(player, total);
-        } else {
-            moneys.put(player.getUniqueId(), total);
-        }
-    }
-
     void giveExp(Player player, double amount) {
         if (amount < 0.01) return;
         final UUID uuid = player.getUniqueId();
@@ -265,22 +224,6 @@ public final class SkillsPlugin extends JavaPlugin implements Listener {
             player.getWorld().spawn(player.getLocation(), ExperienceOrb.class).setExperience(full);
         }
         exps.put(uuid, stored);
-    }
-
-    void depositAllMoneys() {
-        try {
-            for (Map.Entry<UUID, Double> entry : moneys.entrySet()) {
-                Double amount = entry.getValue();
-                if (amount == null || amount < 0.01) continue;
-                OfflinePlayer player = Bukkit.getServer().getOfflinePlayer(entry.getKey());
-                if (player == null) continue;
-                getEconomy().depositPlayer(player, amount);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            moneys.clear();
-        }
     }
 
     boolean hasDebugMode(Player player) {
@@ -309,9 +252,54 @@ public final class SkillsPlugin extends JavaPlugin implements Listener {
     }
 
     void on20Ticks() {
-        saveSome();
         for (Player player : Bukkit.getServer().getOnlinePlayers()) {
             getSession(player.getUniqueId()).on20Ticks();
+        }
+    }
+
+    void importRewards() {
+        File file = new File(getDataFolder(), REWARDS_TXT);
+        if (!file.exists()) {
+            getLogger().warning(REWARDS_TXT + " not found");
+            return;
+        }
+        int linum = 0;
+        BufferedReader in = null;
+        Reward reward = null;
+        try {
+            Map<Reward.Key, Reward> map = new HashMap<>();
+            in = new BufferedReader(new FileReader(file));
+            String line = null;
+            while (null != (line = in.readLine())) {
+                linum++;
+                line = line.split("#")[0];
+                if (line.isEmpty()) continue;
+                String[] tokens = line.split("\\s+");
+                try {
+                    reward = Reward.parse(tokens);
+                } catch (IllegalArgumentException iae) {
+                    System.err.println("Skipping " + REWARDS_TXT + " line " + linum);
+                    iae.printStackTrace();
+                    continue;
+                }
+                if (map.containsKey(reward.key)) getLogger().warning("Warning: Duplicate key '" + reward.key + "' in line " + linum);
+                map.put(reward.key, reward);
+            }
+            score.setRewards(map);
+            getLogger().info("Imported " + map.size() + " rewards from " + REWARDS_TXT);
+        } catch (IOException ioe) {
+            getLogger().warning("Error reading " + REWARDS_TXT + ". See console.");
+            ioe.printStackTrace();
+        } catch (RuntimeException re) {
+            getLogger().warning("Error parsing " + REWARDS_TXT + ", line " + linum + ". See console.");
+            getLogger().warning("" + reward);
+            re.printStackTrace();
+        } finally {
+            try {
+                in.close();
+            } catch (IOException ioe) {
+                ioe.printStackTrace();
+            }
         }
     }
 }

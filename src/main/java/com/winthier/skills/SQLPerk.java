@@ -1,7 +1,6 @@
 package com.winthier.skills;
 
 import java.util.Date;
-import java.util.List;
 import java.util.UUID;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -24,15 +23,9 @@ public final class SQLPerk {
     @Column(nullable = false) private String perk;
     @Column(nullable = false) private Date unlocked;
 
-    public static List<SQLPerk> find(UUID queryPlayer) {
-        return SQLDB.get().find(SQLPerk.class).where().eq("player", queryPlayer).findList();
-    }
-
-    public static void unlock(UUID updatePlayer, String updatePerk) {
-        SQLPerk row = new SQLPerk();
-        row.setPlayer(updatePlayer);
-        row.setPerk(updatePerk);
-        row.setUnlocked(new Date());
-        SQLDB.get().getTable(SQLPerk.class).saveIgnore(row);
+    public SQLPerk(UUID player, String perk) {
+        setPlayer(player);
+        setPerk(perk);
+        setUnlocked(new Date());
     }
 }

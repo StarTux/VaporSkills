@@ -53,7 +53,7 @@ class HighscoreCommand implements CommandExecutor {
         Msg.msg(player, "");
         Msg.msg(player, "&3&lHighscore &7&o(Click for more info)");
         List<Object> message = new ArrayList<>();
-        Highscore hi = plugin.getScore().getHighscore(null);
+        Highscore hi = plugin.getScore().getHighscore(SkillType.TOTAL);
         int rank = hi.rankOfPlayer(uuid);
         String rankString = rank > 0 ? "#" + rank : "-";
         message.add(Msg.button(
@@ -87,18 +87,13 @@ class HighscoreCommand implements CommandExecutor {
     void skillDetail(Player player, String name) {
         Highscore hi;
         String displayName;
-        if ("total".equals(name)) {
-            hi = plugin.getScore().getHighscore(null);
-            displayName = "Total";
-        } else {
-            Skill skill = plugin.skillByName(name);
-            if (skill == null) {
-                player.sendMessage("Skill not found: " + name);
-                return;
-            }
-            hi = plugin.getScore().getHighscore(skill.skillType);
-            displayName = skill.getDisplayName();
+        Skill skill = plugin.skillByName(name);
+        if (skill == null) {
+            player.sendMessage("Skill not found: " + name);
+            return;
         }
+        hi = plugin.getScore().getHighscore(skill.skillType);
+        displayName = skill.getDisplayName();
         final UUID uuid = player.getUniqueId();
         Msg.msg(player, "");
         int rank = hi.rankOfPlayer(uuid);

@@ -27,9 +27,8 @@ class Session {
         this.progressBar = Bukkit.getServer().createBossBar("Skills", BarColor.PINK, BarStyle.SEGMENTED_20);
     }
 
-    void onReward(Player player, Skill skill, Reward reward) {
+    void onReward(Player player, Skill skill, double skillPoints) {
         if (!progressBarEnabled) return;
-        sessionMoney += reward.getMoney();
         int points = (int)plugin.getScore().getSkillPoints(uuid, skill.skillType);
         int level = Score.levelForPoints(points);
         int pointsA = Score.pointsForLevel(level);

@@ -1,13 +1,10 @@
 package com.winthier.skills;
 
 import java.io.File;
-import java.util.UUID;
 import lombok.Getter;
 import lombok.NonNull;
-import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.enchantments.Enchantment;
@@ -114,51 +111,30 @@ public abstract class Skill {
         return plugin.getScore().rewardForName(skillType, name, data);
     }
 
-    final Reward rewardForNameAndMaximum(String name, int dataMax) {
-        return plugin.getScore().rewardForNameAndMaximum(skillType, name, dataMax);
-    }
-
     private void giveSkillPoints(Player player, double skillPoints) {
         if (skillPoints < 0.01) return;
         plugin.getScore().giveSkillPoints(player.getUniqueId(), skillType, skillPoints);
     }
 
-    private void giveMoney(Player player, double money) {
-        if (money < 0.01) return;
-        plugin.giveMoney(player, money);
-    }
-
-    private void giveExp(Player player, double exp) {
-        if (exp < 0.01) return;
-        plugin.giveExp(player, exp);
-    }
-
     final void giveReward(@NonNull Player player, Reward reward, double factor) {
         int level = plugin.getScore().getSkillLevel(player.getUniqueId(), skillType);
-        double bonusFactor = 1.0 + (double)(level / 10) / 100.0;
         if (reward == null) return;
         double skillPoints = reward.getSkillPoints() * factor;
-        double money       = reward.getMoney()       * factor * bonusFactor;
         double exp         = reward.getExp()         * factor;
-        if (skillPoints < 0.01 && money < 0.01 && exp < 0.01) return;
+        if (skillPoints < 0.01 && exp < 0.01) return;
         if (plugin.hasDebugMode(player)) {
-            StoredReward br = StoredReward.of(reward);
-            Msg.msg(player, "[sk] &e%s &8%s &e%s %s&8:&e%s &8\"&e%s&8\" &6%.2f&8sp &6%.2f&8mo &6%.2f&8xp",
+            Msg.msg(player, "[sk] &e%s &8%s &e%s %s&8:&e%s &8\"&e%s&8\" &6%.2f&8sp &6%.2f&8xp",
                            getShorthand(),
-                           Msg.camelCase(br.key.getTarget().name()),
-                           Msg.camelCase(br.key.typeAsPrettyString()),
-                           br.key.typeAsString(),
-                           br.key.dataAsString(),
-                           br.key.nameAsString(),
-                           skillPoints, money, exp);
+                           Msg.camelCase(reward.key.getTarget().name()),
+                           Msg.camelCase(reward.key.typeAsPrettyString()),
+                           reward.key.typeAsString(),
+                           reward.key.dataAsString(),
+                           reward.key.nameAsString(),
+                           skillPoints, exp);
         }
         giveSkillPoints(player, skillPoints);
-        giveMoney(player, money);
-        giveExp(player, exp);
-        Reward outcome = new CustomReward((float)skillPoints, (float)money, (float)exp);
-        plugin.getSession(player).onReward(player, this, outcome);
-        plugin.getScore().logReward(reward, player.getUniqueId(), outcome);
-        Bukkit.getServer().getPluginManager().callEvent(new SkillsRewardEvent(player, this, outcome));
+        plugin.giveExp(player, exp);
+        plugin.getSession(player).onReward(player, this, skillPoints);
     }
 
     final void giveReward(Player player, Reward reward) {
@@ -195,48 +171,6 @@ public abstract class Skill {
         ConfigurationSection result = plugin.getConfig().getConfigurationSection(skillType.key);
         if (result == null) result = plugin.getConfig().createSection(skillType.key);
         return result;
-    }
-
-    final String getPlayerSettingString(UUID uuid, String key, String dfl) {
-        String result = SQLPlayerSetting.getString(uuid, skillType.key, key);
-        return result != null ? result : dfl;
-    }
-
-    final int getPlayerSettingInt(UUID uuid, String key, int dfl) {
-        Integer result = SQLPlayerSetting.getInt(uuid, skillType.key, key);
-        return result != null ? result : dfl;
-    }
-
-    final double getPlayerSettingDouble(UUID uuid, String key, double dfl) {
-        Double result = SQLPlayerSetting.getDouble(uuid, skillType.key, key);
-        return result != null ? result : dfl;
-    }
-
-    final Location getPlayerSettingLocation(UUID uuid, String key, Location dfl) {
-        String serial = SQLPlayerSetting.getString(uuid, skillType.key, key);
-        if (serial == null) return dfl;
-        String[] tokens = serial.split(",");
-        if (tokens.length != 6) return dfl;
-        World world = Bukkit.getServer().getWorld(tokens[0]);
-        if (world == null) return dfl;
-        try {
-            return new Location(world,
-                                Double.parseDouble(tokens[1]),
-                                Double.parseDouble(tokens[2]),
-                                Double.parseDouble(tokens[3]),
-                                Float.parseFloat(tokens[4]),
-                                Float.parseFloat(tokens[5]));
-        } catch (NumberFormatException nfe) {
-            return dfl;
-        }
-    }
-
-    final void setPlayerSetting(UUID uuid, String key, Object value) {
-        if (value instanceof Location) {
-            Location loc = (Location)value;
-            value = String.format("%s,%f,%f,%f,%f,%f", loc.getWorld().getName(), loc.getX(), loc.getY(), loc.getZ(), loc.getYaw(), loc.getPitch());
-        }
-        SQLPlayerSetting.set(uuid, skillType.key, key, value);
     }
 
     static final double linearSkillBonus(double max, int skillLevel) {

@@ -17,10 +17,12 @@ public enum SkillType {
     // Mining Skills
     DIG(Category.MINE),
     MINE(Category.MINE),
-    WOODCUT(Category.MINE);
+    WOODCUT(Category.MINE),
+
+    TOTAL(Category.TOTAL);
 
     public enum Category {
-        CRAFT, COMBAT, FARM, MINE;
+        CRAFT, COMBAT, FARM, MINE, TOTAL;
     }
 
     public final Category category;
