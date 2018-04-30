@@ -77,7 +77,7 @@ final class SmithSkill extends Skill implements Listener {
                 event.getInventory().setItem(0, null);
                 event.getInventory().setItem(1, null);
                 event.getInventory().setItem(2, null);
-                event.setCursor(metadata.result);
+                event.getView().setCursor(metadata.result);
                 onDidImprove(player, metadata);
             }
         } else {
