@@ -10,7 +10,7 @@ import org.bukkit.event.HandlerList;
 @RequiredArgsConstructor
 public class SkillsLevelUpEvent extends Event {
     final Player player;
-    final Skill skill;
+    final SkillType skillType;
     final int level;
     private static HandlerList handlers = new HandlerList();
 

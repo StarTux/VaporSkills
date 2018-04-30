@@ -47,7 +47,11 @@ class AdminCommand implements CommandExecutor {
                     plugin.setDebugMode(player, true);
                     player.sendMessage("Debug mode enabled");
                 }
+            } else if (cmd.equals("info")) {
+                sender.sendMessage("Debug info");
+                sender.sendMessage("Dirty scores: " + plugin.getScore().dirtyScores.size());
             } else {
+                sender.sendMessage("/skadmin info");
                 sender.sendMessage("/skadmin debug");
                 sender.sendMessage("/skadmin config");
                 sender.sendMessage("/skadmin reward");
@@ -70,10 +74,17 @@ class AdminCommand implements CommandExecutor {
                 sender.sendMessage("Player not found: " + args[1]);
                 return true;
             }
-            Skill skill = plugin.skillByName(args[2]);
-            if (skill == null) {
-                sender.sendMessage("Skill not found: " + args[2]);
-                return true;
+            SkillType skillType;
+            if ("total".equals(args[2])) {
+                skillType = SkillType.TOTAL;
+            } else {
+                Skill skill = plugin.skillByName(args[2]);
+                if (skill == null) {
+                    sender.sendMessage("Skill not found: " + args[2]);
+                    return true;
+                } else {
+                    skillType = skill.getSkillType();
+                }
             }
             int skillLevel = 0;
             try {
@@ -83,7 +94,7 @@ class AdminCommand implements CommandExecutor {
                 sender.sendMessage("Invalid level: " + args[3]);
                 return true;
             }
-            LevelUpEffect.launch(plugin, player, skill, skillLevel);
+            LevelUpEffect.launch(plugin, player, skillType, skillLevel);
         } else {
             sender.sendMessage("skadmin test levelup <player> <skill> <level>");
         }

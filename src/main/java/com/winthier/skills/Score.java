@@ -1,8 +1,11 @@
 package com.winthier.skills;
 
+import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.EnumSet;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -13,10 +16,11 @@ import lombok.Setter;
 @RequiredArgsConstructor
 public final class Score {
     private final SkillsPlugin plugin;
-    private final Map<SkillType, Highscore> highscores = new HashMap<>();
-    private final Map<UUID, Map<SkillType, SQLScore>> scores = new HashMap<>();
-    private final Map<UUID, Set<Perk>> perks = new HashMap<>();
+    final Map<SkillType, Highscore> highscores = new HashMap<>();
+    final Map<UUID, Map<SkillType, SQLScore>> scores = new HashMap<>();
+    final Map<UUID, Set<Perk>> perks = new HashMap<>();
     @Getter @Setter private Map<Reward.Key, Reward> rewards = new HashMap<>();
+    final List<SQLScore> dirtyScores = new ArrayList<>();
 
     // Score getters
 
@@ -38,14 +42,20 @@ public final class Score {
         // Calculate new
         double newSkillPoints = skillPoints + points;
         int newSkillLevel = levelForPoints(newSkillPoints);
+        score.setSkillPoints(newSkillPoints);
         // Call hook(s)
         if (newSkillLevel > skillLevel) {
+            score.setSkillLevel(newSkillLevel);
+            // Save instantly
+            plugin.getDb().save(score);
+            dirtyScores.remove(score);
+            // Flush highscores
+            highscores.remove(skill);
+            if (skill != SkillType.TOTAL) giveSkillPoints(player, skill, points);
             plugin.onLevelUp(player, skill, newSkillLevel);
+        } else {
+            if (!dirtyScores.contains(score)) dirtyScores.add(score);
         }
-        // "Write" data
-        score.setSkillPoints(newSkillPoints);
-        score.setSkillLevel(newSkillLevel);
-        plugin.getDb().save(score);
     }
 
     public void setSkillLevel(UUID player, SkillType skill, int skillLevel) {
@@ -55,6 +65,7 @@ public final class Score {
         score.setSkillPoints(skillPoints);
         score.setSkillLevel(skillLevel);
         plugin.getDb().save(score);
+        dirtyScores.remove(score);
     }
 
     // Score: points-level conversion
@@ -93,7 +104,7 @@ public final class Score {
 
     public Highscore getHighscore(SkillType skill) {
         Highscore result = highscores.get(skill);
-        if (result == null || result.ageInSeconds() > 60) { // TODO
+        if (result == null) {
             result = Highscore.create(plugin, skill);
             highscores.put(skill, result);
         }
@@ -156,9 +167,31 @@ public final class Score {
         return getScore(player).get(skill);
     }
 
+    void saveOneDirtyRow() {
+        if (!dirtyScores.isEmpty()) {
+            SQLScore score = dirtyScores.remove(0);
+            plugin.getDb().save(score);
+        }
+    }
+
+    void removePlayer(UUID player) {
+        scores.remove(player);
+        perks.remove(player);
+        Iterator<SQLScore> iter = dirtyScores.iterator();
+        while (iter.hasNext()) {
+            SQLScore score = iter.next();
+            if (score.getPlayer().equals(player)) {
+                plugin.getDb().save(score);
+                iter.remove();
+            }
+        }
+    }
+
     void clear() {
         highscores.clear();
         perks.clear();
         rewards.clear();
+        scores.clear();
+        dirtyScores.clear();
     }
 }

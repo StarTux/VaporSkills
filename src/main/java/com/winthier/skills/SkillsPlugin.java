@@ -50,6 +50,7 @@ public final class SkillsPlugin extends JavaPlugin implements Listener {
     private final Set<UUID> playersInDebugMode = new HashSet<>();
     private final Map<UUID, Session> sessions = new HashMap<>();
     private ConfigurationSection perksConfig = null;
+    private long ticks = 0;
 
     public SkillsPlugin() {
         instance = this;
@@ -122,9 +123,9 @@ public final class SkillsPlugin extends JavaPlugin implements Listener {
         // Tasks
         new BukkitRunnable() {
             @Override public void run() {
-                on20Ticks();
+                onTick();
             }
-        }.runTaskTimer(this, 20, 20);
+        }.runTaskTimer(this, 1, 1);
         // Cache
         buildNameMap();
         importRewards();
@@ -168,7 +169,9 @@ public final class SkillsPlugin extends JavaPlugin implements Listener {
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
-        sessions.remove(event.getPlayer().getUniqueId());
+        final UUID uuid = event.getPlayer().getUniqueId();
+        sessions.remove(uuid);
+        score.removePlayer(uuid);
     }
 
     void buildNameMap() {
@@ -190,11 +193,9 @@ public final class SkillsPlugin extends JavaPlugin implements Listener {
 
     public void onLevelUp(UUID uuid, SkillType skillType, int level) {
         final Player player = Bukkit.getServer().getPlayer(uuid);
-        final Skill skill = getSkill(skillType);
         if (player == null) return;
-        if (skill == null) return;
-        LevelUpEffect.launch(this, player, (Skill)skill, level);
-        Bukkit.getServer().getPluginManager().callEvent(new SkillsLevelUpEvent(player, (Skill)skill, level));
+        LevelUpEffect.launch(this, player, skillType, level);
+        Bukkit.getServer().getPluginManager().callEvent(new SkillsLevelUpEvent(player, skillType, level));
     }
 
     public Collection<? extends Skill> getSkills() {
@@ -251,11 +252,16 @@ public final class SkillsPlugin extends JavaPlugin implements Listener {
         return getSession(player.getUniqueId());
     }
 
-    void on20Ticks() {
-        for (Player player : Bukkit.getServer().getOnlinePlayers()) {
-            getSession(player.getUniqueId()).on20Ticks();
+    void onTick() {
+        ticks += 1;
+        if (ticks % 20 == 0) {
+            for (Player player : Bukkit.getServer().getOnlinePlayers()) {
+                getSession(player.getUniqueId()).on20Ticks();
+            }
         }
+        score.saveOneDirtyRow();
     }
+
 
     void importRewards() {
         File file = new File(getDataFolder(), REWARDS_TXT);

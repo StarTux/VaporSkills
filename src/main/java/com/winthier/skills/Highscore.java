@@ -10,6 +10,7 @@ import lombok.Value;
 @Getter @RequiredArgsConstructor
 public final class Highscore {
     private final SkillsPlugin plugin;
+    final List<Row> rows = new ArrayList<>();
 
     @Value
     public static class Row {
@@ -18,9 +19,6 @@ public final class Highscore {
         final int skillPoints;
         final int skillLevel;
     }
-
-    final long timestamp = System.currentTimeMillis();
-    final List<Row> rows = new ArrayList<>();
 
     static Highscore create(SkillsPlugin plugin, SkillType skill) {
         Highscore result = new Highscore(plugin);
@@ -63,9 +61,5 @@ public final class Highscore {
 
     public int size() {
         return rows.size();
-    }
-
-    public long ageInSeconds() {
-        return (System.currentTimeMillis() - timestamp) / 1000;
     }
 }
