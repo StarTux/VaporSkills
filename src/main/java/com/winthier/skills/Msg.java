@@ -165,4 +165,12 @@ final class Msg {
     public static String camelCase(String input) {
         return input.substring(0, 1).toUpperCase() + input.substring(1, input.length()).toLowerCase();
     }
+
+    public static String toJSONString(Object o) {
+        return JSONValue.toJSONString(o);
+    }
+
+    public static Object fromJSONString(String s) {
+        return JSONValue.parse(s);
+    }
 }

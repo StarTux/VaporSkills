@@ -277,9 +277,9 @@ public final class SkillsPlugin extends JavaPlugin implements Listener {
                 String[] tokens = line.split("\\s+");
                 try {
                     reward = Reward.parse(tokens);
-                } catch (IllegalArgumentException iae) {
+                } catch (RuntimeException re) {
                     System.err.println("Skipping " + REWARDS_TXT + " line " + linum);
-                    iae.printStackTrace();
+                    re.printStackTrace();
                     continue;
                 }
                 if (map.containsKey(reward.key)) getLogger().warning("Warning: Duplicate key '" + reward.key + "' in line " + linum);

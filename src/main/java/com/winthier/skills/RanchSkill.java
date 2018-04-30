@@ -33,7 +33,8 @@ final class RanchSkill extends Skill implements Listener {
         if (!(event.getBreeder() instanceof Player)) return;
         final Player player = (Player)event.getBreeder();
         final LivingEntity entity = event.getEntity();
-        giveReward(player, rewardForEntity(entity));
+        Reward reward = getReward(Reward.Category.BREED_ENTITY, entity.getType().name(), null, null);
+        giveReward(player, reward);
         onBreed(player, event.getMother(), event.getFather(), entity);
     }
 

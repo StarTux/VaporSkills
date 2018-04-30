@@ -10,30 +10,16 @@ brawl:
   DisplayName: Brawling
   Shorthand: Brawl
   Description: Fight hostile monsters in close combat, ideally with your sword.
-breed:
+ranch:
   Enabled: true
-  DisplayName: Breeding
-  Shorthand: Breed
+  DisplayName: Ranching
+  Shorthand: Ranch
   Description: Feed your farm animals to make them breed and increase their numbers.
 brew:
   Enabled: true
   DisplayName: Brewing
   Shorthand: Brew
   Description: Brew magic potions in the brewing stand to achieve epic effects to wreak havoc on your enemies.
-build:
-  Enabled: true
-  DisplayName: Building
-  Shorthand: Build
-  Description: Place blocks in the world to make your own epic creations.
-  PlacementThreshold: 5
-  PlacementInterval: 10
-  RepeatInterval: 3600
-  PlacementBlacklist: [ Soil ]
-butcher:
-  Enabled: true
-  DisplayName: Butchery
-  Shorthand: Butcher
-  Description: Butcher your farm animals to harvest their precious drops.
 cook:
   Enabled: true
   DisplayName: Cooking
@@ -45,13 +31,6 @@ dig:
   Shorthand: Dig
   Description: Use your shovel to dig in the ground and find epic treasure hidden beneath.
   RepeatInterval: 3600
-eat:
-  Enabled: true
-  DisplayName: Eating
-  Shorthand: Eat
-  Description: Eat healthy and tasty food to maintain your stamina, heal up and refresh.
-  FoodLevelFactor: 0.25
-  SaturationFactor: 1.75
 enchant:
   Enabled: true
   DisplayName: Enchanting
@@ -63,10 +42,10 @@ fish:
   Shorthand: Fish
   Description: Cast your fishing rod in bodies of water to catch different types of fish for food or brewing.
   FishInterval: 15
-harvest:
+garden:
   Enabled: true
-  DisplayName: Harvesting
-  Shorthand: Harvest
+  DisplayName: Gardening
+  Shorthand: Garden
   Description: Reap the rewards of your hard gardening work by harvesting crops, fruit and vegetables.
 hunt:
   Enabled: true
@@ -81,34 +60,16 @@ mine:
   Shorthand: Mine
   Description: Grab your pickaxe and descend into the deep mines of this world to find precious ores and rare gems. Most blocks mined under ground will give you skill points, but the rarest ores are by far the most valuable. Only naturally occuring blocks grant you rewards.
   RepeatInterval: 3600
-sacrifice:
-  Enabled: true
-  DisplayName: Sacrifice
-  Shorthand: Sacrifice
-  Description: Sacrifice your precious offerings to the almighty Creeper Overlord in exchange for his blessing. Sacrifice items by dropping them into fire, lava, or cacti. You may ask the Creeper Overlord whether he likes the item in your hand.
 shear:
   Enabled: true
   DisplayName: Shearing
   Shorthand: Shear
   Description: Use shears to harvest wool from sheep.
-smelt:
-  Enabled: true
-  DisplayName: Smelting
-  Shorthand: Smelt
-  Description: Refine your ores and raw materials in a furnace to make them even more precious and useful.
 tame:
   Enabled: true
   DisplayName: Taming
   Shorthand: Tame
   Description: Tame wild animals.
-travel:
-  Enabled: true
-  DisplayName: Traveling
-  Shorthand: Travel
-  Description: Leave your home and travel out in the world on foot or horseback to explore the wide world of Winthier. You collect skill points regularly as you move around. The more distance you reach from your origin location, which you reached via public warps or homes, the more points you get.
-  DistanceStep: 16
-  MaxTeleportDistance: 128
-  MaxDistanceNoProgress: 128
 woodcut:
   Enabled: true
   DisplayName: Woodcutting

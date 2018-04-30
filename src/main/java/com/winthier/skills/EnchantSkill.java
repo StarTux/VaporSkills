@@ -28,6 +28,7 @@ final class EnchantSkill extends Skill implements Listener {
     void onEnchanted(Player player, int oldLevel, int levelUsed) {
         int spent = oldLevel - player.getLevel();
         double factor = Math.min(1.0, (double)levelUsed / (double)spent / 10);
-        giveReward(player, rewardForName("exp_level_cost", spent), factor * factor);
+        Reward reward = getReward(Reward.Category.SPEND_LEVELS, null, spent, null);
+        giveReward(player, reward, factor * factor);
     }
 }

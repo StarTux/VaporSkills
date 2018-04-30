@@ -1,144 +1,77 @@
 package com.winthier.skills;
 
 import java.util.Arrays;
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import lombok.Value;
-import org.bukkit.Material;
-import org.bukkit.enchantments.Enchantment;
-import org.bukkit.potion.PotionEffectType;
 
-@Data
-@AllArgsConstructor
-@RequiredArgsConstructor
+@Getter @RequiredArgsConstructor
 class Reward {
-    public enum Target {
-        NAME, BLOCK, ITEM, ENTITY, ENCHANTMENT, POTION_EFFECT;
+    final Key key;
+    final double skillPoints;
+    final double exp;
+
+    public enum Category {
+        BREAK_BLOCK,
+        BREED_ENTITY,
+        DAMAGE_ENTITY,
+        EAT_ITEM,
+        FISH_ITEM,
+        INGREDIENT,
+        KILL_ENTITY,
+        SHEAR_ENTITY,
+        SMELT_ITEM,
+        SPEND_LEVELS,
+        TAME_ENTITY;
     }
 
-    @Value
+    @Getter @RequiredArgsConstructor @EqualsAndHashCode
     static class Key {
         @NonNull final SkillType skill;
-        @NonNull final Target target;
-        final Integer type;
-        final Integer data;
+        @NonNull final Category category;
         final String name;
-
-        static Integer parseInt(String arg) {
-            if (arg.equals("-")) return null;
-            return Integer.parseInt(arg);
-        }
-
-        @SuppressWarnings("deprecation") static Integer parseType(Target target, String arg) {
-            if (arg.equals("-")) return null;
-            try {
-                switch (target) {
-                case BLOCK:
-                case ITEM:
-                    return Material.valueOf(arg.toUpperCase()).getId();
-                case ENCHANTMENT:
-                    return Enchantment.getByName(arg.toUpperCase()).getId();
-                case POTION_EFFECT:
-                    return PotionEffectType.getByName(arg.toUpperCase()).getId();
-                default:
-                    return Integer.parseInt(arg);
-                }
-            } catch (IllegalArgumentException iae) {
-                iae.printStackTrace();
-            }
-            return 0;
-        }
-
-        static String parseName(String arg) {
-            if (arg.equals("-")) return null;
-            return arg;
-        }
+        final Integer data;
+        final String extra;
 
         static Key parse(String[] tokens) {
             if (tokens.length != 5) throw new IllegalArgumentException("5 items required");
             String skillTypeArg = tokens[0];
-            String targetArg = tokens[1];
-            String typeArg = tokens[2];
+            String categoryArg = tokens[1];
+            String nameArg = tokens[2];
             String dataArg = tokens[3];
-            String nameArg = tokens[4];
+            String extraArg = tokens[4];
             Skill skill = SkillsPlugin.getInstance().skillByName(skillTypeArg);
             if (skill == null) throw new IllegalArgumentException("Skill not found: " + skillTypeArg);
-            Target target = Target.valueOf(targetArg.toUpperCase());
-            Integer type = parseType(target, typeArg);
-            Integer data = parseInt(dataArg);
-            String name = parseName(nameArg);
-            return new Key(skill.getSkillType(), target, type, data, name);
-        }
-
-        @SuppressWarnings("deprecation")
-        String typeAsPrettyString() {
-            if (type == null) return "-";
-            try {
-                switch (target) {
-                case BLOCK:
-                case ITEM:
-                    return Material.getMaterial(type).name();
-                case ENCHANTMENT:
-                    return Enchantment.getById(type).getName();
-                case POTION_EFFECT:
-                    return PotionEffectType.getById(type).getName();
-                default:
-                    return "?";
-                }
-            } catch (IllegalArgumentException iae) {
-                iae.printStackTrace();
-            }
-            return "?";
-        }
-
-        String typeAsString() {
-            if (type == null) return "-";
-            return "" + type;
-        }
-
-        String dataAsString() {
-            if (data == null) return "-";
-            return "" + data;
-        }
-
-        String nameAsString() {
-            if (name == null) return "-";
-            return name;
+            Category category = Category.valueOf(categoryArg.toUpperCase());
+            String name = "-".equals(nameArg) ? null : nameArg.toUpperCase();
+            Integer data = "-".equals(dataArg) ? null : Integer.parseInt(dataArg);
+            String extra = "-".equals(extraArg) ? null : extraArg;
+            return new Key(skill.getSkillType(), category, name, data, extra);
         }
 
         @Override public String toString() {
-            return String.format("%s %s (%s) %s:%s {%s}", Msg.camelCase(skill.name()), Msg.camelCase(target.name()), typeAsPrettyString(), typeAsString(), dataAsString(), nameAsString());
+            return String.format("%s %s %s %s %s", skill.name(), category.name(), name == null ? "-" : name, data == null ? "-" : data.toString(), extra == null ? "-" : extra);
         }
     }
 
-    @Getter final Key key;
-    @Getter private float skillPoints = 0;
-    @Getter private float money = 0;
-    @Getter private float exp = 0;
-
     static Reward parse(String[] tokens) {
-        if (tokens.length != 8 && tokens.length != 9) throw new IllegalArgumentException("8 or 9 items required");
+        if (tokens.length != 7 && tokens.length != 8) throw new IllegalArgumentException("7 or 8 items required");
         String skillPointsArg = tokens[5];
-        String moneyArg = tokens[6];
-        String expArg = tokens[7];
+        String expArg = tokens[6];
         Key key = Key.parse(Arrays.copyOfRange(tokens, 0, 5));
-        float skillPoints = Float.parseFloat(skillPointsArg);
-        float money = Float.parseFloat(moneyArg);
-        float exp = Float.parseFloat(expArg);
+        double skillPoints = Double.parseDouble(skillPointsArg);
+        double exp = Double.parseDouble(expArg);
         if (tokens.length >= 9) {
-            float factor = Float.parseFloat(tokens[8]);
+            double factor = Double.parseDouble(tokens[7]);
             skillPoints *= factor;
-            money *= factor;
             exp *= factor;
         }
-        return new Reward(key, skillPoints, money, exp);
+        return new Reward(key, skillPoints, exp);
     }
 
     @Override
     public String toString() {
-        return String.format("%s %.2f %.2f %.2f", key, skillPoints, money, exp);
+        return String.format("%s %.2f %.2f", key, skillPoints, exp);
     }
 }

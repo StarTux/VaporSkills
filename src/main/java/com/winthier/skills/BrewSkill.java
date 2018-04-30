@@ -16,7 +16,7 @@ final class BrewSkill extends Skill implements Listener {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onBrew(BrewEvent event) {
-        final Player player = getNearestPlayer(event.getContents().getHolder().getLocation(), RADIUS);
+        final Player player = null; // TODO
         if (player == null) return;
         if (!allowPlayer(player)) return;
         // Count potions for percentage
@@ -25,6 +25,8 @@ final class BrewSkill extends Skill implements Listener {
         for (int i = 0; i < Math.min(3, contents.length); ++i) {
             if (contents[i] != null) count += 1;
         }
-        giveReward(player, rewardForItem(event.getContents().getIngredient()), (double)count / 3.0);
+        ItemStack ingredient = event.getContents().getIngredient();
+        Reward reward = getReward(Reward.Category.INGREDIENT, ingredient.getType().name(), (int)ingredient.getDurability(), null);
+        giveReward(player, reward, (double)count / 3.0);
     }
 }

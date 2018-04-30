@@ -15,6 +15,7 @@ final class TameSkill extends Skill implements Listener {
     public void onEntityTame(EntityTameEvent event) {
         Player player = event.getOwner() instanceof Player ? (Player)event.getOwner() : null;
         if (player == null || !allowPlayer(player)) return;
-        giveReward(player, rewardForEntity(event.getEntity()));
+        Reward reward = getReward(Reward.Category.TAME_ENTITY, event.getEntity().getType().name(), null, null);
+        giveReward(player, reward);
     }
 }

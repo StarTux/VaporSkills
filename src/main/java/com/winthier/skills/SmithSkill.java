@@ -101,7 +101,8 @@ final class SmithSkill extends Skill implements Listener {
         // Were levels used up?
         int levelsUsed = oldLevel - player.getLevel();
         if (levelsUsed <= 0) return;
-        giveReward(player, rewardForName("exp_level_cost", levelsUsed));
+        Reward reward = getReward(Reward.Category.SPEND_LEVELS, null, levelsUsed, null);
+        giveReward(player, reward);
     }
 
     private static void addAttribute(ItemStack item, EquipmentSlot slot, Attribute attribute, double amount, int operation, UUID uuid) {

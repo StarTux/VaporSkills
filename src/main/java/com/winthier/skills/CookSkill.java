@@ -14,7 +14,7 @@ final class CookSkill extends Skill implements Listener {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onFurnaceSmelt(FurnaceSmeltEvent event) {
-        Player player = getNearestPlayer(event.getBlock().getLocation(), smeltRadius());
+        Player player = null; // TODO
         if (player == null) return;
         if (!allowPlayer(player)) return;
         onItemSmelt(player, event.getSource(), event.getResult());
@@ -22,10 +22,8 @@ final class CookSkill extends Skill implements Listener {
 
     void onItemSmelt(Player player, ItemStack source, ItemStack result) {
         // By default, reward the result of the smelting
-        giveReward(player, rewardForItem(result));
-    }
-
-    double smeltRadius() {
-        return 160;
+        Reward reward = getReward(Reward.Category.SMELT_ITEM, result.getType().name(), (int)result.getDurability(), null);
+        if (reward == null) reward = getReward(Reward.Category.SMELT_ITEM, result.getType().name(), null, null);
+        giveReward(player, reward);
     }
 }

@@ -37,6 +37,8 @@ final class DigSkill extends Skill implements Listener {
         final Block block = event.getBlock();
         if (BukkitExploits.getInstance().isPlayerPlaced(block)) return;
         if (BukkitExploits.getInstance().didRecentlyBreak(player, block, repeatInterval)) return;
-        giveReward(player, rewardForBlock(block));
+        Reward reward = getReward(Reward.Category.BREAK_BLOCK, block.getType().name(), (int)block.getData(), null);
+        if (reward == null) reward = getReward(Reward.Category.BREAK_BLOCK, block.getType().name(), null, null);
+        giveReward(player, reward);
     }
 }
