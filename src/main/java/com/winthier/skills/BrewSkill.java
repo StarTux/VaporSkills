@@ -26,7 +26,7 @@ final class BrewSkill extends Skill implements Listener {
             if (contents[i] != null) count += 1;
         }
         ItemStack ingredient = event.getContents().getIngredient();
-        Reward reward = getReward(Reward.Category.INGREDIENT, ingredient.getType().name(), (int)ingredient.getDurability(), null);
+        Reward reward = getReward(Reward.Category.INGREDIENT, ingredient.getType().name(), null, null);
         giveReward(player, reward, (double)count / 3.0);
     }
 }

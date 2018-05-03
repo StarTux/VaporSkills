@@ -290,6 +290,12 @@ public final class SkillsPlugin extends JavaPlugin implements Listener {
                 }
                 if (map.containsKey(reward.key)) getLogger().warning("Warning: Duplicate key '" + reward.key + "' in line " + linum);
                 map.put(reward.key, reward);
+                try {
+                    reward.test();
+                } catch (RuntimeException re) {
+                    System.err.println("Error in " + REWARDS_TXT + " line " + linum + ": " + line);
+                    re.printStackTrace();
+                }
             }
             score.setRewards(map);
             getLogger().info("Imported " + map.size() + " rewards from " + REWARDS_TXT);

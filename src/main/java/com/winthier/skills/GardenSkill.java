@@ -36,8 +36,7 @@ final class GardenSkill extends Skill implements Listener {
             break;
         default: break;
         }
-        Reward reward = getReward(Reward.Category.BREAK_BLOCK, mat.name(), (int)block.getData(), null);
-        if (reward == null) reward = getReward(Reward.Category.BREAK_BLOCK, mat.name(), null, null);
+        Reward reward = getReward(Reward.Category.BREAK_BLOCK, mat.name(), null, null);
         giveReward(player, reward, (double)factor);
     }
 }

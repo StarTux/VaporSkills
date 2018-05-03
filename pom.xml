@@ -14,7 +14,7 @@
     <!-- Spigot Repo -->
     <repository>
       <id>spigot-repo</id>
-      <url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
+      <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/ </url>
     </repository>
   </repositories>
   <dependencies>
@@ -23,6 +23,9 @@
       <groupId>org.spigotmc</groupId>
       <artifactId>spigot-api</artifactId>
       <version>1.12-R0.1-SNAPSHOT</version>
+      <!-- <groupId>org.bukkit</groupId> -->
+      <!-- <artifactId>bukkit</artifactId> -->
+      <!-- <version>18w15a-R0.1-SNAPSHOT</version> -->
     </dependency>
     <!-- Lombok -->
     <dependency>

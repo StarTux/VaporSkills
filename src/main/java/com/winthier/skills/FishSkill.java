@@ -30,8 +30,7 @@ final class FishSkill extends Skill implements Listener {
         if (!(event.getCaught() instanceof Item)) return;
         if (BukkitExploits.getInstance().didRecentlyFish(player, player.getLocation().getBlock(), fishInterval)) return;
         ItemStack item = ((Item)event.getCaught()).getItemStack();
-        Reward reward = getReward(Reward.Category.FISH_ITEM, item.getType().name(), (int)item.getDurability(), null);
-        if (reward == null) reward = getReward(Reward.Category.FISH_ITEM, item.getType().name(), null, null);
+        Reward reward = getReward(Reward.Category.FISH_ITEM, item.getType().name(), null, null);
         giveReward(player, reward);
     }
 }

@@ -5,6 +5,8 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.bukkit.Material;
+import org.bukkit.entity.EntityType;
 
 @Getter @RequiredArgsConstructor
 class Reward {
@@ -73,5 +75,27 @@ class Reward {
     @Override
     public String toString() {
         return String.format("%s %.2f %.2f", key, skillPoints, exp);
+    }
+
+    void test() {
+        switch (key.category) {
+        case BREAK_BLOCK:
+        case EAT_ITEM:
+        case FISH_ITEM:
+        case SMELT_ITEM:
+        case INGREDIENT:
+            Material.valueOf(key.name);
+            break;
+        case KILL_ENTITY:
+        case SHEAR_ENTITY:
+        case TAME_ENTITY:
+        case BREED_ENTITY:
+        case DAMAGE_ENTITY:
+            EntityType.valueOf(key.name);
+            break;
+        case SPEND_LEVELS:
+        default:
+            break;
+        }
     }
 }

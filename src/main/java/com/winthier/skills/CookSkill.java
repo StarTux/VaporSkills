@@ -22,8 +22,7 @@ final class CookSkill extends Skill implements Listener {
 
     void onItemSmelt(Player player, ItemStack source, ItemStack result) {
         // By default, reward the result of the smelting
-        Reward reward = getReward(Reward.Category.SMELT_ITEM, result.getType().name(), (int)result.getDurability(), null);
-        if (reward == null) reward = getReward(Reward.Category.SMELT_ITEM, result.getType().name(), null, null);
+        Reward reward = getReward(Reward.Category.SMELT_ITEM, result.getType().name(), null, null);
         giveReward(player, reward);
     }
 }
