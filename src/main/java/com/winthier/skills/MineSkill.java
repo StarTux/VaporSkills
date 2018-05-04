@@ -5,10 +5,9 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 
-final class MineSkill extends Skill implements Listener {
+final class MineSkill extends Skill {
     private long repeatInterval = 60 * 60;
 
     MineSkill(SkillsPlugin plugin) {

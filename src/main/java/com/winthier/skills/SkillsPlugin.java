@@ -18,13 +18,28 @@ import java.util.Set;
 import java.util.UUID;
 import lombok.Getter;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.block.BrewingStand;
+import org.bukkit.block.Furnace;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.ExperienceOrb;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.BrewEvent;
+import org.bukkit.event.inventory.FurnaceSmeltEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.inventory.BrewerInventory;
+import org.bukkit.inventory.FurnaceInventory;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.metadata.MetadataValue;
+import org.bukkit.metadata.Metadatable;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -93,16 +108,9 @@ public final class SkillsPlugin extends JavaPlugin implements Listener {
         for (Skill skill : skills) {
             SkillType type = skill.getSkillType();
             if (skillMap.containsKey(type)) {
-                throw new IllegalStateException("Duplicate skill " + type.name() + ": " + skillMap.get(type).getClass().getSimpleName() + " and " + skill.getClass().getSimpleName());
+                throw new IllegalStateException("Duplicate skill " + type.name() + ": " + skillMap.get(type).getClass().getName() + " and " + skill.getClass().getName());
             }
             skillMap.put(type, skill);
-        }
-        for (Skill skill : skills) {
-            if (skill instanceof Listener) {
-                getServer().getPluginManager().registerEvents((Listener)skill, this);
-            } else {
-                getLogger().warning("Skill not an Event Listener: " + skill.getDisplayName());
-            }
         }
         // Double check skills
         for (SkillType type : SkillType.values()) {
@@ -110,6 +118,7 @@ public final class SkillsPlugin extends JavaPlugin implements Listener {
             if (skill == null) {
                 getLogger().warning("Missing skill: " + type.name());
             } else {
+                getServer().getPluginManager().registerEvents(skill, this);
                 skill.configureSkill();
                 skill.onEnable();
             }
@@ -167,11 +176,200 @@ public final class SkillsPlugin extends JavaPlugin implements Listener {
         importRewards();
     }
 
+    // Event Handlers
+
+    /**
+     * Remove player related data from the caches when they log out.
+     */
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
         final UUID uuid = event.getPlayer().getUniqueId();
         sessions.remove(uuid);
         score.removePlayer(uuid);
+    }
+
+    private static class Inserted {
+        static final String KEY = "Inserted";
+        private UUID player;
+        private Material material;
+        private int amount;
+    }
+
+    /**
+     * Take note when a player loads a furnace.
+     */
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+    public void onInventoryClick(InventoryClickEvent event) {
+        if (event.getClickedInventory() == null) return;
+        final Player player;
+        final UUID uuid;
+        final Material material, targetMaterial;
+        final int targetAmount;
+        final Block block;
+        final JavaPlugin plugin;
+        final int initialAmount;
+        Inserted meta;
+        final Inserted inserted;
+        switch (event.getView().getType()) {
+        case FURNACE:
+            player = (Player)event.getWhoClicked();
+            if (getMetadata(player, Inserted.KEY) != null) return;
+            if (event.getClickedInventory().getType() == InventoryType.FURNACE) {
+                if (event.getSlotType() != InventoryType.SlotType.CRAFTING) return;
+                if (event.isShiftClick()) {
+                    material = event.getCurrentItem().getType();
+                } else if (event.isRightClick()) {
+                    material = event.getCurrentItem().getType();
+                } else {
+                    material = event.getCursor().getType();
+                }
+            } else {
+                if (!event.isShiftClick()) return;
+                material = event.getCurrentItem().getType();
+            }
+            if (material == Material.AIR) return;
+            final FurnaceInventory furnaceInventory = (FurnaceInventory)event.getView().getTopInventory();
+            if (furnaceInventory.getSmelting() == null) {
+                targetMaterial = null;
+                initialAmount = 0;
+            } else {
+                targetMaterial = furnaceInventory.getSmelting().getType();
+                initialAmount = furnaceInventory.getSmelting().getAmount();
+            }
+            if (targetMaterial != null && targetMaterial != material) return;
+            Furnace furnace = furnaceInventory.getHolder();
+            if (furnace == null) return;
+            block = furnace.getBlock();
+            uuid = player.getUniqueId();
+            meta = (Inserted)getMetadata(block, Inserted.KEY);
+            if (meta == null) {
+                meta = new Inserted();
+                meta.player = uuid;
+                meta.material = material;
+                meta.amount = 0;
+            } else {
+                removeMetadata(block, Inserted.KEY);
+                if (!uuid.equals(meta.player)
+                    || material != meta.material) {
+                    meta.player = uuid;
+                    meta.material = material;
+                    meta.amount = 0;
+                }
+            }
+            inserted = meta;
+            plugin = this;
+            setMetadata(player, Inserted.KEY, true);
+            new BukkitRunnable() {
+                @Override public void run() {
+                    removeMetadata(player, Inserted.KEY);
+                    final int finalAmount;
+                    final ItemStack smelting = furnaceInventory.getSmelting();
+                    if (smelting == null || smelting.getType() != material) {
+                        finalAmount = 0;
+                    } else {
+                        finalAmount = smelting.getAmount();
+                    }
+                    final int difference = finalAmount - initialAmount;
+                    inserted.amount = Math.min(64, Math.max(0, inserted.amount + difference));
+                    setMetadata(block, Inserted.KEY, inserted);
+                }
+            }.runTask(this);
+            break;
+        case BREWING:
+            player = (Player)event.getWhoClicked();
+            if (getMetadata(player, Inserted.KEY) != null) return;
+            if (event.getClickedInventory().getType() == InventoryType.BREWING) {
+                // FUEL = Ingredient slot, for some reason
+                if (event.getSlotType() != InventoryType.SlotType.FUEL) return;
+                if (event.isShiftClick()) {
+                    material = event.getCurrentItem().getType();
+                } else if (event.isRightClick()) {
+                    material = event.getCurrentItem().getType();
+                } else {
+                    material = event.getCursor().getType();
+                }
+            } else {
+                if (!event.isShiftClick()) return;
+                material = event.getCurrentItem().getType();
+            }
+            if (material == Material.AIR) return;
+            final BrewerInventory brewerInventory = (BrewerInventory)event.getView().getTopInventory();
+            if (brewerInventory.getIngredient() == null) {
+                targetMaterial = null;
+                initialAmount = 0;
+            } else {
+                targetMaterial = brewerInventory.getIngredient().getType();
+                initialAmount = brewerInventory.getIngredient().getAmount();
+            }
+            if (targetMaterial != null && material != targetMaterial) return;
+            final BrewingStand brewingStand = brewerInventory.getHolder();
+            if (brewingStand == null) return;
+            block = brewingStand.getBlock();
+            meta = (Inserted)getMetadata(block, Inserted.KEY);
+            uuid = player.getUniqueId();
+            if (meta == null) {
+                meta = new Inserted();
+                meta.player = uuid;
+                meta.material = material;
+                meta.amount = 0;
+            } else {
+                removeMetadata(block, Inserted.KEY);
+                if (!uuid.equals(meta.player)
+                    || meta.material != material) {
+                    meta.player = uuid;
+                    meta.material = material;
+                    meta.amount = 0;
+                }
+            }
+            inserted = meta;
+            plugin = this;
+            setMetadata(player, Inserted.KEY, true);
+            new BukkitRunnable() {
+                @Override public void run() {
+                    removeMetadata(player, Inserted.KEY);
+                    final int finalAmount;
+                    final ItemStack ingredient = brewerInventory.getIngredient();
+                    if (ingredient == null || ingredient.getType() != material) {
+                        finalAmount = 0;
+                    } else {
+                        finalAmount = ingredient.getAmount();
+                    }
+                    final int difference = finalAmount - initialAmount;
+                    inserted.amount = Math.min(1, Math.max(0, inserted.amount + difference));
+                    setMetadata(block, Inserted.KEY, inserted);
+                }
+            }.runTask(this);
+            break;
+        default:
+            break;
+        }
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+    public void onFurnaceSmelt(FurnaceSmeltEvent event) {
+        final Block block = event.getBlock();
+        final Inserted inserted = (Inserted)getMetadata(block, Inserted.KEY);
+        if (inserted == null) return;
+        if (inserted.amount <= 0) return;
+        if (inserted.material != event.getSource().getType()) return;
+        inserted.amount -= 1;
+        Player player = getServer().getPlayer(inserted.player);
+        if (player == null) return;
+        if (hasDebugMode(player)) player.sendMessage("SMELT " + inserted.material + " " + inserted.amount);
+        ((CookSkill)getSkill(SkillType.COOK)).onItemSmelt(player, event.getSource(), event.getResult());
+        ((SmithSkill)getSkill(SkillType.SMITH)).onItemSmelt(player, event.getSource(), event.getResult());
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+    public void onBrew(BrewEvent event) {
+        final Block block = event.getBlock();
+        final Inserted inserted = (Inserted)getMetadata(block, Inserted.KEY);
+        if (inserted == null) return;
+        if (inserted.amount <= 0) return;
+        Player player = getServer().getPlayer(inserted.player);
+        if (player == null) return;
+        if (hasDebugMode(player)) player.sendMessage("BREW " + event.getContents().getItem(0));
+        ((BrewSkill)getSkill(SkillType.BREW)).onBrew(player, event.getContents());
     }
 
     void buildNameMap() {
@@ -262,7 +460,6 @@ public final class SkillsPlugin extends JavaPlugin implements Listener {
         score.saveOneDirtyRow();
     }
 
-
     void importRewards() {
         File file = new File(getDataFolder(), REWARDS_TXT);
         if (!file.exists()) {
@@ -313,5 +510,20 @@ public final class SkillsPlugin extends JavaPlugin implements Listener {
                 ioe.printStackTrace();
             }
         }
+    }
+
+    void setMetadata(Metadatable metadatable, String key, Object value) {
+        metadatable.setMetadata(key, new FixedMetadataValue(this, value));
+    }
+
+    void removeMetadata(Metadatable metadatable, String key) {
+        metadatable.removeMetadata(key, this);
+    }
+
+    Object getMetadata(Metadatable metadatable, String key) {
+        for (MetadataValue value: metadatable.getMetadata(key)) {
+            if (value.getOwningPlugin() == this) return value.value();
+        }
+        return null;
     }
 }

@@ -3,10 +3,9 @@ package com.winthier.skills;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityTameEvent;
 
-final class TameSkill extends Skill implements Listener {
+final class TameSkill extends Skill {
     TameSkill(SkillsPlugin plugin) {
         super(plugin, SkillType.TAME);
     }

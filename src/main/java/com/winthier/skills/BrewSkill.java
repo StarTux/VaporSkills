@@ -1,31 +1,28 @@
 package com.winthier.skills;
 
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.BrewEvent;
+import org.bukkit.inventory.BrewerInventory;
 import org.bukkit.inventory.ItemStack;
 
-final class BrewSkill extends Skill implements Listener {
+final class BrewSkill extends Skill {
     static final double RADIUS = 40.0;
 
     BrewSkill(SkillsPlugin plugin) {
         super(plugin, SkillType.BREW);
     }
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
-    public void onBrew(BrewEvent event) {
-        final Player player = null; // TODO
-        if (player == null) return;
+    /**
+     * Called by SkillsPlugin.onBrew()
+     */
+    public void onBrew(Player player, BrewerInventory inventory) {
         if (!allowPlayer(player)) return;
         // Count potions for percentage
         int count = 0;
-        ItemStack[] contents = event.getContents().getContents();
+        ItemStack[] contents = inventory.getContents();
         for (int i = 0; i < Math.min(3, contents.length); ++i) {
             if (contents[i] != null) count += 1;
         }
-        ItemStack ingredient = event.getContents().getIngredient();
+        ItemStack ingredient = inventory.getIngredient();
         Reward reward = getReward(Reward.Category.INGREDIENT, ingredient.getType().name(), null, null);
         giveReward(player, reward, (double)count / 3.0);
     }

@@ -8,10 +8,9 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
-final class HuntSkill extends Skill implements Listener {
+final class HuntSkill extends Skill {
     private long killDistanceInterval = 300;
     private double minKillDistance = 16;
 

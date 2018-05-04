@@ -14,7 +14,6 @@ import org.bukkit.entity.Monster;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.ItemStack;
@@ -22,7 +21,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
-final class BrawlSkill extends Skill implements Listener {
+final class BrawlSkill extends Skill {
     private long killDistanceInterval = 300;
     private double minKillDistance = 16;
     private final Random random = new Random(System.currentTimeMillis());

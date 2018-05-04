@@ -3,11 +3,10 @@ package com.winthier.skills;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
 import org.bukkit.event.enchantment.EnchantItemEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
-final class EnchantSkill extends Skill implements Listener {
+final class EnchantSkill extends Skill {
     EnchantSkill(SkillsPlugin plugin) {
         super(plugin, SkillType.ENCHANT);
     }

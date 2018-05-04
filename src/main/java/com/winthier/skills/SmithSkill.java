@@ -10,7 +10,6 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
@@ -22,7 +21,7 @@ import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
 import org.bukkit.scheduler.BukkitRunnable;
 
-final class SmithSkill extends Skill implements Listener {
+final class SmithSkill extends Skill {
     @RequiredArgsConstructor
     private static class Metadata {
         static final String KEY = "com.winthier.skill.SmithSkill";
@@ -433,5 +432,11 @@ final class SmithSkill extends Skill implements Listener {
             break;
         }
         return result;
+    }
+
+    /**
+     * Called by SkillsPlugin.onFurnaceSmelt()
+     */
+    void onItemSmelt(Player player, ItemStack source, ItemStack result) {
     }
 }

@@ -11,10 +11,9 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityBreedEvent;
 
-final class RanchSkill extends Skill implements Listener {
+final class RanchSkill extends Skill {
     static final String BREED_KEY = "winthier.skill.Ranch.breed";
 
     private static class Breed {

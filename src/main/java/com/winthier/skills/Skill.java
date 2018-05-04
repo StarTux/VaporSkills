@@ -6,12 +6,10 @@ import lombok.NonNull;
 import org.bukkit.GameMode;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
-import org.bukkit.metadata.FixedMetadataValue;
-import org.bukkit.metadata.MetadataValue;
-import org.bukkit.metadata.Metadatable;
+import org.bukkit.event.Listener;
 
 @Getter
-public abstract class Skill {
+public abstract class Skill implements Listener {
     protected final SkillsPlugin plugin;
     public final SkillType skillType;
     private boolean enabled = true;
@@ -82,20 +80,5 @@ public abstract class Skill {
 
     static final double linearSkillBonus(double max, int skillLevel) {
         return Math.min(max, (double)skillLevel * max / 100.0);
-    }
-
-    final void setMetadata(Metadatable metadatable, String key, Object value) {
-        metadatable.setMetadata(key, new FixedMetadataValue(plugin, value));
-    }
-
-    final void removeMetadata(Metadatable metadatable, String key) {
-        metadatable.removeMetadata(key, plugin);
-    }
-
-    final MetadataValue getMetadata(Metadatable metadatable, String key) {
-        for (MetadataValue value: metadatable.getMetadata(key)) {
-            if (value.getOwningPlugin() == plugin) return value;
-        }
-        return null;
     }
 }
