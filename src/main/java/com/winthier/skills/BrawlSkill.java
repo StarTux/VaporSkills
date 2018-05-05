@@ -22,6 +22,9 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
 final class BrawlSkill extends Skill {
+    static final String DISARM_COOLDOWN = "brawl_disarm";
+    static final String STEAL_COOLDOWN = "brawl_steal";
+    static final String STOLEN_SCOREBOARD_TAG = "winthier.brawl_skill.stolen";
     private long killDistanceInterval = 300;
     private double minKillDistance = 16;
     private final Random random = new Random(System.currentTimeMillis());
@@ -140,14 +143,17 @@ final class BrawlSkill extends Skill {
             }
             break;
         case AIR:
-            if (plugin.getScore().hasPerk(uuid, Perk.BRAWL_UNARMED_DISARM)) {
+            // Unarmed
+            double luck = player.getAttribute(Attribute.GENERIC_LUCK).getValue();
+            if (plugin.getScore().hasPerk(uuid, Perk.BRAWL_UNARMED_DISARM)
+                && plugin.getSession(uuid).getCooldown(DISARM_COOLDOWN) == 0) {
                 final int skillLevel = plugin.getScore().getSkillLevel(uuid, skillType);
                 EntityEquipment equip = entity.getEquipment();
-                double luck = player.getAttribute(Attribute.GENERIC_LUCK).getValue();
                 boolean attempted = false;
                 if (equip.getItemInMainHand().getType() != Material.AIR) {
                     double chance = equip.getItemInMainHandDropChance();
                     if (chance > 0) {
+                        plugin.getSession(uuid).setCooldown(DISARM_COOLDOWN, 20);
                         attempted = true;
                         if (random.nextDouble() < chance + luck * 10) {
                             ItemStack drop = equip.getItemInMainHand();
@@ -170,6 +176,7 @@ final class BrawlSkill extends Skill {
                             }
                             if (chance > 0) {
                                 attempted = true;
+                                plugin.getSession(uuid).setCooldown(DISARM_COOLDOWN, 40);
                                 if (random.nextDouble() < chance + luck * 10) {
                                     items[i] = null;
                                     equip.setArmorContents(items);
@@ -179,8 +186,17 @@ final class BrawlSkill extends Skill {
                         }
                     }
                 }
-                if (!attempted && plugin.getScore().hasPerk(uuid, Perk.BRAWL_UNARMED_STEAL)) {
-                    // TODO
+            }
+            if (plugin.getScore().hasPerk(uuid, Perk.BRAWL_UNARMED_STEAL)
+                && plugin.getSession(uuid).getCooldown(STEAL_COOLDOWN) == 0) {
+                ItemStack stolen = stealItem(entity);
+                if (stolen != null) {
+                    plugin.getSession(uuid).setCooldown(STEAL_COOLDOWN, 200);
+                    if (random.nextDouble() < luck * 10) {
+                        if (stolen != null) {
+                            player.getWorld().dropItem(player.getEyeLocation(), stolen.clone()).setPickupDelay(0);
+                        }
+                    }
                 }
             }
             break;
@@ -193,5 +209,65 @@ final class BrawlSkill extends Skill {
         if (plugin.hasDebugMode(player)) Msg.msg(player, "&eBrawl Dmg=%.02f/%.02f Pct=%.02f", event.getFinalDamage(), entity.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue(), percentage);
         Reward reward = getReward(Reward.Category.DAMAGE_ENTITY, entity.getType().name(), null, null);
         giveReward(player, reward, percentage);
+    }
+
+    private ItemStack stealItem(LivingEntity entity) {
+        if (entity.getScoreboardTags().contains(STOLEN_SCOREBOARD_TAG)) return null;
+        final double roll;
+        switch (entity.getType()) {
+        case SKELETON:
+        case STRAY:
+            return new ItemStack(Material.BONE);
+        case ZOMBIE:
+        case HUSK:
+        case ZOMBIE_VILLAGER:
+            return new ItemStack(Material.ROTTEN_FLESH);
+        case CREEPER:
+            return new ItemStack(Material.SULPHUR);
+        case ENDERMAN:
+            return new ItemStack(Material.ENDER_PEARL);
+        case SPIDER:
+        case CAVE_SPIDER:
+            if (random.nextDouble() < 0.33) {
+                return new ItemStack(Material.SPIDER_EYE);
+            } else {
+                return new ItemStack(Material.STRING);
+            }
+        case WITCH:
+            roll = random.nextDouble();
+            if (roll < 0.125) {
+                return new ItemStack(Material.GLASS_BOTTLE);
+            } else if (roll < 0.250) {
+                return new ItemStack(Material.GLOWSTONE_DUST);
+            } else if (roll < 0.375) {
+                return new ItemStack(Material.SULPHUR);
+            } else if (roll < 0.500) {
+                return new ItemStack(Material.REDSTONE);
+            } else if (roll < 0.625) {
+                return new ItemStack(Material.SPIDER_EYE);
+            } else if (roll < 0.750) {
+                return new ItemStack(Material.SUGAR);
+            } else {
+                return new ItemStack(Material.STICK);
+            }
+        case EVOKER:
+            entity.addScoreboardTag(STOLEN_SCOREBOARD_TAG);
+            return new ItemStack(Material.TOTEM);
+        case BLAZE:
+            return new ItemStack(Material.BLAZE_ROD);
+        case WITHER_SKELETON:
+            if (random.nextDouble() < 0.025) {
+                entity.addScoreboardTag(STOLEN_SCOREBOARD_TAG);
+                return new ItemStack(Material.SKULL_ITEM, 1, (short)1);
+            } else {
+                if (random.nextBoolean()) {
+                    return new ItemStack(Material.BONE);
+                } else {
+                    return new ItemStack(Material.COAL);
+                }
+            }
+        default:
+            return null;
+        }
     }
 }

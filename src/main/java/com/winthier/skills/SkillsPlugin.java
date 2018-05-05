@@ -65,7 +65,6 @@ public final class SkillsPlugin extends JavaPlugin implements Listener {
     private final Set<UUID> playersInDebugMode = new HashSet<>();
     private final Map<UUID, Session> sessions = new HashMap<>();
     private ConfigurationSection perksConfig = null;
-    private long ticks = 0;
 
     public SkillsPlugin() {
         instance = this;
@@ -148,6 +147,7 @@ public final class SkillsPlugin extends JavaPlugin implements Listener {
         for (Player player: getServer().getOnlinePlayers()) {
             getSession(player).onDisable();
         }
+        sessions.clear();
     }
 
     void writeDefaultFiles(boolean force) {
@@ -174,6 +174,10 @@ public final class SkillsPlugin extends JavaPlugin implements Listener {
         buildNameMap();
         score.clear();
         importRewards();
+        for (Player player: getServer().getOnlinePlayers()) {
+            getSession(player).onDisable();
+        }
+        sessions.clear();
     }
 
     // Event Handlers
@@ -451,11 +455,8 @@ public final class SkillsPlugin extends JavaPlugin implements Listener {
     }
 
     void onTick() {
-        ticks += 1;
-        if (ticks % 20 == 0) {
-            for (Player player : Bukkit.getServer().getOnlinePlayers()) {
-                getSession(player.getUniqueId()).on20Ticks();
-            }
+        for (Player player : Bukkit.getServer().getOnlinePlayers()) {
+            getSession(player.getUniqueId()).onTick();
         }
         score.saveOneDirtyRow();
     }
