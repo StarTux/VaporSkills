@@ -3,7 +3,7 @@ description: Skills system for Winthier
 author: StarTux
 version: 0.4
 main: com.winthier.skills.SkillsPlugin
-depend: [ SQL, Exploits, PlayerCache ]
+depend: [ SQL, Exploits, PlayerCache, Custom ]
 commands: {}
 permissions:
   skills.skill.*:

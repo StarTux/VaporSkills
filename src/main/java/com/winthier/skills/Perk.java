@@ -90,8 +90,20 @@ public enum Perk {
     DIG_RADIUS(SkillType.DIG, null),
     // Enchanting
     ENCHANT_TOP_OPTIONS(SkillType.ENCHANT, null),
-    ENCHANT_(SkillType.ENCHANT, null);
+    ENCHANT_(SkillType.ENCHANT, null),
     // Fishing
+    // Taming
+    TAME_FOLLOW_TELEPORT(SkillType.TAME, null),
+    TAME_DODGE_ENVIRONMENT_DAMAGE(SkillType.TAME, null),
+    TAME_CAT_AGGRO_CREEPER(SkillType.TAME, null),
+    TAME_CAT_9_LIVES(SkillType.TAME, null),
+    TAME_DOG_ATTACK_DAMAGE(SkillType.TAME, null),
+    TAME_DOG_MOVEMENT_SPEED(SkillType.TAME, null),
+    TAME_DOG_HEALTH(SkillType.TAME, null),
+    TAME_DOG_REVIVE(SkillType.TAME, null),
+    TAME_DOG_DEATH_HEALS(SkillType.TAME, null),
+    TAME_DOG_SACRIFICE(SkillType.TAME, null),
+    ;
 
     final SkillType skillType;
     final Perk depends;

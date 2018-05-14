@@ -24,6 +24,7 @@ import org.bukkit.block.BrewingStand;
 import org.bukkit.block.Furnace;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.ExperienceOrb;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -513,6 +514,8 @@ public final class SkillsPlugin extends JavaPlugin implements Listener {
         }
     }
 
+    // Utility for metadata
+
     void setMetadata(Metadatable metadatable, String key, Object value) {
         metadatable.setMetadata(key, new FixedMetadataValue(this, value));
     }
@@ -526,5 +529,40 @@ public final class SkillsPlugin extends JavaPlugin implements Listener {
             if (value.getOwningPlugin() == this) return value.value();
         }
         return null;
+    }
+
+    // Utility for entity scoreboards
+
+    static Map<String, Object> getScoreboardJSON(Entity e, String key) {
+        key = key + ":";
+        for (String s: e.getScoreboardTags()) {
+            if (s.startsWith(key)) {
+                String v = s.substring(key.length());
+                Object o = Msg.fromJSONString(v);
+                if (!(o instanceof Map)) return null;
+                @SuppressWarnings("unchecked")
+                Map<String, Object> result = (Map<String, Object>)o;
+                return result;
+            }
+        }
+        return null;
+    }
+
+    static int removeScoreboardTag(Entity e, String key) {
+        key = key + ":";
+        List<String> rs = new ArrayList<>();
+        for (String s: e.getScoreboardTags()) {
+            if (s.startsWith(key)) rs.add(s);
+        }
+        for (String r: rs) {
+            e.removeScoreboardTag(r);
+        }
+        return rs.size();
+    }
+
+    static void storeScoreboardJSON(Entity e, String key, Map<String, Object> d) {
+        removeScoreboardTag(e, key);
+        key = key + ":";
+        e.addScoreboardTag(key + Msg.toJSONString(d));
     }
 }
