@@ -39,22 +39,16 @@ public enum Perk {
     RANCH_TWINS(SkillType.RANCH, null),
     RANCH_TRIPLETS(SkillType.RANCH, null),
     RANCH_COW(SkillType.RANCH, Perk.RANCH_TWINS),
-    RANCH_PIG(SkillType.RANCH, Perk.RANCH_COW),
-    RANCH_SHEEP(SkillType.RANCH, Perk.RANCH_PIG),
-    RANCH_CHICKEN(SkillType.RANCH, Perk.RANCH_SHEEP),
-    RANCH_RABBIT(SkillType.RANCH, Perk.RANCH_CHICKEN),
-    RANCH_HORSE(SkillType.RANCH, Perk.RANCH_TWINS),
-    RANCH_DONKEY(SkillType.RANCH, Perk.RANCH_HORSE),
-    RANCH_DOG(SkillType.RANCH, Perk.RANCH_TWINS),
-    RANCH_CAT(SkillType.RANCH, Perk.RANCH_DOG),
+    RANCH_MUSHROOM_COW(SkillType.RANCH, Perk.RANCH_COW),
+    RANCH_PIG(SkillType.RANCH, Perk.RANCH_TWINS),
+    RANCH_SHEEP(SkillType.RANCH, Perk.RANCH_TWINS),
+    RANCH_CHICKEN(SkillType.RANCH, Perk.RANCH_TWINS),
+    RANCH_RABBIT(SkillType.RANCH, Perk.RANCH_TWINS),
     // Ranching Specific
     RANCH_FINE_LEATHER(SkillType.RANCH, Perk.RANCH_COW),
-    RANCH_CAT_TREASURE(SkillType.RANCH, Perk.RANCH_CAT),
     RANCH_PIG_TRUFFLE(SkillType.RANCH, Perk.RANCH_PIG),
     RANCH_SHEEP_RAINBOW(SkillType.RANCH, Perk.RANCH_SHEEP),
     RANCH_CHICKEN_GOLD(SkillType.RANCH, Perk.RANCH_CHICKEN),
-    RANCH_HORSE_SKELETON(SkillType.RANCH, Perk.RANCH_HORSE),
-    RANCH_HORSE_ZOMBIE(SkillType.RANCH, Perk.RANCH_HORSE_SKELETON),
     // Brewing
     BREW_STACK(SkillType.BREW, null),
     // Brewing for yourself
@@ -102,8 +96,7 @@ public enum Perk {
     TAME_DOG_HEALTH(SkillType.TAME, null),
     TAME_DOG_REVIVE(SkillType.TAME, null),
     TAME_DOG_DEATH_HEALS(SkillType.TAME, null),
-    TAME_DOG_SACRIFICE(SkillType.TAME, null),
-    ;
+    TAME_DOG_SACRIFICE(SkillType.TAME, null);
 
     final SkillType skillType;
     final Perk depends;

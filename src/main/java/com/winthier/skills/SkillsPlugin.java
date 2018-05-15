@@ -1,5 +1,6 @@
 package com.winthier.skills;
 
+import com.winthier.custom.event.CustomRegisterEvent;
 import com.winthier.sql.SQLDatabase;
 import java.io.BufferedReader;
 import java.io.File;
@@ -66,6 +67,7 @@ public final class SkillsPlugin extends JavaPlugin implements Listener {
     private final Set<UUID> playersInDebugMode = new HashSet<>();
     private final Map<UUID, Session> sessions = new HashMap<>();
     private ConfigurationSection perksConfig = null;
+    private RanchEntity ranchEntity = null;
 
     public SkillsPlugin() {
         instance = this;
@@ -191,6 +193,12 @@ public final class SkillsPlugin extends JavaPlugin implements Listener {
         final UUID uuid = event.getPlayer().getUniqueId();
         sessions.remove(uuid);
         score.removePlayer(uuid);
+    }
+
+    @EventHandler
+    public void onCustomRegister(CustomRegisterEvent event) {
+        ranchEntity = new RanchEntity(this);
+        event.addEntity(ranchEntity);
     }
 
     private static class Inserted {
