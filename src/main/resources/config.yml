@@ -15,6 +15,8 @@ ranch:
   DisplayName: Ranching
   Shorthand: Ranch
   Description: Feed your farm animals to make them breed and increase their numbers.
+  FemaleNames: [Aaliyah Abigail Addison Alexa Alexandra Alexis Allison Alyssa Amanda Amber Andrea Angelina Anna Ariana Arianna Ashley Audrey Autumn Ava Avery Bailey Brianna Brooke Brooklyn Caroline Chloe Claire Danielle Destiny Elizabeth Ella Emily Emma Erin Evelyn Faith Gabriella Gabrielle Grace Hailey Haley Hannah Isabel Isabella Jacqueline Jada Jasmine Jenna Jennifer Jessica Jocelyn Jordan Julia Kaitlyn Katelyn Katherine Kayla Kaylee Kimberly Kylie Lauren Leah Lillian Lily Mackenzie Madeline Madison Makayla Maria Mariah Marissa Mary Maya Megan Melanie Mia Michelle Morgan Natalie Nevaeh Nicole Olivia Paige Rachel Rebecca Riley Samantha Sara Sarah Savannah Sierra Sofia Sophia Stephanie Sydney Taylor Trinity Vanessa Victoria Zoe]
+  MaleNames: [Aaron Adam Adrian Aidan Aiden Alejandro Alex Alexander Andrew Angel Anthony Antonio Austin Benjamin Blake Brandon Brayden Brian Bryan Caleb Cameron Carlos Carson Carter Charles Chase Christian Christopher Cody Cole Connor Daniel David Devin Diego Dominic Dylan Elijah Eric Ethan Evan Gabriel Gavin Hayden Hunter Ian Isaac Isaiah Jack Jackson Jacob Jaden James Jason Jayden Jeremiah Jesse Jesus John Jonathan Jordan Jose Joseph Joshua Juan Julian Justin Kevin Kyle Landon Logan Lucas Luis Luke Mason Matthew Michael Miguel Nathan Nathaniel Nicholas Noah Owen Patrick Richard Robert Ryan Samuel Sean Sebastian Seth Steven Thomas Timothy Tristan Tyler William Wyatt Xavier Zachary]
 brew:
   Enabled: true
   DisplayName: Brewing

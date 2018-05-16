@@ -15,9 +15,11 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
@@ -64,9 +66,12 @@ public final class RanchEntity implements CustomEntity, TickableEntity {
     enum Quirk {
         NOTHING,
         EXPLOSIVE,
-        HUNGRY,
-        SHY,
+        GLUTTON, // More hunger
+        ABSTINENT, // Less hunger
         SOCIAL,
+        SHY,
+        SANGUINE, // More fun
+        SAD, // Less fun
         SKINNY, // Little meat
         FAT, // Lots of meat
         RICH, // High yield
@@ -104,37 +109,52 @@ public final class RanchEntity implements CustomEntity, TickableEntity {
         Material.GLASS_BOTTLE
     };
 
-    Watcher breed(Watcher mother, Watcher father, LivingEntity child, Player rancher) {
-        Watcher watcher = (Watcher)CustomPlugin.getInstance().getEntityManager().wrapEntity(child, CUSTOM_ID);
-        watcher.generation = Math.min(mother.generation, father.generation) + 1;
-        watcher.owner = rancher.getUniqueId();
-        List<Quirk> motherQuirks = new ArrayList<>(mother.quirks);
-        List<Quirk> fatherQuirks = new ArrayList<>(father.quirks);
-        Random random = new Random(System.currentTimeMillis());
-        if (!motherQuirks.isEmpty()) watcher.quirks.add(motherQuirks.remove(random.nextInt(motherQuirks.size())));
-        if (!fatherQuirks.isEmpty()) watcher.quirks.add(fatherQuirks.remove(random.nextInt(fatherQuirks.size())));
-        if (!motherQuirks.isEmpty()) watcher.quirks.add(motherQuirks.remove(random.nextInt(motherQuirks.size())));
-        if (!fatherQuirks.isEmpty()) watcher.quirks.add(fatherQuirks.remove(random.nextInt(fatherQuirks.size())));
-        // Mutation
-        if (random.nextInt(3) == 0) {
-            List<Quirk> quirkPool = new ArrayList<>();
-            for (Quirk quirk: Quirk.values()) {
-                if (!watcher.quirks.contains(quirk)) quirkPool.add(quirk);
+    /**
+     * Called by RanchSkill when two entities are bred and the rancher
+     * has the required perks to improve them.
+     */
+    Watcher onBreed(LivingEntity motherEntity, LivingEntity fatherEntity, LivingEntity childEntity, Player rancher) {
+        Watcher mother = null, father = null;
+        EntityWatcher tmp;
+        tmp = CustomPlugin.getInstance().getEntityManager().getEntityWatcher(motherEntity);
+        if (tmp != null && tmp instanceof RanchEntity.Watcher) mother = (RanchEntity.Watcher)tmp;
+        tmp = CustomPlugin.getInstance().getEntityManager().getEntityWatcher(fatherEntity);
+        if (tmp != null && tmp instanceof RanchEntity.Watcher) father = (RanchEntity.Watcher)tmp;
+        Watcher child = (Watcher)CustomPlugin.getInstance().getEntityManager().wrapEntity(childEntity, CUSTOM_ID);
+        child.owner = rancher.getUniqueId();
+        if (mother != null && father != null
+            && mother.owner.equals(child.owner) && father.owner.equals(child.owner)) {
+            if (mother.gender == Gender.FEMALE && father.gender != Gender.FEMALE) {
+                Watcher tmp2;
+                tmp2 = mother;
+                mother = father;
+                father = tmp2;
+                LivingEntity tmp3 = motherEntity;
+                motherEntity = fatherEntity;
+                fatherEntity = tmp3;
             }
-            if (!quirkPool.isEmpty()) watcher.quirks.add(quirkPool.remove(random.nextInt(quirkPool.size())));
+            child.generation = Math.min(mother.generation, father.generation) + 1;
+            List<Quirk> motherQuirks = new ArrayList<>(mother.quirks);
+            List<Quirk> fatherQuirks = new ArrayList<>(father.quirks);
+            Random random = new Random(System.currentTimeMillis());
+            if (!motherQuirks.isEmpty()) child.quirks.add(motherQuirks.remove(random.nextInt(motherQuirks.size())));
+            if (!fatherQuirks.isEmpty()) child.quirks.add(fatherQuirks.remove(random.nextInt(fatherQuirks.size())));
+            if (!motherQuirks.isEmpty()) child.quirks.add(motherQuirks.remove(random.nextInt(motherQuirks.size())));
+            if (!fatherQuirks.isEmpty()) child.quirks.add(fatherQuirks.remove(random.nextInt(fatherQuirks.size())));
+            // Mutation
+            if (random.nextInt(3) == 0) {
+                List<Quirk> quirkPool = new ArrayList<>();
+                for (Quirk quirk: Quirk.values()) {
+                    if (!child.quirks.contains(quirk)) quirkPool.add(quirk);
+                }
+                if (!quirkPool.isEmpty()) child.quirks.add(quirkPool.remove(random.nextInt(quirkPool.size())));
+            }
+        } else {
+            child.generation = 1;
         }
-        watcher.roll();
-        watcher.save();
-        return watcher;
-    }
-
-    Watcher breed(LivingEntity child, Player rancher) {
-        Watcher watcher = (Watcher)CustomPlugin.getInstance().getEntityManager().wrapEntity(child, CUSTOM_ID);
-        watcher.generation = 1;
-        watcher.owner = rancher.getUniqueId();
-        watcher.roll();
-        watcher.save();
-        return watcher;
+        child.roll();
+        child.save();
+        return child;
     }
 
     @Getter @RequiredArgsConstructor
@@ -145,14 +165,16 @@ public final class RanchEntity implements CustomEntity, TickableEntity {
         private final RanchEntity customEntity;
         private final LivingEntity entity;
         // Payload
+        private String name = null;
         private int generation = 0;
-        private int happiness = 0;
+        private int hunger, social, fun, happy; // needs
         private UUID owner = new UUID(0, 0);
         private List<Quirk> quirks = new ArrayList<>();
         private Material toy, treat;
         private Gender gender;
         private long tickOffset = 0;
         private long ticks = 0;
+        private int unsaved = 0;
 
         boolean hasActiveQuirk(Quirk quirk) {
             int index = quirks.indexOf(quirk);
@@ -163,8 +185,11 @@ public final class RanchEntity implements CustomEntity, TickableEntity {
             Map<String, Object> map = customEntity.plugin.getScoreboardJSON(entity, SCOREBOARD_KEY);
             if (map == null) return;
             ConfigurationSection config = new YamlConfiguration().createSection("tmp", map);
-            generation = config.getInt("generation", 0);
-            happiness = config.getInt("happy", 0);
+            generation = config.getInt("gen");
+            happy = config.getInt("happy");
+            hunger = config.getInt("hunger");
+            social = config.getInt("social");
+            fun = config.getInt("fun");
             String ownerString = config.getString("owner");
             if (ownerString != null) {
                 try {
@@ -214,14 +239,18 @@ public final class RanchEntity implements CustomEntity, TickableEntity {
 
         void save() {
             Map<String, Object> map = new HashMap<>();
-            map.put("generation", generation);
-            map.put("happy", happiness);
+            map.put("gen", generation);
+            map.put("hunger", hunger);
+            map.put("social", social);
+            map.put("fun", fun);
+            map.put("happy", happy);
             map.put("owner", owner.toString());
             map.put("quirks", quirks.stream().map(a -> a.name().toLowerCase()).collect(Collectors.toList()));
             map.put("toy", toy.name().toLowerCase());
             map.put("treat", treat.name().toLowerCase());
             map.put("gender", gender.name().toLowerCase());
             customEntity.plugin.storeScoreboardJSON(entity, SCOREBOARD_KEY, map);
+            unsaved = 0;
         }
 
         void roll() {
@@ -236,26 +265,148 @@ public final class RanchEntity implements CustomEntity, TickableEntity {
             }
             if (toy == null) toy = customEntity.toys[random.nextInt(customEntity.toys.length)];
             if (treat == null) treat = customEntity.treats[random.nextInt(customEntity.treats.length)];
+            if (gender == null) gender = random.nextBoolean() ? Gender.FEMALE : Gender.MALE;
+            if (name == null) {
+                List<String> names;
+                if (gender == Gender.FEMALE) {
+                    names = customEntity.plugin.getSkill(RanchSkill.class).femaleNames;
+                } else {
+                    names = customEntity.plugin.getSkill(RanchSkill.class).maleNames;
+                }
+                name = names.get(random.nextInt(names.size()));
+            }
+        }
+
+        boolean eat() {
+            Block block = null;
+            // Crops or flowers
+            switch (entity.getType()) {
+            case PIG:
+                for (int i = 0; i < 2; i += 1) {
+                    block = entity.getLocation().getBlock().getRelative(0, i, 0);
+                    switch (block.getType()) {
+                    case CARROT:
+                    case POTATO:
+                        if (block.getData() == 7) {
+                            block.setType(Material.AIR);
+                            hunger = Math.max(0, hunger - 600);
+                        }
+                        break;
+                    case BEETROOT_BLOCK:
+                        if (block.getData() == 3) {
+                            block.setType(Material.AIR);
+                            hunger = Math.max(0, hunger - 600);
+                        }
+                        break;
+                    default: break;
+                    }
+                }
+                break;
+            case COW:
+                for (int i = 0; i < 2; i += 1) {
+                    block = entity.getLocation().getBlock().getRelative(0, i, 0);
+                    switch (block.getType()) {
+                    case CROPS:
+                        if (block.getData() == 7) {
+                            block.setType(Material.AIR);
+                            hunger = Math.max(0, hunger - 600);
+                        }
+                        break;
+                    default: break;
+                    }
+                }
+                break;
+            case RABBIT:
+                for (int i = 0; i < 2; i += 1) {
+                    block = entity.getLocation().getBlock().getRelative(0, i, 0);
+                    switch (block.getType()) {
+                    case CARROT:
+                        if (block.getData() == 7) {
+                            block.setType(Material.AIR);
+                            hunger = Math.max(0, hunger - 600);
+                        }
+                        break;
+                    case YELLOW_FLOWER:
+                        if (block.getData() == 0) {
+                            block.setType(Material.AIR);
+                            hunger = Math.max(0, hunger - 600);
+                        }
+                        break;
+                    default: break;
+                    }
+                }
+                break;
+            }
+            // Tall grass or mushrooms
+            switch (entity.getType()) {
+            case COW:
+            case SHEEP:
+            case RABBIT:
+                block = entity.getLocation().getBlock();
+                if (block.getType() == Material.LONG_GRASS) {
+                    block.setType(Material.AIR);
+                    hunger = Math.max(0, hunger - 600);
+                    return true;
+                }
+                break;
+            case MUSHROOM_COW:
+                block = entity.getLocation().getBlock();
+                if (block.getType() == Material.RED_MUSHROOM
+                    || block.getType() == Material.BROWN_MUSHROOM) {
+                    block.setType(Material.AIR);
+                    hunger = Math.max(0, hunger - 600);
+                    return true;
+                }
+                break;
+            default: break;
+            }
+            // Flat grass or mycel
+            switch (entity.getType()) {
+            case COW:
+            case SHEEP:
+                block = entity.getLocation().getBlock().getRelative(0, -1, 0);
+                if (block.getType() == Material.GRASS) {
+                    block.setType(Material.DIRT);
+                    hunger = Math.max(0, hunger - 300);
+                    return true;
+                }
+                break;
+            case CHICKEN:
+                block = entity.getLocation().getBlock().getRelative(0, -1, 0);
+                if (block.getType() == Material.GRASS
+                    || block.getType() == Material.DIRT) {
+                    block.setTypeIdAndData(Material.DIRT.getId(), (byte)3, true); // Coarse dirt
+                    hunger = Math.max(0, hunger - 300);
+                    return true;
+                }
+                break;
+            case MUSHROOM_COW:
+                block = entity.getLocation().getBlock().getRelative(0, -1, 0);
+                if (block.getType() == Material.MYCEL) {
+                    block.setType(Material.DIRT);
+                    hunger = Math.max(0, hunger - 300);
+                    return true;
+                }
+                break;
+            default: break;
+            }
+            return false;
         }
 
         void onTick() {
             if ((ticks++ % tickOffset) != 0) return;
-            switch (entity.getType()) {
-            case COW:
-                break;
-            case MUSHROOM_COW:
-                break;
-            case PIG:
-                break;
-            case SHEEP:
-                break;
-            case CHICKEN:
-                break;
-            case RABBIT:
-                break;
-            default:
-                break;
-            }
+            unsaved += 1;
+            if (unsaved >= 60) save();
+            hunger += 1;
+            Random random = new Random(System.currentTimeMillis());
+            if (hasActiveQuirk(Quirk.GLUTTON)) hunger += 1;
+            if (hasActiveQuirk(Quirk.ABSTINENT) && random.nextBoolean()) hunger -= 1;
+            social += 1;
+            fun = Math.min(100, fun + 1);
+            if (hasActiveQuirk(Quirk.SANGUINE)) fun += 1;
+            if (hasActiveQuirk(Quirk.SAD) && random.nextBoolean()) fun -= 1;
+            if (hunger > 300) eat();
+            
         }
     }
 }

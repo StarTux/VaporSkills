@@ -1,7 +1,7 @@
 package com.winthier.skills;
 
-import com.winthier.custom.CustomPlugin;
-import com.winthier.custom.entity.EntityWatcher;
+import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -13,8 +13,18 @@ import org.bukkit.event.entity.EntityBreedEvent;
  * The ranching skill works in conjunction with the RanchingEntity.
  */
 final class RanchSkill extends Skill {
+    List<String> maleNames, femaleNames;
+
     RanchSkill(SkillsPlugin plugin) {
         super(plugin, SkillType.RANCH);
+    }
+
+    @Override
+    void configure() {
+        maleNames = getConfig().getStringList("MaleNames");
+        if (maleNames.isEmpty()) maleNames = Arrays.asList("Adam");
+        femaleNames = getConfig().getStringList("FemaleNames");
+        if (femaleNames.isEmpty()) femaleNames = Arrays.asList("Eve");
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
@@ -47,27 +57,7 @@ final class RanchSkill extends Skill {
             doImprove = false;
             break;
         }
-        if (doImprove) {
-            final RanchEntity.Watcher mother, father;
-            EntityWatcher tmp;
-            tmp = CustomPlugin.getInstance().getEntityManager().getEntityWatcher(event.getMother());
-            if (tmp != null && tmp instanceof RanchEntity.Watcher) {
-                mother = (RanchEntity.Watcher)tmp;
-            } else {
-                mother = null;
-            }
-            tmp = CustomPlugin.getInstance().getEntityManager().getEntityWatcher(event.getFather());
-            if (tmp != null && tmp instanceof RanchEntity.Watcher) {
-                father = (RanchEntity.Watcher)tmp;
-            } else {
-                father = null;
-            }
-            if (mother != null && father != null) {
-                plugin.getRanchEntity().breed(mother, father, entity, player);
-            } else {
-                plugin.getRanchEntity().breed(entity, player);
-            }
-        }
+        if (doImprove) plugin.getRanchEntity().onBreed(event.getMother(), event.getFather(), entity, player);
         // Give Reward
         Reward reward = getReward(Reward.Category.BREED_ENTITY, entity.getType().name(), null, null);
         giveReward(player, reward);
