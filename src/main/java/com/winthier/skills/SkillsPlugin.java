@@ -62,6 +62,7 @@ public final class SkillsPlugin extends JavaPlugin implements Listener {
     // Internal Data
     private final Score score = new Score(this);
     private final Map<SkillType, Skill> skillMap = new EnumMap<>(SkillType.class);
+    private final Map<Class<? extends Skill>, Skill> skillClassMap = new HashMap<>();
     private final Map<String, Skill> nameMap = new HashMap<>();
     private final Map<UUID, Double> exps = new HashMap<>();
     private final Set<UUID> playersInDebugMode = new HashSet<>();
@@ -113,6 +114,7 @@ public final class SkillsPlugin extends JavaPlugin implements Listener {
                 throw new IllegalStateException("Duplicate skill " + type.name() + ": " + skillMap.get(type).getClass().getName() + " and " + skill.getClass().getName());
             }
             skillMap.put(type, skill);
+            skillClassMap.put(skill.getClass(), skill);
         }
         // Double check skills
         for (SkillType type : SkillType.values()) {
@@ -419,6 +421,10 @@ public final class SkillsPlugin extends JavaPlugin implements Listener {
 
     public Skill getSkill(SkillType type) {
         return skillMap.get(type);
+    }
+
+    public <E extends Skill> E getSkill(Class<E> skillClass) {
+        return skillClass.cast(skillClassMap.get(skillClass));
     }
 
     void giveExp(Player player, double amount) {
