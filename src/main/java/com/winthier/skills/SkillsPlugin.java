@@ -69,6 +69,7 @@ public final class SkillsPlugin extends JavaPlugin implements Listener {
     private final Map<UUID, Session> sessions = new HashMap<>();
     private ConfigurationSection perksConfig = null;
     private RanchEntity ranchEntity = null;
+    private LootEntity lootEntity = null;
 
     public SkillsPlugin() {
         instance = this;
@@ -200,7 +201,9 @@ public final class SkillsPlugin extends JavaPlugin implements Listener {
     @EventHandler
     public void onCustomRegister(CustomRegisterEvent event) {
         ranchEntity = new RanchEntity(this);
+        lootEntity = new LootEntity(this);
         event.addEntity(ranchEntity);
+        event.addEntity(lootEntity);
     }
 
     private static class Inserted {
@@ -371,8 +374,8 @@ public final class SkillsPlugin extends JavaPlugin implements Listener {
         Player player = getServer().getPlayer(inserted.player);
         if (player == null) return;
         if (hasDebugMode(player)) player.sendMessage("SMELT " + inserted.material + " " + inserted.amount);
-        ((CookSkill)getSkill(SkillType.COOK)).onItemSmelt(player, event.getSource(), event.getResult());
-        ((SmithSkill)getSkill(SkillType.SMITH)).onItemSmelt(player, event.getSource(), event.getResult());
+        getSkill(CookSkill.class).onItemSmelt(player, event.getSource(), event.getResult());
+        getSkill(SmithSkill.class).onItemSmelt(player, event.getSource(), event.getResult());
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)

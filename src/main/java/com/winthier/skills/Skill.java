@@ -31,6 +31,7 @@ public abstract class Skill implements Listener {
         displayName = getConfig().getString("DisplayName", skillType.key);
         shorthand = getConfig().getString("Shorthand", skillType.key);
         description = getConfig().getString("Description", "This is a default skill description. Slap StarTux around so he will finally implement proper skill descriptions and not this dribble.");
+        configure();
     }
 
     void configure() { };
