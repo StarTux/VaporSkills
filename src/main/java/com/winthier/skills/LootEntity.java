@@ -26,7 +26,7 @@ import org.bukkit.inventory.ItemStack;
 
 @RequiredArgsConstructor
 public final class LootEntity implements CustomEntity, TickableEntity {
-    static final String CUSTOM_ID = "skills:loot_entity";
+    static final String CUSTOM_ID = "skills:loot";
     private final SkillsPlugin plugin;
 
     @Override
@@ -39,6 +39,7 @@ public final class LootEntity implements CustomEntity, TickableEntity {
         Cow result = location.getWorld().spawn(location, Cow.class, (cow) -> {
                 cow.setCustomName("Dinnerbone");
                 cow.setAI(false);
+                cow.setSilent(true);
             });
         return result;
     }
@@ -114,7 +115,7 @@ public final class LootEntity implements CustomEntity, TickableEntity {
             if (args.length == 0) return;
             switch (args[0]) {
             case "debug":
-                sender.sendMessage(LootEntity.CUSTOM_ID + " " + Msg.camelCase(entity.getType().name()) + " received debug message");
+                sender.sendMessage(LootEntity.CUSTOM_ID + " " + Msg.capitalize(entity.getType().name()) + " received debug message");
                 getInventory().addItem(new ItemStack(Material.STICK));
                 break;
             case "title":
@@ -123,14 +124,14 @@ public final class LootEntity implements CustomEntity, TickableEntity {
                     StringBuilder sb = new StringBuilder(args[1]);
                     for (int i = 2; i < args.length; i += 1) sb.append(" ").append(args[i]);
                     inventoryTitle = sb.toString();
-                    sender.sendMessage(LootEntity.CUSTOM_ID + " " + Msg.camelCase(entity.getType().name()) + " setting inventory title to \"" + sb.toString() + "\"");
+                    sender.sendMessage(LootEntity.CUSTOM_ID + " " + Msg.capitalize(entity.getType().name()) + " setting inventory title to \"" + sb.toString() + "\"");
                 }
             break;
             case "size":
                 if (args.length == 2) {
                     try {
                         inventorySize = Integer.parseInt(args[1]);
-                        sender.sendMessage(LootEntity.CUSTOM_ID + " " + Msg.camelCase(entity.getType().name()) + " setting inventory size to " + inventorySize);
+                        sender.sendMessage(LootEntity.CUSTOM_ID + " " + Msg.capitalize(entity.getType().name()) + " setting inventory size to " + inventorySize);
                     } catch (NumberFormatException nfe) {
                         nfe.printStackTrace();
                     }

@@ -41,6 +41,12 @@ final class Msg {
         player.sendTitle(format(title), format(subtitle));
     }
 
+    static void actionBar(Player player, String text, Object... args) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("text", format(text, args));
+        consoleCommand("minecraft:title %s actionbar %s", player.getName(), JSONValue.toJSONString(map));
+    }
+
     static void raw(Player player, Object... obj) {
         if (obj.length == 0) return;
         if (obj.length == 1) {
@@ -162,7 +168,15 @@ final class Msg {
         return sb.toString();
     }
 
-    public static String camelCase(String input) {
+    public static String niceEnumName(Enum en) {
+        return en.name().toLowerCase().replace("_", " ");
+    }
+
+    public static String capitalEnumName(Enum en) {
+        return capitalize(en.name().toLowerCase().replace("_", " "));
+    }
+
+    public static String capitalize(String input) {
         return input.substring(0, 1).toUpperCase() + input.substring(1, input.length()).toLowerCase();
     }
 

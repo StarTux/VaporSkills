@@ -8,6 +8,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityBreedEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
+import org.bukkit.inventory.EquipmentSlot;
 
 /**
  * The ranching skill works in conjunction with the RanchingEntity.
@@ -63,4 +66,18 @@ final class RanchSkill extends Skill {
         giveReward(player, reward);
     }
 
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+    public void onPlayerDropItem(PlayerDropItemEvent event) {
+        plugin.getRanchEntity().onPlayerDropItem(event);
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
+    public void onPlayerInteractEntity(PlayerInteractEntityEvent event) {
+        if (event.getHand() != EquipmentSlot.HAND) return;
+        final Player player = event.getPlayer();
+        final UUID uuid = player.getUniqueId();
+        if (plugin.getScore().hasPerk(player.getUniqueId(), Perk.RANCH_CARRY)) {
+            plugin.getRanchEntity().pickup(player, event.getRightClicked());
+        }
+    }
 }
