@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
 import lombok.Getter;
@@ -70,6 +71,7 @@ public final class SkillsPlugin extends JavaPlugin implements Listener {
     private ConfigurationSection perksConfig = null;
     private RanchEntity ranchEntity = null;
     private LootEntity lootEntity = null;
+    final Random random = new Random(System.currentTimeMillis());
 
     public SkillsPlugin() {
         instance = this;

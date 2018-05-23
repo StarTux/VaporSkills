@@ -173,7 +173,10 @@ final class Msg {
     }
 
     public static String capitalEnumName(Enum en) {
-        return capitalize(en.name().toLowerCase().replace("_", " "));
+        String[] t = en.name().split("_");
+        StringBuilder sb = new StringBuilder(capitalize(t[0]));
+        for (int i = 1; i < t.length; i += 1) sb.append(" ").append(capitalize(t[i]));
+        return sb.toString();
     }
 
     public static String capitalize(String input) {

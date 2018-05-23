@@ -27,11 +27,12 @@ final class BrawlSkill extends Skill {
     static final String STOLEN_SCOREBOARD_TAG = "winthier.brawl_skill.stolen";
     private long killDistanceInterval = 300;
     private double minKillDistance = 16;
-    private final Random random = new Random(System.currentTimeMillis());
     private boolean recursionLock = false;
+    private final Random random;
 
     BrawlSkill(SkillsPlugin plugin) {
         super(plugin, SkillType.BRAWL);
+        this.random = plugin.random;
     }
 
     @Override

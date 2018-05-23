@@ -4,14 +4,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import lombok.Data;
-import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
 
 /**
  * Maintain player scoreboards and transient named cooldowns for
@@ -21,13 +19,14 @@ import org.bukkit.scheduler.BukkitRunnable;
 final class Session {
     private final SkillsPlugin plugin;
     private final UUID uuid;
-    @Getter private double sessionMoney = 0.0;
+    private long ticks = 0;
+    // Progress bar
     private boolean progressBarEnabled = true;
-    private BukkitRunnable updateTask;
     private BossBar progressBar;
     private int noRewardTimer = 0;
-    private long ticks = 0;
+    // Cooldowns
     private final Map<String, Integer> cooldowns = new HashMap<>();
+    // Brawling
 
     Session(SkillsPlugin plugin, UUID uuid) {
         this.plugin = plugin;

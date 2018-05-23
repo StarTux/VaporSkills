@@ -19,7 +19,6 @@ final class LevelUpEffect extends BukkitRunnable {
     private final int level;
     private int tickCounter = 0;
     private static final int MAX_TICKS = 20 * 8;
-    private final Random random = new Random(System.currentTimeMillis());
 
     static void launch(SkillsPlugin plugin, Player player, SkillType skillType, int level) {
         new LevelUpEffect(plugin, player.getUniqueId(), skillType, level).runTaskTimer(plugin, 0, 1);
@@ -27,6 +26,7 @@ final class LevelUpEffect extends BukkitRunnable {
 
     @Override
     public void run() {
+        final Random random = plugin.random;
         int ticks = this.tickCounter++;
         Player player = Bukkit.getServer().getPlayer(uuid);
         if (ticks > MAX_TICKS || player == null || !player.isValid()) {

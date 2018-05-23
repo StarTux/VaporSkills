@@ -1,6 +1,5 @@
 package com.winthier.skills;
 
-import com.winthier.custom.CustomPlugin;
 import com.winthier.custom.entity.CustomEntity;
 import com.winthier.custom.entity.EntityContext;
 import com.winthier.custom.entity.EntityWatcher;
@@ -67,12 +66,12 @@ public final class LootEntity implements CustomEntity, TickableEntity {
     }
 
     @RequiredArgsConstructor @Getter
-    final static class Watcher implements EntityWatcher {
+    static final class Watcher implements EntityWatcher {
         final LootEntity customEntity;
         final Entity entity;
-        @Setter String inventoryTitle = "Loot";
-        @Setter int inventorySize = 18;
-        @Setter List<UUID> owners = new ArrayList<>();
+        @Setter private String inventoryTitle = "Loot";
+        @Setter private int inventorySize = 18;
+        @Setter private List<UUID> owners = new ArrayList<>();
         private long age = 0;
         private Inventory inventory = null;
 
@@ -137,6 +136,7 @@ public final class LootEntity implements CustomEntity, TickableEntity {
                     }
                 }
                 break;
+            default: break;
             }
         }
     }
