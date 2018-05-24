@@ -39,9 +39,11 @@ import org.bukkit.entity.Sheep;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.entity.ItemSpawnEvent;
 import org.bukkit.event.entity.SheepRegrowWoolEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
+import org.bukkit.event.player.PlayerShearEntityEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
@@ -102,7 +104,7 @@ public final class RanchEntity implements CustomEntity, TickableEntity {
         watcher.onTick();
     }
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
     public void onEntityDeath(EntityDeathEvent event, EntityContext context) {
         Watcher watcher = (Watcher)context.getEntityWatcher();
         LootEntity.Watcher lootWatcher = watcher.die();
@@ -118,7 +120,13 @@ public final class RanchEntity implements CustomEntity, TickableEntity {
     @EventHandler(ignoreCancelled = true)
     public void onSheepRegrowWool(SheepRegrowWoolEvent event, EntityContext context) {
         Watcher watcher = (Watcher)context.getEntityWatcher();
-        if (watcher.sick == 2) event.setCancelled(true);
+        if (watcher.sick == 1) event.setCancelled(true);
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
+    public void onPlayerShear(PlayerShearEntityEvent event, EntityContext context) {
+        Watcher watcher = (Watcher)context.getEntityWatcher();
+        if (watcher.sick == 1) event.setCancelled(true);
     }
 
     /**
@@ -134,31 +142,21 @@ public final class RanchEntity implements CustomEntity, TickableEntity {
         }
     }
 
-    void pickup(Player player, Entity entity) {
-        if (!player.getPassengers().isEmpty()) {
-            player.eject();
-            player.playSound(player.getEyeLocation(), Sound.ENTITY_HORSE_SADDLE, 1f, 1.9f);
-            return;
-        }
-        ItemStack item = player.getInventory().getItemInMainHand();
-        if (item != null && item.getType() != Material.AIR) return;
-        if (!(entity instanceof Animals)) return;
-        if (!entity.getPassengers().isEmpty()) return;
-        if (entity.getVehicle() != null) return;
-        EntityWatcher ew = CustomPlugin.getInstance().getEntityManager().getEntityWatcher(entity);
-        boolean doPickup = false;
-        if (ew instanceof Watcher) {
-            Watcher watcher = (Watcher)ew;
-            doPickup = player.getUniqueId().equals(watcher.owner);
-        } else {
-            doPickup = true;
-        }
-        if (doPickup) {
-            player.playSound(player.getEyeLocation(), Sound.ENTITY_HORSE_SADDLE, 1f, 1.5f);
-            say((Animals)entity);
-            player.eject();
-            player.addPassenger(entity);
-            Msg.actionBar(player, "Click again to drop the %s", Msg.niceEnumName(entity.getType()));
+    /**
+     * Called by RanchSkill.onItemSpawn()
+     */
+    void onEggSpawn(ItemSpawnEvent event) {
+        for (Entity e: event.getEntity().getNearbyEntities(0, 0, 0)) {
+            if (e.getType() == EntityType.CHICKEN) {
+                EntityWatcher tmp = CustomPlugin.getInstance().getEntityManager().getEntityWatcher(e);
+                if (tmp instanceof Watcher) {
+                    Watcher watcher = (Watcher)tmp;
+                    if (watcher.sick == 1) {
+                        event.setCancelled(true);
+                        return;
+                    }
+                }
+            }
         }
     }
 
@@ -391,8 +389,7 @@ public final class RanchEntity implements CustomEntity, TickableEntity {
         private String name = null;
         private int generation = 0, age = 0;
         private int hunger, social, fun, happy; // needs
-        private int yield, good, sick;
-        private boolean special = false;
+        private int yield, good, sick, special;
         private UUID owner = new UUID(0, 0);
         private List<Quirk> quirks = new ArrayList<>();
         private Material toy, treat;
@@ -475,7 +472,7 @@ public final class RanchEntity implements CustomEntity, TickableEntity {
                     iae.printStackTrace();
                 }
             }
-            special = config.getBoolean("special", false);
+            special = config.getInt("special", 0);
         }
 
         void save() {
@@ -496,7 +493,7 @@ public final class RanchEntity implements CustomEntity, TickableEntity {
             map.put("treat", treat.name().toLowerCase());
             map.put("gender", gender.name().toLowerCase());
             if (sick != 0) map.put("sick", sick);
-            if (special) map.put("special", true);
+            if (special != 0) map.put("special", special);
             customEntity.plugin.storeScoreboardJSON(entity, SCOREBOARD_KEY, map);
         }
 
@@ -719,6 +716,15 @@ public final class RanchEntity implements CustomEntity, TickableEntity {
             final Random random = customEntity.plugin.random;
             switch (entity.getType()) {
             case COW:
+                for (int i = 0; i < foodDrop; i += 1) foodAmount += 1 + random.nextInt(3); // 1 - 3
+                for (int i = 0; i < itemDrop; i += 1) itemAmount += random.nextInt(3); // 0 - 2
+                if (foodAmount > 0) loot.add(new ItemStack(Material.RAW_BEEF, foodAmount));
+                if (itemAmount < 0) loot.add(new ItemStack(Material.LEATHER, itemAmount));
+                if (customEntity.plugin.getScore().hasPerk(owner, Perk.RANCH_COW_OXHIDE)) {
+                }
+                if (customEntity.plugin.getScore().hasPerk(owner, Perk.RANCH_COW_SIRLOIN)) {
+                }
+                break;
             case MUSHROOM_COW:
                 for (int i = 0; i < foodDrop; i += 1) foodAmount += 1 + random.nextInt(3); // 1 - 3
                 for (int i = 0; i < itemDrop; i += 1) itemAmount += random.nextInt(3); // 0 - 2
@@ -854,6 +860,8 @@ public final class RanchEntity implements CustomEntity, TickableEntity {
                     if (entity instanceof Sheep) {
                         Sheep sheep = (Sheep)entity;
                         if (!sheep.isSheared()) sheep.setSheared(true);
+                    } else if (entity.getType() == EntityType.CHICKEN) {
+                        Msg.entityData(entity, "EggLayTime", 12000);
                     }
                     entity.getWorld().spawnParticle(Particle.CRIT_MAGIC, entity.getEyeLocation(), 2, 0.5, 0.5, 0.5, 0);
                     entity.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 40, 0, true));
@@ -976,15 +984,29 @@ public final class RanchEntity implements CustomEntity, TickableEntity {
         void onInteract(PlayerInteractEntityEvent event) {
             final Player player = event.getPlayer();
             final UUID uuid = player.getUniqueId();
-            final ItemStack item = player.getInventory().getItemInMainHand();
+            final ItemStack item;
+            if (event.getHand() != EquipmentSlot.HAND) {
+                item = player.getInventory().getItemInMainHand();
+            } else {
+                item = player.getInventory().getItemInOffHand();
+            }
             boolean isFood = false, isTreat = false;
             if (item == null || item.getType() == Material.AIR) {
-                return;
+                if (customEntity.plugin.getScore().hasPerk(player.getUniqueId(), Perk.RANCH_CARRY) && owner.equals(uuid)) {
+                    if (player.getPassengers().isEmpty()) {
+                        player.addPassenger(entity);
+                        Msg.actionBar(player, "Click again to drop %s", name);
+                    } else {
+                        player.eject();
+                    }
+                    event.setCancelled(true);
+                }
             } else if (item.getType() == treat) {
                 isFood = true;
                 isTreat = true;
             } else if (item.getType() == Material.BOOK) {
                 if (entity.isAdult()
+                    && event.getHand() == EquipmentSlot.HAND
                     && new ItemStack(Material.BOOK).equals(item)
                     && customEntity.plugin.getScore().hasPerk(uuid, Perk.RANCH_INSPECT_BOOK)) {
                     ItemStack newItem = new ItemStack(Material.WRITTEN_BOOK);
@@ -1030,6 +1052,7 @@ public final class RanchEntity implements CustomEntity, TickableEntity {
                     meta.setTitle(name + " the " + Msg.capitalize(Msg.niceEnumName(entity.getType())));
                     meta.setAuthor(player.getName());
                     newItem.setItemMeta(meta);
+                    // Main hand check is in the main if clause
                     player.getInventory().setItemInMainHand(newItem);
                     player.playSound(player.getEyeLocation(), Sound.ITEM_ARMOR_EQUIP_ELYTRA, 0.5f, 2.0f);
                 }
@@ -1043,6 +1066,10 @@ public final class RanchEntity implements CustomEntity, TickableEntity {
                         }
                     }
                 } else {
+                    event.setCancelled(true);
+                }
+            } else if (item.getType() == Material.BUCKET) {
+                if (entity.getType() == EntityType.COW && sick == 1) {
                     event.setCancelled(true);
                 }
             } else {
@@ -1108,6 +1135,7 @@ public final class RanchEntity implements CustomEntity, TickableEntity {
                 eatCooldown = 5;
                 item.setAmount(item.getAmount() - 1);
                 customEntity.entityEatEffect(entity);
+                event.setCancelled(true);
             }
         }
 

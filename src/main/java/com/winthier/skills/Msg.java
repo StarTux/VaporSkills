@@ -8,6 +8,7 @@ import java.util.Map;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.json.simple.JSONValue;
 
@@ -39,6 +40,13 @@ final class Msg {
     @SuppressWarnings("deprecation")
     static void title(Player player, String title, String subtitle) {
         player.sendTitle(format(title), format(subtitle));
+    }
+
+    static void entityData(Entity e, String key, Object value) {
+        Map<String, Object> map = new HashMap<>();
+        map.put(key, value);
+        String uuid = e.getUniqueId().toString();
+        consoleCommand("minecraft:execute %s ~ ~ ~ minecraft:entitydata %s %s", uuid, uuid, JSONValue.toJSONString(map));
     }
 
     static void actionBar(Player player, String text, Object... args) {

@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.UUID;
 import lombok.Getter;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.entity.Animals;
@@ -16,8 +17,8 @@ import org.bukkit.entity.Sheep;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityBreedEvent;
+import org.bukkit.event.entity.ItemSpawnEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
-import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -163,13 +164,11 @@ final class RanchSkill extends Skill {
         plugin.getRanchEntity().onPlayerDropItem(event);
     }
 
+    // Listen for spawned eggs
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
-    public void onPlayerInteractEntity(PlayerInteractEntityEvent event) {
-        if (event.getHand() != EquipmentSlot.HAND) return;
-        final Player player = event.getPlayer();
-        final UUID uuid = player.getUniqueId();
-        if (plugin.getScore().hasPerk(player.getUniqueId(), Perk.RANCH_CARRY)) {
-            plugin.getRanchEntity().pickup(player, event.getRightClicked());
+    public void onItemSpawn(ItemSpawnEvent event) {
+        if (event.getEntity().getItemStack().getType() == Material.EGG) {
+            plugin.getRanchEntity().onEggSpawn(event);
         }
     }
 }
