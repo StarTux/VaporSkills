@@ -71,6 +71,7 @@ public final class SkillsPlugin extends JavaPlugin implements Listener {
     private ConfigurationSection perksConfig = null;
     private RanchEntity ranchEntity = null;
     private LootEntity lootEntity = null;
+    private Map<IngredientItem.Type, IngredientItem> ingredients = null;
     final Random random = new Random(System.currentTimeMillis());
 
     public SkillsPlugin() {
@@ -86,7 +87,6 @@ public final class SkillsPlugin extends JavaPlugin implements Listener {
     @Override
     public void onEnable() {
         // Files
-        writeDefaultFiles(false);
         reloadConfig();
         // Database
         db = new SQLDatabase(this);
@@ -206,6 +206,10 @@ public final class SkillsPlugin extends JavaPlugin implements Listener {
         lootEntity = new LootEntity(this);
         event.addEntity(ranchEntity);
         event.addEntity(lootEntity);
+        ingredients = new EnumMap<>(IngredientItem.Type.class);
+        for (IngredientItem.Type type: IngredientItem.Type.values()) {
+            ingredients.put(type, new IngredientItem(this, type));
+        }
     }
 
     private static class Inserted {
@@ -482,17 +486,17 @@ public final class SkillsPlugin extends JavaPlugin implements Listener {
     }
 
     void importRewards() {
-        File file = new File(getDataFolder(), REWARDS_TXT);
-        if (!file.exists()) {
-            getLogger().warning(REWARDS_TXT + " not found");
-            return;
-        }
         int linum = 0;
         BufferedReader in = null;
         Reward reward = null;
         try {
             Map<Reward.Key, Reward> map = new HashMap<>();
-            in = new BufferedReader(new FileReader(file));
+            final File file = new File(getDataFolder(), REWARDS_TXT);
+            if (file.exists()) {
+                in = new BufferedReader(new FileReader(file));
+            } else {
+                in = new BufferedReader(new InputStreamReader(getResource(REWARDS_TXT)));
+            }
             String line = null;
             while (null != (line = in.readLine())) {
                 linum++;

@@ -65,7 +65,6 @@ class HighscoreCommand implements CommandExecutor {
                         "&r" + Msg.wrap(plugin.getConfig().getString("total.Description", ""), 32),
                         "&7Click for more details"));
         for (Skill skill : plugin.getSkills()) {
-            if (!skill.isEnabled()) continue;
             hi = plugin.getScore().getHighscore(skill.skillType);
             rank = hi.rankOfPlayer(uuid);
             rankString = rank > 0 ? "#" + rank : "-";

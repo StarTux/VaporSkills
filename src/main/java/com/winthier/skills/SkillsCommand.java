@@ -41,7 +41,6 @@ class SkillsCommand implements CommandExecutor {
         Msg.msg(player, "&3&lSkills &7&o(Click for more info)");
         List<Object> message = new ArrayList<>();
         for (Skill skill : plugin.getSkills()) {
-            if (!skill.isEnabled()) continue;
             int skillPoints = (int)plugin.getScore().getSkillPoints(uuid, skill.skillType);
             int skillLevel = plugin.getScore().getSkillLevel(uuid, skill.skillType);
             int pointsInLevel = Score.pointsInLevel(skillPoints);

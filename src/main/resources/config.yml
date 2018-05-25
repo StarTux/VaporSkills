@@ -1,79 +1,65 @@
 total:
   Description: The total skill aggregates all other skill points and levels.
 smith:
-  Enabled: true
   DisplayName: Smithing
   Shorthand: Smith
   Description: Refine items on an anvil.
 brawl:
-  Enabled: true
   DisplayName: Brawling
   Shorthand: Brawl
   Description: Fight hostile monsters in close combat, ideally with your sword.
 ranch:
-  Enabled: true
   DisplayName: Ranching
   Shorthand: Ranch
   Description: Feed your farm animals to make them breed and increase their numbers.
   FemaleNames: [Aaliyah, Abigail, Addison, Alexa, Alexandra, Alexis, Allison, Alyssa, Amanda, Amber, Andrea, Angelina, Anna, Ariana, Arianna, Ashley, Audrey, Autumn, Ava, Avery, Bailey, Brianna, Brooke, Brooklyn, Caroline, Chloe, Claire, Danielle, Destiny, Elizabeth, Ella, Emily, Emma, Erin, Evelyn, Faith, Gabriella, Gabrielle, Grace, Hailey, Haley, Hannah, Isabel, Isabella, Jacqueline, Jada, Jasmine, Jenna, Jennifer, Jessica, Jocelyn, Jordan, Julia, Kaitlyn, Katelyn, Katherine, Kayla, Kaylee, Kimberly, Kylie, Lauren, Leah, Lillian, Lily, Mackenzie, Madeline, Madison, Makayla, Maria, Mariah, Marissa, Mary, Maya, Megan, Melanie, Mia, Michelle, Morgan, Natalie, Nevaeh, Nicole, Olivia, Paige, Rachel, Rebecca, Riley, Samantha, Sara, Sarah, Savannah, Sierra, Sofia, Sophia, Stephanie, Sydney, Taylor, Trinity, Vanessa, Victoria, Zoe]
   MaleNames: [Aaron, Adam, Adrian, Aidan, Aiden, Alejandro, Alex, Alexander, Andrew, Angel, Anthony, Antonio, Austin, Benjamin, Blake, Brandon, Brayden, Brian, Bryan, Caleb, Cameron, Carlos, Carson, Carter, Charles, Chase, Christian, Christopher, Cody, Cole, Connor, Daniel, David, Devin, Diego, Dominic, Dylan, Elijah, Eric, Ethan, Evan, Gabriel, Gavin, Hayden, Hunter, Ian, Isaac, Isaiah, Jack, Jackson, Jacob, Jaden, James, Jason, Jayden, Jeremiah, Jesse, Jesus, John, Jonathan, Jordan, Jose, Joseph, Joshua, Juan, Julian, Justin, Kevin, Kyle, Landon, Logan, Lucas, Luis, Luke, Mason, Matthew, Michael, Miguel, Nathan, Nathaniel, Nicholas, Noah, Owen, Patrick, Richard, Robert, Ryan, Samuel, Sean, Sebastian, Seth, Steven, Thomas, Timothy, Tristan, Tyler, William, Wyatt, Xavier, Zachary]
 brew:
-  Enabled: true
   DisplayName: Brewing
   Shorthand: Brew
   Description: Brew magic potions in the brewing stand to achieve epic effects to wreak havoc on your enemies.
 cook:
-  Enabled: true
   DisplayName: Cooking
   Shorthand: Cook
   Description: Prepare your meals in the oven to increase their effectiveness and taste.
 dig:
-  Enabled: true
   DisplayName: Digging
   Shorthand: Dig
   Description: Use your shovel to dig in the ground and find epic treasure hidden beneath.
   RepeatInterval: 3600
 enchant:
-  Enabled: true
   DisplayName: Enchanting
   Shorthand: Enchant
   Description: Improve your weapons, tools and armor on the enchanting table to make them stronger, more effective and deadlier.
 fish:
-  Enabled: true
   DisplayName: Fishing
   Shorthand: Fish
   Description: Cast your fishing rod in bodies of water to catch different types of fish for food or brewing.
   FishInterval: 15
 garden:
-  Enabled: true
   DisplayName: Gardening
   Shorthand: Garden
   Description: Reap the rewards of your hard gardening work by harvesting crops, fruit and vegetables.
 hunt:
-  Enabled: true
   DisplayName: Hunting
   Shorthand: Hunt
   Description: Snipe dangerous creatures from afar with your bow to stay out of harms way.
   KillDistanceInterval: 300
   MinKillDistance: 16
 mine:
-  Enabled: true
   DisplayName: Mining
   Shorthand: Mine
   Description: Grab your pickaxe and descend into the deep mines of this world to find precious ores and rare gems. Most blocks mined under ground will give you skill points, but the rarest ores are by far the most valuable. Only naturally occuring blocks grant you rewards.
   RepeatInterval: 3600
 shear:
-  Enabled: true
   DisplayName: Shearing
   Shorthand: Shear
   Description: Use shears to harvest wool from sheep.
 tame:
-  Enabled: true
   DisplayName: Taming
   Shorthand: Tame
   Description: Tame wild animals.
 woodcut:
-  Enabled: true
   DisplayName: Woodcutting
   Shorthand: Woodcut
   Description: Grab your axe and cut down trees to collect lumber for your building projects.

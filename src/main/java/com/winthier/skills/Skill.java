@@ -12,7 +12,6 @@ import org.bukkit.event.Listener;
 public abstract class Skill implements Listener {
     protected final SkillsPlugin plugin;
     public final SkillType skillType;
-    private boolean enabled = true;
     private String displayName;
     private String shorthand;
     private String description;
@@ -27,10 +26,9 @@ public abstract class Skill implements Listener {
      * reload.
      */
     final void configureSkill() {
-        enabled = getConfig().getBoolean("Enabled", true);
-        displayName = getConfig().getString("DisplayName", skillType.key);
-        shorthand = getConfig().getString("Shorthand", skillType.key);
-        description = getConfig().getString("Description", "This is a default skill description. Slap StarTux around so he will finally implement proper skill descriptions and not this dribble.");
+        displayName = getConfig().getString("DisplayName");
+        shorthand = getConfig().getString("Shorthand");
+        description = getConfig().getString("Description");
         configure();
     }
 
@@ -69,14 +67,12 @@ public abstract class Skill implements Listener {
         return plugin.getScore().getRewards().get(new Reward.Key(skillType, category, name, data, extra));
     }
 
-    final File getConfigFile() {
-        return new File(plugin.getDataFolder(), skillType.key + ".yml");
-    }
-
     final ConfigurationSection getConfig() {
-        ConfigurationSection result = plugin.getConfig().getConfigurationSection(skillType.key);
-        if (result == null) result = plugin.getConfig().createSection(skillType.key);
-        return result;
+        if (!plugin.getConfig().isSet(skillType.key)) {
+            return plugin.getConfig().getDefaultSection().getConfigurationSection(skillType.key);
+        } else {
+            return plugin.getConfig().getConfigurationSection(skillType.key);
+        }
     }
 
     static final double linearSkillBonus(double max, int skillLevel) {

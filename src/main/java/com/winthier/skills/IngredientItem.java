@@ -3,6 +3,7 @@ package com.winthier.skills;
 import com.winthier.custom.CustomPlugin;
 import com.winthier.custom.item.CustomItem;
 import com.winthier.custom.item.ItemContext;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
@@ -16,7 +17,12 @@ public final class IngredientItem implements CustomItem {
     final ItemStack itemStack;
 
     enum Type {
-        FINE_LEATHER(Material.LEATHER),
+        PRIME_OXHIDE(Material.LEATHER),
+        FABLED_OXHIDE(Material.LEATHER),
+        PRIME_PIGSKIN(Material.LEATHER),
+        FABLED_PIGSKIN(Material.LEATHER),
+        PRIME_LEATHER_SCRAP(Material.LEATHER),
+        FABLED_LEATHER_SCRAP(Material.LEATHER),
         STEEL(Material.IRON_INGOT);
 
         final Material material;
@@ -33,15 +39,15 @@ public final class IngredientItem implements CustomItem {
         }
     }
 
-    private IngredientItem(SkillsPlugin plugin, Type type, Material material) {
+    IngredientItem(SkillsPlugin plugin, Type type) {
         this.plugin = plugin;
         this.type = type;
         this.customId = "skills:" + type.name().toLowerCase();
-        this.itemStack = new ItemStack(material);
+        this.itemStack = new ItemStack(type.material);
         ItemMeta meta = this.itemStack.getItemMeta();
         meta.addEnchant(Enchantment.DURABILITY, 1, false);
         meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-        meta.setDisplayName(Msg.capitalEnumName(type));
+        meta.setDisplayName(ChatColor.BLUE + Msg.capitalEnumName(type));
         this.itemStack.setItemMeta(meta);
     }
 
