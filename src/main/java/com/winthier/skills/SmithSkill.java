@@ -143,7 +143,7 @@ final class SmithSkill extends Skill {
         final String attrName = sb.toString();
         attrTag.setString("Slot", slotName);
         attrTag.setString("AttributeName", attrName);
-        attrTag.setString("Name", attrName);
+        attrTag.setString("Name", "skills:" + attrName);
         attrTag.setDouble("Amount", amount);
         attrTag.setInt("Operation", operation);
         attrTag.setLong("UUIDMost", uuid.getMostSignificantBits());
@@ -234,7 +234,7 @@ final class SmithSkill extends Skill {
         case LEATHER_LEGGINGS:
         case LEATHER_BOOTS:
             if (inputB.getType() == Material.LEATHER
-                && plugin.getScore().hasPerk(uuid, Perk.SMITH_IMPROVE_LEATHER)) {
+                && plugin.getScore().hasPerk(uuid, Perk.SMITH_LEATHER)) {
                 result = new ItemStack(inputA.getType());
                 ItemMeta meta = result.getItemMeta();
                 meta.setUnbreakable(true);
@@ -247,7 +247,7 @@ final class SmithSkill extends Skill {
                     addAttribute(result, null, Attribute.GENERIC_ARMOR, armor, 0, null);
                 }
             } else if (inputB.getType() == Material.IRON_INGOT
-                && plugin.getScore().hasPerk(uuid, Perk.SMITH_IMPROVE_MAIL)) {
+                && plugin.getScore().hasPerk(uuid, Perk.SMITH_MAIL)) {
                 switch (inputA.getType()) {
                 case LEATHER_HELMET: result = new ItemStack(Material.CHAINMAIL_HELMET); break;
                 case LEATHER_CHESTPLATE: result = new ItemStack(Material.CHAINMAIL_CHESTPLATE); break;
@@ -272,7 +272,7 @@ final class SmithSkill extends Skill {
         case GOLD_LEGGINGS:
         case GOLD_BOOTS:
             if (inputB.getType() == Material.GOLD_INGOT
-                && plugin.getScore().hasPerk(uuid, Perk.SMITH_IMPROVE_GOLD)) {
+                && plugin.getScore().hasPerk(uuid, Perk.SMITH_GOLD)) {
                 result = new ItemStack(inputA.getType());
                 ItemMeta meta = result.getItemMeta();
                 meta.setUnbreakable(true);
@@ -291,7 +291,7 @@ final class SmithSkill extends Skill {
         case IRON_LEGGINGS:
         case IRON_BOOTS:
             if (inputB.getType() == Material.IRON_INGOT
-                && plugin.getScore().hasPerk(uuid, Perk.SMITH_IMPROVE_IRON)) {
+                && plugin.getScore().hasPerk(uuid, Perk.SMITH_IRON)) {
                 result = new ItemStack(inputA.getType());
                 ItemMeta meta = result.getItemMeta();
                 meta.setUnbreakable(true);
@@ -313,7 +313,7 @@ final class SmithSkill extends Skill {
         case DIAMOND_LEGGINGS:
         case DIAMOND_BOOTS:
             if (inputB.getType() == Material.DIAMOND
-                && plugin.getScore().hasPerk(uuid, Perk.SMITH_IMPROVE_DIAMOND)) {
+                && plugin.getScore().hasPerk(uuid, Perk.SMITH_DIAMOND)) {
                 result = new ItemStack(inputA.getType());
                 ItemMeta meta = result.getItemMeta();
                 meta.setUnbreakable(true);
@@ -338,7 +338,7 @@ final class SmithSkill extends Skill {
         case GOLD_SPADE:
         case GOLD_SWORD:
             if (inputB.getType() == Material.GOLD_INGOT
-                && plugin.getScore().hasPerk(uuid, Perk.SMITH_IMPROVE_GOLD)) {
+                && plugin.getScore().hasPerk(uuid, Perk.SMITH_GOLD)) {
                 result = new ItemStack(inputA.getType());
                 ItemMeta meta = result.getItemMeta();
                 meta.setUnbreakable(true);
@@ -353,7 +353,7 @@ final class SmithSkill extends Skill {
         case IRON_SPADE:
         case IRON_SWORD:
             if (inputB.getType() == Material.IRON_INGOT
-                && plugin.getScore().hasPerk(uuid, Perk.SMITH_IMPROVE_IRON)) {
+                && plugin.getScore().hasPerk(uuid, Perk.SMITH_IRON)) {
                 result = new ItemStack(inputA.getType());
                 ItemMeta meta = result.getItemMeta();
                 meta.setUnbreakable(true);
@@ -368,7 +368,7 @@ final class SmithSkill extends Skill {
         case DIAMOND_SPADE:
         case DIAMOND_SWORD:
             if (inputB.getType() == Material.DIAMOND
-                && plugin.getScore().hasPerk(uuid, Perk.SMITH_IMPROVE_DIAMOND)) {
+                && plugin.getScore().hasPerk(uuid, Perk.SMITH_DIAMOND)) {
                 result = new ItemStack(inputA.getType());
                 ItemMeta meta = result.getItemMeta();
                 meta.setUnbreakable(true);
@@ -378,7 +378,7 @@ final class SmithSkill extends Skill {
             break;
         case SHIELD:
             if (inputB.getType() == Material.IRON_INGOT
-                && plugin.getScore().hasPerk(uuid, Perk.SMITH_IMPROVE_IRON)) {
+                && plugin.getScore().hasPerk(uuid, Perk.SMITH_IRON)) {
                 result = new ItemStack(inputA.getType());
                 ItemMeta meta = result.getItemMeta();
                 meta.setUnbreakable(true);
