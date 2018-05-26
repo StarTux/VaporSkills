@@ -20,7 +20,6 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityBreedEvent;
 import org.bukkit.event.entity.ItemSpawnEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
-import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.scheduler.BukkitRunnable;
 
 /**

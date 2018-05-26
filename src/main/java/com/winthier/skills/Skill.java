@@ -1,6 +1,5 @@
 package com.winthier.skills;
 
-import java.io.File;
 import lombok.Getter;
 import lombok.NonNull;
 import org.bukkit.GameMode;

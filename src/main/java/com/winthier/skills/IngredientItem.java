@@ -2,13 +2,11 @@ package com.winthier.skills;
 
 import com.winthier.custom.CustomPlugin;
 import com.winthier.custom.item.CustomItem;
-import com.winthier.custom.item.ItemContext;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Item;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
