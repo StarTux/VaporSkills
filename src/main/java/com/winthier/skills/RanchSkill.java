@@ -9,6 +9,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
+import org.bukkit.SoundCategory;
 import org.bukkit.entity.Animals;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
@@ -66,22 +67,22 @@ final class RanchSkill extends Skill {
                     }
                     break;
                 case 2:
-                    e.getWorld().playSound(loc, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 0.5f, 1.0f);
+                    e.getWorld().playSound(loc, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.NEUTRAL, 0.5f, 1.0f);
                     break;
                 case 4:
-                    e.getWorld().playSound(loc, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 0.5f, 1.2f);
+                    e.getWorld().playSound(loc, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.NEUTRAL, 0.5f, 1.2f);
                     break;
                 case 6:
-                    if (power > 1) e.getWorld().playSound(loc, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 0.5f, 1.2f);
+                    if (power > 1) e.getWorld().playSound(loc, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.NEUTRAL, 0.5f, 1.2f);
                     break;
                 case 8:
-                    if (power > 1) e.getWorld().playSound(loc, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 0.5f, 1.4f);
+                    if (power > 1) e.getWorld().playSound(loc, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.NEUTRAL, 0.5f, 1.4f);
                     break;
                 case 10:
-                    if (power >= 2) e.getWorld().playSound(loc, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 0.5f, 1.4f);
+                    if (power >= 2) e.getWorld().playSound(loc, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.NEUTRAL, 0.5f, 1.4f);
                     break;
                 case 12:
-                    if (power >= 2) e.getWorld().playSound(loc, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 0.5f, 1.6f);
+                    if (power >= 2) e.getWorld().playSound(loc, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.NEUTRAL, 0.5f, 1.6f);
                     break;
                 case 13:
                     cancel();
@@ -100,33 +101,37 @@ final class RanchSkill extends Skill {
         if (!(event.getEntity() instanceof Animals)) return;
         final Animals entity = (Animals)event.getEntity();
         final boolean doImprove;
+        final boolean canSpecial;
         switch (entity.getType()) {
         case COW:
             doImprove = plugin.getScore().hasPerk(uuid, Perk.RANCH_COW);
-            break;
-        case MUSHROOM_COW:
-            doImprove = plugin.getScore().hasPerk(uuid, Perk.RANCH_MUSHROOM_COW);
+            canSpecial = plugin.getScore().hasPerk(uuid, Perk.RANCH_COW_MILK);
             break;
         case PIG:
             doImprove = plugin.getScore().hasPerk(uuid, Perk.RANCH_PIG);
+            canSpecial = plugin.getScore().hasPerk(uuid, Perk.RANCH_PIG_TRUFFLE);
             break;
         case CHICKEN:
             doImprove = plugin.getScore().hasPerk(uuid, Perk.RANCH_CHICKEN);
+            canSpecial = plugin.getScore().hasPerk(uuid, Perk.RANCH_CHICKEN_GOLD_EGG);
             break;
         case SHEEP:
             doImprove = plugin.getScore().hasPerk(uuid, Perk.RANCH_SHEEP);
+            canSpecial = plugin.getScore().hasPerk(uuid, Perk.RANCH_SHEEP_RAINBOW);
             break;
         case RABBIT:
             doImprove = plugin.getScore().hasPerk(uuid, Perk.RANCH_RABBIT);
+            canSpecial = false;
             break;
         default:
             doImprove = false;
+            canSpecial = false;
             break;
         }
         if (doImprove) {
             List<String> names = new ArrayList<>();
             RanchEntity.Watcher watcher;
-            watcher = plugin.getRanchEntity().breed(event.getMother(), event.getFather(), entity, player);
+            watcher = plugin.getRanchEntity().breed(event.getMother(), event.getFather(), entity, player, canSpecial);
             names.add(watcher.getName());
             int siblings = 0;
             if (plugin.getScore().hasPerk(uuid, Perk.RANCH_TWINS)) siblings += 1;
@@ -140,7 +145,7 @@ final class RanchSkill extends Skill {
                                 ((Sheep)e).setColor(((Sheep)entity).getColor());
                             }
                         });
-                    watcher = plugin.getRanchEntity().breed(event.getMother(), event.getFather(), sibling, player);
+                    watcher = plugin.getRanchEntity().breed(event.getMother(), event.getFather(), sibling, player, canSpecial);
                     names.add(watcher.getName());
                 }
             }

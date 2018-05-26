@@ -208,7 +208,9 @@ public final class SkillsPlugin extends JavaPlugin implements Listener {
         event.addEntity(lootEntity);
         ingredients = new EnumMap<>(IngredientItem.Type.class);
         for (IngredientItem.Type type: IngredientItem.Type.values()) {
-            ingredients.put(type, new IngredientItem(this, type));
+            IngredientItem item = new IngredientItem(this, type);
+            event.addItem(item);
+            ingredients.put(type, item);
         }
     }
 

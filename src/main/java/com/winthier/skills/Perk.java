@@ -37,7 +37,6 @@ public enum Perk {
     BRAWL_UNARMED_STEAL(SkillType.BRAWL, null),
     // Ranching Base
     RANCH_COW(SkillType.RANCH, null),
-    RANCH_MUSHROOM_COW(SkillType.RANCH, null),
     RANCH_PIG(SkillType.RANCH, null),
     RANCH_SHEEP(SkillType.RANCH, null),
     RANCH_CHICKEN(SkillType.RANCH, null),
@@ -53,11 +52,14 @@ public enum Perk {
     // Ranching Specific
     RANCH_COW_OXHIDE(SkillType.RANCH, Perk.RANCH_COW),
     RANCH_COW_SIRLOIN(SkillType.RANCH, Perk.RANCH_COW),
-    RANCH_PIG_PIGSKIN(SkillType.RANCH, Perk.RANCH_PIG),
+    RANCH_COW_MILK(SkillType.RANCH, Perk.RANCH_COW),
     RANCH_PIG_TRUFFLE(SkillType.RANCH, Perk.RANCH_PIG),
+    RANCH_PIG_PIGSKIN(SkillType.RANCH, Perk.RANCH_PIG),
+    RANCH_PIG_BACON(SkillType.RANCH, Perk.RANCH_PIG),
     RANCH_SHEEP_RAINBOW(SkillType.RANCH, Perk.RANCH_SHEEP),
     RANCH_CHICKEN_GOLD_EGG(SkillType.RANCH, Perk.RANCH_CHICKEN),
     RANCH_CHICKEN_DOWN(SkillType.RANCH, Perk.RANCH_CHICKEN),
+    RANCH_RABBIT_FOOT(SkillType.RANCH, Perk.RANCH_RABBIT),
     // Brewing
     BREW_STACK(SkillType.BREW, null),
     // Brewing for yourself

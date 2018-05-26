@@ -17,11 +17,13 @@ import java.util.stream.Collectors;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.Bukkit;
+import org.bukkit.DyeColor;
 import org.bukkit.EntityEffect;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
+import org.bukkit.SoundCategory;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
@@ -40,6 +42,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.ItemSpawnEvent;
+import org.bukkit.event.entity.PlayerLeashEntityEvent;
 import org.bukkit.event.entity.SheepRegrowWoolEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
@@ -48,6 +51,7 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.material.MaterialData;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -82,14 +86,17 @@ public final class RanchEntity implements CustomEntity, TickableEntity {
     }
 
     @Override
-    public void entityWasDiscovered(EntityWatcher watcher) {
-        ((Watcher)watcher).load();
-        ((Watcher)watcher).roll();
+    public void entityWasDiscovered(EntityWatcher entityWatcher) {
+        Watcher watcher = (Watcher)entityWatcher;
+        watcher.load();
+        watcher.roll();
     }
 
     @Override
-    public void entityWillUnload(EntityWatcher watcher) {
-        ((Watcher)watcher).save();
+    public void entityWillUnload(EntityWatcher entityWatcher) {
+        Watcher watcher = (Watcher)entityWatcher;
+        watcher.save();
+        watcher.onUnload();
     }
 
     @Override
@@ -113,20 +120,32 @@ public final class RanchEntity implements CustomEntity, TickableEntity {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onPlayerInteractEntity(PlayerInteractEntityEvent event, EntityContext context) {
-        if (event.getHand() != EquipmentSlot.HAND) return;
         ((Watcher)context.getEntityWatcher()).onInteract(event);
     }
 
     @EventHandler(ignoreCancelled = true)
     public void onSheepRegrowWool(SheepRegrowWoolEvent event, EntityContext context) {
         Watcher watcher = (Watcher)context.getEntityWatcher();
-        if (watcher.sick == 1) event.setCancelled(true);
+        if (watcher.sick == 1 || watcher.happy < 0) event.setCancelled(true);
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
     public void onPlayerShear(PlayerShearEntityEvent event, EntityContext context) {
         Watcher watcher = (Watcher)context.getEntityWatcher();
-        if (watcher.sick == 1) event.setCancelled(true);
+        watcher.onShear(event);
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+    public void onPlayerLeashEntity(PlayerLeashEntityEvent event, EntityContext context) {
+        Watcher watcher = (Watcher)context.getEntityWatcher();
+        Player player = event.getPlayer();
+        UUID uuid = player.getUniqueId();
+        if (uuid.equals(watcher.owner)) {
+            Location loc = watcher.entity.getLocation();
+            watcher.leashX = loc.getBlockX();
+            watcher.leashZ = loc.getBlockZ();
+            say(watcher.entity);
+        }
     }
 
     /**
@@ -224,9 +243,9 @@ public final class RanchEntity implements CustomEntity, TickableEntity {
     static void say(LivingEntity e) {
         float pitch;
         if (e instanceof Ageable && (((Ageable)e).isAdult())) {
-            pitch = 2.0f;
-        } else {
             pitch = 1.0f;
+        } else {
+            pitch = 2.0f;
         }
         switch (e.getType()) {
         case COW:
@@ -326,11 +345,37 @@ public final class RanchEntity implements CustomEntity, TickableEntity {
         }.runTaskTimer(plugin, 1, 1);
     }
 
+    void specialEffect(Location loc) {
+        new BukkitRunnable() {
+            private int ticks = 0;
+            @Override public void run() {
+                switch (ticks++) {
+                case 10:
+                    loc.getWorld().spawnParticle(Particle.SPELL_MOB, loc.add(0, 0.5, 0), 16, 0.5, 0.5, 0.5, 1.0);
+                    loc.getWorld().playSound(loc, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.NEUTRAL, 1.0f, 1.5f);
+                    break;
+                case 13:
+                    loc.getWorld().playSound(loc, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.NEUTRAL, 1.0f, 1.6f);
+                    break;
+                case 15:
+                    loc.getWorld().playSound(loc, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.NEUTRAL, 1.0f, 1.6f);
+                    break;
+                case 18:
+                    loc.getWorld().playSound(loc, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.NEUTRAL, 1.0f, 1.7f);
+                    break;
+                case 19:
+                    cancel();
+                default: break;
+                }
+            }
+        }.runTaskTimer(plugin, 1, 1);
+    }
+
     /**
      * Called by RanchSkill when two entities are bred and the rancher
      * has the required perks to improve them.
      */
-    Watcher breed(LivingEntity motherEntity, LivingEntity fatherEntity, LivingEntity childEntity, Player rancher) {
+    Watcher breed(LivingEntity motherEntity, LivingEntity fatherEntity, LivingEntity childEntity, Player rancher, boolean canSpecial) {
         Watcher mother = null, father = null;
         EntityWatcher tmp;
         tmp = CustomPlugin.getInstance().getEntityManager().getEntityWatcher(motherEntity);
@@ -370,6 +415,12 @@ public final class RanchEntity implements CustomEntity, TickableEntity {
             child.yield = Math.min(mother.yield, father.yield);
             int improveChance = Math.min(75, 1 + child.generation * 3);
             if (random.nextInt(100) < improveChance) child.yield += 1;
+            if (canSpecial) {
+                int specialChance = Math.min(50, child.yield);
+                for (int i = 0; i < 3; i += 1) {
+                    if (random.nextInt(100) < 50) child.special += 1;
+                }
+            }
         } else {
             child.generation = 1;
         }
@@ -397,7 +448,9 @@ public final class RanchEntity implements CustomEntity, TickableEntity {
         private Gender gender;
         private long tickOffset = 0, ticks = 0;
         private int unsaved = 0;
-        private int eatCooldown = 0, chatCooldown = 0, toyCooldown = 0;
+        private int eatCooldown = 0, chatCooldown = 0, toyCooldown = 0, specialCooldown = 0;
+        private int leashX = 0, leashZ = 0;
+        private DyeColor originalColor = null;
 
         boolean hasActiveQuirk(Quirk quirk) {
             int index = quirks.indexOf(quirk);
@@ -537,7 +590,7 @@ public final class RanchEntity implements CustomEntity, TickableEntity {
                             block.setType(Material.AIR);
                             hunger = Math.max(0, hunger - 600);
                             block.getWorld().playSound(block.getLocation().add(0.5, 0, 0.5), Sound.BLOCK_GRASS_BREAK, 1.0f, 0.8f);
-                            block.getWorld().spawnParticle(Particle.BLOCK_DUST, block.getLocation().add(.5, .5, .5), 16, .5, .5, .5, 0, Material.GRASS.getNewData((byte)0));
+                            block.getWorld().spawnParticle(Particle.BLOCK_DUST, block.getLocation().add(.5, .5, .5), 16, .5, .5, .5, 0, new MaterialData(Material.GRASS));
                             customEntity.entityEatEffect(entity);
                             return true;
                         }
@@ -547,7 +600,7 @@ public final class RanchEntity implements CustomEntity, TickableEntity {
                             block.setType(Material.AIR);
                             hunger = Math.max(0, hunger - 600);
                             block.getWorld().playSound(block.getLocation().add(0.5, 0, 0.5), Sound.BLOCK_GRASS_BREAK, 1.0f, 0.8f);
-                            block.getWorld().spawnParticle(Particle.BLOCK_DUST, block.getLocation().add(.5, .5, .5), 16, .5, .5, .5, 0, Material.GRASS.getNewData((byte)0));
+                            block.getWorld().spawnParticle(Particle.BLOCK_DUST, block.getLocation().add(.5, .5, .5), 16, .5, .5, .5, 0, new MaterialData(Material.GRASS));
                             customEntity.entityEatEffect(entity);
                             return true;
                         }
@@ -565,7 +618,7 @@ public final class RanchEntity implements CustomEntity, TickableEntity {
                             block.setType(Material.AIR);
                             hunger = Math.max(0, hunger - 600);
                             block.getWorld().playSound(block.getLocation().add(0.5, 0, 0.5), Sound.BLOCK_GRASS_BREAK, 1.0f, 0.8f);
-                            block.getWorld().spawnParticle(Particle.BLOCK_DUST, block.getLocation().add(.5, .5, .5), 16, .5, .5, .5, 0, Material.GRASS.getNewData((byte)0));
+                            block.getWorld().spawnParticle(Particle.BLOCK_DUST, block.getLocation().add(.5, .5, .5), 16, .5, .5, .5, 0, new MaterialData(Material.GRASS));
                             customEntity.entityEatEffect(entity);
                             return true;
                         }
@@ -583,7 +636,7 @@ public final class RanchEntity implements CustomEntity, TickableEntity {
                             block.setType(Material.AIR);
                             hunger = Math.max(0, hunger - 600);
                             block.getWorld().playSound(block.getLocation().add(0.5, 0, 0.5), Sound.BLOCK_GRASS_BREAK, 1.0f, 0.8f);
-                            block.getWorld().spawnParticle(Particle.BLOCK_DUST, block.getLocation().add(.5, .5, .5), 16, .5, .5, .5, 0, Material.GRASS.getNewData((byte)0));
+                            block.getWorld().spawnParticle(Particle.BLOCK_DUST, block.getLocation().add(.5, .5, .5), 16, .5, .5, .5, 0, new MaterialData(Material.GRASS));
                             customEntity.entityEatEffect(entity);
                             return true;
                         }
@@ -593,7 +646,7 @@ public final class RanchEntity implements CustomEntity, TickableEntity {
                             block.setType(Material.AIR);
                             hunger = Math.max(0, hunger - 600);
                             block.getWorld().playSound(block.getLocation().add(0.5, 0, 0.5), Sound.BLOCK_GRASS_BREAK, 1.0f, 0.8f);
-                            block.getWorld().spawnParticle(Particle.BLOCK_DUST, block.getLocation().add(.5, .5, .5), 16, .5, .5, .5, 0, Material.GRASS.getNewData((byte)0));
+                            block.getWorld().spawnParticle(Particle.BLOCK_DUST, block.getLocation().add(.5, .5, .5), 16, .5, .5, .5, 0, new MaterialData(Material.GRASS));
                             customEntity.entityEatEffect(entity);
                             return true;
                         }
@@ -615,7 +668,7 @@ public final class RanchEntity implements CustomEntity, TickableEntity {
                     hunger = Math.max(0, hunger - 600);
                     if (entity.getType() == EntityType.SHEEP) entity.playEffect(EntityEffect.SHEEP_EAT);
                     block.getWorld().playSound(block.getLocation().add(0.5, 0, 0.5), Sound.BLOCK_GRASS_BREAK, 1.0f, 0.8f);
-                    block.getWorld().spawnParticle(Particle.BLOCK_DUST, block.getLocation().add(.5, .5, .5), 16, .5, .5, .5, 0, Material.GRASS.getNewData((byte)0));
+                    block.getWorld().spawnParticle(Particle.BLOCK_DUST, block.getLocation().add(.5, .5, .5), 16, .5, .5, .5, 0, new MaterialData(Material.GRASS));
                     customEntity.entityEatEffect(entity);
                     return true;
                 }
@@ -627,7 +680,7 @@ public final class RanchEntity implements CustomEntity, TickableEntity {
                     block.setType(Material.AIR);
                     hunger = Math.max(0, hunger - 600);
                     block.getWorld().playSound(block.getLocation().add(0.5, 0, 0.5), Sound.BLOCK_GRASS_BREAK, 1.0f, 0.8f);
-                    block.getWorld().spawnParticle(Particle.BLOCK_DUST, block.getLocation().add(.5, .5, .5), 16, .5, .5, .5, 0, Material.GRASS.getNewData((byte)0));
+                    block.getWorld().spawnParticle(Particle.BLOCK_DUST, block.getLocation().add(.5, .5, .5), 16, .5, .5, .5, 0, new MaterialData(Material.GRASS));
                     customEntity.entityEatEffect(entity);
                     return true;
                 }
@@ -644,7 +697,7 @@ public final class RanchEntity implements CustomEntity, TickableEntity {
                     hunger = Math.max(0, hunger - 300);
                     if (entity.getType() == EntityType.SHEEP) entity.playEffect(EntityEffect.SHEEP_EAT);
                     block.getWorld().playSound(block.getLocation().add(0.5, 0, 0.5), Sound.BLOCK_GRASS_BREAK, 1.0f, 0.8f);
-                    block.getWorld().spawnParticle(Particle.BLOCK_DUST, block.getLocation().add(.5, 1.5, .5), 16, .5, .5, .5, 0, Material.GRASS.getNewData((byte)0));
+                    block.getWorld().spawnParticle(Particle.BLOCK_DUST, block.getLocation().add(.5, 1.5, .5), 16, .5, .5, .5, 0, new MaterialData(Material.GRASS));
                     customEntity.entityEatEffect(entity);
                     return true;
                 }
@@ -656,7 +709,7 @@ public final class RanchEntity implements CustomEntity, TickableEntity {
                     block.setTypeIdAndData(Material.DIRT.getId(), (byte)3, true); // Coarse dirt
                     hunger = Math.max(0, hunger - 300);
                     block.getWorld().playSound(block.getLocation().add(0.5, 0, 0.5), Sound.BLOCK_GRASS_BREAK, 1.0f, 0.8f);
-                    block.getWorld().spawnParticle(Particle.BLOCK_DUST, block.getLocation().add(.5, 1.5, .5), 16, .5, .5, .5, 0, Material.GRASS.getNewData((byte)0));
+                    block.getWorld().spawnParticle(Particle.BLOCK_DUST, block.getLocation().add(.5, 1.5, .5), 16, .5, .5, .5, 0, new MaterialData(Material.GRASS));
                     customEntity.entityEatEffect(entity);
                     return true;
                 }
@@ -667,7 +720,7 @@ public final class RanchEntity implements CustomEntity, TickableEntity {
                     block.setType(Material.DIRT);
                     hunger = Math.max(0, hunger - 300);
                     block.getWorld().playSound(block.getLocation().add(0.5, 0, 0.5), Sound.BLOCK_GRASS_BREAK, 1.0f, 0.8f);
-                    block.getWorld().spawnParticle(Particle.BLOCK_DUST, block.getLocation().add(.5, 1.5, .5), 16, .5, .5, .5, 0, Material.GRASS.getNewData((byte)0));
+                    block.getWorld().spawnParticle(Particle.BLOCK_DUST, block.getLocation().add(.5, 1.5, .5), 16, .5, .5, .5, 0, new MaterialData(Material.GRASS));
                     customEntity.entityEatEffect(entity);
                     return true;
                 }
@@ -713,6 +766,9 @@ public final class RanchEntity implements CustomEntity, TickableEntity {
             }
             List<ItemStack> loot = new ArrayList<>();
             int foodAmount = 0, itemAmount = 0;
+            int specialDropChance = Math.min(75, effectiveYield);
+            if (hasActiveQuirk(Quirk.RICH)) specialDropChance += 10;
+            if (hasActiveQuirk(Quirk.POOR)) specialDropChance -= 10;
             final Random random = customEntity.plugin.random;
             switch (entity.getType()) {
             case COW:
@@ -721,8 +777,10 @@ public final class RanchEntity implements CustomEntity, TickableEntity {
                 if (foodAmount > 0) loot.add(new ItemStack(Material.RAW_BEEF, foodAmount));
                 if (itemAmount < 0) loot.add(new ItemStack(Material.LEATHER, itemAmount));
                 if (customEntity.plugin.getScore().hasPerk(owner, Perk.RANCH_COW_OXHIDE)) {
+                    if (random.nextInt(100) < specialDropChance) loot.add(IngredientItem.Type.OXHIDE.spawn());
                 }
                 if (customEntity.plugin.getScore().hasPerk(owner, Perk.RANCH_COW_SIRLOIN)) {
+                    if (random.nextInt(100) < specialDropChance) loot.add(IngredientItem.Type.SIRLOIN.spawn());
                 }
                 break;
             case MUSHROOM_COW:
@@ -734,6 +792,12 @@ public final class RanchEntity implements CustomEntity, TickableEntity {
             case PIG:
                 for (int i = 0; i < foodDrop; i += 1) foodAmount += 1 + random.nextInt(3); // 1 - 3
                 if (foodAmount > 0) loot.add(new ItemStack(Material.PORK, foodAmount));
+                if (customEntity.plugin.getScore().hasPerk(owner, Perk.RANCH_PIG_PIGSKIN)) {
+                    if (random.nextInt(100) < specialDropChance) loot.add(IngredientItem.Type.PIGSKIN.spawn());
+                }
+                if (customEntity.plugin.getScore().hasPerk(owner, Perk.RANCH_PIG_BACON)) {
+                    if (random.nextInt(100) < specialDropChance) loot.add(IngredientItem.Type.BACON.spawn());
+                }
                 break;
             case SHEEP:
                 for (int i = 0; i < foodDrop; i += 1) foodAmount += 1 + random.nextInt(3); // 1 - 3
@@ -746,12 +810,18 @@ public final class RanchEntity implements CustomEntity, TickableEntity {
                 for (int i = 0; i < itemDrop; i += 1) itemAmount += random.nextInt(2); // 0 - 1
                 if (foodAmount > 0) loot.add(new ItemStack(Material.RABBIT, foodAmount));
                 if (itemAmount > 0) loot.add(new ItemStack(Material.RABBIT_HIDE, itemAmount));
+                if (customEntity.plugin.getScore().hasPerk(owner, Perk.RANCH_RABBIT_FOOT)) {
+                    if (random.nextInt(100) < specialDropChance) loot.add(new ItemStack(Material.RABBIT_FOOT));
+                }
                 break;
             case CHICKEN:
                 for (int i = 0; i < foodDrop; i += 1) foodAmount += random.nextInt(3); // 0 - 2 (vanilla: 1)
                 for (int i = 0; i < itemDrop; i += 1) itemAmount += random.nextInt(3); // 0 - 2
                 if (foodAmount > 0) loot.add(new ItemStack(Material.RAW_CHICKEN, foodAmount));
                 if (itemAmount > 0) loot.add(new ItemStack(Material.FEATHER, itemAmount));
+                if (customEntity.plugin.getScore().hasPerk(owner, Perk.RANCH_CHICKEN_DOWN)) {
+                    if (random.nextInt(100) < specialDropChance) loot.add(IngredientItem.Type.CHICKEN_DOWN.spawn());
+                }
                 break;
             default: break;
             }
@@ -775,10 +845,25 @@ public final class RanchEntity implements CustomEntity, TickableEntity {
             final Random random = customEntity.plugin.random;
             if (unsaved >= 60) save();
             if (happy < 0 && entity.isAdult()) entity.setBreed(false);
-            if (Bukkit.getServer().getPlayer(owner) == null) return;
+            // Rainbow sheep
+            if (special > 0 && entity.getType() == EntityType.SHEEP) {
+                Sheep sheep = (Sheep)entity;
+                if (happy > 0) {
+                    if (originalColor == null) originalColor = sheep.getColor();
+                    sheep.setColor(DyeColor.values()[random.nextInt(16)]);
+                } else {
+                    if (originalColor != null) {
+                        sheep.setColor(originalColor);
+                        originalColor = null;
+                    }
+                }
+            }
+            Player player = Bukkit.getServer().getPlayer(owner);
+            if (player == null) return;
             if (eatCooldown > 0) eatCooldown -= 1;
             if (chatCooldown > 0) chatCooldown -= 1;
             if (toyCooldown > 0) toyCooldown -= 1;
+            if (specialCooldown > 0) specialCooldown -= 1;
             // Modify happiness
             if (hunger > 900) {
                 happy -= 1;
@@ -824,6 +909,7 @@ public final class RanchEntity implements CustomEntity, TickableEntity {
             hunger += 1;
             if (hasActiveQuirk(Quirk.GLUTTON)) hunger += 1;
             if (hasActiveQuirk(Quirk.ABSTINENT) && random.nextBoolean()) hunger -= 1;
+            if (sick == 1) hunger += 1;
             social += 1;
             fun += 1;
             if (hasActiveQuirk(Quirk.SANGUINE)) fun += 1;
@@ -894,7 +980,10 @@ public final class RanchEntity implements CustomEntity, TickableEntity {
             }
             // Reduce needs
             if (hunger >= 200 && eatCooldown == 0) {
-                if (eat()) eatCooldown = 10;
+                if (eat()) {
+                    eatCooldown = 10;
+                    if (sick != 1 && entity instanceof Sheep) ((Sheep)entity).setSheared(false);
+                }
             }
             if (social >= 100 && chatCooldown == 0) {
                 if (hasActiveQuirk(Quirk.SOCIAL) && interactibles.size() >= 2) {
@@ -915,6 +1004,42 @@ public final class RanchEntity implements CustomEntity, TickableEntity {
                 fun = Math.max(0, fun - 300);
                 customEntity.entityChatterEffect(entity, friends);
                 chatCooldown = 10;
+            }
+            // Special leash activities
+            if (special > 0 && sick != 1 && happy > 0 && specialCooldown == 0
+                && entity.isAdult() && entity.isLeashed() && player.equals(entity.getLeashHolder())) {
+                switch (entity.getType()) {
+                case PIG:
+                case CHICKEN:
+                    Location loc = entity.getLocation();
+                    int x = loc.getBlockX();
+                    int z = loc.getBlockZ();
+                    if (Math.abs(x - leashX) > 2 && Math.abs(z - leashZ) > 2) {
+                        leashX = x;
+                        leashZ = z;
+                        if (random.nextInt(3) == 0) {
+                            special -= 1;
+                            specialCooldown = 10;
+                            save();
+                            switch (entity.getType()) {
+                            case PIG:
+                                IngredientItem.Type.TRUFFLE.drop(loc);
+                                loc.getWorld().playSound(loc, Sound.BLOCK_GRASS_BREAK, 1.0f, 0.8f);
+                                loc.getWorld().spawnParticle(Particle.BLOCK_DUST, loc, 16, .5, .5, .5, 0, new MaterialData(Material.GRASS));
+                                break;
+                            case CHICKEN:
+                                IngredientItem.Type.GOLDEN_EGG.drop(loc);
+                                loc.getWorld().playSound(loc, Sound.ENTITY_CHICKEN_EGG, 1.0f, 1.0f);
+                                break;
+                            default: break;
+                            }
+                            customEntity.specialEffect(loc);
+                            say(entity);
+                        }
+                    }
+                    break;
+                default: break;
+                }
             }
             // Display biggest problem
             if (sick == 1) {
@@ -941,12 +1066,20 @@ public final class RanchEntity implements CustomEntity, TickableEntity {
             case "debug":
                 sender.sendMessage(RanchEntity.CUSTOM_ID + " " + Msg.capitalize(entity.getType().name()) + " received debug message");
                 if (sender instanceof Player) owner = ((Player)sender).getUniqueId();
-                sick = 1;
+                special = 3;
+                yield = 99;
+                age = getMaxAge();
+                good = age;
+                happy = 100;
+                hunger = 0;
+                fun = 0;
+                social = 0;
                 save();
                 break;
             case "eat":
                 if (eat()) {
                     sender.sendMessage(kind + " " + name + " ate successfully");
+                    if (sick != 1 && entity instanceof Sheep) ((Sheep)entity).setSheared(false);
                 } else {
                     sender.sendMessage(kind + " " + name + " failed to eat");
                 }
@@ -976,6 +1109,7 @@ public final class RanchEntity implements CustomEntity, TickableEntity {
                 sender.sendMessage("friend: " + friend.name().toLowerCase());
                 sender.sendMessage("treat: " + treat.name().toLowerCase());
                 sender.sendMessage("sick: " + sick);
+                sender.sendMessage("special: " + special);
                 break;
             default: break;
             }
@@ -985,21 +1119,23 @@ public final class RanchEntity implements CustomEntity, TickableEntity {
             final Player player = event.getPlayer();
             final UUID uuid = player.getUniqueId();
             final ItemStack item;
-            if (event.getHand() != EquipmentSlot.HAND) {
+            if (event.getHand() == EquipmentSlot.HAND) {
                 item = player.getInventory().getItemInMainHand();
             } else {
                 item = player.getInventory().getItemInOffHand();
             }
             boolean isFood = false, isTreat = false;
             if (item == null || item.getType() == Material.AIR) {
-                if (customEntity.plugin.getScore().hasPerk(player.getUniqueId(), Perk.RANCH_CARRY) && owner.equals(uuid)) {
-                    if (player.getPassengers().isEmpty()) {
-                        player.addPassenger(entity);
-                        Msg.actionBar(player, "Click again to drop %s", name);
-                    } else {
-                        player.eject();
+                if (event.getHand() == EquipmentSlot.HAND && !entity.isLeashed() && !entity.getLeashHolder().equals(player)) {
+                    if (customEntity.plugin.getScore().hasPerk(player.getUniqueId(), Perk.RANCH_CARRY) && owner.equals(uuid)) {
+                        if (player.getPassengers().isEmpty()) {
+                            player.addPassenger(entity);
+                            Msg.actionBar(player, "Click again to drop %s", name);
+                        } else {
+                            player.eject();
+                        }
+                        event.setCancelled(true);
                     }
-                    event.setCancelled(true);
                 }
             } else if (item.getType() == treat) {
                 isFood = true;
@@ -1071,6 +1207,21 @@ public final class RanchEntity implements CustomEntity, TickableEntity {
             } else if (item.getType() == Material.BUCKET) {
                 if (entity.getType() == EntityType.COW && sick == 1) {
                     event.setCancelled(true);
+                }
+            } else if (item.getType() == Material.GLASS_BOTTLE) {
+                // Cow special
+                if (event.getHand() == EquipmentSlot.HAND && entity.getType() == EntityType.COW && sick != 1 && entity.isAdult() && special > 0 && specialCooldown == 0 && happy > 0) {
+                    special -= 1;
+                    save();
+                    specialCooldown = 10;
+                    event.setCancelled(true);
+                    item.setAmount(item.getAmount() - 1);
+                    entity.getWorld().playSound(entity.getEyeLocation(), Sound.ENTITY_COW_MILK, 1.0f, 1.0f);
+                    say(entity);
+                    for (ItemStack drop: player.getInventory().addItem(IngredientItem.Type.FRESH_MILK.spawn()).values()) {
+                        player.getWorld().dropItem(player.getEyeLocation(), drop);
+                    }
+                    customEntity.specialEffect(entity.getEyeLocation());
                 }
             } else {
                 switch (entity.getType()) {
@@ -1144,6 +1295,34 @@ public final class RanchEntity implements CustomEntity, TickableEntity {
                 toyCooldown = 5;
                 fun = Math.max(0, fun - 100);
                 customEntity.entityChatterEffect(entity, Arrays.asList(player));
+            }
+        }
+
+        void onShear(PlayerShearEntityEvent event) {
+            if (sick == 1) {
+                event.setCancelled(true);
+            } else if (special > 0 && entity.getType() == EntityType.SHEEP) {
+                special -= 1;
+                save();
+                if (special == 0 && originalColor != null) {
+                    ((Sheep)entity).setColor(originalColor);
+                    originalColor = null;
+                }
+                final Random random = customEntity.plugin.random;
+                for (int i = 0; i < 16; i += 1) {
+                    ItemStack item = new ItemStack(Material.WOOL, 1 + random.nextInt(3), (short)i);
+                    entity.getWorld().dropItemNaturally(entity.getEyeLocation(), item);
+                }
+                say(entity);
+                customEntity.specialEffect(entity.getEyeLocation());
+            }
+        }
+
+        void onUnload() {
+            if (entity instanceof Sheep && originalColor != null) {
+                Sheep sheep = (Sheep)entity;
+                sheep.setColor(originalColor);
+                originalColor = null;
             }
         }
     }
