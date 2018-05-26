@@ -15,7 +15,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerItemHeldEvent;
+import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.inventory.EntityEquipment;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -210,6 +214,63 @@ final class BrawlSkill extends Skill {
         if (plugin.hasDebugMode(player)) Msg.msg(player, "&eBrawl Dmg=%.02f/%.02f Pct=%.02f", event.getFinalDamage(), entity.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue(), percentage);
         Reward reward = getReward(Reward.Category.DAMAGE_ENTITY, entity.getType().name(), null, null);
         giveReward(player, reward, percentage);
+    }
+
+    boolean isChargeItem(ItemStack item) {
+        switch (item.getType()) {
+        case WOOD_SWORD:
+        case STONE_SWORD:
+        case GOLD_SWORD:
+        case IRON_SWORD:
+        case DIAMOND_SWORD:
+        case WOOD_AXE:
+        case STONE_AXE:
+        case GOLD_AXE:
+        case IRON_AXE:
+        case DIAMOND_AXE:
+            return true;
+        default:
+            return false;
+        }
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+    public void onPlayerToggleSneak(PlayerToggleSneakEvent event) {
+        final Player player = event.getPlayer();
+        if (event.isSneaking()) {
+            if (isChargeItem(player.getInventory().getItemInMainHand())) {
+                plugin.getSession(player).startCharging(player, 3);
+            }
+        } else {
+            plugin.getSession(player).stopCharging();
+        }
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+    public void onPlayerItemHeld(PlayerItemHeldEvent event) {
+        final Player player = event.getPlayer();
+        if (player.isSneaking()) {
+            if (isChargeItem(player.getInventory().getItem(event.getNewSlot()))) {
+                plugin.getSession(player).startCharging(player, 3);
+            } else {
+                plugin.getSession(player).stopCharging();
+            }
+        }
+    }
+
+    @EventHandler(ignoreCancelled = false, priority = EventPriority.MONITOR)
+    public void onPlayerInteract(PlayerInteractEvent event) {
+        if (event.getHand() != EquipmentSlot.HAND) return;
+        switch (event.getAction()) {
+        case LEFT_CLICK_BLOCK:
+        case LEFT_CLICK_AIR:
+            final Player player = event.getPlayer();
+            if (player.isSneaking() && isChargeItem(player.getInventory().getItemInMainHand())) {
+                plugin.getSession(player).startCharging(player, 3);
+            }
+            break;
+        default: break;
+        }
     }
 
     private ItemStack stealItem(LivingEntity entity) {

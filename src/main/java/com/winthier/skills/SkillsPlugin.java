@@ -482,7 +482,7 @@ public final class SkillsPlugin extends JavaPlugin implements Listener {
 
     void onTick() {
         for (Player player : Bukkit.getServer().getOnlinePlayers()) {
-            getSession(player.getUniqueId()).onTick();
+            getSession(player.getUniqueId()).onTick(player);
         }
         score.saveOneDirtyRow();
     }

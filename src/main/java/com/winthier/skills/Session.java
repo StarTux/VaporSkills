@@ -27,11 +27,16 @@ final class Session {
     // Cooldowns
     private final Map<String, Integer> cooldowns = new HashMap<>();
     // Brawling
+    private double weaponCharge = 0;
+    private BossBar weaponChargeBar;
+    private boolean charging = false;
+    private int maxWeaponChargeLevel = 0;
 
     Session(SkillsPlugin plugin, UUID uuid) {
         this.plugin = plugin;
         this.uuid = uuid;
-        this.progressBar = Bukkit.getServer().createBossBar("Skills", BarColor.PINK, BarStyle.SEGMENTED_20);
+        this.progressBar = Bukkit.getServer().createBossBar("Progress", BarColor.PURPLE, BarStyle.SOLID);
+        this.weaponChargeBar = Bukkit.getServer().createBossBar("Weapon Charge", BarColor.YELLOW, BarStyle.SEGMENTED_10);
     }
 
     // Accessors
@@ -79,7 +84,7 @@ final class Session {
     /**
      * Called by SkillsPlugin.onTick(), once per tick.
      */
-    void onTick() {
+    void onTick(Player player) {
         ticks += 1;
         if (progressBarEnabled && ticks % 20 == 0) {
             noRewardTimer += 1;
@@ -95,6 +100,25 @@ final class Session {
                 cooldowns.put(key, val - 1);
             }
         }
+        if (charging) {
+            weaponCharge += 0.03;
+            weaponChargeBar.setProgress(weaponCharge % 1.0);
+            weaponChargeBar.setTitle("Level " + Math.floor(weaponCharge));
+        }
+    }
+
+    void startCharging(Player player, int maxLevel) {
+        charging = true;
+        weaponChargeBar.setProgress(0);
+        weaponChargeBar.setTitle("Charge");
+        weaponCharge = 0;
+        maxWeaponChargeLevel = maxLevel;
+        weaponChargeBar.addPlayer(player);
+    }
+
+    void stopCharging() {
+        weaponChargeBar.removeAll();
+        charging = false;
     }
 
     /**
@@ -102,7 +126,7 @@ final class Session {
      * via admin command.
      */
     void onDisable() {
-        progressBar.setVisible(false);
         progressBar.removeAll();
+        weaponChargeBar.removeAll();
     }
 }
