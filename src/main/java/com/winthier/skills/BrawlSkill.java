@@ -4,6 +4,7 @@ import com.winthier.exploits.bukkit.BukkitExploits;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
@@ -13,6 +14,7 @@ import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
 import org.bukkit.attribute.Attribute;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Monster;
@@ -155,10 +157,47 @@ final class BrawlSkill extends Skill {
         }
     }
 
-    double damage(LivingEntity entity, double damage, Player player) {
+    double damage(LivingEntity entity, double damage, Player player, ItemStack item) {
+        int fireTicks = 0;
+        double oldDamage = damage;
+        if (item != null) {
+            for (Map.Entry<Enchantment, Integer> entry: item.getEnchantments().entrySet()) {
+                Enchantment enchantment = entry.getKey();
+                int level = entry.getValue();
+                if (enchantment.equals(Enchantment.DAMAGE_ALL)) {
+                    damage += 0.5 * (double)(level + 1);
+                } else if (enchantment.equals(Enchantment.DAMAGE_ARTHROPODS)) {
+                    switch (entity.getType()) {
+                    case SPIDER:
+                    case CAVE_SPIDER:
+                    case SILVERFISH:
+                    case ENDERMITE:
+                        damage += 2.5 * (double)level;
+                    default: break;
+                    }
+                } else if (enchantment.equals(Enchantment.DAMAGE_UNDEAD)) {
+                    switch (entity.getType()) {
+                    case SKELETON:
+                    case ZOMBIE:
+                    case WITHER:
+                    case WITHER_SKELETON:
+                    case PIG_ZOMBIE:
+                    case ZOMBIE_HORSE:
+                    case SKELETON_HORSE:
+                        // case PHANTOM:
+                        // case DROWNED:
+                        damage += 2.5 * (double)level;
+                    default: break;
+                    }
+                } else if (enchantment.equals(Enchantment.FIRE_ASPECT)) {
+                    fireTicks = 80 * level;
+                }
+            }
+        }
         NCP.exempt(player, NCP.FIGHT);
         entity.damage(damage, player);
         NCP.unexempt(player, NCP.FIGHT);
+        if (fireTicks > 0) entity.setFireTicks(Math.max(entity.getFireTicks(), fireTicks));
         if (entityDamageByEntityEventIntercept == null) {
             return 0.0;
         } else if (entityDamageByEntityEventIntercept.isCancelled()) {
@@ -213,6 +252,7 @@ final class BrawlSkill extends Skill {
         final Vector dir = player.getLocation().getDirection().normalize();
         final Vector dirh = dir.clone().multiply(0.5);
         final Set<UUID> affectedEntities = new HashSet<>();
+        final ItemStack itemInHand = player.getInventory().getItemInMainHand();
         final double damage = player.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE).getValue();
         Location location = player.getEyeLocation();
         location.getWorld().playSound(location, Sound.ENTITY_PLAYER_ATTACK_SWEEP, SoundCategory.PLAYERS, 0.5f, 1.6f);
@@ -224,7 +264,7 @@ final class BrawlSkill extends Skill {
                 if (nearby instanceof LivingEntity && !player.equals(nearby) && !affectedEntities.contains(nearby.getUniqueId())) {
                     affectedEntities.add(nearby.getUniqueId());
                     LivingEntity living = (LivingEntity)nearby;
-                    if (damage(living, damage, player) > 0) {
+                    if (damage(living, damage, player, itemInHand) > 0) {
                         living.getWorld().playSound(living.getEyeLocation(), Sound.ENTITY_PLAYER_ATTACK_STRONG, SoundCategory.HOSTILE, 0.5f, 0.8f);
                         location.getWorld().spawnParticle(Particle.BLOCK_DUST, location, 16, .25, .25, .25, 0.1, new MaterialData(Material.DIAMOND_BLOCK));
                     }
@@ -241,6 +281,7 @@ final class BrawlSkill extends Skill {
         if (tmp.getY() > 0.25f) tmp = tmp.setY(0.25);
         final Vector velo = tmp.normalize().multiply(3.0);
         final double damage = player.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE).getValue();
+        final ItemStack itemInHand = player.getInventory().getItemInMainHand();
         final Set<UUID> affectedEntities = new HashSet<>();
         player.getWorld().playSound(player.getEyeLocation(), Sound.ENTITY_PLAYER_ATTACK_SWEEP, SoundCategory.PLAYERS, 0.25f, 2.0f);
         NCP.exempt(player, NCP.MOVING);
@@ -264,7 +305,7 @@ final class BrawlSkill extends Skill {
                             if (nearby instanceof LivingEntity && !player.equals(nearby) && !affectedEntities.contains(nearby.getUniqueId())) {
                                 affectedEntities.add(nearby.getUniqueId());
                                 LivingEntity living = (LivingEntity)nearby;
-                                if (damage(living, damage, player) > 0) {
+                                if (damage(living, damage, player, itemInHand) > 0) {
                                     living.addPotionEffect(new PotionEffect(PotionEffectType.WEAKNESS, 20, 99));
                                     living.setVelocity(living.getVelocity().add(velo));
                                     player.setVelocity(new Vector(0, 0, 0));
@@ -303,6 +344,7 @@ final class BrawlSkill extends Skill {
         Vector eyeVector = eyeLocation.toVector();
         Vector viewDirection = eyeLocation.getDirection();
         final double damage = player.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE).getValue();
+        final ItemStack itemInHand = player.getInventory().getItemInMainHand();
         player.getWorld().playSound(player.getEyeLocation(), Sound.ENTITY_PLAYER_ATTACK_SWEEP, SoundCategory.PLAYERS, 0.2f, 1.0f);
         player.getWorld().spawnParticle(Particle.SWEEP_ATTACK, eyeLocation.clone().add(viewDirection), 1, 0, 0, 0, 0);
         for (Entity e: player.getNearbyEntities(4, 1, 4)) {
@@ -311,7 +353,7 @@ final class BrawlSkill extends Skill {
                 Vector entityDirection = living.getLocation().add(0, living.getHeight() / 2, 0).toVector().subtract(eyeVector);
                 float angle = entityDirection.angle(viewDirection);
                 if (angle < Math.PI * 0.5) {
-                    if (damage(living, damage, player) > 0) {
+                    if (damage(living, damage, player, itemInHand) > 0) {
                         living.getWorld().playSound(living.getEyeLocation(), Sound.ENTITY_PLAYER_ATTACK_STRONG, SoundCategory.HOSTILE, 0.5f, 1.0f);
                         living.getWorld().spawnParticle(Particle.SWEEP_ATTACK, living.getEyeLocation(), 1, 0, 0, 0, 0);
                     }
@@ -324,6 +366,7 @@ final class BrawlSkill extends Skill {
         final float yaw = player.getLocation().getYaw();
         final Set<UUID> affectedEntities = new HashSet<>();
         final double damage = player.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE).getValue();
+        final ItemStack itemInHand = player.getInventory().getItemInMainHand();
         new BukkitRunnable() {
             private int ticks = 0;
             @Override public void run() {
@@ -345,7 +388,7 @@ final class BrawlSkill extends Skill {
                         if (e instanceof LivingEntity && !player.equals(e) && !affectedEntities.contains(e.getUniqueId())) {
                             affectedEntities.add(e.getUniqueId());
                             LivingEntity living = (LivingEntity)e;
-                            if (damage(living, damage, player) > 0) {
+                            if (damage(living, damage, player, itemInHand) > 0) {
                                 living.getWorld().spawnParticle(Particle.SWEEP_ATTACK, living.getEyeLocation(), 1, 0, 0, 0, 0);
                                 living.getWorld().playSound(living.getEyeLocation(), Sound.ENTITY_PLAYER_ATTACK_SWEEP, SoundCategory.HOSTILE, 0.5f, 1.0f);
                             }
@@ -368,11 +411,13 @@ final class BrawlSkill extends Skill {
                 }
                 ticks += 1;
                 if (ticks <= 60) {
-                    Location eyeLocation = player.getEyeLocation();
-                    for (Entity nearby: player.getNearbyEntities(4, 1, 4)) {
-                        if (nearby instanceof LivingEntity && !nearby.equals(player)) {
-                            float angle = eyeLocation.getDirection().angle(
-                    }
+                    // Location eyeLocation = player.getEyeLocation();
+                    // for (Entity nearby: player.getNearbyEntities(4, 1, 4)) {
+                    //     if (nearby instanceof LivingEntity && !nearby.equals(player)) {
+                    //         float angle = eyeLocation.getDirection().angle(
+                    // }
+                } else {
+                    cancel();
                 }
             }
         }.runTaskTimer(plugin, 1, 1);
