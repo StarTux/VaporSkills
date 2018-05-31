@@ -70,13 +70,9 @@ public final class Score {
 
     // Score: points-level conversion
 
-    public static int levelForPoints(double skillPointsDouble) {
-        int skillPoints = (int)skillPointsDouble;
-        int level = 0;
-        while (pointsForLevel(level + 1) <= skillPoints) level += 1;
-        return level;
-    }
-
+    /**
+     * This is the base of all points-level calculations.
+     */
     public static int pointsToLevelUpTo(int i) {
         if (i <= 0) return 0;
         return i * 10;
@@ -88,6 +84,13 @@ public final class Score {
             points += pointsToLevelUpTo(i);
         }
         return points;
+    }
+
+    public static int levelForPoints(double skillPointsDouble) {
+        int skillPoints = (int)skillPointsDouble;
+        int level = 0;
+        while (pointsForLevel(level + 1) <= skillPoints) level += 1;
+        return level;
     }
 
     public static int pointsInLevel(int skillPoints) {

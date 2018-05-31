@@ -22,7 +22,7 @@
     <dependency>
       <groupId>org.spigotmc</groupId>
       <artifactId>spigot-api</artifactId>
-      <version>1.12-R0.1-SNAPSHOT</version>
+      <version>1.12.2-R0.1-SNAPSHOT</version>
       <!-- <groupId>org.bukkit</groupId> -->
       <!-- <artifactId>bukkit</artifactId> -->
       <!-- <version>18w15a-R0.1-SNAPSHOT</version> -->
@@ -60,6 +60,13 @@
       <groupId>com.winthier.custom</groupId>
       <artifactId>custom</artifactId>
       <version>0.1</version>
+      <scope>provided</scope>
+    </dependency>
+    <!-- NoCheatPlus -->
+    <dependency>
+      <groupId>fr.neatmonster.nocheatplus</groupId>
+      <artifactId>NoCheatPlus</artifactId>
+      <version>3.16.0</version>
       <scope>provided</scope>
     </dependency>
   </dependencies>

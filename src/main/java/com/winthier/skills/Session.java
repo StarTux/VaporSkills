@@ -6,6 +6,8 @@ import java.util.UUID;
 import lombok.Data;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Sound;
+import org.bukkit.SoundCategory;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
@@ -30,12 +32,13 @@ final class Session {
     private double weaponCharge = 0;
     private BossBar weaponChargeBar;
     private boolean charging = false;
-    private int maxWeaponChargeLevel = 0;
+    private double weaponChargeSpeed = 0;
+    private int maxWeaponCharge = 0;
 
     Session(SkillsPlugin plugin, UUID uuid) {
         this.plugin = plugin;
         this.uuid = uuid;
-        this.progressBar = Bukkit.getServer().createBossBar("Progress", BarColor.PURPLE, BarStyle.SOLID);
+        this.progressBar = Bukkit.getServer().createBossBar("Progress", BarColor.PURPLE, BarStyle.SEGMENTED_20);
         this.weaponChargeBar = Bukkit.getServer().createBossBar("Weapon Charge", BarColor.YELLOW, BarStyle.SEGMENTED_10);
     }
 
@@ -78,7 +81,7 @@ final class Session {
         noRewardTimer = 0;
         progressBar.setVisible(true);
         progressBar.addPlayer(player);
-        progressBar.setTitle(skill.getDisplayName() + " Level " + ChatColor.YELLOW + level);
+        progressBar.setTitle(ChatColor.BLUE + skill.getDisplayName() + " Level " + level);
     }
 
     /**
@@ -101,18 +104,58 @@ final class Session {
             }
         }
         if (charging) {
-            weaponCharge += 0.03;
-            weaponChargeBar.setProgress(weaponCharge % 1.0);
-            weaponChargeBar.setTitle("Level " + Math.floor(weaponCharge));
+            double summand = weaponChargeSpeed / 40.0;
+            double oldWeaponCharge = weaponCharge;
+            weaponCharge = Math.min((double)maxWeaponCharge, weaponCharge + summand);
+            boolean isLevelUp = (int)weaponCharge != (int)oldWeaponCharge;
+            if (isLevelUp) {
+                weaponChargeBar.removeAll();
+                int chargeLevel = (int)weaponCharge;
+                boolean isMax = chargeLevel == maxWeaponCharge;
+                ChatColor color;
+                switch (chargeLevel) {
+                case 1:
+                    color = ChatColor.YELLOW;
+                    weaponChargeBar.setColor(BarColor.YELLOW);
+                    break;
+                case 2:
+                    color = ChatColor.GOLD;
+                    weaponChargeBar.setColor(BarColor.RED);
+                    break;
+                case 3:
+                    color = ChatColor.RED;
+                    weaponChargeBar.setColor(BarColor.RED);
+                    break;
+                default:
+                    color = ChatColor.WHITE;
+                    weaponChargeBar.setTitle("Charge");
+                }
+                if (isMax) {
+                    weaponChargeBar.setTitle("" + color + ChatColor.BOLD + "Charge " + chargeLevel);
+                } else {
+                    weaponChargeBar.setTitle(color + "Charge " + chargeLevel);
+                }
+                player.playSound(player.getEyeLocation(), Sound.BLOCK_NOTE_BELL, SoundCategory.PLAYERS, 0.1f, 1.4f + 0.1f * (float)chargeLevel);
+            }
+            if (weaponCharge < 0.01) {
+                weaponChargeBar.setProgress(0);
+            } else if (Math.abs(Math.ceil(weaponCharge) - weaponCharge) < summand) {
+                weaponChargeBar.setProgress(1);
+            } else {
+                weaponChargeBar.setProgress(weaponCharge % 1.0);
+            }
+            if (isLevelUp) weaponChargeBar.addPlayer(player);
         }
     }
 
-    void startCharging(Player player, int maxLevel) {
+    void startCharging(Player player, int maxCharge, double chargeSpeed) {
         charging = true;
         weaponChargeBar.setProgress(0);
         weaponChargeBar.setTitle("Charge");
+        weaponChargeBar.setColor(BarColor.WHITE);
         weaponCharge = 0;
-        maxWeaponChargeLevel = maxLevel;
+        maxWeaponCharge = maxCharge;
+        weaponChargeSpeed = chargeSpeed;
         weaponChargeBar.addPlayer(player);
     }
 

@@ -41,7 +41,7 @@ public abstract class Skill implements Listener {
 
     final boolean allowPlayer(Player player) {
         if (player == null) return false;
-        if (player.getGameMode() != GameMode.SURVIVAL) return false;
+        if (player.getGameMode() != GameMode.SURVIVAL && player.getGameMode() != GameMode.ADVENTURE) return false;
         if (!player.hasPermission("skills.skill.*") && !player.hasPermission(getPermissionNode())) return false;
         return true;
     }
