@@ -1,142 +1,139 @@
-#===============================================================================
+#=====================================================
 # Skill Target		Type Data Name		SP
-#===============================================================================
+#=====================================================
 
-#===============================================================================
+#=====================================================
 # Mining
-# Give exp for all ores that don't give exp in vanilla.
-#===============================================================================
+#=====================================================
 
-Mine break_block	diamond_ore - -		10	# Vanilla: 3-7 exp (5 avg)
+Mine break_block	diamond_ore - -		10
 Mine break_block	iron_ore - -		3
 Mine break_block	gold_ore - -		5
-Mine break_block	emerald_ore - -		10	# Vanilla: 3-7 exp (5 avg)
-Mine break_block	coal_ore - -		.5	# Vanilla: 0-2 exp (1 avg)
-Mine break_block	redstone_ore - -	2	# Vanilla: 1-5 exp (3 avg)
-Mine break_block glowing_redstone_ore - -	2	# Vanilla: 1-5 exp (3 avg)
-Mine break_block	lapis_ore - -		3.5	# Vanilla: 2-5 exp (3.5 avg)
-Mine break_block	quartz_ore - -		1	# Vanilla: 2-5 exp (3.5 avg)
+Mine break_block	emerald_ore - -		10
+Mine break_block	coal_ore - -		.5
+Mine break_block	redstone_ore - -	2
+Mine break_block glowing_redstone_ore - -	2
+Mine break_block	lapis_ore - -		3.5
+Mine break_block	quartz_ore - -		1
 Mine break_block	glowstone - -		3
 Mine break_block	sea_lantern - -		5
 
-#===============================================================================
+#=====================================================
 # Digging
-# Using the stone value from mining as point of orientation.
-#===============================================================================
+#=====================================================
 
 Dig break_block		dirt 0 -		.15
-Dig break_block		dirt 1 -		.15	# Coarse Dirt
-Dig break_block		dirt 2 -		.15	# Podzol
+Dig break_block		dirt 1 -		.15
+Dig break_block		dirt 2 -		.15
 Dig break_block		grass 0 -		.15
 Dig break_block		mycel 0 -		.15
 Dig break_block		sand 0 -		.15
-Dig break_block		sand 1 -		.15	# Red Sand
+Dig break_block		sand 1 -		.15
 Dig break_block		gravel 0 -		.15
 Dig break_block		soul_Sand 0 -		.15
 Dig break_block		clay 0 -		.5
 
-#===============================================================================
+#=====================================================
 # Brawling
-# Give no exp since all mobs drop exp. Orient SP and money on vanilla exp.
-#===============================================================================
+#=====================================================
 
-Brawl damage_entity	zombie - -		5	# Vanilla:  5 exp
-Brawl damage_entity	husk - -		5	# Vanilla:  5 exp
-Brawl damage_entity	skeleton - -		5	# Vanilla:  5 exp
-Brawl damage_entity	stray - -		5	# Vanilla:  5 exp
-Brawl damage_entity	wither_skeleton - -	5	# Vanilla:  5 exp
-Brawl damage_entity	creeper - -		5	# Vanilla:  5 exp
-Brawl damage_entity	spider - -		5	# Vanilla:  5 exp
-Brawl damage_entity	cave_spider - -		5	# Vanilla:  5 exp
-Brawl damage_entity	endermite - -		5	# Vanilla:  5 exp
-Brawl damage_entity	silverfish - -		5	# Vanilla:  5 exp
-Brawl damage_entity	enderman - -		5	# Vanilla:  5 exp
-Brawl damage_entity	witch - -		10	# Vanilla:  5 exp
-Brawl damage_entity	vindicator - -		10	# Vanilla:  5 exp
-Brawl damage_entity	evoker - -		10	# Vanilla:  5 exp
-Brawl damage_entity	vex - -			3	# Vanilla:  3 exp
-Brawl damage_entity	pig_zombie - -		5	# Vanilla:  5 exp
-Brawl damage_entity	blaze - -		10	# Vanilla: 10 exp
-Brawl damage_entity	slime 3 -		4	# Vanilla:  4 exp
-Brawl damage_entity	slime 1 -		2	# Vanilla:  2 exp
-Brawl damage_entity	slime 0 -		1	# Vanilla:  1 exp
-Brawl damage_entity	magma_cube 3 -		4	# Vanilla:  4 exp
-Brawl damage_entity	magma_cube 1 -		2	# Vanilla:  2 exp
-Brawl damage_entity	magma_cube 0 -		1	# Vanilla:  1 exp
-Brawl damage_entity	guardian - -		10	# Vanilla: 10 exp
-Brawl damage_entity	elder_guardian - -	10	# Vanilla: 10 exp
-Brawl damage_entity	ender_dragon - -	100	# Vanilla: 12k exp 
-Brawl damage_entity	wither - -		50	# Vanilla: 50 exp 
-Brawl damage_entity	ghast - -		5	# Vanilla: 5 exp
-Brawl damage_entity	giant - -		5	# Vanilla: 5 exp
+Brawl damage_entity	zombie - -		5
+Brawl damage_entity	husk - -		5
+Brawl damage_entity	skeleton - -		5
+Brawl damage_entity	stray - -		5
+Brawl damage_entity	wither_skeleton - -	5
+Brawl damage_entity	creeper - -		5
+Brawl damage_entity	spider - -		5
+Brawl damage_entity	cave_spider - -		5
+Brawl damage_entity	endermite - -		5
+Brawl damage_entity	silverfish - -		5
+Brawl damage_entity	enderman - -		5
+Brawl damage_entity	witch - -		10
+Brawl damage_entity	vindicator - -		10
+Brawl damage_entity	evoker - -		10
+Brawl damage_entity	vex - -			3
+Brawl damage_entity	pig_zombie - -		5
+Brawl damage_entity	blaze - -		10
+Brawl damage_entity	slime 3 -		4
+Brawl damage_entity	slime 1 -		2
+Brawl damage_entity	slime 0 -		1
+Brawl damage_entity	magma_cube 3 -		4
+Brawl damage_entity	magma_cube 1 -		2
+Brawl damage_entity	magma_cube 0 -		1
+Brawl damage_entity	guardian - -		10
+Brawl damage_entity	elder_guardian - -	10
+Brawl damage_entity	ender_dragon - -	100
+Brawl damage_entity	wither - -		50
+Brawl damage_entity	ghast - -		5
+Brawl damage_entity	giant - -		5
 
-#===============================================================================
+#=====================================================
 # Hunting
 # Strongly inspired by Brawling.
-#===============================================================================
+#=====================================================
 
-Hunt damage_entity	zombie - -		5	# Vanilla:  5 exp
-Hunt damage_entity	husk - -		5	# Vanilla:  5 exp
-Hunt damage_entity	skeleton - -		5	# Vanilla:  5 exp
-Hunt damage_entity	stray - -		5	# Vanilla:  5 exp
-Hunt damage_entity	wither_skeleton - -	5	# Vanilla:  5 exp
-Hunt damage_entity	creeper - -		5	# Vanilla:  5 exp
-Hunt damage_entity	spider - -		5	# Vanilla:  5 exp
-Hunt damage_entity	cave_spider - -		5	# Vanilla:  5 exp
-Hunt damage_entity	endermite - -		5	# Vanilla:  5 exp
-Hunt damage_entity	silverfish - -		5	# Vanilla:  5 exp
-Hunt damage_entity	enderman - -		5	# Vanilla:  5 exp
-Hunt damage_entity	witch - -		10	# Vanilla:  5 exp
-Hunt damage_entity	vindicator - -		10	# Vanilla:  5 exp
-Hunt damage_entity	evoker - -		10	# Vanilla:  5 exp
-Hunt damage_entity	vex - -			3	# Vanilla:  3 exp
-Hunt damage_entity	pig_zombie - -		5	# Vanilla:  5 exp
-Hunt damage_entity	blaze - -		10	# Vanilla: 10 exp
-Hunt damage_entity	slime 3 -		4	# Vanilla:  4 exp
-Hunt damage_entity	slime 1 -		2	# Vanilla:  2 exp
-Hunt damage_entity	slime 0 -		1	# Vanilla:  1 exp
-Hunt damage_entity	Magma_Cube 3 -		4	# Vanilla:  4 exp
-Hunt damage_entity	Magma_Cube 1 -		2	# Vanilla:  2 exp
-Hunt damage_entity	Magma_Cube 0 -		1	# Vanilla:  1 exp
-Hunt damage_entity	guardian - -		10	# Vanilla: 10 exp
-Hunt damage_entity	elder_guardian - -	10	# Vanilla: 10 exp
-Hunt damage_entity	ender_dragon - -	100	# Vanilla: 12k exp 
-Hunt damage_entity	wither - -		50	# Vanilla: 50 exp
-Hunt damage_entity	ghast - -		5	# Vanilla: 5 exp
-Hunt damage_entity	giant - -		5	# Vanilla: 5 exp
+Hunt damage_entity	zombie - -		5
+Hunt damage_entity	husk - -		5
+Hunt damage_entity	skeleton - -		5
+Hunt damage_entity	stray - -		5
+Hunt damage_entity	wither_skeleton - -	5
+Hunt damage_entity	creeper - -		5
+Hunt damage_entity	spider - -		5
+Hunt damage_entity	cave_spider - -		5
+Hunt damage_entity	endermite - -		5
+Hunt damage_entity	silverfish - -		5
+Hunt damage_entity	enderman - -		5
+Hunt damage_entity	witch - -		10
+Hunt damage_entity	vindicator - -		10
+Hunt damage_entity	evoker - -		10
+Hunt damage_entity	vex - -			3
+Hunt damage_entity	pig_zombie - -		5
+Hunt damage_entity	blaze - -		10
+Hunt damage_entity	slime 3 -		4
+Hunt damage_entity	slime 1 -		2
+Hunt damage_entity	slime 0 -		1
+Hunt damage_entity	Magma_Cube 3 -		4
+Hunt damage_entity	Magma_Cube 1 -		2
+Hunt damage_entity	Magma_Cube 0 -		1
+Hunt damage_entity	guardian - -		10
+Hunt damage_entity	elder_guardian - -	10
+Hunt damage_entity	ender_dragon - -	100
+Hunt damage_entity	wither - -		50
+Hunt damage_entity	ghast - -		5
+Hunt damage_entity	giant - -		5
 
-Hunt kill_entity	chicken - -		2	# Vanilla: 1-3 (2 avg)
-Hunt kill_entity	cow - -			2	# Vanilla: 1-3 (2 avg)
-Hunt kill_entity	sheep - -		2	# Vanilla: 1-3 (2 avg)
-Hunt kill_entity	pig - -			2	# Vanilla: 1-3 (2 avg)
-Hunt kill_entity	rabbit - -		2	# Vanilla: 1-3 (2 avg)
-Hunt kill_entity	mushroom_cow - -	2	# Vanilla: 1-3 (2 avg)
-Hunt kill_entity	wolf - -		2	# Vanilla: 1-3 (2 avg)
-Hunt kill_entity	ocelot - -		2	# Vanilla: 1-3 (2 avg)
-Hunt kill_entity	horse - -		2	# Vanilla: 1-3 (2 avg)
-Hunt kill_entity	squid - -		5	# Vanilla: 1-3 (2 avg)
-Hunt kill_entity	polar_bear - -		2	# Vanilla: 1-3
-Hunt kill_entity	llama - -		2	# Vanilla: ?
+Hunt kill_entity	chicken - -		2
+Hunt kill_entity	cow - -			2
+Hunt kill_entity	sheep - -		2
+Hunt kill_entity	pig - -			2
+Hunt kill_entity	rabbit - -		2
+Hunt kill_entity	mushroom_cow - -	2
+Hunt kill_entity	wolf - -		2
+Hunt kill_entity	ocelot - -		2
+Hunt kill_entity	horse - -		2
+Hunt kill_entity	squid - -		5
+Hunt kill_entity	polar_bear - -		2
+Hunt kill_entity	llama - -		2
 
-#===============================================================================
+#=====================================================
 # Ranching
-#===============================================================================
+#=====================================================
 
-Ranch breed_entity	chicken - -		4	# Vanilla: 1-7 exp (4 avg)
-Ranch breed_entity	cow - -			4	# Vanilla: 1-7 exp (4 avg)
-Ranch breed_entity	pig - -			4	# Vanilla: 1-7 exp (4 avg)
-Ranch breed_entity	sheep - -		4	# Vanilla: 1-7 exp (4 avg)
-Ranch breed_entity	rabbit - -		4	# Vanilla: 1-4 exp (2.5 avg)
-Ranch breed_entity	mushroom_cow - -	4	# Vanilla: 1-7 exp (4 avg)
-Ranch breed_entity	wolf - -		4	# Vanilla: 1-7 exp (4 avg)
-Ranch breed_entity	ocelot - -		4	# Vanilla: 1-7 exp (4 avg)
-Ranch breed_entity	horse - -		4	# Vanilla: 1-7 exp (4 avg)
-Ranch breed_entity	llama - -		4	# Vanilla: ???
+Ranch breed_entity	chicken - -		4
+Ranch breed_entity	cow - -			4
+Ranch breed_entity	pig - -			4
+Ranch breed_entity	sheep - -		4
+Ranch breed_entity	rabbit - -		4
+Ranch breed_entity	mushroom_cow - -	4
+Ranch breed_entity	wolf - -		4
+Ranch breed_entity	ocelot - -		4
+Ranch breed_entity	horse - -		4
+Ranch breed_entity	llama - -		4
 Ranch shear_entity	sheep - -		1
 
-#===============================================================================
+#=====================================================
 # Taming
-#===============================================================================
+#=====================================================
 
 Tame tame_entity	wolf - -		3
 Tame tame_entity	ocelot - -		3
@@ -144,9 +141,9 @@ Tame tame_entity	horse - -		5
 Tame tame_entity	llama - -		5
 Tame tame_entity	parrot - -		5
 
-#===============================================================================
+#=====================================================
 # Brewing
-#===============================================================================
+#=====================================================
 
 Brew ingredient		nether_stalk - -	2
 Brew ingredient		redstone - -		3
@@ -162,14 +159,14 @@ Brew ingredient		raw_fish 3 - 		6
 Brew ingredient		rabbit_foot - - 	6
 Brew ingredient		ghast_tear - -		6
 
-#===============================================================================
+#=====================================================
 # Fishing
-#===============================================================================
+#=====================================================
 
-Fish fish_item		raw_fish 0 -		7	# Vanilla: 1-6 exp (3.5 avg)
-Fish fish_item		raw_fish 1 -		7	# Vanilla: 1-6 exp (3.5 avg) // Salmon
-Fish fish_item		raw_fish 2 -		10	# Vanilla: Unknown exp       // Clownfish
-Fish fish_item		raw_fish 3 -		10	# Vanilla: Unknown exp       // Pufferfish
+Fish fish_item		raw_fish 0 -		7
+Fish fish_item		raw_fish 1 -		7	# Salmon
+Fish fish_item		raw_fish 2 -		10	# Clownfish
+Fish fish_item		raw_fish 3 -		10	# Pufferfish
 
 Fish fish_item		bow - -			10
 Fish fish_item		enchanted_book - -	10
@@ -191,31 +188,30 @@ Fish fish_item		tripwire_hook - -	5
 Fish fish_item		emerald - -		10
 Fish fish_item		diamond - -		20
 
-#===============================================================================
+#=====================================================
 # Cooking
-#===============================================================================
+#=====================================================
 
-Cook smelt_item		cooked_beef 0 -		.35	# Vanilla: 0.35 exp
-Cook smelt_item		cooked_chicken 0 -	.35	# Vanilla: 0.35 exp
-Cook smelt_item		cooked_fish 0 -		.35	# Vanilla: 0.35 exp
-Cook smelt_item		cooked_fish 1 -		.35	# Vanilla: 0.35 exp // Salmon
-Cook smelt_item		cooked_mutton 0 -	.35	# Vanilla: 0.35 exp
-Cook smelt_item		cooked_rabbit 0 -	.35	# Vanilla: 0.35 exp
-Cook smelt_item		grilled_pork 0 -	.35	# Vanilla: 0.35 exp
-Cook smelt_item		baked_potato 0 -	.35	# Vanilla: 0.35 exp
+Cook smelt_item		cooked_beef 0 -		.35
+Cook smelt_item		cooked_chicken 0 -	.35
+Cook smelt_item		cooked_fish 0 -		.35
+Cook smelt_item		cooked_fish 1 -		.35
+Cook smelt_item		cooked_mutton 0 -	.35
+Cook smelt_item		cooked_rabbit 0 -	.35
+Cook smelt_item		grilled_pork 0 -	.35
+Cook smelt_item		baked_potato 0 -	.35
 
-#===============================================================================
+#=====================================================
 # Enchanting
-# No exp for any.
-#===============================================================================
+#=====================================================
 
 Enchant spend_levels	- 1 exp_level_cost	1
 Enchant spend_levels	- 2 exp_level_cost	2
 Enchant spend_levels	- 3 exp_level_cost	5
 
-#===============================================================================
+#=====================================================
 # Smithing
-#===============================================================================
+#=====================================================
 
 Smith spend_levels	- 1 exp_level_cost	.5
 Smith spend_levels	- 2 exp_level_cost	1
@@ -224,21 +220,21 @@ Smith spend_levels	- 5 exp_level_cost	5
 Smith spend_levels	- 10 exp_level_cost	10
 Smith spend_levels	- 30 exp_level_cost	30
 
-Smith smelt_item	gold_ore - -		1	# Vanilla: 1.0 exp
-Smith smelt_item	iron_ore - -		.7	# Vanilla: 0.7 exp
+Smith smelt_item	gold_ore - -		1
+Smith smelt_item	iron_ore - -		.7
 
-#===============================================================================
+#=====================================================
 # Woodcutting
-#===============================================================================
+#=====================================================
 
 Woodcut break_block	log - -			.75
 Woodcut break_block	log_2 - -		.75
 Woodcut break_block	leaves - -		.1
 Woodcut break_block	leaves_2 - -		.1
 
-#===============================================================================
+#=====================================================
 # Gardening
-#===============================================================================
+#=====================================================
 
 Garden break_block	crops 7 -		.2
 Garden break_block	potato 7 -		.2
