@@ -50,11 +50,9 @@ public abstract class Skill implements Listener {
         if (reward == null) return;
         int level = plugin.getScore().getSkillLevel(player.getUniqueId(), skillType);
         double skillPoints = reward.getSkillPoints() * factor;
-        double exp         = reward.getExp()         * factor;
-        if (skillPoints < 0.01 && exp < 0.01) return;
+        if (skillPoints < 0.01) return;
         if (plugin.hasDebugMode(player)) Msg.msg(player, "[sk]&e %s * %.2f", reward, factor);
         plugin.getScore().giveSkillPoints(player.getUniqueId(), skillType, skillPoints);
-        plugin.giveExp(player, exp);
         plugin.getSession(player).onReward(player, this, skillPoints);
     }
 

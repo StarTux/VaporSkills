@@ -12,7 +12,6 @@ import org.bukkit.entity.EntityType;
 class Reward {
     final Key key;
     final double skillPoints;
-    final double exp;
 
     public enum Category {
         BREAK_BLOCK,
@@ -58,23 +57,16 @@ class Reward {
     }
 
     static Reward parse(String[] tokens) {
-        if (tokens.length != 7 && tokens.length != 8) throw new IllegalArgumentException("7 or 8 items required");
-        String skillPointsArg = tokens[5];
-        String expArg = tokens[6];
+        if (tokens.length != 6) throw new IllegalArgumentException("6 items required");
         Key key = Key.parse(Arrays.copyOfRange(tokens, 0, 5));
+        String skillPointsArg = tokens[5];
         double skillPoints = Double.parseDouble(skillPointsArg);
-        double exp = Double.parseDouble(expArg);
-        if (tokens.length >= 9) {
-            double factor = Double.parseDouble(tokens[7]);
-            skillPoints *= factor;
-            exp *= factor;
-        }
-        return new Reward(key, skillPoints, exp);
+        return new Reward(key, skillPoints);
     }
 
     @Override
     public String toString() {
-        return String.format("%s %.2f %.2f", key, skillPoints, exp);
+        return String.format("%s %.2f", key, skillPoints);
     }
 
     void test() {

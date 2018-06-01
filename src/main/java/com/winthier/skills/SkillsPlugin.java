@@ -27,7 +27,6 @@ import org.bukkit.block.Furnace;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.ExperienceOrb;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -65,7 +64,6 @@ public final class SkillsPlugin extends JavaPlugin implements Listener {
     private final Map<SkillType, Skill> skillMap = new EnumMap<>(SkillType.class);
     private final Map<Class<? extends Skill>, Skill> skillClassMap = new HashMap<>();
     private final Map<String, Skill> nameMap = new HashMap<>();
-    private final Map<UUID, Double> exps = new HashMap<>();
     private final Set<UUID> playersInDebugMode = new HashSet<>();
     private final Map<UUID, Session> sessions = new HashMap<>();
     private ConfigurationSection perksConfig = null;
@@ -436,23 +434,6 @@ public final class SkillsPlugin extends JavaPlugin implements Listener {
 
     public <E extends Skill> E getSkill(Class<E> skillClass) {
         return skillClass.cast(skillClassMap.get(skillClass));
-    }
-
-    void giveExp(Player player, double amount) {
-        if (amount < 0.01) return;
-        final UUID uuid = player.getUniqueId();
-        Double stored = exps.get(uuid);
-        if (stored == null) {
-            stored = amount;
-        } else {
-            stored += amount;
-        }
-        final int full = stored.intValue();
-        if (full > 10) {
-            stored -= (double)full;
-            player.getWorld().spawn(player.getLocation(), ExperienceOrb.class).setExperience(full);
-        }
-        exps.put(uuid, stored);
     }
 
     boolean hasDebugMode(Player player) {
