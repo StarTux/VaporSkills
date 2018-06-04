@@ -432,7 +432,7 @@ public final class RanchEntity implements CustomEntity, TickableEntity {
     @Getter @RequiredArgsConstructor
     static final class Watcher implements EntityWatcher {
         // Constant
-        static final String SCOREBOARD_KEY = "winthier_ranching";
+        static final String SCOREBOARD_KEY = "RanchingSkill";
         // Interface implementation
         private final RanchEntity customEntity;
         private final Animals entity;
@@ -458,7 +458,7 @@ public final class RanchEntity implements CustomEntity, TickableEntity {
         }
 
         void load() {
-            Map<String, Object> map = customEntity.plugin.getScoreboardJSON(entity, SCOREBOARD_KEY);
+            Map<String, Object> map = CustomPlugin.getInstance().getEntityManager().loadEntityData(entity, SCOREBOARD_KEY);
             if (map == null) return;
             ConfigurationSection config = new YamlConfiguration().createSection("tmp", map);
             name = config.getString("name");
@@ -547,7 +547,7 @@ public final class RanchEntity implements CustomEntity, TickableEntity {
             map.put("gender", gender.name().toLowerCase());
             if (sick != 0) map.put("sick", sick);
             if (special != 0) map.put("special", special);
-            customEntity.plugin.storeScoreboardJSON(entity, SCOREBOARD_KEY, map);
+            CustomPlugin.getInstance().getEntityManager().saveEntityData(entity, SCOREBOARD_KEY, map);
         }
 
         void roll() {
@@ -832,6 +832,7 @@ public final class RanchEntity implements CustomEntity, TickableEntity {
             entity.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(1.0);
             entity.setCustomName("Dinnerbone");
             CustomPlugin.getInstance().getEntityManager().removeEntityWatcher(this);
+            CustomPlugin.getInstance().getEntityManager().removeEntityData(entity, SCOREBOARD_KEY);
             LootEntity.Watcher lootWatcher = (LootEntity.Watcher)CustomPlugin.getInstance().getEntityManager().wrapEntity(entity, LootEntity.CUSTOM_ID);
             lootWatcher.setInventoryTitle(name);
             lootWatcher.getOwners().add(owner);
@@ -883,8 +884,8 @@ public final class RanchEntity implements CustomEntity, TickableEntity {
             if (happy > 100) happy = 100;
             if (happy < -100) {
                 entity.setCustomName(name);
-                customEntity.plugin.removeScoreboardTag(entity, SCOREBOARD_KEY);
                 CustomPlugin.getInstance().getEntityManager().removeEntityWatcher(this);
+                CustomPlugin.getInstance().getEntityManager().removeEntityData(entity, SCOREBOARD_KEY);
                 return;
             }
             int maxAge = getMaxAge();
@@ -973,8 +974,8 @@ public final class RanchEntity implements CustomEntity, TickableEntity {
                     happy -= 1;
                 } else {
                     entity.setCustomName(name);
-                    customEntity.plugin.removeScoreboardTag(entity, SCOREBOARD_KEY);
                     CustomPlugin.getInstance().getEntityManager().removeEntityWatcher(this);
+                    CustomPlugin.getInstance().getEntityManager().removeEntityData(entity, SCOREBOARD_KEY);
                 }
                 return;
             }
