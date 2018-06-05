@@ -8,7 +8,6 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
 final class HuntSkill extends Skill {
     private long killDistanceInterval = 300;
@@ -24,20 +23,9 @@ final class HuntSkill extends Skill {
         minKillDistance = getConfig().getDouble("MinKillDistance", 16);
     }
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
-    public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
-        if (!(event.getEntity() instanceof LivingEntity)) return;
-        LivingEntity entity = (LivingEntity)event.getEntity();
-        if (!(event.getDamager() instanceof Arrow)) return;
-        Arrow arrow = (Arrow)event.getDamager();
-        if (!(arrow.getShooter() instanceof Player)) return;
-        Player player = (Player)arrow.getShooter();
-        if (!allowPlayer(player)) return;
+    void onEntityKill(Player player, LivingEntity entity) {
         if (entity.getCustomName() != null && entity.getCustomName().startsWith("" + ChatColor.COLOR_CHAR)) return;
-        if (BukkitExploits.getInstance().recentKillDistance(player, entity.getLocation(), killDistanceInterval) < minKillDistance) return;
-        double percentage = BukkitExploits.getInstance().getEntityDamageByPlayerRemainderPercentage(entity, Math.min(entity.getHealth(), event.getFinalDamage()));
-        if (plugin.hasDebugMode(player)) Msg.msg(player, "&eHunt Dmg=%.02f/%.02f Pct=%.02f", event.getFinalDamage(), entity.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue(), percentage);
-        Reward reward = getReward(Reward.Category.DAMAGE_ENTITY, entity.getType().name(), null, null);
-        giveReward(player, reward, percentage);
+        Reward reward = getReward(Reward.Category.KILL_ENTITY, entity.getType().name(), null, null);
+        giveReward(player, reward, 1);
     }
 }

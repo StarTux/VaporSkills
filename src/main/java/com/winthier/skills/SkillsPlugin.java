@@ -27,10 +27,16 @@ import org.bukkit.block.Furnace;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
+import org.bukkit.event.entity.CreatureSpawnEvent;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.inventory.BrewEvent;
 import org.bukkit.event.inventory.FurnaceSmeltEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -51,6 +57,8 @@ public final class SkillsPlugin extends JavaPlugin implements Listener {
     static final String CONFIG_YML = "config.yml";
     static final String REWARDS_TXT = "rewards.txt";
     static final String PERKS_YML = "perks.yml";
+    static final String SPAWN_REASON_TAG = "SpawnReason";
+    static final String LAST_DAMAGE_CAUSE_KEY = "LastDamageCause";
     // Singleton
     @Getter private static SkillsPlugin instance;
     // External Data
@@ -396,6 +404,59 @@ public final class SkillsPlugin extends JavaPlugin implements Listener {
         ((BrewSkill)getSkill(SkillType.BREW)).onBrew(player, event.getContents());
     }
 
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+    public void onCreatureSpawn(CreatureSpawnEvent event) {
+        setScoreboardValue(event.getEntity(), SPAWN_REASON_TAG, event.getSpawnReason().name());
+    }
+
+    /**
+     * Listen for entity deaths and figure out if they died for the
+     * right reasons on behalf of Brawling and Hunting.
+     */
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+    public void onEntityDeath(EntityDeathEvent event) {
+        final LivingEntity entity = event.getEntity();
+        Player killer = entity.getKiller();
+        if (killer == null) return;
+        String reasonString = getScoreboardValue(entity, SPAWN_REASON_TAG);
+        if (reasonString == null) return;
+        SpawnReason reason;
+        try {
+            reason = SpawnReason.valueOf(reasonString.toUpperCase());
+        } catch (IllegalArgumentException iae) {
+            return;
+        }
+        switch (reason) {
+        case SPAWNER:
+        case SPAWNER_EGG:
+            return;
+        default: break;
+        }
+        String lastDamageCause = (String)getMetadata(entity, LAST_DAMAGE_CAUSE_KEY);
+        if (lastDamageCause == null) {
+            return;
+        } else if (lastDamageCause.equals(SkillType.BRAWL.key)) {
+            getSkill(BrawlSkill.class).onEntityKill(killer, entity);
+        } else if (lastDamageCause.equals(SkillType.HUNT.key)) {
+            getSkill(HuntSkill.class).onEntityKill(killer, entity);
+        }
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+    public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
+        Entity damager = event.getDamager();
+        if (!(event.getEntity() instanceof LivingEntity)) return;
+        LivingEntity damagee = (LivingEntity)event.getEntity();
+        if (damager instanceof Player) {
+            setMetadata(damagee, LAST_DAMAGE_CAUSE_KEY, SkillType.BRAWL.key);
+        } else if (damager instanceof Projectile) {
+            Projectile projectile = (Projectile)damager;
+            if (projectile.getShooter() instanceof Player) {
+                setMetadata(damagee, LAST_DAMAGE_CAUSE_KEY, SkillType.HUNT.key);
+            }
+        }
+    }
+
     void buildNameMap() {
         nameMap.clear();
         // Put all the names in the map
@@ -533,6 +594,38 @@ public final class SkillsPlugin extends JavaPlugin implements Listener {
     Object getMetadata(Metadatable metadatable, String key) {
         for (MetadataValue value: metadatable.getMetadata(key)) {
             if (value.getOwningPlugin() == this) return value.value();
+        }
+        return null;
+    }
+
+    // Utility for scoreboards
+
+    void setScoreboardValue(Entity entity, String key, String value) {
+        removeScoreboardKey(entity, key);
+        entity.addScoreboardTag(key + "=" + value);
+    }
+
+    void removeScoreboardKey(Entity entity, String key) {
+        key = key + "=";
+        List<String> removes = null;
+        for (String tag: entity.getScoreboardTags()) {
+            if (tag.startsWith(key)) {
+                if (removes == null) removes = new ArrayList<>();
+                removes.add(tag);
+            }
+        }
+        if (removes == null) return;
+        for (String remove: removes) {
+            entity.removeScoreboardTag(remove);
+        }
+    }
+
+    String getScoreboardValue(Entity entity, String key) {
+        key = key + "=";
+        for (String tag: entity.getScoreboardTags()) {
+            if (tag.startsWith(key)) {
+                return tag.substring(key.length());
+            }
         }
         return null;
     }

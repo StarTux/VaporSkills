@@ -1,7 +1,12 @@
 package com.winthier.skills;
 
-import com.winthier.exploits.bukkit.BukkitExploits;
+import com.winthier.custom.CustomPlugin;
+import com.winthier.custom.entity.SimpleScriptEntity;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.IdentityHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
@@ -13,12 +18,14 @@ import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
@@ -28,6 +35,7 @@ import org.bukkit.material.MaterialData;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.util.EulerAngle;
 import org.bukkit.util.Vector;
 
 final class BrawlSkill extends Skill {
@@ -36,7 +44,6 @@ final class BrawlSkill extends Skill {
     static final String STOLEN_SCOREBOARD_TAG = "winthier.brawl_skill.stolen";
     private long killDistanceInterval = 300;
     private double minKillDistance = 16;
-    private boolean recursionLock = false;
     private final Random random;
     private EntityDamageByEntityEvent entityDamageByEntityEventIntercept = null;
 
@@ -52,27 +59,18 @@ final class BrawlSkill extends Skill {
     }
 
     /**
-     * Players damaging mobs collects skill points, and may trigger
-     * the current charge action (if any).
+     * Called by SkillsPlugin.onEntityDeath() only after an entity
+     * spawned by a proper reason was killed by a player using melee
+     * combat.
      */
+    void onEntityKill(Player player, LivingEntity entity) {
+        Reward reward = getReward(Reward.Category.KILL_ENTITY, entity.getType().name(), null, null);
+        giveReward(player, reward, 1);
+    }
+
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
         entityDamageByEntityEventIntercept = event;
-        if (recursionLock) return;
-        if (!(event.getDamager() instanceof Player)) return;
-        if (!(event.getEntity() instanceof LivingEntity)) return;
-        final Player player = (Player)event.getDamager();
-        final UUID uuid = player.getUniqueId();
-        if (!allowPlayer(player)) return;
-        final LivingEntity entity = (LivingEntity)event.getEntity();
-        // Perks
-        ItemStack item = player.getInventory().getItemInMainHand();
-        // Give Reward
-        if (BukkitExploits.getInstance().recentKillDistance(player, entity.getLocation(), killDistanceInterval) < minKillDistance) return;
-        double percentage = BukkitExploits.getInstance().getEntityDamageByPlayerRemainderPercentage(entity, Math.min(entity.getHealth(), event.getFinalDamage()));
-        if (plugin.hasDebugMode(player)) Msg.msg(player, "&eBrawl Dmg=%.02f/%.02f Pct=%.02f", event.getFinalDamage(), entity.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue(), percentage);
-        Reward reward = getReward(Reward.Category.DAMAGE_ENTITY, entity.getType().name(), null, null);
-        giveReward(player, reward, percentage);
     }
 
     /**
@@ -103,7 +101,12 @@ final class BrawlSkill extends Skill {
                     if (chargeLevel == 2) dashAttack(player);
                     break;
                 case GOLD_SWORD:
+                    if (chargeLevel == 1) bestAttack(player);
                     if (chargeLevel == 2) rageAttack(player);
+                    break;
+                case DIAMOND_AXE:
+                    if (chargeLevel == 1) slashAttack(player);
+                    if (chargeLevel == 2) axeThrow(player);
                     break;
                 default: break;
                 }
@@ -255,9 +258,8 @@ final class BrawlSkill extends Skill {
         for (int i = 0; i < 10; i += 1) {
             location = location.add(dirh);
             location.getWorld().spawnParticle(Particle.FIREWORKS_SPARK, location, 1, 0, 0, 0, 0);
-            //            location.getWorld().playSound(location, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.PLAYERS, 0.05f, 2.0f);
             for (Entity nearby: location.getWorld().getNearbyEntities(location, 0.5, 0.5, 0.5)) {
-                if (nearby instanceof LivingEntity && !player.equals(nearby) && !affectedEntities.contains(nearby.getUniqueId())) {
+                if (nearby instanceof LivingEntity && !nearby.isInvulnerable() && !player.equals(nearby) && !affectedEntities.contains(nearby.getUniqueId())) {
                     affectedEntities.add(nearby.getUniqueId());
                     LivingEntity living = (LivingEntity)nearby;
                     if (damage(living, damage, player, itemInHand) > 0) {
@@ -275,7 +277,7 @@ final class BrawlSkill extends Skill {
         final Vector dirh = dir.clone().multiply(0.5);
         Vector tmp = dir.clone();
         if (tmp.getY() > 0.25f) tmp = tmp.setY(0.25);
-        final Vector velo = tmp.normalize().multiply(3.0);
+        final Vector velo = tmp.normalize().multiply(1.2);
         final double damage = player.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE).getValue();
         final ItemStack itemInHand = player.getInventory().getItemInMainHand();
         final Set<UUID> affectedEntities = new HashSet<>();
@@ -290,15 +292,16 @@ final class BrawlSkill extends Skill {
                     cancel();
                     return;
                 }
-                switch (ticks++) {
-                case 0: case 1: case 2: case 3: case 4: case 5:
-                    if (!cancelDash) player.setVelocity(velo);
+                int oldTicks = ticks;
+                ticks += 1;
+                if (oldTicks < 15) {
+                    player.setVelocity(velo);
                     player.getWorld().spawnParticle(Particle.FIREWORKS_SPARK, player.getEyeLocation().add(dirf), 1, 0, 0, 0, 0);
                     Location location = player.getEyeLocation();
                     for (int i = 0; i < 10; i += 1) {
                         location = location.add(dirh);
                         for (Entity nearby: location.getWorld().getNearbyEntities(location, 0.5, 0.5, 0.5)) {
-                            if (nearby instanceof LivingEntity && !player.equals(nearby) && !affectedEntities.contains(nearby.getUniqueId())) {
+                            if (nearby instanceof LivingEntity && !nearby.isInvulnerable() && !player.equals(nearby) && !affectedEntities.contains(nearby.getUniqueId())) {
                                 affectedEntities.add(nearby.getUniqueId());
                                 LivingEntity living = (LivingEntity)nearby;
                                 if (damage(living, damage, player, itemInHand) > 0) {
@@ -307,29 +310,13 @@ final class BrawlSkill extends Skill {
                                     player.setVelocity(new Vector(0, 0, 0));
                                     living.getWorld().playSound(living.getEyeLocation(), Sound.ENTITY_PLAYER_ATTACK_STRONG, SoundCategory.HOSTILE, 0.5f, 1.5f);
                                     location.getWorld().spawnParticle(Particle.BLOCK_DUST, location, 16, .25, .25, .25, 0.1, new MaterialData(Material.DIAMOND_BLOCK));
-                                    if (!cancelDash) {
-                                        Vector stopVelo = player.getVelocity().setX(0).setZ(0);
-                                        stopVelo.setY(Math.min(stopVelo.getY(), 0));
-                                        player.setVelocity(new Vector(0, 0, 0));
-                                        cancelDash = true;
-                                    }
                                 }
                             }
                         }
                     }
-                    break;
-                case 6:
-                    if (!cancelDash) {
-                        Vector stopVelo = player.getVelocity().setX(0).setZ(0);
-                        stopVelo.setY(Math.min(stopVelo.getY(), 0));
-                        player.setVelocity(new Vector(0, 0, 0));
-                    }
-                    break;
-                case 15:
+                } else {
                     NCP.unexempt(player, NCP.MOVING);
                     cancel();
-                    break;
-                default: break;
                 }
             }
         }.runTaskTimer(plugin, 1, 1);
@@ -343,15 +330,27 @@ final class BrawlSkill extends Skill {
         final ItemStack itemInHand = player.getInventory().getItemInMainHand();
         player.getWorld().playSound(player.getEyeLocation(), Sound.ENTITY_PLAYER_ATTACK_SWEEP, SoundCategory.PLAYERS, 0.2f, 1.0f);
         player.getWorld().spawnParticle(Particle.SWEEP_ATTACK, eyeLocation.clone().add(viewDirection), 1, 0, 0, 0, 0);
-        for (Entity e: player.getNearbyEntities(4, 1, 4)) {
+        final Material particleMat;
+        String itemName = itemInHand.getType().name();
+        if (itemName.contains("GOLD")) {
+            particleMat = Material.GOLD_BLOCK;
+        } else if (itemName.contains("DIAMOND")) {
+            particleMat = Material.DIAMOND_BLOCK;
+        } else {
+            particleMat = Material.IRON_BLOCK;
+        }
+        for (Entity e: player.getNearbyEntities(4, 4, 4)) {
             if (e instanceof LivingEntity && !e.equals(player)) {
                 LivingEntity living = (LivingEntity)e;
-                Vector entityDirection = living.getLocation().add(0, living.getHeight() / 2, 0).toVector().subtract(eyeVector);
-                float angle = entityDirection.angle(viewDirection);
-                if (angle < Math.PI * 0.5) {
-                    if (damage(living, damage, player, itemInHand) > 0) {
-                        living.getWorld().playSound(living.getEyeLocation(), Sound.ENTITY_PLAYER_ATTACK_STRONG, SoundCategory.HOSTILE, 0.5f, 1.0f);
-                        living.getWorld().spawnParticle(Particle.SWEEP_ATTACK, living.getEyeLocation(), 1, 0, 0, 0, 0);
+                Location entityCenter = living.getLocation().add(0, living.getHeight() * 0.5, 0);
+                if (eyeLocation.distanceSquared(entityCenter) <= 16) {
+                    Vector entityDirection = entityCenter.toVector().subtract(eyeVector);
+                    float angle = entityDirection.angle(viewDirection);
+                    if (angle < Math.PI * 0.5) {
+                        if (damage(living, damage, player, itemInHand) > 0) {
+                            living.getWorld().playSound(living.getEyeLocation(), Sound.BLOCK_ANVIL_PLACE, SoundCategory.HOSTILE, 0.3f, 1.3f);
+                            living.getWorld().spawnParticle(Particle.BLOCK_DUST, living.getEyeLocation(), 16, .25, .25, .25, 0.1, new MaterialData(particleMat));
+                        }
                     }
                 }
             }
@@ -385,8 +384,8 @@ final class BrawlSkill extends Skill {
                             affectedEntities.add(e.getUniqueId());
                             LivingEntity living = (LivingEntity)e;
                             if (damage(living, damage, player, itemInHand) > 0) {
-                                living.getWorld().spawnParticle(Particle.SWEEP_ATTACK, living.getEyeLocation(), 1, 0, 0, 0, 0);
-                                living.getWorld().playSound(living.getEyeLocation(), Sound.ENTITY_PLAYER_ATTACK_SWEEP, SoundCategory.HOSTILE, 0.5f, 1.0f);
+                                living.getWorld().playSound(living.getEyeLocation(), Sound.BLOCK_ANVIL_PLACE, SoundCategory.HOSTILE, 0.3f, 1.5f);
+                                living.getWorld().spawnParticle(Particle.BLOCK_DUST, living.getEyeLocation(), 32, .25, .25, .25, 0.1, new MaterialData(Material.IRON_BLOCK));
                             }
                         }
                     }
@@ -395,6 +394,41 @@ final class BrawlSkill extends Skill {
                 }
             }
         }.runTaskTimer(plugin, 1, 1);
+    }
+
+    void bestAttack(final Player player) {
+        Location eyeLocation = player.getEyeLocation();
+        Vector eyeVector = eyeLocation.toVector();
+        Vector viewDirection = eyeLocation.getDirection();
+        Map<LivingEntity, Double> targetDists = new IdentityHashMap<>();
+        List<LivingEntity> targets = new ArrayList<>();
+        for (Entity nearby: player.getNearbyEntities(4, 4, 4)) {
+            if (nearby instanceof LivingEntity && !nearby.isInvulnerable()) {
+                LivingEntity living = (LivingEntity)nearby;
+                Location entityCenter = living.getLocation().add(0, living.getHeight() * 0.5, 0);
+                double distanceSquared = eyeLocation.distanceSquared(entityCenter);
+                if (distanceSquared < 16) {
+                    Vector entityVector = entityCenter.toVector().subtract(eyeVector).normalize();
+                    double angle = viewDirection.angle(entityVector);
+                    if (angle < Math.PI * 0.5) {
+                        targetDists.put(living, distanceSquared);
+                        targets.add(living);
+                    }
+                }
+            }
+        }
+        player.getWorld().playSound(eyeLocation, Sound.ENTITY_PLAYER_ATTACK_SWEEP, SoundCategory.PLAYERS, 0.2f, 1.2f);
+        player.getWorld().spawnParticle(Particle.SWEEP_ATTACK, eyeLocation.clone().add(viewDirection), 1, 0, 0, 0, 0);
+        Collections.sort(targets, (a, b) -> Double.compare(targetDists.get(a), targetDists.get(b)));
+        for (LivingEntity target: targets) {
+            double finalDamage = damage(target, player.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE).getValue(), player, player.getInventory().getItemInMainHand());
+            player.sendMessage("" + finalDamage);
+            if (finalDamage > 0) {
+                target.getWorld().playSound(target.getEyeLocation(), Sound.ENTITY_PLAYER_ATTACK_STRONG, 0.5f, 1.0f);
+                target.getWorld().spawnParticle(Particle.BLOCK_DUST, target.getEyeLocation(), 16, .25, .25, .25, 0.1, new MaterialData(Material.GOLD_BLOCK));
+                break;
+            }
+        }
     }
 
     void rageAttack(final Player player) {
@@ -413,6 +447,73 @@ final class BrawlSkill extends Skill {
                     //         float angle = eyeLocation.getDirection().angle(
                     // }
                 } else {
+                    cancel();
+                }
+            }
+        }.runTaskTimer(plugin, 1, 1);
+    }
+
+    void axeThrow(final Player player) {
+        final ArmorStand armorStand = player.getWorld().spawn(player.getLocation(), ArmorStand.class, as -> {
+                as.setVisible(false);
+                as.setArms(true);
+                as.setGravity(false);
+                as.setInvulnerable(true);
+                as.getEquipment().setItemInMainHand(new ItemStack(Material.DIAMOND_AXE));
+                as.setRightArmPose(new EulerAngle(Math.PI * 1, 0, 0));
+            });
+        Vector velo = player.getLocation().getDirection().normalize().multiply(0.7);
+        final SimpleScriptEntity.Watcher watcher = (SimpleScriptEntity.Watcher)CustomPlugin.getInstance().getEntityManager().wrapEntity(armorStand, SimpleScriptEntity.CUSTOM_ID);
+        watcher.setEventHandler(event -> {
+                if (event instanceof EntityDamageEvent) {
+                    ((EntityDamageEvent)event).setCancelled(true);
+                }
+            });
+        player.playSound(player.getEyeLocation(), Sound.ENTITY_PLAYER_ATTACK_SWEEP, SoundCategory.PLAYERS, 0.2f, 1.5f);
+        double damage = player.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE).getValue();
+        ItemStack itemInMainHand = player.getInventory().getItemInMainHand();
+        new BukkitRunnable() {
+            int ticks = 0;
+            @Override
+            public void run() {
+                if (!player.isValid()) {
+                    armorStand.remove();
+                    cancel();
+                    return;
+                }
+                if (!armorStand.isValid()) {
+                    cancel();
+                    return;
+                }
+                int oldTicks = ticks;
+                ticks += 1;
+                if (oldTicks < 30) {
+                    armorStand.setVelocity(velo);
+                    armorStand.teleport(armorStand.getLocation().add(velo));
+                    armorStand.setRightArmPose(armorStand.getRightArmPose().add(0.3, 0, 0));
+                    boolean didHit = false;
+                    for (Entity nearby: armorStand.getNearbyEntities(0.5, 0.5, 0.5)) {
+                        if (nearby instanceof LivingEntity && !nearby.isInvulnerable() && !nearby.equals(player)) {
+                            didHit = true;
+                            break;
+                        }
+                    }
+                    Location axeLoc = armorStand.getLocation().add(0, 1.5, 0);
+                    if (axeLoc.getBlock().getType().isSolid()) didHit = true;
+                    if (didHit) {
+                        armorStand.getWorld().playSound(axeLoc, Sound.ENTITY_WITHER_BREAK_BLOCK, SoundCategory.PLAYERS, 0.5f, 0.8f);
+                        armorStand.getWorld().spawnParticle(Particle.EXPLOSION_HUGE, axeLoc, 1);
+                        for (Entity nearby: armorStand.getNearbyEntities(3, 3, 3)) {
+                            if (nearby instanceof LivingEntity && !nearby.isInvulnerable() && !nearby.equals(player)) {
+                                LivingEntity living = (LivingEntity)nearby;
+                                damage(living, damage, player, itemInMainHand);
+                            }
+                        }
+                        armorStand.remove();
+                        cancel();
+                    }
+                } else {
+                    armorStand.remove();
                     cancel();
                 }
             }

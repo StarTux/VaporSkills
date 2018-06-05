@@ -104,7 +104,7 @@ final class Session {
             }
         }
         if (charging) {
-            double summand = weaponChargeSpeed / 40.0;
+            double summand = weaponChargeSpeed / 10.0;
             double oldWeaponCharge = weaponCharge;
             weaponCharge = Math.min((double)maxWeaponCharge, weaponCharge + summand);
             boolean isLevelUp = (int)weaponCharge != (int)oldWeaponCharge;

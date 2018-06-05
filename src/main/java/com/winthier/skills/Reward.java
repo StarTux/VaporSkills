@@ -16,7 +16,6 @@ class Reward {
     public enum Category {
         BREAK_BLOCK,
         BREED_ENTITY,
-        DAMAGE_ENTITY,
         EAT_ITEM,
         FISH_ITEM,
         INGREDIENT,
@@ -82,7 +81,6 @@ class Reward {
         case SHEAR_ENTITY:
         case TAME_ENTITY:
         case BREED_ENTITY:
-        case DAMAGE_ENTITY:
             EntityType.valueOf(key.name);
             break;
         case SPEND_LEVELS:
