@@ -95,6 +95,9 @@ class AdminCommand implements CommandExecutor {
                 return true;
             }
             LevelUpEffect.launch(plugin, player, skillType, skillLevel);
+        } else if (cmd.equals("attr")) {
+            Player player = (Player)sender;
+            player.sendMessage("attackSpeed: " + player.getAttribute(org.bukkit.attribute.Attribute.GENERIC_ATTACK_SPEED).getValue());
         } else {
             sender.sendMessage("skadmin test levelup <player> <skill> <level>");
         }

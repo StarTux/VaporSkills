@@ -1,6 +1,7 @@
 package com.winthier.skills;
 
 import com.winthier.custom.event.CustomRegisterEvent;
+import com.winthier.custom.util.Dirty;
 import com.winthier.sql.SQLDatabase;
 import java.io.BufferedReader;
 import java.io.File;
@@ -30,6 +31,7 @@ import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.block.Block;
 import org.bukkit.block.BrewingStand;
 import org.bukkit.block.Furnace;
@@ -55,6 +57,7 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.BrewerInventory;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.FurnaceInventory;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -811,5 +814,60 @@ public final class SkillsPlugin extends JavaPlugin implements Listener {
             }
         }
         return null;
+    }
+
+    // Utility for Attributes
+
+    @Data
+    static final class AttributeEntry {
+        private String name, attribute, slot;
+        private double amount;
+        private int operation;
+        private UUID uuid;
+
+        AttributeEntry(EquipmentSlot slot, String name, Attribute attribute, double amount, int operation, UUID uuid) {
+            this.name = name;
+            this.amount = amount;
+            this.operation = operation;
+            if (uuid == null) {
+                this.uuid = new UUID(1 + (long)slot.ordinal(), 1 + (long)attribute.ordinal());
+            } else {
+                this.uuid = uuid;
+            }
+            String[] attrNames = attribute.name().split("_");
+            StringBuilder sb = new StringBuilder();
+            sb.append(attrNames[0].toLowerCase()).append(".");
+            sb.append(attrNames[1].toLowerCase());
+            for (int i = 2; i < attrNames.length; i += 1) sb.append(attrNames[i].substring(0, 1)).append(attrNames[i].substring(1).toLowerCase());
+            this.attribute = sb.toString();
+            switch (slot) {
+            case HAND: this.slot = "mainhand"; break;
+            case OFF_HAND: this.slot = "offhand"; break;
+            default: this.slot = slot.name().toLowerCase();
+            }
+        }
+
+        AttributeEntry(String slot, String name, String attribute, double amount, int operation, UUID uuid) {
+            this.slot = slot;
+            this.name = name;
+            this.attribute = attribute;
+            this.amount = amount;
+            this.operation = operation;
+            this.uuid = uuid;
+        }
+
+        void addTo(ItemStack item) {
+            Dirty.TagWrapper itemTag = Dirty.TagWrapper.getItemTagOf(item);
+            Dirty.TagListWrapper attrList = itemTag.getList("AttributeModifiers");
+            if (attrList == null) attrList = itemTag.createList("AttributeModifiers");
+            Dirty.TagWrapper attrTag = attrList.createCompound();
+            attrTag.setString("Slot", slot);
+            attrTag.setString("Name", name);
+            attrTag.setString("AttributeName", attribute);
+            attrTag.setDouble("Amount", amount);
+            attrTag.setInt("Operation", operation);
+            attrTag.setLong("UUIDMost", uuid.getMostSignificantBits());
+            attrTag.setLong("UUIDLeast", uuid.getLeastSignificantBits());
+        }
     }
 }

@@ -2,7 +2,59 @@ AnvilRecipes:
 - inputA: [oxhide, 1]
   inputB: [oxhide, 1]
   output: [leather_scraps, 1]
+
 - inputA: pigskin
   inputB: pigskin
   output: leather_scraps
 
+- inputA: leather_scraps
+  inputB: creeper_oil
+  output: hardened_leather
+
+- inputA: fine_iron_nugget
+  inputB: fine_iron_nugget
+  output: fine_iron_bar
+
+- inputA: fine_iron_bar
+  inputB: fine_iron_bar
+  output: steel_bar
+
+- inputA: steel_bar
+  inputB: wither_oil
+  output: hardened_steel
+
+- inputA: fine_gold_nugget
+  inputB: fine_gold_nugget
+  output: gold_bullion
+
+- inputA: golden_egg
+  inputB: golden_egg
+  output: gold_bullion
+
+- inputA: gold_bullion
+  inputB: gold_bullion
+  output: fine_gold_bullion
+
+- inputA: fine_gold_bullion
+  inputB: nickel
+  output: white_gold
+
+- inputA: flawless_diamond
+  inputB: fine_gold_nugget
+  output: edged_diamond
+
+- inputA: flawless_emerald
+  inputB: fine_gold_nugget
+  output: edged_emerald
+
+- inputA: flawless_diamond
+  inputB: flawless_diamond
+  output: diamond_dust
+
+- inputA: flawless_emerald
+  inputB: flawless_emerald
+  output: emerald_dust
+
+- inputA: diamond_dust
+  inputB: emerald_dust
+  output: gemstone_dust

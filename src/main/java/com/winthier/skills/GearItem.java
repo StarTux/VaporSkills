@@ -17,6 +17,6 @@ public final class GearItem implements CustomItem {
 
     @Override
     public ItemStack spawnItemStack(int amount) {
-        return new ItemStack(Material.WOOD_SWORD);
+        return new ItemStack(Material.IRON_CHESTPLATE);
     }
 }

@@ -10,6 +10,9 @@ import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.PotionMeta;
+import org.bukkit.potion.PotionData;
+import org.bukkit.potion.PotionType;
 
 public final class IngredientItem implements CustomItem {
     final SkillsPlugin plugin;
@@ -17,27 +20,54 @@ public final class IngredientItem implements CustomItem {
     final ItemStack itemStack;
 
     enum Type {
+        // Leather
         OXHIDE(Material.LEATHER),
         PIGSKIN(Material.LEATHER),
+        LEATHER_SCRAPS(Material.LEATHER),
+        HARDENED_LEATHER(Material.LEATHER),
+        // Food
         SIRLOIN(Material.RAW_BEEF),
         BACON(Material.PORK),
         FRESH_MILK(Material.DRAGONS_BREATH),
         TRUFFLE(Material.BROWN_MUSHROOM),
-        GOLDEN_EGG(Material.GOLD_NUGGET),
         CHICKEN_DOWN(Material.FEATHER),
-        STEEL(Material.IRON_INGOT),
-        LEATHER_SCRAPS(Material.LEATHER);
+        // Iron
+        FINE_IRON_NUGGET(Material.IRON_NUGGET),
+        FINE_IRON_BAR(Material.IRON_INGOT),
+        STEEL_BAR(Material.IRON_INGOT),
+        HARDENED_STEEL(Material.IRON_INGOT),
+        // Gold
+        FINE_GOLD_NUGGET(Material.GOLD_NUGGET),
+        GOLDEN_EGG(Material.GOLD_NUGGET),
+        GOLD_BULLION(Material.GOLD_INGOT),
+        FINE_GOLD_BULLION(Material.GOLD_INGOT),
+        WHITE_GOLD(Material.GOLD_INGOT),
+        // Diamond
+        FLAWLESS_DIAMOND(Material.DIAMOND),
+        FLAWLESS_EMERALD(Material.EMERALD),
+        EDGED_DIAMOND(Material.DIAMOND),
+        EDGED_EMERALD(Material.EMERALD),
+        DIAMOND_DUST(Material.SUGAR),
+        EMERALD_DUST(Material.INK_SACK, 2, (String)null), // TODO cactus_green in 1.13
+        GEMSTONE_DUST(Material.BLAZE_POWDER),
+        // Rare
+        CREEPER_OIL(Material.POTION),
+        WITHER_OIL(Material.POTION),
+        NICKEL(Material.GHAST_TEAR),
+        ;
 
         final Material material;
+        final int data; // TODO remove in 1.13
         final String extra;
         final String customId;
 
         Type(Material material) {
-            this(material, null);
+            this(material, 0, null);
         }
 
-        Type(Material material, String extra) {
+        Type(Material material, int data, String extra) {
             this.material = material;
+            this.data = data;
             this.extra = extra;
             this.customId = "skills:" + name().toLowerCase();
         }
@@ -65,11 +95,23 @@ public final class IngredientItem implements CustomItem {
     IngredientItem(SkillsPlugin plugin, Type type) {
         this.plugin = plugin;
         this.type = type;
-        this.itemStack = new ItemStack(type.material);
+        this.itemStack = new ItemStack(type.material, 1, (short)type.data);
         ItemMeta meta = this.itemStack.getItemMeta();
         meta.addEnchant(Enchantment.DURABILITY, 1, false);
         meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         meta.setDisplayName(ChatColor.BLUE + Msg.capitalEnumName(type));
+        switch (type) {
+        case CREEPER_OIL:
+            ((PotionMeta)meta).setBasePotionData(new PotionData(PotionType.POISON));
+            meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+            break;
+        case WITHER_OIL:
+            ((PotionMeta)meta).setBasePotionData(new PotionData(PotionType.INSTANT_DAMAGE));
+            meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+            break;
+        default:
+            break;
+        }
         this.itemStack.setItemMeta(meta);
     }
 

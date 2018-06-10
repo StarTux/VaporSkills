@@ -1,7 +1,7 @@
 package com.winthier.skills;
 
 import com.winthier.custom.CustomPlugin;
-import com.winthier.custom.util.Dirty;
+import com.winthier.skills.SkillsPlugin.AttributeEntry;
 import java.util.UUID;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -21,41 +21,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 final class SmithSkill extends Skill {
     SmithSkill(SkillsPlugin plugin) {
         super(plugin, SkillType.SMITH);
-    }
-
-    private static void addAttribute(ItemStack item, EquipmentSlot slot, String name, Attribute attribute, double amount, int operation, UUID uuid) {
-        // Attribute name
-        String[] attrNames = attribute.name().split("_");
-        StringBuilder sb = new StringBuilder();
-        sb.append(attrNames[0].toLowerCase()).append(".");
-        sb.append(attrNames[1].toLowerCase());
-        for (int i = 2; i < attrNames.length; i += 1) sb.append(attrNames[i].substring(0, 1)).append(attrNames[i].substring(1).toLowerCase());
-        final String attributeName = sb.toString();
-        // Name
-        if (name == null) name = attributeName;
-        // UUID
-        if (uuid == null) uuid = new UUID(1 + (long)slot.ordinal(), 1 + (long)attribute.ordinal());
-        addAttribute(item, slot, name, attributeName, amount, operation, uuid);
-    }
-
-    private static void addAttribute(ItemStack item, EquipmentSlot slot, String name, String attributeName, double amount, int operation, UUID uuid) {
-        Dirty.TagWrapper itemTag = Dirty.TagWrapper.getItemTagOf(item);
-        Dirty.TagListWrapper attrList = itemTag.getList("AttributeModifiers");
-        if (attrList == null) attrList = itemTag.createList("AttributeModifiers");
-        Dirty.TagWrapper attrTag = attrList.createCompound();
-        final String slotName;
-        switch (slot) {
-        case HAND: slotName = "mainhand"; break;
-        case OFF_HAND: slotName = "offhand"; break;
-        default: slotName = slot.name().toLowerCase();
-        }
-        attrTag.setString("Slot", slotName);
-        attrTag.setString("AttributeName", attributeName);
-        attrTag.setString("Name", name);
-        attrTag.setDouble("Amount", amount);
-        attrTag.setInt("Operation", operation);
-        attrTag.setLong("UUIDMost", uuid.getMostSignificantBits());
-        attrTag.setLong("UUIDLeast", uuid.getLeastSignificantBits());
     }
 
     static int getDefaultArmor(Material mat) {
@@ -84,7 +49,7 @@ final class SmithSkill extends Skill {
         }
     }
 
-    static int getDefaultDamage(Material mat) {
+    static int getDefaultAttackDamage(Material mat) {
         switch (mat) {
         case WOOD_SWORD: return 4;
         case GOLD_SWORD: return 4;
@@ -97,25 +62,54 @@ final class SmithSkill extends Skill {
         case STONE_AXE: return 9;
         case IRON_AXE: return 9;
         case DIAMOND_AXE: return 9;
+            // Pickaxes
+        case WOOD_PICKAXE: return 2;
+        case GOLD_PICKAXE: return 2;
+        case STONE_PICKAXE: return 3;
+        case IRON_PICKAXE: return 4;
+        case DIAMOND_PICKAXE: return 5;
+            // Shovel
+        case WOOD_SPADE: return 2;
+        case GOLD_SPADE: return 2;
+        case STONE_SPADE: return 3;
+        case IRON_SPADE: return 4;
+        case DIAMOND_SPADE: return 5;
         default: return 0;
         }
     }
 
     static double getDefaultAttackSpeed(Material mat) {
         switch (mat) {
-        // Swords
         case WOOD_SWORD:
         case GOLD_SWORD:
         case STONE_SWORD:
         case IRON_SWORD:
         case DIAMOND_SWORD:
             return 1.6;
-        // Axes
+            // Axes
         case WOOD_AXE: return 0.8;
         case GOLD_AXE: return 1.0;
         case STONE_AXE: return 0.8;
         case IRON_AXE: return 0.9;
         case DIAMOND_AXE: return 1.0;
+            // Pickaxes
+        case WOOD_PICKAXE: return 1.2;
+        case STONE_PICKAXE: return 1.2;
+        case GOLD_PICKAXE: return 1.2;
+        case IRON_PICKAXE: return 1.2;
+        case DIAMOND_PICKAXE: return 1.2;
+            // Shovels
+        case WOOD_SPADE: return 1.0;
+        case STONE_SPADE: return 1.0;
+        case GOLD_SPADE: return 1.0;
+        case IRON_SPADE: return 1.0;
+        case DIAMOND_SPADE: return 1.0;
+            // Hoes
+        case WOOD_HOE: return 1.0;
+        case STONE_HOE: return 1.0;
+        case GOLD_HOE: return 1.0;
+        case IRON_HOE: return 1.0;
+        case DIAMOND_HOE: return 1.0;
         default: return 0;
         }
     }
@@ -236,7 +230,7 @@ final class SmithSkill extends Skill {
         LEATHER(Material.LEATHER),
         IRON(Material.IRON_INGOT),
         GOLD(Material.GOLD_INGOT),
-        CHAINMAIL(Material.IRON_INGOT),
+        MAIL(Material.IRON_INGOT),
         DIAMOND(Material.DIAMOND);
 
         final Material material;
@@ -290,7 +284,7 @@ final class SmithSkill extends Skill {
             case CHAINMAIL_CHESTPLATE:
             case CHAINMAIL_HELMET:
             case CHAINMAIL_LEGGINGS:
-                return Quality.CHAINMAIL;
+                return Quality.MAIL;
             case DIAMOND_AXE:
             case DIAMOND_BARDING:
             case DIAMOND_BOOTS:
@@ -326,65 +320,209 @@ final class SmithSkill extends Skill {
             if (anvilStore.inputB == null) return;
             if (anvilStore.inputB.getAmount() != 1) return;
             if (!anvilStore.inputA.equals(new ItemStack(anvilStore.inputA.getType()))) return;
+            // We can rule out any further proceedings if the base
+            // perk for the gear quality is not present.
+            switch (quality) {
+            case LEATHER:
+                if (!plugin.getScore().hasPerk(uuid, Perk.SMITH_LEATHER)) return;
+                break;
+            case IRON:
+                if (!plugin.getScore().hasPerk(uuid, Perk.SMITH_IRON)) return;
+                break;
+            case MAIL:
+                if (!plugin.getScore().hasPerk(uuid, Perk.SMITH_MAIL)) return;
+                break;
+            case GOLD:
+                if (!plugin.getScore().hasPerk(uuid, Perk.SMITH_GOLD)) return;
+                break;
+            case DIAMOND:
+                if (!plugin.getScore().hasPerk(uuid, Perk.SMITH_DIAMOND)) return;
+                break;
+            default:
+                return;
+            }
             // Slot B may either be a vanilla item used to create the
             // gear in question, or a similar IngredientItem.  Each
             // item has a specific fineness which determines the
             // quality of the resulting gear item.
             IngredientItem.Type ingredient = IngredientItem.Type.of(anvilStore.inputB);
             int fineness = 0;
-            if (ingredient == null) {
-                if (anvilStore.inputB.getType() == quality.material) {
-                    fineness = 1;
-                } else {
-                    return;
-                }
-            }
             switch (quality) {
             case WOOD:
                 break;
             case STONE:
                 break;
             case LEATHER:
-                if (plugin.getScore().hasPerk(uuid, Perk.SMITH_LEATHER)) {
-                    if (ingredient != null) {
-                        switch (ingredient) {
-                        case OXHIDE:
-                        case PIGSKIN:
-                            fineness = 2; break;
-                        case LEATHER_SCRAPS:
-                            fineness = 3; break;
-                        default:
-                            fineness = 0;
-                        }
+                if (ingredient != null) {
+                    switch (ingredient) {
+                    case OXHIDE:
+                    case PIGSKIN:
+                        fineness = 2; break;
+                    case LEATHER_SCRAPS:
+                        fineness = 3; break;
+                    case HARDENED_LEATHER:
+                        fineness = 4; break;
+                    default:
+                        fineness = 0;
                     }
+                } else if (anvilStore.inputB.getType() == Material.LEATHER) {
+                    fineness = 1;
+                } else {
+                    fineness = 0;
                 }
                 break;
+            case MAIL:
             case IRON:
+                if (ingredient != null) {
+                    switch (ingredient) {
+                    case FINE_IRON_NUGGET:
+                        fineness = 2; break;
+                    case FINE_IRON_BAR:
+                        fineness = 3; break;
+                    case STEEL_BAR:
+                        fineness = 4; break;
+                    case HARDENED_STEEL:
+                        fineness = 5; break;
+                    default:
+                        fineness = 0;
+                    }
+                } else if (anvilStore.inputB.getType() == Material.IRON_INGOT) {
+                    fineness = 1;
+                } else {
+                    fineness = 0;
+                }
                 break;
             case GOLD:
-                break;
-            case CHAINMAIL:
+                if (ingredient != null) {
+                    switch (ingredient) {
+                    case FINE_GOLD_NUGGET:
+                    case GOLDEN_EGG:
+                        fineness = 2; break;
+                    case GOLD_BULLION:
+                        fineness = 3; break;
+                    case FINE_GOLD_BULLION:
+                        fineness = 4; break;
+                    case WHITE_GOLD:
+                        fineness = 5; break;
+                    default:
+                        fineness = 0;
+                    }
+                } else if (anvilStore.inputB.getType() == Material.GOLD_INGOT) {
+                    fineness = 1;
+                } else {
+                    fineness = 0;
+                }
                 break;
             case DIAMOND:
+                if (ingredient != null) {
+                    switch (ingredient) {
+                    case FLAWLESS_DIAMOND:
+                    case FLAWLESS_EMERALD:
+                        fineness = 2; break;
+                    case EDGED_DIAMOND:
+                    case EDGED_EMERALD:
+                        fineness = 3; break;
+                    case DIAMOND_DUST:
+                    case EMERALD_DUST:
+                        fineness = 4; break;
+                    case GEMSTONE_DUST:
+                        fineness = 5; break;
+                    default:
+                        fineness = 0;
+                    }
+                } else if (anvilStore.inputB.getType() == Material.GOLD_INGOT) {
+                    fineness = 1;
+                } else {
+                    fineness = 0;
+                }
                 break;
             default:
                 break;
             }
             if (fineness <= 0) return;
-            double finenessFactor = (double)fineness / 4.0;
-            switch (gear.category) {
-            case ARMOR:
-                ItemStack output = CustomPlugin.getInstance().getItemManager().wrapItemStack(new ItemStack(anvilStore.inputA.getType()), GearItem.CUSTOM_ID);
+            double finenessFactor = (double)fineness / 5.0;
+            ItemStack output = CustomPlugin.getInstance().getItemManager().wrapItemStack(new ItemStack(anvilStore.inputA.getType()), GearItem.CUSTOM_ID);
+            if (plugin.getScore().hasPerk(uuid, Perk.SMITH_UNBREAKABLE)) {
                 ItemMeta meta = output.getItemMeta();
                 meta.setUnbreakable(true);
                 output.setItemMeta(meta);
-                double armor = getDefaultArmor(output.getType());
-                armor *= 1.0 + linearSkillBonus(finenessFactor, skillLevel);
-                addAttribute(output, gear.slot, "skills:armor", Attribute.GENERIC_ARMOR, armor, 0, null);
+            }
+            if (gear.category == Gear.Category.ARMOR) {
+                final int defaultArmor = getDefaultArmor(output.getType());
+                double armor = (double)defaultArmor + linearSkillBonus(finenessFactor * (double)defaultArmor, skillLevel);
+                // Different qualities of armor have various bonus
+                // attributes.  In the case of diamond, it's the
+                // default which we must make sure to maintain.
+                switch (quality) {
+                case LEATHER:
+                    if (plugin.getScore().hasPerk(uuid, Perk.SMITH_LEATHER_ARMOR_SPEED)) {
+                        double speed = 0.1 * finenessFactor;
+                        new AttributeEntry(gear.slot, "skills:movementSpeed", Attribute.GENERIC_MOVEMENT_SPEED, speed, 0, null).addTo(output);
+                    }
+                    break;
+                case IRON:
+                    if (plugin.getScore().hasPerk(uuid, Perk.SMITH_IRON_ARMOR_ARMOR)) {
+                        armor += finenessFactor * (double)defaultArmor;
+                    }
+                    break;
+                case GOLD:
+                    if (plugin.getScore().hasPerk(uuid, Perk.SMITH_GOLD_ARMOR_HEALTH)) {
+                        double health = finenessFactor * (double)defaultArmor;
+                        new AttributeEntry(gear.slot, "skills:maxHealth", Attribute.GENERIC_MAX_HEALTH, health, 0, null).addTo(output);
+                    }
+                    break;
+                case MAIL:
+                    if (plugin.getScore().hasPerk(uuid, Perk.SMITH_MAIL_ARMOR_DAMAGE)) {
+                        double damage = finenessFactor * (double)defaultArmor;
+                        new AttributeEntry(gear.slot, "skills:attackDamage", Attribute.GENERIC_ATTACK_DAMAGE, damage, 0, null).addTo(output);
+                    }
+                    break;
+                case DIAMOND:
+                    double armorToughness = 2;
+                    if (plugin.getScore().hasPerk(uuid, Perk.SMITH_DIAMOND_ARMOR_TOUGH)) {
+                        armorToughness += 2 * finenessFactor;
+                    }
+                    new AttributeEntry(gear.slot, "skills:armorToughness", Attribute.GENERIC_ARMOR_TOUGHNESS, armorToughness, 0, null).addTo(output);
+                    break;
+                }
+                new AttributeEntry(gear.slot, "skills:armor", Attribute.GENERIC_ARMOR, armor, 0, null).addTo(output);
                 anvilStore.setOutput(output);
-                break;
-            default:
-                break;
+            }
+            if (gear.category.isWeapon()) {
+                final double defaultAttackSpeed = getDefaultAttackSpeed(output.getType());
+                final int defaultDamage = getDefaultAttackDamage(output.getType());
+                double attackDamage = (double)defaultDamage + linearSkillBonus((double)defaultDamage * finenessFactor, skillLevel);
+                double attackSpeed = defaultAttackSpeed;
+                switch (quality) {
+                case IRON:
+                    if (gear == Gear.SWORD && plugin.getScore().hasPerk(uuid, Perk.SMITH_IRON_SWORD_DAMAGE)) {
+                        attackDamage += finenessFactor * defaultDamage;
+                    }
+                    if (gear == Gear.AXE && plugin.getScore().hasPerk(uuid, Perk.SMITH_IRON_AXE_KNOCKBACK_RESIST)) {
+                        double knockbackResist = 0.5 * finenessFactor;
+                        new AttributeEntry(gear.slot, "skills.knockbackResistance", Attribute.GENERIC_KNOCKBACK_RESISTANCE, knockbackResist, 0, null).addTo(output);
+                    }
+                    break;
+                case GOLD:
+                    if (gear == Gear.SWORD && plugin.getScore().hasPerk(uuid, Perk.SMITH_GOLD_SWORD_ATTACK_SPEED)) {
+                        attackSpeed /= 1.0 + finenessFactor;
+                    }
+                    if (gear == Gear.AXE && plugin.getScore().hasPerk(uuid, Perk.SMITH_GOLD_AXE_ATTACK_SPEED)) {
+                        attackSpeed /= 1.0 + finenessFactor;
+                    }
+                    break;
+                case DIAMOND:
+                    if (gear == Gear.SWORD && plugin.getScore().hasPerk(uuid, Perk.SMITH_DIAMOND_SWORD_SPEED)) {
+                        double speed = 0.1 * finenessFactor;
+                        new AttributeEntry(gear.slot, "skills.movementSpeed", Attribute.GENERIC_MOVEMENT_SPEED, speed, 0, null).addTo(output);
+                    }
+                    if (gear == Gear.AXE && plugin.getScore().hasPerk(uuid, Perk.SMITH_DIAMOND_AXE_DAMAGE)) {
+                        attackDamage += finenessFactor * defaultDamage;
+                    }
+                    break;
+                }
+                new AttributeEntry(gear.slot, "skills.attackDamage", Attribute.GENERIC_ATTACK_DAMAGE, attackDamage, 0, null).addTo(output);
+                new AttributeEntry(gear.slot, "skills.attackSpeed", Attribute.GENERIC_ATTACK_SPEED, attackSpeed, 0, null).addTo(output);
             }
         }
     }
