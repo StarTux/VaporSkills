@@ -251,11 +251,8 @@ Garden break_block	huge_mushroom_2 - -     .2
 Garden break_block	vine - -		.5
 Garden break_block	water_lily - -		.5
 
-Garden break_block	cocoa 8 -		.2
-Garden break_block	cocoa 9 -		.2
-Garden break_block	cocoa 10 -		.2
-Garden break_block	cocoa 11 -		.2
+Garden break_block	cocoa - -		.2
 
 Garden break_block	chorus_plant - -	.1
 Garden break_block	chorus_flower - -	.1
-Garden break_block	beetroot_block 3 -	.1
+Garden break_block	beetroot_block - -	.1

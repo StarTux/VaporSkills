@@ -23,9 +23,10 @@ public final class IngredientItem implements CustomItem {
         BACON(Material.PORK),
         FRESH_MILK(Material.DRAGONS_BREATH),
         TRUFFLE(Material.BROWN_MUSHROOM),
-        GOLDEN_EGG(Material.GOLD_INGOT),
+        GOLDEN_EGG(Material.GOLD_NUGGET),
         CHICKEN_DOWN(Material.FEATHER),
-        STEEL(Material.IRON_INGOT);
+        STEEL(Material.IRON_INGOT),
+        LEATHER_SCRAPS(Material.LEATHER);
 
         final Material material;
         final String extra;
@@ -45,8 +46,19 @@ public final class IngredientItem implements CustomItem {
             return CustomPlugin.getInstance().getItemManager().spawnItemStack(customId, 1);
         }
 
+        ItemStack spawn(int amount) {
+            return CustomPlugin.getInstance().getItemManager().spawnItemStack(customId, amount);
+        }
+
         Item drop(Location location) {
             return CustomPlugin.getInstance().getItemManager().dropItemStack(location, customId, 1);
+        }
+
+        static Type of(ItemStack item) {
+            if (item == null) return null;
+            CustomItem custom = CustomPlugin.getInstance().getItemManager().getCustomItem(item);
+            if (custom == null || !(custom instanceof IngredientItem)) return null;
+            return ((IngredientItem)custom).type;
         }
     }
 

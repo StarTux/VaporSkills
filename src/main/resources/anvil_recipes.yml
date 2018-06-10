@@ -1,0 +1,8 @@
+AnvilRecipes:
+- inputA: [oxhide, 1]
+  inputB: [oxhide, 1]
+  output: [leather_scraps, 1]
+- inputA: pigskin
+  inputB: pigskin
+  output: leather_scraps
+

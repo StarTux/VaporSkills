@@ -1,13 +1,18 @@
 package com.winthier.skills;
 
 import com.winthier.custom.item.CustomItem;
+import lombok.RequiredArgsConstructor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
-public final class ModifiedGear implements CustomItem {
+@RequiredArgsConstructor
+public final class GearItem implements CustomItem {
+    public static final String CUSTOM_ID = "skills:gear";
+    final SkillsPlugin plugin;
+
     @Override
     public String getCustomId() {
-        return "winthier_skills:modified_gear";
+        return CUSTOM_ID;
     }
 
     @Override

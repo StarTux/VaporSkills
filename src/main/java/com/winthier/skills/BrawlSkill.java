@@ -39,8 +39,6 @@ import org.bukkit.util.EulerAngle;
 import org.bukkit.util.Vector;
 
 final class BrawlSkill extends Skill {
-    static final String DISARM_COOLDOWN = "brawl_disarm";
-    static final String STEAL_COOLDOWN = "brawl_steal";
     static final String STOLEN_SCOREBOARD_TAG = "winthier.brawl_skill.stolen";
     private long killDistanceInterval = 300;
     private double minKillDistance = 16;
@@ -79,7 +77,8 @@ final class BrawlSkill extends Skill {
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onPlayerToggleSneak(PlayerToggleSneakEvent event) {
         final Player player = event.getPlayer();
-        int maxWeaponCharge = getMaxWeaponCharge(player);
+        final ItemStack weapon = player.getInventory().getItemInMainHand();
+        int maxWeaponCharge = getMaxWeaponCharge(player, weapon);
         if (event.isSneaking()) {
             if (maxWeaponCharge > 0) {
                 double attackSpeed = player.getAttribute(Attribute.GENERIC_ATTACK_SPEED).getValue();
@@ -91,22 +90,30 @@ final class BrawlSkill extends Skill {
             if (maxWeaponCharge > 0 && plugin.getSession(player).isCharging()) {
                 double charge = plugin.getSession(player).getWeaponCharge();
                 int chargeLevel = Math.min(maxWeaponCharge, (int)charge);
-                switch (player.getInventory().getItemInMainHand().getType()) {
+                switch (weapon.getType()) {
                 case IRON_SWORD:
-                    if (chargeLevel == 1) slashAttack(player);
-                    if (chargeLevel == 2) spinAttack(player);
+                    if (chargeLevel == 1) ironSwordSlash(player);
+                    if (chargeLevel == 2) ironSwordSpin(player);
                     break;
                 case DIAMOND_SWORD:
-                    if (chargeLevel == 1) pierceAttack(player);
-                    if (chargeLevel == 2) dashAttack(player);
+                    if (chargeLevel == 1) diamondSpearPierce(player);
+                    if (chargeLevel == 2) diamondSpearDash(player);
                     break;
                 case GOLD_SWORD:
-                    if (chargeLevel == 1) bestAttack(player);
-                    if (chargeLevel == 2) rageAttack(player);
+                    if (chargeLevel == 1) goldSwordHeal(player);
+                    if (chargeLevel == 2) goldSwordRage(player);
+                    break;
+                case IRON_AXE:
+                    if (chargeLevel == 1) ironHammerSmash(player);
+                    if (chargeLevel == 1) ironHammerSmash2(player);
                     break;
                 case DIAMOND_AXE:
-                    if (chargeLevel == 1) slashAttack(player);
-                    if (chargeLevel == 2) axeThrow(player);
+                    if (chargeLevel == 1) diamondAxeSlash(player); // TODO come up with something unique??
+                    if (chargeLevel == 2) diamondAxeThrow(player);
+                    break;
+                case GOLD_AXE:
+                    if (chargeLevel == 1) goldAxeArea(player);
+                    if (chargeLevel == 2) goldAxeArea2(player);
                     break;
                 default: break;
                 }
@@ -122,8 +129,9 @@ final class BrawlSkill extends Skill {
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onPlayerItemHeld(PlayerItemHeldEvent event) {
         final Player player = event.getPlayer();
+        final int newSlot = event.getNewSlot();
         if (player.isSneaking()) {
-            int maxWeaponCharge = getMaxWeaponCharge(player);
+            int maxWeaponCharge = getMaxWeaponCharge(player, player.getInventory().getItem(newSlot));
             if (maxWeaponCharge > 0) {
                 double chargeSpeed = player.getAttribute(Attribute.GENERIC_ATTACK_SPEED).getValue();
                 plugin.getSession(player).startCharging(player, maxWeaponCharge, chargeSpeed);
@@ -145,7 +153,7 @@ final class BrawlSkill extends Skill {
         case LEFT_CLICK_AIR:
             final Player player = event.getPlayer();
             if (player.isSneaking()) {
-                int maxWeaponCharge = getMaxWeaponCharge(player);
+                int maxWeaponCharge = getMaxWeaponCharge(player, player.getInventory().getItemInMainHand());
                 if (maxWeaponCharge > 0) {
                     double chargeSpeed = player.getAttribute(Attribute.GENERIC_ATTACK_SPEED).getValue();
                     plugin.getSession(player).startCharging(player, maxWeaponCharge, chargeSpeed);
@@ -209,11 +217,10 @@ final class BrawlSkill extends Skill {
         }
     }
 
-    int getMaxWeaponCharge(Player player) {
+    int getMaxWeaponCharge(Player player, ItemStack weapon) {
         final UUID uuid = player.getUniqueId();
-        final ItemStack item = player.getInventory().getItemInMainHand();
-        if (item == null) return 0;
-        switch (item.getType()) {
+        if (weapon == null) return 0;
+        switch (weapon.getType()) {
         case WOOD_SWORD:
         case STONE_SWORD:
             if (plugin.getScore().hasPerk(uuid, Perk.BRAWL_CHARGE)) return 1;
@@ -247,7 +254,7 @@ final class BrawlSkill extends Skill {
         }
     }
 
-    void pierceAttack(final Player player) {
+    void diamondSpearPierce(final Player player) {
         final Vector dir = player.getLocation().getDirection().normalize();
         final Vector dirh = dir.clone().multiply(0.5);
         final Set<UUID> affectedEntities = new HashSet<>();
@@ -271,7 +278,7 @@ final class BrawlSkill extends Skill {
         }
     }
 
-    void dashAttack(final Player player) {
+    void diamondSpearDash(final Player player) {
         final Vector dir = player.getLocation().getDirection().normalize();
         final Vector dirf = dir.clone().multiply(5);
         final Vector dirh = dir.clone().multiply(0.5);
@@ -322,7 +329,7 @@ final class BrawlSkill extends Skill {
         }.runTaskTimer(plugin, 1, 1);
     }
 
-    void slashAttack(final Player player) {
+    void ironSwordSlash(final Player player) {
         Location eyeLocation = player.getEyeLocation();
         Vector eyeVector = eyeLocation.toVector();
         Vector viewDirection = eyeLocation.getDirection();
@@ -330,15 +337,6 @@ final class BrawlSkill extends Skill {
         final ItemStack itemInHand = player.getInventory().getItemInMainHand();
         player.getWorld().playSound(player.getEyeLocation(), Sound.ENTITY_PLAYER_ATTACK_SWEEP, SoundCategory.PLAYERS, 0.2f, 1.0f);
         player.getWorld().spawnParticle(Particle.SWEEP_ATTACK, eyeLocation.clone().add(viewDirection), 1, 0, 0, 0, 0);
-        final Material particleMat;
-        String itemName = itemInHand.getType().name();
-        if (itemName.contains("GOLD")) {
-            particleMat = Material.GOLD_BLOCK;
-        } else if (itemName.contains("DIAMOND")) {
-            particleMat = Material.DIAMOND_BLOCK;
-        } else {
-            particleMat = Material.IRON_BLOCK;
-        }
         for (Entity e: player.getNearbyEntities(4, 4, 4)) {
             if (e instanceof LivingEntity && !e.equals(player)) {
                 LivingEntity living = (LivingEntity)e;
@@ -349,7 +347,7 @@ final class BrawlSkill extends Skill {
                     if (angle < Math.PI * 0.5) {
                         if (damage(living, damage, player, itemInHand) > 0) {
                             living.getWorld().playSound(living.getEyeLocation(), Sound.BLOCK_ANVIL_PLACE, SoundCategory.HOSTILE, 0.3f, 1.3f);
-                            living.getWorld().spawnParticle(Particle.BLOCK_DUST, living.getEyeLocation(), 16, .25, .25, .25, 0.1, new MaterialData(particleMat));
+                            living.getWorld().spawnParticle(Particle.BLOCK_DUST, living.getEyeLocation(), 16, .25, .25, .25, 0.1, new MaterialData(Material.IRON_BLOCK));
                         }
                     }
                 }
@@ -357,7 +355,7 @@ final class BrawlSkill extends Skill {
         }
     }
 
-    void spinAttack(final Player player) {
+    void ironSwordSpin(final Player player) {
         final float yaw = player.getLocation().getYaw();
         final Set<UUID> affectedEntities = new HashSet<>();
         final double damage = player.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE).getValue();
@@ -396,7 +394,7 @@ final class BrawlSkill extends Skill {
         }.runTaskTimer(plugin, 1, 1);
     }
 
-    void bestAttack(final Player player) {
+    void goldSwordHeal(final Player player) {
         Location eyeLocation = player.getEyeLocation();
         Vector eyeVector = eyeLocation.toVector();
         Vector viewDirection = eyeLocation.getDirection();
@@ -422,16 +420,19 @@ final class BrawlSkill extends Skill {
         Collections.sort(targets, (a, b) -> Double.compare(targetDists.get(a), targetDists.get(b)));
         for (LivingEntity target: targets) {
             double finalDamage = damage(target, player.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE).getValue(), player, player.getInventory().getItemInMainHand());
-            player.sendMessage("" + finalDamage);
             if (finalDamage > 0) {
                 target.getWorld().playSound(target.getEyeLocation(), Sound.ENTITY_PLAYER_ATTACK_STRONG, 0.5f, 1.0f);
                 target.getWorld().spawnParticle(Particle.BLOCK_DUST, target.getEyeLocation(), 16, .25, .25, .25, 0.1, new MaterialData(Material.GOLD_BLOCK));
+                player.sendMessage("" + finalDamage);
+                if (finalDamage >= 4) {
+                    player.addPotionEffect(new PotionEffect(PotionEffectType.HEAL, 1, 0));
+                }
                 break;
             }
         }
     }
 
-    void rageAttack(final Player player) {
+    void goldSwordRage(final Player player) {
         new BukkitRunnable() {
             private int ticks = 0;
             @Override public void run() {
@@ -439,21 +440,74 @@ final class BrawlSkill extends Skill {
                     cancel();
                     return;
                 }
+                final double damage = player.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE).getValue();
+                final ItemStack weapon = player.getInventory().getItemInMainHand();
+                final Set<UUID> affectedEntities = new HashSet<>();
                 ticks += 1;
                 if (ticks <= 60) {
-                    // Location eyeLocation = player.getEyeLocation();
-                    // for (Entity nearby: player.getNearbyEntities(4, 1, 4)) {
-                    //     if (nearby instanceof LivingEntity && !nearby.equals(player)) {
-                    //         float angle = eyeLocation.getDirection().angle(
-                    // }
+                    if (ticks % 3 == 0) {
+                        Location eyeLocation = player.getEyeLocation();
+                        Vector eyeVector = eyeLocation.toVector();
+                        Vector viewDirection = eyeLocation.getDirection();
+                        List<LivingEntity> targets = new ArrayList<>();
+                        for (Entity nearby: player.getNearbyEntities(4, 4, 4)) {
+                            if (nearby instanceof LivingEntity && !nearby.isInvulnerable() && !nearby.equals(player)) {
+                                LivingEntity living = (LivingEntity)nearby;
+                                Vector entityDirection = living.getLocation().add(0, living.getHeight() * 0.5, 0).toVector().subtract(eyeVector).normalize();
+                                double angle = viewDirection.angle(entityDirection);
+                                if (angle < Math.PI * 0.5) targets.add(living);
+                            }
+                        }
+                        Collections.shuffle(targets, random);
+                        player.getWorld().playSound(eyeLocation, Sound.ENTITY_PLAYER_ATTACK_SWEEP, SoundCategory.PLAYERS, 0.2f, 2.0f);
+                        player.getWorld().spawnParticle(Particle.SWEEP_ATTACK, eyeLocation.clone().add(viewDirection.clone().multiply(2)), 1);
+                        for (LivingEntity target: targets) {
+                            if (0 < damage(target, damage, player, weapon)) {
+                                target.getWorld().playSound(target.getEyeLocation(), Sound.ENTITY_PLAYER_ATTACK_CRIT, SoundCategory.HOSTILE, 0.3f, 1.3f);
+                                target.getWorld().spawnParticle(Particle.BLOCK_DUST, target.getEyeLocation(), 16, .25, .25, .25, 0.1, new MaterialData(Material.IRON_BLOCK));
+                                affectedEntities.add(target.getUniqueId());
+                                break;
+                            }
+                        }
+                    }
                 } else {
+                    int potionLevel;
+                    if (affectedEntities.size() > 2) {
+                        player.addPotionEffect(new PotionEffect(PotionEffectType.HEAL, 1, 1));
+                    }
                     cancel();
                 }
             }
         }.runTaskTimer(plugin, 1, 1);
     }
 
-    void axeThrow(final Player player) {
+    void diamondAxeSlash(final Player player) {
+        Location eyeLocation = player.getEyeLocation();
+        Vector eyeVector = eyeLocation.toVector();
+        Vector viewDirection = eyeLocation.getDirection();
+        final double damage = player.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE).getValue();
+        final ItemStack itemInHand = player.getInventory().getItemInMainHand();
+        player.getWorld().playSound(player.getEyeLocation(), Sound.ENTITY_PLAYER_ATTACK_SWEEP, SoundCategory.PLAYERS, 0.2f, 1.0f);
+        player.getWorld().spawnParticle(Particle.SWEEP_ATTACK, eyeLocation.clone().add(viewDirection), 1, 0, 0, 0, 0);
+        for (Entity e: player.getNearbyEntities(4, 4, 4)) {
+            if (e instanceof LivingEntity && !e.equals(player)) {
+                LivingEntity living = (LivingEntity)e;
+                Location entityCenter = living.getLocation().add(0, living.getHeight() * 0.5, 0);
+                if (eyeLocation.distanceSquared(entityCenter) <= 16) {
+                    Vector entityDirection = entityCenter.toVector().subtract(eyeVector);
+                    float angle = entityDirection.angle(viewDirection);
+                    if (angle < Math.PI * 0.5) {
+                        if (damage(living, damage, player, itemInHand) > 0) {
+                            living.getWorld().playSound(living.getEyeLocation(), Sound.BLOCK_ANVIL_PLACE, SoundCategory.HOSTILE, 0.3f, 1.3f);
+                            living.getWorld().spawnParticle(Particle.BLOCK_DUST, living.getEyeLocation(), 16, .25, .25, .25, 0.1, new MaterialData(Material.DIAMOND_BLOCK));
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    void diamondAxeThrow(final Player player) {
         final ArmorStand armorStand = player.getWorld().spawn(player.getLocation(), ArmorStand.class, as -> {
                 as.setVisible(false);
                 as.setArms(true);
@@ -473,7 +527,7 @@ final class BrawlSkill extends Skill {
         double damage = player.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE).getValue();
         ItemStack itemInMainHand = player.getInventory().getItemInMainHand();
         new BukkitRunnable() {
-            int ticks = 0;
+            private int ticks = 0;
             @Override
             public void run() {
                 if (!player.isValid()) {
@@ -520,122 +574,15 @@ final class BrawlSkill extends Skill {
         }.runTaskTimer(plugin, 1, 1);
     }
 
-    // void steal() {
-    //     // Unarmed
-    //     double luck = player.getAttribute(Attribute.GENERIC_LUCK).getValue();
-    //     if (plugin.getScore().hasPerk(uuid, Perk.BRAWL_UNARMED_DISARM)
-    //         && plugin.getSession(uuid).getCooldown(DISARM_COOLDOWN) == 0) {
-    //         final int skillLevel = plugin.getScore().getSkillLevel(uuid, skillType);
-    //         EntityEquipment equip = entity.getEquipment();
-    //         boolean attempted = false;
-    //         if (equip.getItemInMainHand().getType() != Material.AIR) {
-    //             double chance = equip.getItemInMainHandDropChance();
-    //             if (chance > 0) {
-    //                 plugin.getSession(uuid).setCooldown(DISARM_COOLDOWN, 20);
-    //                 attempted = true;
-    //                 if (random.nextDouble() < chance + luck * 10) {
-    //                     ItemStack drop = equip.getItemInMainHand();
-    //                     equip.setItemInMainHand(null);
-    //                     player.getWorld().dropItem(player.getEyeLocation(), drop.clone()).setPickupDelay(0);
-    //                 }
-    //             }
-    //         }
-    //         if (!attempted && plugin.getScore().hasPerk(uuid, Perk.BRAWL_UNARMED_UNDRESS)) {
-    //             ItemStack[] items = equip.getArmorContents();
-    //             for (int i = 3; !attempted && i >= 0; i -= 1) {
-    //                 ItemStack item = items[i];
-    //                 if (item != null && item.getType() != Material.AIR) {
-    //                     final double chance;
-    //                     switch (i) {
-    //                     case 3: chance = equip.getHelmetDropChance(); break;
-    //                     case 2: chance = equip.getChestplateDropChance(); break;
-    //                     case 1: chance = equip.getLeggingsDropChance(); break;
-    //                     case 0: default: chance = equip.getBootsDropChance(); break;
-    //                     }
-    //                     if (chance > 0) {
-    //                         attempted = true;
-    //                         plugin.getSession(uuid).setCooldown(DISARM_COOLDOWN, 40);
-    //                         if (random.nextDouble() < chance + luck * 10) {
-    //                             items[i] = null;
-    //                             equip.setArmorContents(items);
-    //                             player.getWorld().dropItem(player.getEyeLocation(), item.clone()).setPickupDelay(0);
-    //                         }
-    //                     }
-    //                 }
-    //             }
-    //         }
-    //     }
-    //     if (plugin.getScore().hasPerk(uuid, Perk.BRAWL_UNARMED_STEAL)
-    //         && plugin.getSession(uuid).getCooldown(STEAL_COOLDOWN) == 0) {
-    //         ItemStack stolen = stealItem(entity);
-    //         if (stolen != null) {
-    //             plugin.getSession(uuid).setCooldown(STEAL_COOLDOWN, 200);
-    //             if (random.nextDouble() < luck * 10) {
-    //                 if (stolen != null) {
-    //                     player.getWorld().dropItem(player.getEyeLocation(), stolen.clone()).setPickupDelay(0);
-    //                 }
-    //             }
-    //         }
-    //     }
-    // }
+    void goldAxeArea(final Player player) {
+    }
 
-    // private ItemStack stealItem(LivingEntity entity) {
-    //     if (entity.getScoreboardTags().contains(STOLEN_SCOREBOARD_TAG)) return null;
-    //     final double roll;
-    //     switch (entity.getType()) {
-    //     case SKELETON:
-    //     case STRAY:
-    //         return new ItemStack(Material.BONE);
-    //     case ZOMBIE:
-    //     case HUSK:
-    //     case ZOMBIE_VILLAGER:
-    //         return new ItemStack(Material.ROTTEN_FLESH);
-    //     case CREEPER:
-    //         return new ItemStack(Material.SULPHUR);
-    //     case ENDERMAN:
-    //         return new ItemStack(Material.ENDER_PEARL);
-    //     case SPIDER:
-    //     case CAVE_SPIDER:
-    //         if (random.nextDouble() < 0.33) {
-    //             return new ItemStack(Material.SPIDER_EYE);
-    //         } else {
-    //             return new ItemStack(Material.STRING);
-    //         }
-    //     case WITCH:
-    //         roll = random.nextDouble();
-    //         if (roll < 0.125) {
-    //             return new ItemStack(Material.GLASS_BOTTLE);
-    //         } else if (roll < 0.250) {
-    //             return new ItemStack(Material.GLOWSTONE_DUST);
-    //         } else if (roll < 0.375) {
-    //             return new ItemStack(Material.SULPHUR);
-    //         } else if (roll < 0.500) {
-    //             return new ItemStack(Material.REDSTONE);
-    //         } else if (roll < 0.625) {
-    //             return new ItemStack(Material.SPIDER_EYE);
-    //         } else if (roll < 0.750) {
-    //             return new ItemStack(Material.SUGAR);
-    //         } else {
-    //             return new ItemStack(Material.STICK);
-    //         }
-    //     case EVOKER:
-    //         entity.addScoreboardTag(STOLEN_SCOREBOARD_TAG);
-    //         return new ItemStack(Material.TOTEM);
-    //     case BLAZE:
-    //         return new ItemStack(Material.BLAZE_ROD);
-    //     case WITHER_SKELETON:
-    //         if (random.nextDouble() < 0.025) {
-    //             entity.addScoreboardTag(STOLEN_SCOREBOARD_TAG);
-    //             return new ItemStack(Material.SKULL_ITEM, 1, (short)1);
-    //         } else {
-    //             if (random.nextBoolean()) {
-    //                 return new ItemStack(Material.BONE);
-    //             } else {
-    //                 return new ItemStack(Material.COAL);
-    //             }
-    //         }
-    //     default:
-    //         return null;
-    //     }
-    // }
+    void goldAxeArea2(final Player player) {
+    }
+
+    void ironHammerSmash(final Player player) {
+    }
+
+    void ironHammerSmash2(final Player player) {
+    }
 }

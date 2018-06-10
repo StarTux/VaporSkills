@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.Bukkit;
+import org.bukkit.CropState;
 import org.bukkit.DyeColor;
 import org.bukkit.EntityEffect;
 import org.bukkit.Location;
@@ -51,6 +52,7 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.material.Crops;
 import org.bukkit.material.MaterialData;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -586,7 +588,8 @@ public final class RanchEntity implements CustomEntity, TickableEntity {
                     switch (block.getType()) {
                     case CARROT:
                     case POTATO:
-                        if (block.getData() == 7) {
+                        // if (block.getData() == 7) {
+                        if (((Crops)block.getState().getData()).getState() == CropState.RIPE) {
                             block.setType(Material.AIR);
                             hunger = Math.max(0, hunger - 600);
                             block.getWorld().playSound(block.getLocation().add(0.5, 0, 0.5), Sound.BLOCK_GRASS_BREAK, 1.0f, 0.8f);
@@ -596,7 +599,8 @@ public final class RanchEntity implements CustomEntity, TickableEntity {
                         }
                         break;
                     case BEETROOT_BLOCK:
-                        if (block.getData() == 3) {
+                        // if (block.getData() == 3) {
+                        if (((Crops)block.getState().getData()).getState() == CropState.RIPE) {
                             block.setType(Material.AIR);
                             hunger = Math.max(0, hunger - 600);
                             block.getWorld().playSound(block.getLocation().add(0.5, 0, 0.5), Sound.BLOCK_GRASS_BREAK, 1.0f, 0.8f);
@@ -614,7 +618,8 @@ public final class RanchEntity implements CustomEntity, TickableEntity {
                     block = entity.getLocation().getBlock().getRelative(0, i, 0);
                     switch (block.getType()) {
                     case CROPS:
-                        if (block.getData() == 7) {
+                        // if (block.getData() == 7) {
+                        if (((Crops)block.getState().getData()).getState() == CropState.RIPE) {
                             block.setType(Material.AIR);
                             hunger = Math.max(0, hunger - 600);
                             block.getWorld().playSound(block.getLocation().add(0.5, 0, 0.5), Sound.BLOCK_GRASS_BREAK, 1.0f, 0.8f);
@@ -632,7 +637,8 @@ public final class RanchEntity implements CustomEntity, TickableEntity {
                     block = entity.getLocation().getBlock().getRelative(0, i, 0);
                     switch (block.getType()) {
                     case CARROT:
-                        if (block.getData() == 7) {
+                        // if (block.getData() == 7) {
+                        if (((Crops)block.getState().getData()).getState() == CropState.RIPE) {
                             block.setType(Material.AIR);
                             hunger = Math.max(0, hunger - 600);
                             block.getWorld().playSound(block.getLocation().add(0.5, 0, 0.5), Sound.BLOCK_GRASS_BREAK, 1.0f, 0.8f);
@@ -642,15 +648,14 @@ public final class RanchEntity implements CustomEntity, TickableEntity {
                         }
                         break;
                     case YELLOW_FLOWER:
-                        if (block.getData() == 0) {
-                            block.setType(Material.AIR);
-                            hunger = Math.max(0, hunger - 600);
-                            block.getWorld().playSound(block.getLocation().add(0.5, 0, 0.5), Sound.BLOCK_GRASS_BREAK, 1.0f, 0.8f);
-                            block.getWorld().spawnParticle(Particle.BLOCK_DUST, block.getLocation().add(.5, .5, .5), 16, .5, .5, .5, 0, new MaterialData(Material.GRASS));
-                            customEntity.entityEatEffect(entity);
-                            return true;
-                        }
-                        break;
+                        // if (block.getData() == 0) {
+                        block.setType(Material.AIR);
+                        hunger = Math.max(0, hunger - 600);
+                        block.getWorld().playSound(block.getLocation().add(0.5, 0, 0.5), Sound.BLOCK_GRASS_BREAK, 1.0f, 0.8f);
+                        block.getWorld().spawnParticle(Particle.BLOCK_DUST, block.getLocation().add(.5, .5, .5), 16, .5, .5, .5, 0, new MaterialData(Material.GRASS));
+                        customEntity.entityEatEffect(entity);
+                        return true;
+                        // }
                     default: break;
                     }
                 }

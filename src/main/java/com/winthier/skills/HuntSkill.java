@@ -1,13 +1,8 @@
 package com.winthier.skills;
 
-import com.winthier.exploits.bukkit.BukkitExploits;
 import org.bukkit.ChatColor;
-import org.bukkit.attribute.Attribute;
-import org.bukkit.entity.Arrow;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 
 final class HuntSkill extends Skill {
     private long killDistanceInterval = 300;

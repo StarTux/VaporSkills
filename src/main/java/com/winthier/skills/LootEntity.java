@@ -55,9 +55,7 @@ public final class LootEntity implements CustomEntity, TickableEntity {
     @EventHandler
     public void onPlayerInteract(PlayerInteractEntityEvent event, EntityContext context) {
         Watcher watcher = (Watcher)context.getEntityWatcher();
-        if (watcher.owners.isEmpty() || watcher.owners.contains(event.getPlayer().getUniqueId())) {
-            event.getPlayer().openInventory(watcher.getInventory());
-        }
+        event.getPlayer().openInventory(watcher.getInventory());
     }
 
     @EventHandler
