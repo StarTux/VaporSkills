@@ -377,7 +377,7 @@ public final class RanchEntity implements CustomEntity, TickableEntity {
      * Called by RanchSkill when two entities are bred and the rancher
      * has the required perks to improve them.
      */
-    Watcher breed(LivingEntity motherEntity, LivingEntity fatherEntity, LivingEntity childEntity, Player rancher, boolean canSpecial) {
+    Watcher breed(LivingEntity motherEntity, LivingEntity fatherEntity, LivingEntity childEntity, Player rancher, int skillLevel, boolean canSpecial) {
         Watcher mother = null, father = null;
         EntityWatcher tmp;
         tmp = CustomPlugin.getInstance().getEntityManager().getEntityWatcher(motherEntity);
@@ -415,7 +415,7 @@ public final class RanchEntity implements CustomEntity, TickableEntity {
             }
             // Yield
             child.yield = Math.min(mother.yield, father.yield);
-            int improveChance = Math.min(75, 1 + child.generation * 3);
+            int improveChance = Math.min(75, skillLevel + child.generation);
             if (random.nextInt(100) < improveChance) child.yield += 1;
             if (canSpecial) {
                 int specialChance = Math.min(50, child.yield);
@@ -464,7 +464,7 @@ public final class RanchEntity implements CustomEntity, TickableEntity {
             if (map == null) return;
             ConfigurationSection config = new YamlConfiguration().createSection("tmp", map);
             name = config.getString("name");
-            generation = config.getInt("gen");
+            generation = config.getInt("generation");
             age = config.getInt("age");
             happy = config.getInt("happy");
             good = config.getInt("good");
@@ -534,7 +534,7 @@ public final class RanchEntity implements CustomEntity, TickableEntity {
             unsaved = 0;
             Map<String, Object> map = new HashMap<>();
             map.put("name", name);
-            map.put("gen", generation);
+            map.put("generation", generation);
             map.put("age", age);
             map.put("hunger", hunger);
             map.put("social", social);

@@ -128,9 +128,10 @@ final class RanchSkill extends Skill {
             break;
         }
         if (doImprove) {
+            final int skillLevel = plugin.getScore().getSkillLevel(uuid, skillType);
             List<String> names = new ArrayList<>();
             RanchEntity.Watcher watcher;
-            watcher = plugin.getRanchEntity().breed(event.getMother(), event.getFather(), entity, player, canSpecial);
+            watcher = plugin.getRanchEntity().breed(event.getMother(), event.getFather(), entity, player, skillLevel, canSpecial);
             names.add(watcher.getName());
             int siblings = 0;
             if (plugin.getScore().hasPerk(uuid, Perk.RANCH_TWINS)) siblings += 1;
@@ -144,7 +145,7 @@ final class RanchSkill extends Skill {
                                 ((Sheep)e).setColor(((Sheep)entity).getColor());
                             }
                         });
-                    watcher = plugin.getRanchEntity().breed(event.getMother(), event.getFather(), sibling, player, canSpecial);
+                    watcher = plugin.getRanchEntity().breed(event.getMother(), event.getFather(), sibling, player, skillLevel, canSpecial);
                     names.add(watcher.getName());
                 }
             }
