@@ -1,5 +1,5 @@
 #=====================================================
-# Skill Target		Type Data Name		SP
+# Skill Target		Name Data Extra		SP
 #=====================================================
 
 #=====================================================
@@ -213,15 +213,32 @@ Enchant spend_levels	- 3 exp_level_cost	5
 # Smithing
 #=====================================================
 
-Smith spend_levels	- 1 exp_level_cost	.5
-Smith spend_levels	- 2 exp_level_cost	1
-Smith spend_levels	- 3 exp_level_cost	2.5
-Smith spend_levels	- 5 exp_level_cost	5
-Smith spend_levels	- 10 exp_level_cost	10
-Smith spend_levels	- 30 exp_level_cost	30
+Smith smelt_item	gold_ore - -		.1
+Smith smelt_item	iron_ore - -		.1
 
-Smith smelt_item	gold_ore - -		1
-Smith smelt_item	iron_ore - -		.7
+Smith craft_ingredient	tanned_leather - -	1
+Smith craft_ingredient	leather_scraps - -	2
+Smith craft_ingredient	hardened_leather - -	4
+
+Smith craft_ingredient	fine_iron_bar - -	1
+Smith craft_ingredient	steel_bar - -		2
+Smith craft_ingredient	hardened_steel - -	4
+
+Smith craft_ingredient	gold_bullion - -	1
+Smith craft_ingredient	fine_gold_bullion - -	2
+Smith craft_ingredient	white_gold - -		4
+
+Smith craft_ingredient	edged_diamond - -	1
+Smith craft_ingredient	edged_emerald - -	1
+Smith craft_ingredient	diamond_dust - -	2
+Smith craft_ingredient	emerald_dust - -	2
+Smith craft_ingredient	gemstone_dust - -	4
+
+Smith craft_gear	- 1 -			.1
+Smith craft_gear	- 2 -			1
+Smith craft_gear	- 3 -			2
+Smith craft_gear	- 4 -			4
+Smith craft_gear	- 5 -			8
 
 #=====================================================
 # Woodcutting
@@ -246,8 +263,8 @@ Garden break_block	sugar_cane_block - -	.1
 Garden break_block	pumpkin - -		.2
 Garden break_block	melon_block - -		.2
 Garden break_block	nether_warts 3 -	.2
-Garden break_block	huge_mushroom_1 - -     .2
-Garden break_block	huge_mushroom_2 - -     .2
+Garden break_block	huge_mushroom_1 - -	.2
+Garden break_block	huge_mushroom_2 - -	.2
 Garden break_block	vine - -		.5
 Garden break_block	water_lily - -		.5
 

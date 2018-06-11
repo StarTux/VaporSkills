@@ -431,9 +431,10 @@ public final class SkillsPlugin extends JavaPlugin implements Listener {
                 final Location anvilLoc = event.getInventory().getLocation();
                 if (anvilLoc == null) return;
                 final Block anvilBlock = anvilLoc.getBlock();
-                AnvilStore anvilStore = (AnvilStore)getMetadata(anvilBlock, AnvilStore.KEY);
+                final AnvilStore anvilStore = (AnvilStore)getMetadata(anvilBlock, AnvilStore.KEY);
                 removeMetadata(anvilBlock, AnvilStore.KEY);
                 if (anvilStore == null) return;
+                if (anvilStore.getOutput() == null || anvilStore.getOutput().getAmount() == 0) return;
                 // Compare AnvilStore with AnvilInventory, except the
                 // output, which tends to differ for some reason.
                 if (!anvilStore.player.equals(player.getUniqueId())) return;
@@ -459,6 +460,7 @@ public final class SkillsPlugin extends JavaPlugin implements Listener {
                     event.getInventory().setItem(1, null);
                     event.getInventory().setItem(2, null);
                     anvilUseEffect(anvilBlock);
+                    getSkill(SmithSkill.class).onAnvilCraft(player, anvilStore);
                 }
             }
             break;

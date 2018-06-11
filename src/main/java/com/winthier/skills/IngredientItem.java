@@ -23,6 +23,7 @@ public final class IngredientItem implements CustomItem {
         // Leather
         OXHIDE(Material.LEATHER),
         PIGSKIN(Material.LEATHER),
+        TANNED_LEATHER(Material.LEATHER),
         LEATHER_SCRAPS(Material.LEATHER),
         HARDENED_LEATHER(Material.LEATHER),
         // Food

@@ -23,7 +23,9 @@ class Reward {
         SHEAR_ENTITY,
         SMELT_ITEM,
         SPEND_LEVELS,
-        TAME_ENTITY;
+        TAME_ENTITY,
+        CRAFT_INGREDIENT,
+        CRAFT_GEAR;
     }
 
     @Getter @RequiredArgsConstructor @EqualsAndHashCode
@@ -84,6 +86,13 @@ class Reward {
             EntityType.valueOf(key.name);
             break;
         case SPEND_LEVELS:
+            break;
+        case CRAFT_INGREDIENT:
+            IngredientItem.Type.valueOf(key.name);
+            break;
+        case CRAFT_GEAR:
+            if (key.name != null) Material.valueOf(key.name);
+            if (key.data == null) throw new NullPointerException("craft_gear required data value");
         default:
             break;
         }
