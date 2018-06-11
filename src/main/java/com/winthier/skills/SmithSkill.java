@@ -4,6 +4,7 @@ import com.winthier.custom.CustomPlugin;
 import com.winthier.skills.SkillsPlugin.AnvilStore;
 import com.winthier.skills.SkillsPlugin.AttributeEntry;
 import java.util.Arrays;
+import java.util.Set;
 import java.util.UUID;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -357,21 +358,22 @@ final class SmithSkill extends Skill {
             if (!anvilStore.inputA.equals(new ItemStack(anvilStore.inputA.getType()))) return;
             // We can rule out any further proceedings if the base
             // perk for the gear quality is not present.
+            Set<Perk> perks = plugin.getScore().getPerks(uuid);
             switch (quality) {
             case LEATHER:
-                if (!plugin.getScore().hasPerk(uuid, Perk.SMITH_LEATHER)) return;
+                if (!perks.contains(Perk.SMITH_LEATHER)) return;
                 break;
             case IRON:
-                if (!plugin.getScore().hasPerk(uuid, Perk.SMITH_IRON)) return;
+                if (!perks.contains(Perk.SMITH_IRON)) return;
                 break;
             case MAIL:
-                if (!plugin.getScore().hasPerk(uuid, Perk.SMITH_MAIL)) return;
+                if (!perks.contains(Perk.SMITH_MAIL)) return;
                 break;
             case GOLD:
-                if (!plugin.getScore().hasPerk(uuid, Perk.SMITH_GOLD)) return;
+                if (!perks.contains(Perk.SMITH_GOLD)) return;
                 break;
             case DIAMOND:
-                if (!plugin.getScore().hasPerk(uuid, Perk.SMITH_DIAMOND)) return;
+                if (!perks.contains(Perk.SMITH_DIAMOND)) return;
                 break;
             default:
                 return;
@@ -477,7 +479,7 @@ final class SmithSkill extends Skill {
             double finenessFactor = (double)fineness / 5.0;
             ItemStack output = CustomPlugin.getInstance().getItemManager().wrapItemStack(new ItemStack(anvilStore.inputA.getType()), GearItem.CUSTOM_ID);
             ItemMeta meta = output.getItemMeta();
-            if (plugin.getScore().hasPerk(uuid, Perk.SMITH_UNBREAKABLE)) meta.setUnbreakable(true);
+            if (perks.contains(Perk.SMITH_UNBREAKABLE)) meta.setUnbreakable(true);
             meta.setLore(Arrays.asList("Made by " + player.getName()));
             switch (fineness) {
             case 1: meta.setDisplayName(ChatColor.WHITE + "Simple " + Msg.capitalEnumName(output.getType())); break;
@@ -495,31 +497,31 @@ final class SmithSkill extends Skill {
                 // default which we must make sure to maintain.
                 switch (quality) {
                 case LEATHER:
-                    if (plugin.getScore().hasPerk(uuid, Perk.SMITH_LEATHER_ARMOR_SPEED)) {
+                    if (perks.contains(Perk.SMITH_LEATHER_ARMOR_SPEED)) {
                         double speed = 0.1 * finenessFactor;
                         new AttributeEntry(gear.slot, "skills:movementSpeed", Attribute.GENERIC_MOVEMENT_SPEED, speed, 0, null).addTo(output);
                     }
                     break;
                 case IRON:
-                    if (plugin.getScore().hasPerk(uuid, Perk.SMITH_IRON_ARMOR_ARMOR)) {
+                    if (perks.contains(Perk.SMITH_IRON_ARMOR_ARMOR)) {
                         armor += finenessFactor * baseArmor;
                     }
                     break;
                 case GOLD:
-                    if (plugin.getScore().hasPerk(uuid, Perk.SMITH_GOLD_ARMOR_HEALTH)) {
+                    if (perks.contains(Perk.SMITH_GOLD_ARMOR_HEALTH)) {
                         double health = finenessFactor * baseArmor * 0.5;
                         new AttributeEntry(gear.slot, "skills:maxHealth", Attribute.GENERIC_MAX_HEALTH, health, 0, null).addTo(output);
                     }
                     break;
                 case MAIL:
-                    if (plugin.getScore().hasPerk(uuid, Perk.SMITH_MAIL_ARMOR_DAMAGE)) {
+                    if (perks.contains(Perk.SMITH_MAIL_ARMOR_DAMAGE)) {
                         double damage = finenessFactor * baseArmor * 0.3;
                         new AttributeEntry(gear.slot, "skills:attackDamage", Attribute.GENERIC_ATTACK_DAMAGE, damage, 0, null).addTo(output);
                     }
                     break;
                 case DIAMOND:
                     double armorToughness = 2;
-                    if (plugin.getScore().hasPerk(uuid, Perk.SMITH_DIAMOND_ARMOR_TOUGH)) {
+                    if (perks.contains(Perk.SMITH_DIAMOND_ARMOR_TOUGH)) {
                         armorToughness += 2.0 * finenessFactor;
                     }
                     new AttributeEntry(gear.slot, "skills:armorToughness", Attribute.GENERIC_ARMOR_TOUGHNESS, armorToughness, 0, null).addTo(output);
@@ -534,28 +536,28 @@ final class SmithSkill extends Skill {
                 double attackSpeed = defaultAttackSpeed;
                 switch (quality) {
                 case IRON:
-                    if (gear == Gear.SWORD && plugin.getScore().hasPerk(uuid, Perk.SMITH_IRON_SWORD_DAMAGE)) {
+                    if (gear == Gear.SWORD && perks.contains(Perk.SMITH_IRON_SWORD_DAMAGE)) {
                         attackDamage += finenessFactor * baseDamage;
                     }
-                    if (gear == Gear.AXE && plugin.getScore().hasPerk(uuid, Perk.SMITH_IRON_AXE_KNOCKBACK_RESIST)) {
+                    if (gear == Gear.AXE && perks.contains(Perk.SMITH_IRON_AXE_KNOCKBACK_RESIST)) {
                         double knockbackResist = 0.5 * finenessFactor;
                         new AttributeEntry(gear.slot, "skills:knockbackResistance", Attribute.GENERIC_KNOCKBACK_RESISTANCE, knockbackResist, 0, null).addTo(output);
                     }
                     break;
                 case GOLD:
-                    if (gear == Gear.SWORD && plugin.getScore().hasPerk(uuid, Perk.SMITH_GOLD_SWORD_ATTACK_SPEED)) {
+                    if (gear == Gear.SWORD && perks.contains(Perk.SMITH_GOLD_SWORD_ATTACK_SPEED)) {
                         attackSpeed -= attackSpeed * finenessFactor * 0.5;
                     }
-                    if (gear == Gear.AXE && plugin.getScore().hasPerk(uuid, Perk.SMITH_GOLD_AXE_ATTACK_SPEED)) {
+                    if (gear == Gear.AXE && perks.contains(Perk.SMITH_GOLD_AXE_ATTACK_SPEED)) {
                         attackSpeed -= attackSpeed * finenessFactor * 0.5;
                     }
                     break;
                 case DIAMOND:
-                    if (gear == Gear.SWORD && plugin.getScore().hasPerk(uuid, Perk.SMITH_DIAMOND_SWORD_SPEED)) {
+                    if (gear == Gear.SWORD && perks.contains(Perk.SMITH_DIAMOND_SWORD_SPEED)) {
                         double speed = finenessFactor * 0.1;
                         new AttributeEntry(gear.slot, "skills:movementSpeed", Attribute.GENERIC_MOVEMENT_SPEED, speed, 0, null).addTo(output);
                     }
-                    if (gear == Gear.AXE && plugin.getScore().hasPerk(uuid, Perk.SMITH_DIAMOND_AXE_DAMAGE)) {
+                    if (gear == Gear.AXE && perks.contains(Perk.SMITH_DIAMOND_AXE_DAMAGE)) {
                         attackDamage += finenessFactor * baseDamage;
                     }
                     break;
@@ -564,7 +566,7 @@ final class SmithSkill extends Skill {
                 new AttributeEntry(gear.slot, "skills:attackSpeed", Attribute.GENERIC_ATTACK_SPEED, attackSpeed, 0, null).addTo(output);
             }
             if (gear == Gear.SHIELD) {
-                if (plugin.getScore().hasPerk(uuid, Perk.SMITH_SHIELD_KNOCKBACK_RESIST)) {
+                if (perks.contains(Perk.SMITH_SHIELD_KNOCKBACK_RESIST)) {
                     double knockbackResist = finenessFactor * 0.5;
                     new AttributeEntry(gear.slot, "skills:knockbackResistance", Attribute.GENERIC_KNOCKBACK_RESISTANCE, knockbackResist, 0, null).addTo(output);
                 }
