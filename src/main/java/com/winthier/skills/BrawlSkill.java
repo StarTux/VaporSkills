@@ -687,7 +687,7 @@ final class BrawlSkill extends Skill {
         Block centerBlock = player.getLocation().getBlock();
         List<Block> blocks = new ArrayList<>();
         double damage = player.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE).getValue();
-        ItemStack weapon = player.getInventory().getItemInHand();
+        ItemStack weapon = player.getInventory().getItemInMainHand();
         int R = 3;
         for (int dz = -R; dz <= R; dz += 1) {
             for (int dx = -R; dx <= R; dx += 1) {
@@ -725,7 +725,7 @@ final class BrawlSkill extends Skill {
     void ironHammerSmash2(final Player player) {
         Block centerBlock = player.getLocation().getBlock();
         double damage = player.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE).getValue();
-        ItemStack weapon = player.getInventory().getItemInHand();
+        ItemStack weapon = player.getInventory().getItemInMainHand();
         final List<List<Block>> blockList = new ArrayList<>();
         final int R = 5;
         for (int i = 0; i < R; i += 1) blockList.add(new ArrayList<>());
