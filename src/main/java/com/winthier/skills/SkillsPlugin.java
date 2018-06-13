@@ -41,6 +41,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
+import org.bukkit.entity.Tameable;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -606,6 +607,11 @@ public final class SkillsPlugin extends JavaPlugin implements Listener {
             Projectile projectile = (Projectile)damager;
             if (projectile.getShooter() instanceof Player) {
                 setMetadata(damagee, LAST_DAMAGE_CAUSE_KEY, SkillType.HUNT.key);
+            }
+        } else if (damager instanceof Tameable) {
+            Tameable pet = (Tameable)damager;
+            if (pet.isTamed() && pet.getOwner() instanceof Player) {
+                setMetadata(damagee, LAST_DAMAGE_CAUSE_KEY, SkillType.TAME.key);
             }
         }
     }

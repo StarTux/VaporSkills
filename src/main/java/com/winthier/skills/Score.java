@@ -115,18 +115,19 @@ public final class Score {
     }
 
     public Set<Perk> getPerks(UUID player) {
-        Set<Perk> result = perks.get(player);
-        if (result == null) {
-            result = EnumSet.noneOf(Perk.class);
-            for (SQLPerk sqlPerk: plugin.getDb().find(SQLPerk.class).where().eq("player", player).findList()) {
-                try {
-                    Perk perk = Perk.valueOf(sqlPerk.getPerk().toUpperCase());
-                    result.add(perk);
-                } catch (IllegalArgumentException iae) { }
-            }
-            perks.put(player, result);
-        }
-        return result;
+        return EnumSet.allOf(Perk.class);
+        // Set<Perk> result = perks.get(player);
+        // if (result == null) {
+        //     result = EnumSet.noneOf(Perk.class);
+        //     for (SQLPerk sqlPerk: plugin.getDb().find(SQLPerk.class).where().eq("player", player).findList()) {
+        //         try {
+        //             Perk perk = Perk.valueOf(sqlPerk.getPerk().toUpperCase());
+        //             result.add(perk);
+        //         } catch (IllegalArgumentException iae) { }
+        //     }
+        //     perks.put(player, result);
+        // }
+        // return result;
     }
 
     public boolean hasPerk(UUID player, Perk perk) {

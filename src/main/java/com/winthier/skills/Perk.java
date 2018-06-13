@@ -110,17 +110,28 @@ public enum Perk {
     ENCHANT_TOP_OPTIONS(SkillType.ENCHANT, null),
     ENCHANT_(SkillType.ENCHANT, null),
     // Fishing
-    // Taming
-    TAME_FOLLOW_TELEPORT(SkillType.TAME, null),
-    TAME_DODGE_ENVIRONMENT_DAMAGE(SkillType.TAME, null),
-    TAME_CAT_AGGRO_CREEPER(SkillType.TAME, null),
-    TAME_CAT_9_LIVES(SkillType.TAME, null),
-    TAME_DOG_ATTACK_DAMAGE(SkillType.TAME, null),
-    TAME_DOG_MOVEMENT_SPEED(SkillType.TAME, null),
-    TAME_DOG_HEALTH(SkillType.TAME, null),
-    TAME_DOG_REVIVE(SkillType.TAME, null),
-    TAME_DOG_DEATH_HEALS(SkillType.TAME, null),
-    TAME_DOG_SACRIFICE(SkillType.TAME, null);
+    // Taming Base
+    TAME_BASE(SkillType.TAME, null), // done
+    TAME_FOLLOW_TELEPORT(SkillType.TAME, null), // done
+    // Taming Cat
+    TAME_CAT_AGGRO_CREEPER(SkillType.TAME, null), // done
+    TAME_CAT_RAGE(SkillType.TAME, null), // done
+    TAME_CAT_LIVES(SkillType.TAME, null), // done
+    // Taming Dog
+    TAME_DOG_ATTACK_DAMAGE(SkillType.TAME, null), // done
+    TAME_DOG_MOVEMENT_SPEED(SkillType.TAME, null), // done
+    TAME_DOG_HEALTH(SkillType.TAME, null), // done
+    TAME_DOG_DODGE(SkillType.TAME, null), // done
+    TAME_DOG_DEATH_HEALS(SkillType.TAME, null), // done
+    TAME_DOG_SACRIFICE(SkillType.TAME, null), // done
+    TAME_DOG_SPAWN_SNOWMAN(SkillType.TAME, null),
+    TAME_DOG_SPAWN_GOLEM(SkillType.TAME, null),
+    // Taming Horse
+    TAME_HORSE_SPEED_CHANCE(SkillType.TAME, null),
+    TAME_HORSE_JUMP_CHANCE(SkillType.TAME, null),
+    TAME_HORSE_KNOCKBACK(SkillType.TAME, null),
+    TAME_HORSE_RIDE_DOWN(SkillType.TAME, null),
+    ;
 
     final SkillType skillType;
     final Perk depends;

@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -95,9 +96,24 @@ class AdminCommand implements CommandExecutor {
                 return true;
             }
             LevelUpEffect.launch(plugin, player, skillType, skillLevel);
-        } else if (cmd.equals("attr")) {
+        } else if (cmd.equals("cat")) {
             Player player = (Player)sender;
-            player.sendMessage("attackSpeed: " + player.getAttribute(org.bukkit.attribute.Attribute.GENERIC_ATTACK_SPEED).getValue());
+            org.bukkit.entity.Ocelot cat= player.getWorld().spawn(player.getLocation(), org.bukkit.entity.Ocelot.class);
+            cat.setCatType(org.bukkit.entity.Ocelot.Type.BLACK_CAT);
+            cat.setTamed(true);
+            cat.setRemoveWhenFarAway(false);
+            cat.setOwner(player);
+        } else if (cmd.equals("perks")) {
+            Map<SkillType, Integer> map = new EnumMap<>(SkillType.class);
+            for (SkillType skillType: SkillType.values()) {
+                map.put(skillType, 0);
+            }
+            for (Perk perk: Perk.values()) {
+                map.put(perk.skillType, map.get(perk.skillType) + 1);
+            }
+            for (SkillType skillType: SkillType.values()) {
+                sender.sendMessage(map.get(skillType) + " " + skillType.key);
+            }
         } else {
             sender.sendMessage("skadmin test levelup <player> <skill> <level>");
         }
