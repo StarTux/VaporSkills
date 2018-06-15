@@ -3,8 +3,13 @@ package com.winthier.skills;
 import lombok.Getter;
 import lombok.NonNull;
 import org.bukkit.GameMode;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Tameable;
 import org.bukkit.event.Listener;
 
 @Getter
@@ -74,5 +79,17 @@ public abstract class Skill implements Listener {
 
     static final double linearSkillBonus(double max, int skillLevel) {
         return Math.min(max, (double)skillLevel * max / 100.0);
+    }
+
+    static boolean isViableAttackTarget(Entity entity, Player player) {
+        if (!(entity instanceof LivingEntity)) return false;
+        if (entity instanceof ArmorStand) return false; // TODO armor stand could be custom entity?
+        if (entity instanceof Player) return false; // TODO pvp options?
+        if (entity.isInvulnerable()) return false;
+        if (entity instanceof Tameable) {
+            Tameable pet = (Tameable)entity;
+            if (pet.isTamed() && pet.getOwner() instanceof OfflinePlayer) return false; // TODO pvp option?
+        }
+        return true;
     }
 }

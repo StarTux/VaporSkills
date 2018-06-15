@@ -103,6 +103,12 @@ class AdminCommand implements CommandExecutor {
             cat.setTamed(true);
             cat.setRemoveWhenFarAway(false);
             cat.setOwner(player);
+        } else if (cmd.equals("horse")) {
+            Player player = (Player)sender;
+            org.bukkit.entity.Horse horse = player.getWorld().spawn(player.getLocation(), org.bukkit.entity.Horse.class);
+            horse.setTamed(true);
+            horse.setRemoveWhenFarAway(false);
+            horse.setOwner(player);
         } else if (cmd.equals("perks")) {
             Map<SkillType, Integer> map = new EnumMap<>(SkillType.class);
             for (SkillType skillType: SkillType.values()) {

@@ -48,6 +48,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.inventory.BrewEvent;
 import org.bukkit.event.inventory.FurnaceSmeltEvent;
@@ -570,8 +571,6 @@ public final class SkillsPlugin extends JavaPlugin implements Listener {
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onEntityDeath(EntityDeathEvent event) {
         final LivingEntity entity = event.getEntity();
-        Player killer = entity.getKiller();
-        if (killer == null) return;
         String reasonString = getScoreboardValue(entity, SPAWN_REASON_TAG);
         if (reasonString == null) return;
         SpawnReason reason;
@@ -590,9 +589,23 @@ public final class SkillsPlugin extends JavaPlugin implements Listener {
         if (lastDamageCause == null) {
             return;
         } else if (lastDamageCause.equals(SkillType.BRAWL.key)) {
+            Player killer = entity.getKiller();
+            if (killer == null) return;
             getSkill(BrawlSkill.class).onEntityKill(killer, entity);
         } else if (lastDamageCause.equals(SkillType.HUNT.key)) {
+            Player killer = entity.getKiller();
+            if (killer == null) return;
             getSkill(HuntSkill.class).onEntityKill(killer, entity);
+        } else if (lastDamageCause.equals(SkillType.TAME.key)) {
+            EntityDamageEvent damageEvent = entity.getLastDamageCause();
+            if (!(damageEvent instanceof EntityDamageByEntityEvent)) return;
+            EntityDamageByEntityEvent damageEvent2 = (EntityDamageByEntityEvent)damageEvent;
+            Entity damager = damageEvent2.getDamager();
+            if (damager == null || !damager.isValid() || !(damager instanceof Tameable)) return;
+            Tameable pet = (Tameable)damager;
+            if (!pet.isTamed() || !(pet.getOwner() instanceof Player)) return;
+            Player player = (Player)pet.getOwner();
+            getSkill(TameSkill.class).onEntityKill(player, pet, entity);
         }
     }
 

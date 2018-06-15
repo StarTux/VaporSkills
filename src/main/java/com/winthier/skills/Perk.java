@@ -25,29 +25,19 @@ public enum Perk {
     SMITH_DIAMOND_AXE_DAMAGE(SkillType.SMITH, Perk.SMITH_DIAMOND),
     // Brawl Swords
     BRAWL_CHARGE(SkillType.BRAWL, null),
-
     BRAWL_SWORD_DIAMOND_PIERCE(SkillType.BRAWL, Perk.BRAWL_CHARGE),
     BRAWL_SWORD_DIAMOND_DASH(SkillType.BRAWL, Perk.BRAWL_SWORD_DIAMOND_PIERCE),
-    //    BRAWL_SWORD_DIAMOND_STUN(SkillType.BRAWL, Perk.BRAWL_SWORD_DIAMOND_DASH),
-
     BRAWL_SWORD_IRON_SLASH(SkillType.BRAWL, Perk.BRAWL_CHARGE),
     BRAWL_SWORD_IRON_SPIN(SkillType.BRAWL, Perk.BRAWL_SWORD_IRON_SLASH),
-    // BRAWL_SWORD_IRON_KNOCKBACK(SkillType.BRAWL, Perk.BRAWL_SWORD_IRON_SPIN),
-
     BRAWL_SWORD_GOLD_LIFE_STEAL(SkillType.BRAWL, Perk.BRAWL_CHARGE),
     BRAWL_SWORD_GOLD_REGENERATION(SkillType.BRAWL, Perk.BRAWL_SWORD_GOLD_LIFE_STEAL),
     BRAWL_SWORD_GOLD_HEALTH(SkillType.BRAWL, Perk.BRAWL_SWORD_GOLD_REGENERATION),
-
     // Brawl Axes
     BRAWL_AXE_AOE(SkillType.BRAWL, null),
     BRAWL_AXE_KNOCKBACK(SkillType.BRAWL, null),
     BRAWL_IRON_AXE_PARALYSIS(SkillType.BRAWL, null),
     BRAWL_GOLD_AXE_FIRE(SkillType.BRAWL, null),
     BRAWL_DIAMOND_AXE_BLEED(SkillType.BRAWL, null),
-    // Brawl Unarmed
-    BRAWL_UNARMED_DISARM(SkillType.BRAWL, null),
-    BRAWL_UNARMED_UNDRESS(SkillType.BRAWL, null),
-    BRAWL_UNARMED_STEAL(SkillType.BRAWL, null),
     // Ranching Base
     RANCH_COW(SkillType.RANCH, null),
     RANCH_PIG(SkillType.RANCH, null),
@@ -127,10 +117,12 @@ public enum Perk {
     TAME_DOG_SPAWN_SNOWMAN(SkillType.TAME, null),
     TAME_DOG_SPAWN_GOLEM(SkillType.TAME, null),
     // Taming Horse
-    TAME_HORSE_SPEED_CHANCE(SkillType.TAME, null),
-    TAME_HORSE_JUMP_CHANCE(SkillType.TAME, null),
-    TAME_HORSE_KNOCKBACK(SkillType.TAME, null),
-    TAME_HORSE_RIDE_DOWN(SkillType.TAME, null),
+    TAME_HORSE_INHERIT(SkillType.TAME, null), // done
+    TAME_HORSE_SPEED_CHANCE(SkillType.TAME, null), // done
+    TAME_HORSE_JUMP_CHANCE(SkillType.TAME, null), // done
+    TAME_HORSE_KNOCKBACK(SkillType.TAME, null), // done
+    TAME_HORSE_RIDE_DOWN(SkillType.TAME, null), // done
+    TAME_HORSE_RESURRECT(SkillType.TAME, null),
     ;
 
     final SkillType skillType;

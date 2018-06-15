@@ -3,28 +3,35 @@ package com.winthier.skills;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
 import org.bukkit.attribute.Attributable;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
+import org.bukkit.entity.AbstractHorse;
 import org.bukkit.entity.AnimalTamer;
 import org.bukkit.entity.Creeper;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Horse;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Ocelot;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Sittable;
+import org.bukkit.entity.SkeletonHorse;
 import org.bukkit.entity.Tameable;
 import org.bukkit.entity.Wolf;
+import org.bukkit.entity.ZombieHorse;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.entity.EntityBreedEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -32,12 +39,17 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityTameEvent;
 import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.event.vehicle.VehicleMoveEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
+import org.bukkit.inventory.HorseInventory;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.material.MaterialData;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.util.Vector;
 
 final class TameSkill extends Skill {
     TameSkill(SkillsPlugin plugin) {
@@ -76,9 +88,6 @@ final class TameSkill extends Skill {
             if (perks.contains(Perk.TAME_DOG_HEALTH)) {
                 addAttribute(wolf, "skills:tame.maxHealth", Attribute.GENERIC_MAX_HEALTH, 20);
             }
-            break;
-        case HORSE:
-            
             break;
         default:
             break;
@@ -194,11 +203,7 @@ final class TameSkill extends Skill {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onEntityTarget(EntityTargetEvent event) {
-        if (event.getEntity().getType() == EntityType.OCELOT) {
-            System.out.println("Kitty Target");
-        }
         if (event.getEntity().getType() == EntityType.CREEPER) {
-            System.out.println("Creeper Target");
             if (!(event.getTarget() instanceof Player)) return;
             final Creeper creeper = (Creeper)event.getEntity();
             final Player player = (Player)event.getTarget();
@@ -229,17 +234,62 @@ final class TameSkill extends Skill {
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
-    public void onDogDeath(EntityDeathEvent event) {
-        if (event.getEntity().getType() != EntityType.WOLF) return;
-        Wolf dog = (Wolf)event.getEntity();
-        if (plugin.getMetadata(dog, "Sacrificed") != null) return;
-        if (!dog.isTamed()) return;
-        AnimalTamer owner = dog.getOwner();
-        if (owner == null || !(owner instanceof Player)) return;
-        final Player player = (Player)owner;
-        final UUID uuid = player.getUniqueId();
-        if (plugin.getScore().hasPerk(uuid, Perk.TAME_DOG_DEATH_HEALS)) {
+    public void onEntityDeath(EntityDeathEvent event) {
+        if (event.getEntity() instanceof Wolf) {
+            final Wolf dog = (Wolf)event.getEntity();
+            if (plugin.getMetadata(dog, "Sacrificed") != null) return;
+            if (!dog.isTamed()) return;
+            AnimalTamer owner = dog.getOwner();
+            if (owner == null || !(owner instanceof Player)) return;
+            final Player player = (Player)owner;
+            final UUID uuid = player.getUniqueId();
+            if (!plugin.getScore().hasPerk(uuid, Perk.TAME_DOG_DEATH_HEALS)) return;
             player.addPotionEffect(new PotionEffect(PotionEffectType.HEAL, 1, 1));
+        } else if (event.getEntity() instanceof Horse) {
+            final Horse horse = (Horse)event.getEntity();
+            if (!horse.isTamed()) return;
+            AnimalTamer owner = horse.getOwner();
+            if (owner == null || !(owner instanceof Player)) return;
+            final Player player = (Player)owner;
+            final UUID uuid = player.getUniqueId();
+            if (!plugin.getScore().hasPerk(uuid, Perk.TAME_HORSE_RESURRECT)) return;
+            boolean isZombie = false;
+            if (horse.getLastDamageCause() instanceof EntityDamageByEntityEvent) {
+                Entity damager = ((EntityDamageByEntityEvent)horse.getLastDamageCause()).getDamager();
+                switch (damager.getType()) {
+                case ZOMBIE:
+                case HUSK:
+                case PIG_ZOMBIE:
+                case ZOMBIE_HORSE:
+                case ZOMBIE_VILLAGER:
+                    isZombie = true;
+                    break;
+                default:
+                    break;
+                }
+            }
+            AbstractHorse reincarnation;
+            if (isZombie) {
+                reincarnation = horse.getWorld().spawn(horse.getLocation(), ZombieHorse.class);
+            } else {
+                reincarnation = horse.getWorld().spawn(horse.getLocation(), SkeletonHorse.class);
+            }
+            if (reincarnation == null) return;
+            reincarnation.setMaxDomestication(horse.getMaxDomestication());
+            reincarnation.setDomestication(horse.getDomestication());
+            reincarnation.setTamed(true);
+            reincarnation.setOwner(player);
+            double jumpStrength = horse.getAttribute(Attribute.HORSE_JUMP_STRENGTH).getBaseValue();
+            double movementSpeed = horse.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).getBaseValue();
+            reincarnation.getAttribute(Attribute.HORSE_JUMP_STRENGTH).setBaseValue(jumpStrength);
+            reincarnation.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(movementSpeed);
+            Location loc = reincarnation.getEyeLocation();
+            loc.getWorld().strikeLightningEffect(loc);
+            if (isZombie) {
+                loc.getWorld().playSound(loc, Sound.ENTITY_ZOMBIE_HORSE_AMBIENT, 0.5f, 0.75f);
+            } else {
+                loc.getWorld().playSound(loc, Sound.ENTITY_SKELETON_HORSE_AMBIENT, 0.5f, 0.75f);
+            }
         }
     }
 
@@ -302,5 +352,96 @@ final class TameSkill extends Skill {
                 }
             }
         }
+    }
+
+    /**
+     * Called by Session.onTick()
+     */
+    public void onRideHorse(Player player, AbstractHorse horse) {
+        if (!allowPlayer(player)) return;
+        final UUID uuid = player.getUniqueId();
+        Set<Perk> perks = plugin.getScore().getPerks(uuid);
+        boolean knockback = perks.contains(Perk.TAME_HORSE_KNOCKBACK);
+        boolean rideDown = perks.contains(Perk.TAME_HORSE_RIDE_DOWN);
+        if (!knockback && !rideDown) return;
+        Location horseLocation = horse.getLocation();
+        switch (horse.getType()) {
+        case HORSE:
+        case SKELETON_HORSE:
+        case ZOMBIE_HORSE:
+            for (Entity nearby: horseLocation.getWorld().getNearbyEntities(horseLocation, 1, 0.5, 1)) {
+                if (isViableAttackTarget(nearby, player)) {
+                    LivingEntity target = (LivingEntity)nearby;
+                    Vector horseVector = horseLocation.toVector();
+                    if (rideDown) {
+                        double damage;
+                        ItemStack armor = ((HorseInventory)horse.getInventory()).getArmor();
+                        if (armor == null) {
+                            damage = 1;
+                        } else {
+                            switch (armor.getType()) {
+                            case IRON_BARDING: damage = 5; break;
+                            case GOLD_BARDING: damage = 3; break;
+                            case DIAMOND_BARDING: damage = 10; break;
+                            default: damage = 1;
+                            }
+                        }
+                        target.damage(damage, horse);
+                    }
+                    if (knockback) {
+                        Vector velo = target.getLocation().toVector().subtract(horseVector).setY(0).normalize().setY(0.25).normalize().multiply(2);
+                        target.setVelocity(velo);
+                    }
+                    Location loc = target.getLocation();
+                    loc.getWorld().playSound(loc, Sound.ENTITY_HORSE_LAND, SoundCategory.HOSTILE, 1.0f, 0.5f);
+                    loc.getWorld().spawnParticle(Particle.BLOCK_DUST, loc, 24, .5, .5, .5, 0.2, new MaterialData(Material.DIRT));
+                }
+            }
+            break;
+        default:
+            break;
+        }
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.NORMAL)
+    public void onEntityBreed(EntityBreedEvent event) {
+        if (!(event.getBreeder() instanceof Player)) return;
+        if (!(event.getEntity() instanceof Horse)) return;
+        if (!(event.getMother() instanceof Horse)) return;
+        if (!(event.getFather() instanceof Horse)) return;
+        final Player player = (Player)event.getBreeder();
+        final UUID uuid = player.getUniqueId();
+        final Set<Perk> perks = plugin.getScore().getPerks(uuid);
+        if (!perks.contains(Perk.TAME_HORSE_INHERIT)) return;
+        final Horse baby = (Horse)event.getEntity();
+        final Horse mother = (Horse)event.getMother();
+        final Horse father = (Horse)event.getFather();
+        final Random random = plugin.random;
+        Horse pick;
+        pick = random.nextBoolean() ? mother : father;
+        double jumpStrength = pick.getAttribute(Attribute.HORSE_JUMP_STRENGTH).getBaseValue();
+        pick = random.nextBoolean() ? mother : father;
+        double movementSpeed = pick.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).getBaseValue();
+        if (perks.contains(Perk.TAME_HORSE_JUMP_CHANCE) && random.nextInt(10) == 0) {
+            movementSpeed = Math.min(0.4, movementSpeed + 0.01);
+        }
+        if (perks.contains(Perk.TAME_HORSE_SPEED_CHANCE) && random.nextInt(10) == 0) {
+            jumpStrength = Math.min(1.0, jumpStrength + 0.05);
+        }
+        baby.getAttribute(Attribute.HORSE_JUMP_STRENGTH).setBaseValue(jumpStrength);
+        baby.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(movementSpeed);
+        new BukkitRunnable() {
+            @Override public void run() {
+                if (!baby.isValid()) return;
+                Location loc = baby.getEyeLocation();
+                loc.getWorld().spawnParticle(Particle.SPELL_MOB, loc, 16, .5, .5, .5, 1.0f);
+            }
+        }.runTask(plugin);
+    }
+
+    /**
+     * Called by SkillsPlugin.onEntityDeath().
+     */
+    void onEntityKill(Player player, Tameable pet, LivingEntity victim) {
     }
 }

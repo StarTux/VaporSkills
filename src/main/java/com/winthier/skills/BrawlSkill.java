@@ -267,7 +267,7 @@ final class BrawlSkill extends Skill {
             location = location.add(dirh);
             location.getWorld().spawnParticle(Particle.CRIT, location, 1, 0, 0, 0, 0);
             for (Entity nearby: location.getWorld().getNearbyEntities(location, 0.5, 0.5, 0.5)) {
-                if (nearby instanceof LivingEntity && !nearby.isInvulnerable() && !player.equals(nearby) && !affectedEntities.contains(nearby.getUniqueId())) {
+                if (isViableAttackTarget(nearby, player) && !affectedEntities.contains(nearby.getUniqueId())) {
                     affectedEntities.add(nearby.getUniqueId());
                     LivingEntity living = (LivingEntity)nearby;
                     if (damage(living, damage, player, weapon) > 0) {
@@ -309,7 +309,7 @@ final class BrawlSkill extends Skill {
                     for (int i = 0; i < 10; i += 1) {
                         location = location.add(dirh);
                         for (Entity nearby: location.getWorld().getNearbyEntities(location, 0.5, 0.5, 0.5)) {
-                            if (nearby instanceof LivingEntity && !nearby.isInvulnerable() && !player.equals(nearby) && !affectedEntities.contains(nearby.getUniqueId())) {
+                            if (isViableAttackTarget(nearby, player) && !affectedEntities.contains(nearby.getUniqueId())) {
                                 affectedEntities.add(nearby.getUniqueId());
                                 LivingEntity living = (LivingEntity)nearby;
                                 if (damage(living, damage, player, weapon) > 0) {
@@ -402,7 +402,7 @@ final class BrawlSkill extends Skill {
         Map<LivingEntity, Double> targetDists = new IdentityHashMap<>();
         List<LivingEntity> targets = new ArrayList<>();
         for (Entity nearby: player.getNearbyEntities(4, 4, 4)) {
-            if (nearby instanceof LivingEntity && !nearby.isInvulnerable()) {
+            if (isViableAttackTarget(nearby, player)) {
                 LivingEntity living = (LivingEntity)nearby;
                 Location entityCenter = living.getLocation().add(0, living.getHeight() * 0.5, 0);
                 double distanceSquared = eyeLocation.distanceSquared(entityCenter);
@@ -451,7 +451,7 @@ final class BrawlSkill extends Skill {
                         Vector viewDirection = eyeLocation.getDirection();
                         List<LivingEntity> targets = new ArrayList<>();
                         for (Entity nearby: player.getNearbyEntities(4, 4, 4)) {
-                            if (nearby instanceof LivingEntity && !nearby.isInvulnerable() && !nearby.equals(player)) {
+                            if (isViableAttackTarget(nearby, player)) {
                                 LivingEntity living = (LivingEntity)nearby;
                                 if (eyeLocation.distanceSquared(living.getEyeLocation()) <= 16) {
                                     Vector entityDirection = living.getLocation().add(0, living.getHeight() * 0.5, 0).toVector().subtract(eyeVector).normalize();
@@ -549,7 +549,7 @@ final class BrawlSkill extends Skill {
                     armorStand.setRightArmPose(armorStand.getRightArmPose().add(0.3, 0, 0));
                     boolean didHit = false;
                     for (Entity nearby: armorStand.getNearbyEntities(0.5, 0.5, 0.5)) {
-                        if (nearby instanceof LivingEntity && !nearby.isInvulnerable() && !nearby.equals(player)) {
+                        if (isViableAttackTarget(nearby, player)) {
                             didHit = true;
                             break;
                         }
@@ -560,7 +560,7 @@ final class BrawlSkill extends Skill {
                         armorStand.getWorld().playSound(axeLoc, Sound.ENTITY_WITHER_BREAK_BLOCK, SoundCategory.PLAYERS, 0.5f, 0.8f);
                         armorStand.getWorld().spawnParticle(Particle.EXPLOSION_HUGE, axeLoc, 1);
                         for (Entity nearby: armorStand.getNearbyEntities(3, 3, 3)) {
-                            if (nearby instanceof LivingEntity && !nearby.isInvulnerable() && !nearby.equals(player)) {
+                            if (isViableAttackTarget(nearby, player)) {
                                 LivingEntity living = (LivingEntity)nearby;
                                 damage(living, damage, player, itemInMainHand);
                             }
@@ -599,7 +599,7 @@ final class BrawlSkill extends Skill {
             }
         }.runTaskTimer(plugin, 1, 1);
         for (Entity nearby: player.getNearbyEntities(3, 2, 3)) {
-            if (nearby instanceof LivingEntity && !nearby.isInvulnerable() && !nearby.equals(player)) {
+            if (isViableAttackTarget(nearby, player)) {
                 LivingEntity target = (LivingEntity)nearby;
                 Location targetLocation = target.getLocation().add(0, target.getHeight() * 0.5, 0);
                 if (player.getEyeLocation().distanceSquared(targetLocation) <= 9) {
@@ -653,7 +653,7 @@ final class BrawlSkill extends Skill {
             }
         }.runTaskTimer(plugin, 1, 1);
         for (Entity nearby: player.getNearbyEntities(5, 3, 5)) {
-            if (nearby instanceof LivingEntity && !nearby.isInvulnerable() && !nearby.equals(player)) {
+            if (isViableAttackTarget(nearby, player)) {
                 LivingEntity target = (LivingEntity)nearby;
                 Location targetLocation = target.getLocation().add(0, target.getHeight() * 0.5, 0);
                 if (player.getEyeLocation().distanceSquared(targetLocation) <= 25) {
@@ -709,7 +709,7 @@ final class BrawlSkill extends Skill {
             Location location = block.getLocation().add(0.5, 1.5, 0.5);
             location.getWorld().spawnParticle(Particle.EXPLOSION_NORMAL, location, 1, 0.5, 0.5, 0.5, 0.1);
             for (Entity nearby: location.getWorld().getNearbyEntities(location, 0.5, 0.5, 0.5)) {
-                if (nearby instanceof LivingEntity && !nearby.isInvulnerable() && !nearby.equals(player)) {
+                if (isViableAttackTarget(nearby, player)) {
                     targets.add((LivingEntity)nearby);
                 }
             }
@@ -774,7 +774,7 @@ final class BrawlSkill extends Skill {
                             Location location = block.getLocation().add(0.5, 1.5, 0.5);
                             location.getWorld().spawnParticle(Particle.EXPLOSION_LARGE, location, 1, 0.25, 0.25, 0.25, 0);
                             for (Entity nearby: location.getWorld().getNearbyEntities(location, 0.5, 0.5, 0.5)) {
-                                if (nearby instanceof LivingEntity && !nearby.isInvulnerable() && !nearby.equals(player)) {
+                                if (isViableAttackTarget(nearby, player)) {
                                     targets.add((LivingEntity)nearby);
                                 }
                             }

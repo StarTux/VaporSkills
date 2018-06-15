@@ -12,7 +12,7 @@ Mine break_block	gold_ore - -		5
 Mine break_block	emerald_ore - -		10
 Mine break_block	coal_ore - -		.5
 Mine break_block	redstone_ore - -	2
-Mine break_block glowing_redstone_ore - -	2
+Mine break_block	glowing_redstone_ore - -	2
 Mine break_block	lapis_ore - -		3.5
 Mine break_block	quartz_ore - -		1
 Mine break_block	glowstone - -		3

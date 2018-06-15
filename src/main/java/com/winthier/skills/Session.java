@@ -6,11 +6,13 @@ import java.util.UUID;
 import lombok.Data;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
+import org.bukkit.entity.AbstractHorse;
 import org.bukkit.entity.Player;
 
 /**
@@ -34,6 +36,8 @@ final class Session {
     private boolean charging = false;
     private double weaponChargeSpeed = 0;
     private int maxWeaponCharge = 0;
+    // Horse
+    private int horseX = 0, horseY = -1, horseZ = 0;
 
     Session(SkillsPlugin plugin, UUID uuid) {
         this.plugin = plugin;
@@ -89,12 +93,14 @@ final class Session {
      */
     void onTick(Player player) {
         ticks += 1;
+        // Progress bar updates
         if (progressBarEnabled && ticks % 20 == 0) {
             noRewardTimer += 1;
             if (noRewardTimer == 10) {
                 progressBar.setVisible(false);
             }
         }
+        // Cooldowns
         for (String key: cooldowns.keySet()) {
             Integer val = cooldowns.get(key);
             if (val == 1) {
@@ -103,6 +109,7 @@ final class Session {
                 cooldowns.put(key, val - 1);
             }
         }
+        // Weapon charge
         if (charging) {
             double summand = weaponChargeSpeed / 20.0;
             double oldWeaponCharge = weaponCharge;
@@ -145,6 +152,20 @@ final class Session {
                 weaponChargeBar.setProgress(weaponCharge % 1.0);
             }
             if (isLevelUp) weaponChargeBar.addPlayer(player);
+        }
+        // Horse riding
+        if (player.getVehicle() instanceof AbstractHorse) {
+            AbstractHorse horse = (AbstractHorse)player.getVehicle();
+            Location horseLocation = horse.getLocation();
+            int x = horseLocation.getBlockX();
+            int y = horseLocation.getBlockY();
+            int z = horseLocation.getBlockZ();
+            if (x != horseX || y != horseY || z != horseZ) {
+                horseX = x;
+                horseY = y;
+                horseZ = z;
+                plugin.getSkill(TameSkill.class).onRideHorse(player, horse);
+            }
         }
     }
 
