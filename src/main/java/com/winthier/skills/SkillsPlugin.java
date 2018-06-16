@@ -22,10 +22,8 @@ import java.util.UUID;
 import lombok.Data;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import lombok.Value;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
@@ -53,8 +51,6 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.inventory.BrewEvent;
 import org.bukkit.event.inventory.FurnaceSmeltEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -252,8 +248,8 @@ public final class SkillsPlugin extends JavaPlugin implements Listener {
         final Block anvilBlock;
         final UUID player;
         final ItemStack inputA, inputB;
-        ItemStack output = null;
-        boolean customRecipe = false;
+        private ItemStack output = null;
+        private boolean customRecipe = false;
         void setOutput(ItemStack o) {
             this.output = o;
             this.customRecipe = true;
@@ -513,8 +509,8 @@ public final class SkillsPlugin extends JavaPlugin implements Listener {
         if (ingredientA != null && (ingredientB == null) == (inputB == null || inputB.getAmount() == 0)) {
             for (AnvilRecipe anvilRecipe: anvilRecipes) {
                 if (anvilRecipe.inputA.type == ingredientA && anvilRecipe.inputA.amount == inputA.getAmount()
-                    && ((ingredientB == null && anvilRecipe.inputB == null) ||
-                        (anvilRecipe.inputB.type == ingredientB && anvilRecipe.inputB.amount == inputB.getAmount()))) {
+                    && ((ingredientB == null && anvilRecipe.inputB == null)
+                        || (anvilRecipe.inputB.type == ingredientB && anvilRecipe.inputB.amount == inputB.getAmount()))) {
                     anvilStore.setOutput(anvilRecipe.output.type.spawn(anvilRecipe.output.amount));
                     break;
                 }

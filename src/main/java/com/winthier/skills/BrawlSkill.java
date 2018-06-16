@@ -688,10 +688,10 @@ final class BrawlSkill extends Skill {
         List<Block> blocks = new ArrayList<>();
         double damage = player.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE).getValue();
         ItemStack weapon = player.getInventory().getItemInMainHand();
-        int R = 3;
-        for (int dz = -R; dz <= R; dz += 1) {
-            for (int dx = -R; dx <= R; dx += 1) {
-                if (dx * dx + dz * dz <= R * R) {
+        final int radius = 3;
+        for (int dz = -radius; dz <= radius; dz += 1) {
+            for (int dx = -radius; dx <= radius; dx += 1) {
+                if (dx * dx + dz * dz <= radius * radius) {
                     Block block = centerBlock.getRelative(dx, 0, dz);
                     for (int i = 0; i < 8 && block.getType().isSolid(); i += 1) {
                         block = block.getRelative(0, 1, 0);
@@ -727,12 +727,12 @@ final class BrawlSkill extends Skill {
         double damage = player.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE).getValue();
         ItemStack weapon = player.getInventory().getItemInMainHand();
         final List<List<Block>> blockList = new ArrayList<>();
-        final int R = 5;
-        for (int i = 0; i < R; i += 1) blockList.add(new ArrayList<>());
-        for (int dz = -R; dz <= R; dz += 1) {
-            for (int dx = -R; dx <= R; dx += 1) {
+        final int radius = 5;
+        for (int i = 0; i < radius; i += 1) blockList.add(new ArrayList<>());
+        for (int dz = -radius; dz <= radius; dz += 1) {
+            for (int dx = -radius; dx <= radius; dx += 1) {
                 int distSq = dx * dx + dz * dz;
-                if (distSq <= R * R) {
+                if (distSq <= radius * radius) {
                     Block block = centerBlock.getRelative(dx, 0, dz);
                     for (int i = 0; i < 8 && block.getType().isSolid(); i += 1) {
                         block = block.getRelative(0, 1, 0);
@@ -766,8 +766,8 @@ final class BrawlSkill extends Skill {
                 int oldTicks = ticks;
                 ticks += 1;
                 List<LivingEntity> targets = new ArrayList<>();
-                if (oldTicks < R * 3) {
-                    if (oldTicks > 0 && oldTicks % 3 == 0 && bid < R) {
+                if (oldTicks < radius * 3) {
+                    if (oldTicks > 0 && oldTicks % 3 == 0 && bid < radius) {
                         player.getWorld().playSound(player.getLocation().add(0, (double)-bid, 0), Sound.ENTITY_GENERIC_EXPLODE, SoundCategory.PLAYERS, 0.05f, 0.5f);
                         List<Block> blocks = blockList.get(bid++);
                         for (Block block: blocks) {

@@ -54,8 +54,7 @@ public final class IngredientItem implements CustomItem {
         // Rare
         CREEPER_OIL(Material.POTION),
         WITHER_OIL(Material.POTION),
-        NICKEL(Material.GHAST_TEAR),
-        ;
+        NICKEL(Material.GHAST_TEAR);
 
         final Material material;
         final int data; // TODO remove in 1.13

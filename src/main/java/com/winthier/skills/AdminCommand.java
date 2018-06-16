@@ -98,7 +98,7 @@ class AdminCommand implements CommandExecutor {
             LevelUpEffect.launch(plugin, player, skillType, skillLevel);
         } else if (cmd.equals("cat")) {
             Player player = (Player)sender;
-            org.bukkit.entity.Ocelot cat= player.getWorld().spawn(player.getLocation(), org.bukkit.entity.Ocelot.class);
+            org.bukkit.entity.Ocelot cat = player.getWorld().spawn(player.getLocation(), org.bukkit.entity.Ocelot.class);
             cat.setCatType(org.bukkit.entity.Ocelot.Type.BLACK_CAT);
             cat.setTamed(true);
             cat.setRemoveWhenFarAway(false);

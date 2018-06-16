@@ -34,19 +34,15 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityBreedEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityTameEvent;
 import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
-import org.bukkit.event.vehicle.VehicleMoveEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.inventory.HorseInventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.MaterialData;
 import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
@@ -455,7 +451,7 @@ final class TameSkill extends Skill {
         switch (pet.getType()) {
         case WOLF:
         case OCELOT:
-            Reward reward = getReward(Reward.Category.PET_KILL_ENTITY, victim.getType().getName(), null, null);
+            Reward reward = getReward(Reward.Category.PET_KILL_ENTITY, victim.getType().name(), null, null);
             if (reward == null) reward = getReward(Reward.Category.PET_KILL_ENTITY, null, null, null);
             giveReward(player, reward, 1);
             break;

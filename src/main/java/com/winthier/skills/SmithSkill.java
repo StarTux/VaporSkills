@@ -7,20 +7,12 @@ import java.util.Arrays;
 import java.util.Set;
 import java.util.UUID;
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
-import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.inventory.EquipmentSlot;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.metadata.FixedMetadataValue;
-import org.bukkit.metadata.MetadataValue;
-import org.bukkit.scheduler.BukkitRunnable;
 
 final class SmithSkill extends Skill {
     SmithSkill(SkillsPlugin plugin) {
@@ -526,6 +518,8 @@ final class SmithSkill extends Skill {
                     }
                     new AttributeEntry(gear.slot, "skills:armorToughness", Attribute.GENERIC_ARMOR_TOUGHNESS, armorToughness, 0, null).addTo(output);
                     break;
+                default:
+                    break;
                 }
                 new AttributeEntry(gear.slot, "skills:armor", Attribute.GENERIC_ARMOR, armor, 0, null).addTo(output);
             }
@@ -560,6 +554,8 @@ final class SmithSkill extends Skill {
                     if (gear == Gear.AXE && perks.contains(Perk.SMITH_DIAMOND_AXE_DAMAGE)) {
                         attackDamage += finenessFactor * baseDamage;
                     }
+                    break;
+                default:
                     break;
                 }
                 new AttributeEntry(gear.slot, "skills:attackDamage", Attribute.GENERIC_ATTACK_DAMAGE, attackDamage, 0, null).addTo(output);

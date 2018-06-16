@@ -122,8 +122,7 @@ public enum Perk {
     TAME_HORSE_JUMP_CHANCE(SkillType.TAME, null),
     TAME_HORSE_KNOCKBACK(SkillType.TAME, null),
     TAME_HORSE_RIDE_DOWN(SkillType.TAME, null),
-    TAME_HORSE_RESURRECT(SkillType.TAME, null),
-    ;
+    TAME_HORSE_RESURRECT(SkillType.TAME, null);
 
     final SkillType skillType;
     final Perk depends;
