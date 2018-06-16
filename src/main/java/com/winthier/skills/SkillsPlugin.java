@@ -620,6 +620,7 @@ public final class SkillsPlugin extends JavaPlugin implements Listener {
             Projectile projectile = (Projectile)damager;
             if (projectile.getShooter() instanceof Player) {
                 setMetadata(damagee, LAST_DAMAGE_CAUSE_KEY, SkillType.HUNT.key);
+                getSkill(HuntSkill.class).onProjectileHit((Player)projectile.getShooter(), projectile, damagee);
             }
         } else if (damager instanceof Tameable) {
             Tameable pet = (Tameable)damager;

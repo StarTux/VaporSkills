@@ -3,23 +3,27 @@ package com.winthier.skills;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.entity.ProjectileLaunchEvent;
 
 final class HuntSkill extends Skill {
-    private long killDistanceInterval = 300;
-    private double minKillDistance = 16;
-
     HuntSkill(SkillsPlugin plugin) {
         super(plugin, SkillType.HUNT);
     }
 
-    @Override
-    public void configure() {
-        killDistanceInterval = getConfig().getLong("KillDistanceInterval", 300);
-        minKillDistance = getConfig().getDouble("MinKillDistance", 16);
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+    void onProjectileLaunch(ProjectileLaunchEvent event) {
+    }
+
+    /**
+     * Called by SkillsPlugin.onEntityDamageByEntity().
+     */
+    void onProjectileHit(Player player, Projectile projectile, LivingEntity target) {
     }
 
     void onEntityKill(Player player, LivingEntity entity) {
-        if (entity.getCustomName() != null && entity.getCustomName().startsWith("" + ChatColor.COLOR_CHAR)) return;
         Reward reward = getReward(Reward.Category.KILL_ENTITY, entity.getType().name(), null, null);
         giveReward(player, reward, 1);
     }

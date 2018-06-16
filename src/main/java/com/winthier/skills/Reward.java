@@ -25,7 +25,8 @@ class Reward {
         SPEND_LEVELS,
         TAME_ENTITY,
         CRAFT_INGREDIENT,
-        CRAFT_GEAR;
+        CRAFT_GEAR,
+        PET_KILL_ENTITY;
     }
 
     @Getter @RequiredArgsConstructor @EqualsAndHashCode
@@ -93,6 +94,9 @@ class Reward {
         case CRAFT_GEAR:
             if (key.name != null) Material.valueOf(key.name);
             if (key.data == null) throw new NullPointerException("craft_gear required data value");
+            break;
+        case PET_KILL_ENTITY:
+            if (key.name != null) EntityType.valueOf(key.name);
         default:
             break;
         }

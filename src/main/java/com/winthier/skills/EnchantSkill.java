@@ -14,20 +14,16 @@ final class EnchantSkill extends Skill {
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onEnchantItem(EnchantItemEvent event) {
         final Player player = event.getEnchanter();
-        if (player == null) return;
         if (!allowPlayer(player)) return;
-        final int level = player.getLevel();
+        final int oldLevel = player.getLevel();
+        final int levelUsed = event.getExpLevelCost();
         new BukkitRunnable() {
             @Override public void run() {
-                onEnchanted(player, level, event.getExpLevelCost());
+                int spent = oldLevel - player.getLevel();
+                double factor = Math.min(1.0, (double)levelUsed / (double)spent / 10);
+                Reward reward = getReward(Reward.Category.SPEND_LEVELS, null, spent, null);
+                giveReward(player, reward, factor * factor);
             }
         }.runTask(plugin);
-    }
-
-    void onEnchanted(Player player, int oldLevel, int levelUsed) {
-        int spent = oldLevel - player.getLevel();
-        double factor = Math.min(1.0, (double)levelUsed / (double)spent / 10);
-        Reward reward = getReward(Reward.Category.SPEND_LEVELS, null, spent, null);
-        giveReward(player, reward, factor * factor);
     }
 }

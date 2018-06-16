@@ -1,7 +1,7 @@
 package com.winthier.skills;
 
 public enum Perk {
-    // Base Smithing Improvements
+    // Smithing ====================================================
     SMITH_LEATHER(SkillType.SMITH, null),
     SMITH_GOLD(SkillType.SMITH, Perk.SMITH_LEATHER),
     SMITH_MAIL(SkillType.SMITH, Perk.SMITH_GOLD),
@@ -23,7 +23,7 @@ public enum Perk {
     SMITH_IRON_AXE_KNOCKBACK_RESIST(SkillType.SMITH, Perk.SMITH_IRON),
     SMITH_GOLD_AXE_ATTACK_SPEED(SkillType.SMITH, Perk.SMITH_GOLD),
     SMITH_DIAMOND_AXE_DAMAGE(SkillType.SMITH, Perk.SMITH_DIAMOND),
-    // Brawl Swords
+    // Brawl Swords ================================================
     BRAWL_CHARGE(SkillType.BRAWL, null),
     BRAWL_SWORD_DIAMOND_PIERCE(SkillType.BRAWL, Perk.BRAWL_CHARGE),
     BRAWL_SWORD_DIAMOND_DASH(SkillType.BRAWL, Perk.BRAWL_SWORD_DIAMOND_PIERCE),
@@ -38,7 +38,8 @@ public enum Perk {
     BRAWL_IRON_AXE_PARALYSIS(SkillType.BRAWL, null),
     BRAWL_GOLD_AXE_FIRE(SkillType.BRAWL, null),
     BRAWL_DIAMOND_AXE_BLEED(SkillType.BRAWL, null),
-    // Ranching Base
+    // Hunting =====================================================
+    // Ranching ====================================================
     RANCH_COW(SkillType.RANCH, null),
     RANCH_PIG(SkillType.RANCH, null),
     RANCH_SHEEP(SkillType.RANCH, null),
@@ -63,7 +64,7 @@ public enum Perk {
     RANCH_CHICKEN_GOLD_EGG(SkillType.RANCH, Perk.RANCH_CHICKEN),
     RANCH_CHICKEN_DOWN(SkillType.RANCH, Perk.RANCH_CHICKEN),
     RANCH_RABBIT_FOOT(SkillType.RANCH, Perk.RANCH_RABBIT),
-    // Brewing
+    // Brewing =====================================================
     BREW_STACK(SkillType.BREW, null),
     // Brewing for yourself
     BREW_MOVEMENT_DURATION(SkillType.BREW, Perk.BREW_STACK),
@@ -77,14 +78,14 @@ public enum Perk {
     BREW_DAMAGE_POISON(SkillType.BREW, Perk.BREW_DEBUFF_DURATION),
     BREW_WEAK_BLIND(SkillType.BREW, Perk.BREW_DAMAGE_POISON),
     BREW_SLOW_WITHER(SkillType.BREW, Perk.BREW_WEAK_BLIND),
-    // Cook
+    // Cookinf =====================================================
     COOK_SATURATION(SkillType.COOK, null),
     COOK_MEAT_RESISTANCE(SkillType.COOK, null),
     COOK_VEGETABLE_HEALTH(SkillType.COOK, null),
     COOK_STARCH_STRENGTH(SkillType.COOK, null),
     COOK_SUGAR_SPEED(SkillType.COOK, null),
     COOK_FISH_ABSORPTION(SkillType.COOK, null),
-    // Digging
+    // Digging =====================================================
     DIG_BONE(SkillType.DIG, null),
     DIG_STRING(SkillType.DIG, null),
     DIG_FEATHER(SkillType.DIG, null),
@@ -96,32 +97,31 @@ public enum Perk {
     DIG_DIAMOND(SkillType.DIG, null),
     DIG_FALLING_STACK(SkillType.DIG, null),
     DIG_RADIUS(SkillType.DIG, null),
-    // Enchanting
+    // Enchanting ==================================================
     ENCHANT_TOP_OPTIONS(SkillType.ENCHANT, null),
     ENCHANT_(SkillType.ENCHANT, null),
-    // Fishing
-    // Taming Base
-    TAME_BASE(SkillType.TAME, null), // done
-    TAME_FOLLOW_TELEPORT(SkillType.TAME, null), // done
+    // Taming ======================================================
+    TAME_BASE(SkillType.TAME, null),
+    TAME_FOLLOW_TELEPORT(SkillType.TAME, null),
     // Taming Cat
-    TAME_CAT_AGGRO_CREEPER(SkillType.TAME, null), // done
-    TAME_CAT_RAGE(SkillType.TAME, null), // done
-    TAME_CAT_LIVES(SkillType.TAME, null), // done
+    TAME_CAT_AGGRO_CREEPER(SkillType.TAME, null),
+    TAME_CAT_RAGE(SkillType.TAME, null),
+    TAME_CAT_LIVES(SkillType.TAME, null),
     // Taming Dog
-    TAME_DOG_ATTACK_DAMAGE(SkillType.TAME, null), // done
-    TAME_DOG_MOVEMENT_SPEED(SkillType.TAME, null), // done
-    TAME_DOG_HEALTH(SkillType.TAME, null), // done
-    TAME_DOG_DODGE(SkillType.TAME, null), // done
-    TAME_DOG_DEATH_HEALS(SkillType.TAME, null), // done
-    TAME_DOG_SACRIFICE(SkillType.TAME, null), // done
+    TAME_DOG_ATTACK_DAMAGE(SkillType.TAME, null),
+    TAME_DOG_MOVEMENT_SPEED(SkillType.TAME, null),
+    TAME_DOG_HEALTH(SkillType.TAME, null),
+    TAME_DOG_DODGE(SkillType.TAME, null),
+    TAME_DOG_DEATH_HEALS(SkillType.TAME, null),
+    TAME_DOG_SACRIFICE(SkillType.TAME, null),
     TAME_DOG_SPAWN_SNOWMAN(SkillType.TAME, null),
     TAME_DOG_SPAWN_GOLEM(SkillType.TAME, null),
     // Taming Horse
-    TAME_HORSE_INHERIT(SkillType.TAME, null), // done
-    TAME_HORSE_SPEED_CHANCE(SkillType.TAME, null), // done
-    TAME_HORSE_JUMP_CHANCE(SkillType.TAME, null), // done
-    TAME_HORSE_KNOCKBACK(SkillType.TAME, null), // done
-    TAME_HORSE_RIDE_DOWN(SkillType.TAME, null), // done
+    TAME_HORSE_INHERIT(SkillType.TAME, null),
+    TAME_HORSE_SPEED_CHANCE(SkillType.TAME, null),
+    TAME_HORSE_JUMP_CHANCE(SkillType.TAME, null),
+    TAME_HORSE_KNOCKBACK(SkillType.TAME, null),
+    TAME_HORSE_RIDE_DOWN(SkillType.TAME, null),
     TAME_HORSE_RESURRECT(SkillType.TAME, null),
     ;
 

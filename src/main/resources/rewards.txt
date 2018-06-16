@@ -119,27 +119,25 @@ Hunt kill_entity	llama - -		1
 # Ranching
 #=====================================================
 
-Ranch breed_entity	chicken - -		4
-Ranch breed_entity	cow - -			4
-Ranch breed_entity	pig - -			4
-Ranch breed_entity	sheep - -		4
-Ranch breed_entity	rabbit - -		4
-Ranch breed_entity	mushroom_cow - -	4
-Ranch breed_entity	wolf - -		4
-Ranch breed_entity	ocelot - -		4
-Ranch breed_entity	horse - -		4
-Ranch breed_entity	llama - -		4
+Ranch breed_entity	chicken - -		1
+Ranch breed_entity	cow - -			1
+Ranch breed_entity	pig - -			1
+Ranch breed_entity	sheep - -		1
+Ranch breed_entity	rabbit - -		1
+Ranch breed_entity	mushroom_cow - -	1
 Ranch shear_entity	sheep - -		1
 
 #=====================================================
 # Taming
 #=====================================================
 
-Tame tame_entity	wolf - -		3
-Tame tame_entity	ocelot - -		3
-Tame tame_entity	horse - -		5
-Tame tame_entity	llama - -		5
-Tame tame_entity	parrot - -		5
+Tame tame_entity	wolf - -		1
+Tame tame_entity	ocelot - -		1
+Tame tame_entity	horse - -		1
+Tame tame_entity	llama - -		1
+Tame tame_entity	parrot - -		1
+
+Tame pet_kill_entity	- - -			1
 
 #=====================================================
 # Brewing

@@ -69,6 +69,7 @@ final class TameSkill extends Skill {
     public void onEntityTame(EntityTameEvent event) {
         if (!(event.getOwner() instanceof Player)) return;
         final Player player = (Player)event.getOwner();
+        if (!allowPlayer(player)) return;
         final UUID uuid = player.getUniqueId();
         final Set<Perk> perks = plugin.getScore().getPerks(uuid);
         if (!perks.contains(Perk.TAME_BASE)) return;
@@ -104,6 +105,7 @@ final class TameSkill extends Skill {
         AnimalTamer tamer = pet.getOwner();
         if (!(tamer instanceof Player)) return;
         final Player player = (Player)tamer;
+        if (!allowPlayer(player)) return;
         final UUID uuid = player.getUniqueId();
         if (plugin.getScore().hasPerk(uuid, Perk.TAME_DOG_DODGE)) {
             switch (event.getCause()) {
@@ -207,6 +209,7 @@ final class TameSkill extends Skill {
             if (!(event.getTarget() instanceof Player)) return;
             final Creeper creeper = (Creeper)event.getEntity();
             final Player player = (Player)event.getTarget();
+            if (!allowPlayer(player)) return;
             final UUID uuid = player.getUniqueId();
             if (plugin.getScore().hasPerk(uuid, Perk.TAME_CAT_AGGRO_CREEPER)) {
                 Ocelot cat = null;
@@ -242,6 +245,7 @@ final class TameSkill extends Skill {
             AnimalTamer owner = dog.getOwner();
             if (owner == null || !(owner instanceof Player)) return;
             final Player player = (Player)owner;
+            if (!allowPlayer(player)) return;
             final UUID uuid = player.getUniqueId();
             if (!plugin.getScore().hasPerk(uuid, Perk.TAME_DOG_DEATH_HEALS)) return;
             player.addPotionEffect(new PotionEffect(PotionEffectType.HEAL, 1, 1));
@@ -251,6 +255,7 @@ final class TameSkill extends Skill {
             AnimalTamer owner = horse.getOwner();
             if (owner == null || !(owner instanceof Player)) return;
             final Player player = (Player)owner;
+            if (!allowPlayer(player)) return;
             final UUID uuid = player.getUniqueId();
             if (!plugin.getScore().hasPerk(uuid, Perk.TAME_HORSE_RESURRECT)) return;
             boolean isZombie = false;
@@ -297,6 +302,7 @@ final class TameSkill extends Skill {
     public void onDeadlyEntityDamage(EntityDamageEvent event) {
         if (event.getEntity() instanceof Player) {
             final Player player = (Player)event.getEntity();
+            if (!allowPlayer(player)) return;
             double overkill = event.getFinalDamage() - player.getHealth();
             if (overkill < 0) return;
             final UUID uuid = player.getUniqueId();
@@ -326,6 +332,7 @@ final class TameSkill extends Skill {
             AnimalTamer owner = cat.getOwner();
             if (owner == null || !(owner instanceof Player)) return;
             final Player player = (Player)owner;
+            if (!allowPlayer(player)) return;
             final UUID uuid = player.getUniqueId();
             if (plugin.getScore().hasPerk(uuid, Perk.TAME_CAT_LIVES)) {
                 int lives;
@@ -410,6 +417,7 @@ final class TameSkill extends Skill {
         if (!(event.getMother() instanceof Horse)) return;
         if (!(event.getFather() instanceof Horse)) return;
         final Player player = (Player)event.getBreeder();
+        if (!allowPlayer(player)) return;
         final UUID uuid = player.getUniqueId();
         final Set<Perk> perks = plugin.getScore().getPerks(uuid);
         if (!perks.contains(Perk.TAME_HORSE_INHERIT)) return;
@@ -443,5 +451,16 @@ final class TameSkill extends Skill {
      * Called by SkillsPlugin.onEntityDeath().
      */
     void onEntityKill(Player player, Tameable pet, LivingEntity victim) {
+        if (!allowPlayer(player)) return;
+        switch (pet.getType()) {
+        case WOLF:
+        case OCELOT:
+            Reward reward = getReward(Reward.Category.PET_KILL_ENTITY, victim.getType().getName(), null, null);
+            if (reward == null) reward = getReward(Reward.Category.PET_KILL_ENTITY, null, null, null);
+            giveReward(player, reward, 1);
+            break;
+        default:
+            break;
+        }
     }
 }
