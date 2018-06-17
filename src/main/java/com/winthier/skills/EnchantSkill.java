@@ -16,8 +16,6 @@ import org.bukkit.block.BlockState;
 import org.bukkit.block.Container;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.ArmorStand;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.ThrownExpBottle;
 import org.bukkit.event.EventHandler;
@@ -27,8 +25,6 @@ import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.player.PlayerArmorStandManipulateEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.EnchantmentStorageMeta;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 
 final class EnchantSkill extends Skill {
@@ -75,17 +71,17 @@ final class EnchantSkill extends Skill {
         final Enchantment bukkitEnchant;
         final Material sacrificeMaterial;
         final String displayName;
-        final static Map<Enchantment, Enchant> bukkitEnchantMap = new HashMap<>();
+        static final Map<Enchantment, Enchant> BUKKIT_ENCHANT_MAP = new HashMap<>();
 
         static {
             for (Enchantment bukkitEnchant: Enchantment.values()) {
                 for (Enchant enchant: values()) {
                     if (bukkitEnchant.equals(enchant.bukkitEnchant)) {
-                        bukkitEnchantMap.put(bukkitEnchant, enchant);
+                        BUKKIT_ENCHANT_MAP.put(bukkitEnchant, enchant);
                         break;
                     }
                 }
-                if (!bukkitEnchantMap.containsKey(bukkitEnchant)) {
+                if (!BUKKIT_ENCHANT_MAP.containsKey(bukkitEnchant)) {
                     System.err.println("EnchantSkill: Missing Bukkit Enchant: " + bukkitEnchant);
                 }
             }
@@ -94,7 +90,7 @@ final class EnchantSkill extends Skill {
         Enchant(Enchantment bukkitEnchant, Material sacrificeMaterial) {
             this.bukkitEnchant = bukkitEnchant;
             this.sacrificeMaterial = sacrificeMaterial;
-            String toks[] = name().split("_");
+            String[] toks = name().split("_");
             StringBuilder sb = new StringBuilder(Msg.capitalize(toks[0]));
             for (int i = 1; i < toks.length; i += 1) {
                 switch (toks[i]) {
@@ -359,7 +355,7 @@ final class EnchantSkill extends Skill {
         armorStand.getWorld().playSound(loc, Sound.BLOCK_ENCHANTMENT_TABLE_USE, SoundCategory.BLOCKS, 1.0f, 1.0f);
     }
 
-        @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onEnchantItem(EnchantItemEvent event) {
         final Player player = event.getEnchanter();
         if (!allowPlayer(player)) return;
