@@ -109,6 +109,10 @@ class AdminCommand implements CommandExecutor {
             horse.setTamed(true);
             horse.setRemoveWhenFarAway(false);
             horse.setOwner(player);
+        } else if (cmd.equals("inv")) {
+            Player player = (Player)sender;
+            org.bukkit.inventory.Inventory inv = plugin.getServer().createInventory(player, org.bukkit.event.inventory.InventoryType.ANVIL, "Hello World");
+            player.openInventory(inv);
         } else if (cmd.equals("perks")) {
             Map<SkillType, Integer> map = new EnumMap<>(SkillType.class);
             for (SkillType skillType: SkillType.values()) {

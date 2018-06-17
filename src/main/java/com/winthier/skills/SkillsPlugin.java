@@ -287,6 +287,7 @@ public final class SkillsPlugin extends JavaPlugin implements Listener {
         final UUID uuid = player.getUniqueId();
         switch (event.getView().getType()) {
         case FURNACE:
+            if (!(event.getInventory() instanceof FurnaceInventory)) return;
             if (getMetadata(player, FurnaceStore.KEY) == null) {
                 final int initialAmount;
                 final Material material, targetMaterial;
@@ -351,6 +352,7 @@ public final class SkillsPlugin extends JavaPlugin implements Listener {
             }
             break;
         case BREWING:
+            if (!(event.getInventory() instanceof BrewerInventory)) return;
             if (getMetadata(player, FurnaceStore.KEY) != null) {
                 final int initialAmount;
                 final Material material, targetMaterial;
@@ -425,6 +427,8 @@ public final class SkillsPlugin extends JavaPlugin implements Listener {
                 final Inventory inventory = event.getInventory();
                 ItemStack inputA = inventory.getItem(0);
                 ItemStack inputB = inventory.getItem(1);
+                if (inputA != null && inputA.getType() == Material.AIR) inputA = null;
+                if (inputB != null && inputB.getType() == Material.AIR) inputB = null;
                 // Find AnvilStore in block metadata store
                 final Location anvilLoc = event.getInventory().getLocation();
                 if (anvilLoc == null) return;
@@ -432,16 +436,16 @@ public final class SkillsPlugin extends JavaPlugin implements Listener {
                 final AnvilStore anvilStore = (AnvilStore)getMetadata(anvilBlock, AnvilStore.KEY);
                 removeMetadata(anvilBlock, AnvilStore.KEY);
                 if (anvilStore == null) return;
-                if (anvilStore.getOutput() == null || anvilStore.getOutput().getType() == Material.AIR) return;
+                if (anvilStore.getOutput() == null) return;
                 // Compare AnvilStore with AnvilInventory, except the
                 // output, which tends to differ for some reason.
                 if (!anvilStore.player.equals(player.getUniqueId())) return;
                 if (anvilStore.inputA == null && inputA != null) return;
                 if (anvilStore.inputA != null && inputA == null) return;
-                if (!anvilStore.inputA.equals(inputA)) return;
+                if (anvilStore.inputA != inputA && !anvilStore.inputA.equals(inputA)) return;
                 if (anvilStore.inputB == null && inputB != null) return;
                 if (anvilStore.inputB != null && inputB == null) return;
-                if (!anvilStore.inputB.equals(inputB)) return;
+                if (anvilStore.inputB != inputB && !anvilStore.inputB.equals(inputB)) return;
                 // Dish out result item
                 boolean didCraft = false;
                 if (event.isShiftClick()) {
@@ -502,7 +506,8 @@ public final class SkillsPlugin extends JavaPlugin implements Listener {
         final ItemStack output = event.getInventory().getItem(2);
         final ItemStack inputA = event.getInventory().getItem(0);
         if (inputA == null || inputA.getType() == Material.AIR) return;
-        final ItemStack inputB = event.getInventory().getItem(1);
+        ItemStack inputB = event.getInventory().getItem(1);
+        if (inputB != null && inputB.getType() == Material.AIR) inputB = null;
         AnvilStore anvilStore = new AnvilStore(anvilBlock, player.getUniqueId(), inputA, inputB);
         IngredientItem.Type ingredientA = IngredientItem.Type.of(inputA);
         IngredientItem.Type ingredientB = IngredientItem.Type.of(inputB);

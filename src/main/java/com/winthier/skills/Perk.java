@@ -98,31 +98,30 @@ public enum Perk {
     DIG_FALLING_STACK(SkillType.DIG, null),
     DIG_RADIUS(SkillType.DIG, null),
     // Enchanting ==================================================
-    ENCHANT_TOP_OPTIONS(SkillType.ENCHANT, null),
-    ENCHANT_(SkillType.ENCHANT, null),
+    ENCHANT_ALTAR(SkillType.ENCHANT, null),
+    ENCHANT_FIND_BOOKS(SkillType.ENCHANT, Perk.ENCHANT_ALTAR),
+    ENCHANT_KEEP_BOOKS(SkillType.ENCHANT, Perk.ENCHANT_FIND_BOOKS),
     // Taming ======================================================
     TAME_BASE(SkillType.TAME, null),
-    TAME_FOLLOW_TELEPORT(SkillType.TAME, null),
+    TAME_FOLLOW_TELEPORT(SkillType.TAME, Perk.TAME_BASE),
     // Taming Cat
-    TAME_CAT_AGGRO_CREEPER(SkillType.TAME, null),
-    TAME_CAT_RAGE(SkillType.TAME, null),
-    TAME_CAT_LIVES(SkillType.TAME, null),
+    TAME_CAT_LIVES(SkillType.TAME, Perk.TAME_BASE),
+    TAME_CAT_AGGRO_CREEPER(SkillType.TAME, Perk.TAME_CAT_LIVES),
+    TAME_CAT_RAGE(SkillType.TAME, Perk.TAME_CAT_AGGRO_CREEPER),
     // Taming Dog
-    TAME_DOG_ATTACK_DAMAGE(SkillType.TAME, null),
-    TAME_DOG_MOVEMENT_SPEED(SkillType.TAME, null),
-    TAME_DOG_HEALTH(SkillType.TAME, null),
-    TAME_DOG_DODGE(SkillType.TAME, null),
-    TAME_DOG_DEATH_HEALS(SkillType.TAME, null),
-    TAME_DOG_SACRIFICE(SkillType.TAME, null),
-    TAME_DOG_SPAWN_SNOWMAN(SkillType.TAME, null),
-    TAME_DOG_SPAWN_GOLEM(SkillType.TAME, null),
+    TAME_DOG_ATTACK_DAMAGE(SkillType.TAME, Perk.TAME_BASE),
+    TAME_DOG_MOVEMENT_SPEED(SkillType.TAME, Perk.TAME_DOG_ATTACK_DAMAGE),
+    TAME_DOG_HEALTH(SkillType.TAME, Perk.TAME_DOG_MOVEMENT_SPEED),
+    TAME_DOG_DODGE(SkillType.TAME, Perk.TAME_BASE),
+    TAME_DOG_DEATH_HEALS(SkillType.TAME, Perk.TAME_DOG_DODGE),
+    TAME_DOG_SACRIFICE(SkillType.TAME, Perk.TAME_DOG_DEATH_HEALS),
     // Taming Horse
-    TAME_HORSE_INHERIT(SkillType.TAME, null),
-    TAME_HORSE_SPEED_CHANCE(SkillType.TAME, null),
-    TAME_HORSE_JUMP_CHANCE(SkillType.TAME, null),
-    TAME_HORSE_KNOCKBACK(SkillType.TAME, null),
-    TAME_HORSE_RIDE_DOWN(SkillType.TAME, null),
-    TAME_HORSE_RESURRECT(SkillType.TAME, null);
+    TAME_HORSE_INHERIT(SkillType.TAME, Perk.TAME_BASE),
+    TAME_HORSE_SPEED_CHANCE(SkillType.TAME, Perk.TAME_HORSE_INHERIT),
+    TAME_HORSE_JUMP_CHANCE(SkillType.TAME, Perk.TAME_HORSE_SPEED_CHANCE),
+    TAME_HORSE_KNOCKBACK(SkillType.TAME, Perk.TAME_BASE),
+    TAME_HORSE_RIDE_DOWN(SkillType.TAME, Perk.TAME_HORSE_KNOCKBACK),
+    TAME_HORSE_RESURRECT(SkillType.TAME, Perk.TAME_HORSE_RIDE_DOWN);
 
     final SkillType skillType;
     final Perk depends;

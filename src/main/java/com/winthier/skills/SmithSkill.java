@@ -254,18 +254,20 @@ final class SmithSkill extends Skill {
     }
 
     enum Quality {
-        WOOD(Material.WOOD),
-        STONE(Material.COBBLESTONE),
-        LEATHER(Material.LEATHER),
-        IRON(Material.IRON_INGOT),
-        GOLD(Material.GOLD_INGOT),
-        MAIL(Material.IRON_INGOT),
-        DIAMOND(Material.DIAMOND);
+        WOOD(Material.WOOD, null),
+        STONE(Material.COBBLESTONE, null),
+        LEATHER(Material.LEATHER, Perk.SMITH_LEATHER),
+        IRON(Material.IRON_INGOT, Perk.SMITH_IRON),
+        GOLD(Material.GOLD_INGOT, Perk.SMITH_GOLD),
+        MAIL(Material.IRON_INGOT, Perk.SMITH_MAIL),
+        DIAMOND(Material.DIAMOND, Perk.SMITH_DIAMOND);
 
         final Material material;
+        final Perk requiredPerk;
 
-        Quality(Material material) {
+        Quality(Material material, Perk requiredPerk) {
             this.material = material;
+            this.requiredPerk = requiredPerk;
         }
 
         static Quality of(Material mat) {
@@ -340,7 +342,12 @@ final class SmithSkill extends Skill {
         // to work on.
         final Gear gear = Gear.of(anvilStore.inputA.getType());
         final Quality quality = Quality.of(anvilStore.inputA.getType());
-        if (gear != null && quality != null) {
+        Set<Perk> perks = plugin.getScore().getPerks(uuid);
+        if (gear != null && quality != null && anvilStore.inputB == null) {
+            int enchantCount = anvilStore.inputA.getEnchantments().size();
+            if (enchantCount == 0) return;
+            anvilStore.setOutput(new ItemStack(Material.EXP_BOTTLE, enchantCount));
+        } else if (gear != null && quality != null) {
             // Gear improvements require exactly 1 item per slot.  The
             // first item has to be an undamaged, unmodified vanilla
             // gear item.
@@ -348,28 +355,7 @@ final class SmithSkill extends Skill {
             if (anvilStore.inputB == null) return;
             if (anvilStore.inputB.getAmount() != 1) return;
             if (!anvilStore.inputA.equals(new ItemStack(anvilStore.inputA.getType()))) return;
-            // We can rule out any further proceedings if the base
-            // perk for the gear quality is not present.
-            Set<Perk> perks = plugin.getScore().getPerks(uuid);
-            switch (quality) {
-            case LEATHER:
-                if (!perks.contains(Perk.SMITH_LEATHER)) return;
-                break;
-            case IRON:
-                if (!perks.contains(Perk.SMITH_IRON)) return;
-                break;
-            case MAIL:
-                if (!perks.contains(Perk.SMITH_MAIL)) return;
-                break;
-            case GOLD:
-                if (!perks.contains(Perk.SMITH_GOLD)) return;
-                break;
-            case DIAMOND:
-                if (!perks.contains(Perk.SMITH_DIAMOND)) return;
-                break;
-            default:
-                return;
-            }
+            if (quality.requiredPerk == null || !perks.contains(quality.requiredPerk)) return;
             // Slot B may either be a vanilla item used to create the
             // gear in question, or a similar IngredientItem.  Each
             // item has a specific fineness which determines the
