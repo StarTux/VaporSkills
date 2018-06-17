@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
 import org.bukkit.block.Block;
@@ -16,14 +17,17 @@ import org.bukkit.block.BlockState;
 import org.bukkit.block.Container;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.ThrownExpBottle;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.enchantment.EnchantItemEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerArmorStandManipulateEvent;
 import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -116,13 +120,11 @@ final class EnchantSkill extends Skill {
             TOO_MANY_ITEMS,
             WRONG_TARGET,
             TOO_LOW_LEVEL;
-            EnchantingStore store() {
-                EnchantingStore result = new EnchantingStore();
-                result.error = this;
-                return result;
+            EnchantingStore store(ArmorStand entity) {
+                return new EnchantingStore(entity, this);
             }
         }
-        private Error error = null;
+        private final Error error;
         private final ArmorStand armorStand;
         private final Block topBlock;
         private final ItemStack enchantedItem;
@@ -131,14 +133,8 @@ final class EnchantSkill extends Skill {
         private final Map<Material, Integer> sacrificeMap;
         private final int expLevelCost;
 
-        EnchantingStore() {
-            this.armorStand = null;
-            this.topBlock = null;
-            this.enchantedItem = null;
-            this.enchantedItemSlot = null;
-            this.enchantMap = null;
-            this.sacrificeMap = null;
-            this.expLevelCost = 0;
+        EnchantingStore(ArmorStand armorStand, Error error) {
+            this(error, armorStand, null, null, null, null, null, 0);
         }
 
         static EnchantingStore of(ArmorStand armorStand, Player player) {
@@ -158,7 +154,7 @@ final class EnchantSkill extends Skill {
             for (int i = 0; i < items.size(); i += 1) {
                 ItemStack item = items.get(i);
                 if (item == null || item.getType() == Material.AIR) continue;
-                if (enchantedItem != null) return Error.TOO_MANY_ITEMS.store();
+                if (enchantedItem != null) return Error.TOO_MANY_ITEMS.store(armorStand);
                 enchantedItem = item;
                 switch (i) {
                 case 0: enchantedItemSlot = EquipmentSlot.HEAD; break;
@@ -169,8 +165,8 @@ final class EnchantSkill extends Skill {
                 default: break;
                 }
             }
-            if (enchantedItem == null) return Error.NO_ITEMS.store();
-            if (!enchantedItem.getEnchantments().isEmpty()) return Error.ALREADY_ENCHANTED.store();
+            if (enchantedItem == null) return Error.NO_ITEMS.store(armorStand);
+            if (!enchantedItem.getEnchantments().isEmpty()) return Error.ALREADY_ENCHANTED.store(armorStand);
             // Enchantments
             Map<Enchant, Integer> enchantMap = new EnumMap<>(Enchant.class);
             Map<Material, Integer> sacrificeMap = new HashMap<>();
@@ -197,10 +193,11 @@ final class EnchantSkill extends Skill {
                                 break;
                             }
                         }
-                        if (!isIngredient) return Error.INVALID_SACRIFICE.store();
+                        if (!isIngredient) return Error.INVALID_SACRIFICE.store(armorStand);
                     }
                 }
             }
+            if (enchantMap.isEmpty()) return Error.NO_ENCHANTS.store(armorStand);
             // Conflicts
             int totalLevel = 0;
             for (Map.Entry<Enchant, Integer> entry: enchantMap.entrySet()) {
@@ -208,21 +205,22 @@ final class EnchantSkill extends Skill {
                 int level = entry.getValue();
                 totalLevel += level;
                 if (level > enchant.bukkitEnchant.getMaxLevel()) {
-                    return Error.IMPOSSIBLE_ENCHANT_LEVEL.store();
+                    return Error.IMPOSSIBLE_ENCHANT_LEVEL.store(armorStand);
                 }
                 if (!enchant.bukkitEnchant.getItemTarget().includes(enchantedItem)) {
-                    return Error.WRONG_TARGET.store();
+                    return Error.WRONG_TARGET.store(armorStand);
                 }
                 for (Enchant enchant2: enchantMap.keySet()) {
                     if (enchant != enchant2 && enchant.bukkitEnchant.conflictsWith(enchant2.bukkitEnchant)) {
-                        return Error.ENCHANT_CONFLICT.store();
+                        return Error.ENCHANT_CONFLICT.store(armorStand);
                     }
                 }
             }
             // Exp. Winging it for now.
             int expLevelCost = totalLevel;
-            EnchantingStore result = new EnchantingStore(armorStand, topBlock, enchantedItem, enchantedItemSlot, enchantMap, sacrificeMap, expLevelCost);
-            if (player.getLevel() < expLevelCost * 10) result.error = Error.TOO_LOW_LEVEL;
+            Error error = null;
+            if (player.getLevel() < expLevelCost * 5) error = Error.TOO_LOW_LEVEL;
+            EnchantingStore result = new EnchantingStore(error, armorStand, topBlock, enchantedItem, enchantedItemSlot, enchantMap, sacrificeMap, expLevelCost);
             return result;
         }
     }
@@ -234,48 +232,49 @@ final class EnchantSkill extends Skill {
         final ArmorStand armorStand = event.getRightClicked();
         new BukkitRunnable() {
             @Override public void run() {
-                updateEnchantingArmorStand(player, armorStand);
+                EnchantingStore store = EnchantingStore.of(armorStand, player);
+                if (store == null) return;
+                updateEnchantingStore(player, store);
             }
         }.runTask(plugin);
     }
 
-    private void updateEnchantingArmorStand(Player player, ArmorStand armorStand) {
-        EnchantingStore store = EnchantingStore.of(armorStand, player);
-        if (store == null) return;
+    private void updateEnchantingStore(Player player, EnchantingStore store) {
         if (store.error != null) {
             switch (store.error) {
             case NO_ENCHANTS:
             case NO_ITEMS:
-                armorStand.setCustomName(null);
-                armorStand.setCustomNameVisible(false);
+                store.armorStand.setCustomName(null);
+                store.armorStand.setCustomNameVisible(false);
                 return;
             case TOO_MANY_ENCHANTS:
-                armorStand.setCustomName(Msg.format("&cToo Many Enchantments"));
-                armorStand.setCustomNameVisible(true);
+                store.armorStand.setCustomName(Msg.format("&cToo Many Enchantments"));
+                store.armorStand.setCustomNameVisible(true);
                 break;
             case ENCHANT_CONFLICT:
-                armorStand.setCustomName(Msg.format("&cConflicting Enchantments"));
-                armorStand.setCustomNameVisible(true);
+                store.armorStand.setCustomName(Msg.format("&cConflicting Enchantments"));
+                store.armorStand.setCustomNameVisible(true);
                 break;
             case TOO_MANY_ITEMS:
-                armorStand.setCustomName(Msg.format("&cToo Many Items"));
-                armorStand.setCustomNameVisible(true);
+                store.armorStand.setCustomName(Msg.format("&cToo Many Items"));
+                store.armorStand.setCustomNameVisible(true);
                 break;
             case TOO_LOW_LEVEL:
-                armorStand.setCustomName(Msg.format("&cRequires Exp Level %d", store.expLevelCost));
-                armorStand.setCustomNameVisible(true);
+                store.armorStand.setCustomName(Msg.format("&cRequires Exp Level %d", store.expLevelCost * 5));
+                store.armorStand.setCustomNameVisible(true);
                 break;
             case WRONG_TARGET:
-                armorStand.setCustomName(Msg.format("&cIncompatible Item"));
-                armorStand.setCustomNameVisible(true);
+                store.armorStand.setCustomName(Msg.format("&cIncompatible Item"));
+                store.armorStand.setCustomNameVisible(true);
                 break;
             default:
-                armorStand.setCustomName(Msg.format("&c%s", Msg.capitalEnumName(store.error)));
-                armorStand.setCustomNameVisible(true);
+                store.armorStand.setCustomName(Msg.format("&c%s", Msg.capitalEnumName(store.error)));
+                store.armorStand.setCustomNameVisible(true);
                 break;
             }
-            Location loc = armorStand.getEyeLocation();
-            armorStand.getWorld().playSound(loc, Sound.BLOCK_ENCHANTMENT_TABLE_USE, SoundCategory.BLOCKS, 1.0f, 0.5f);
+            Location loc = store.armorStand.getEyeLocation();
+            store.armorStand.getWorld().playSound(loc, Sound.BLOCK_ENCHANTMENT_TABLE_USE, SoundCategory.BLOCKS, 1.0f, 0.5f);
+            loc.getWorld().spawnParticle(Particle.BARRIER, loc, 1, 0, 0, 0, 1);
         } else {
             StringBuilder sb = new StringBuilder(ChatColor.GRAY.toString());
             boolean latter = false;
@@ -294,10 +293,11 @@ final class EnchantSkill extends Skill {
                 }
             }
             sb.append(Msg.format("&d %d Levels", store.expLevelCost));
-            armorStand.setCustomName(sb.toString());
-            armorStand.setCustomNameVisible(true);
-            Location loc = armorStand.getEyeLocation();
-            armorStand.getWorld().playSound(loc, Sound.BLOCK_ENCHANTMENT_TABLE_USE, SoundCategory.BLOCKS, 1.0f, 2.0f);
+            store.armorStand.setCustomName(sb.toString());
+            store.armorStand.setCustomNameVisible(true);
+            Location loc = store.armorStand.getEyeLocation();
+            loc.getWorld().playSound(loc, Sound.BLOCK_ENCHANTMENT_TABLE_USE, SoundCategory.BLOCKS, 1.0f, 2.0f);
+            loc.getWorld().spawnParticle(Particle.ENCHANTMENT_TABLE, loc, store.expLevelCost * 5, 1, 1, 1, 1.0);
         }
     }
 
@@ -351,9 +351,30 @@ final class EnchantSkill extends Skill {
         armorStand.setCustomName(null);
         armorStand.setCustomNameVisible(false);
         Location loc = armorStand.getEyeLocation();
-        armorStand.getWorld().strikeLightningEffect(loc);
-        armorStand.getWorld().playSound(loc, Sound.BLOCK_ENCHANTMENT_TABLE_USE, SoundCategory.BLOCKS, 1.0f, 1.0f);
+        loc.getWorld().strikeLightningEffect(loc);
+        loc.getWorld().playSound(loc, Sound.BLOCK_ENCHANTMENT_TABLE_USE, SoundCategory.BLOCKS, 1.0f, 1.0f);
+        loc.getWorld().spawnParticle(Particle.ENCHANTMENT_TABLE, loc, store.expLevelCost * 10, 1, 1, 1, 1.0);
     }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+    public void onInventoryClose(InventoryCloseEvent event) {
+        if (!(event.getPlayer() instanceof Player)) return;
+        final Player player = (Player)event.getPlayer();
+        if (!allowPlayer(player)) return;
+        InventoryHolder holder = event.getInventory().getHolder();
+        if (!(holder instanceof Container)) return;
+        Block block = ((Container)holder).getBlock();
+        for (Entity nearby: block.getWorld().getNearbyEntities(block.getLocation().add(0.5, 0.5, 0.5), 1, 1, 1)) {
+            if (nearby instanceof ArmorStand) {
+                EnchantingStore store = EnchantingStore.of((ArmorStand)nearby, player);
+                if (store != null) {
+                    updateEnchantingStore(player, store);
+                    return;
+                }
+            }
+        }
+    }
+
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onEnchantItem(EnchantItemEvent event) {
