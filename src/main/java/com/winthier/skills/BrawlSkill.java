@@ -27,9 +27,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerItemHeldEvent;
-import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.MaterialData;
@@ -70,99 +67,6 @@ final class BrawlSkill extends Skill {
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
         entityDamageByEntityEventIntercept = event;
-    }
-
-    /**
-     * Sneaking start and stops weapon charge.
-     */
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
-    public void onPlayerToggleSneak(PlayerToggleSneakEvent event) {
-        final Player player = event.getPlayer();
-        final ItemStack weapon = player.getInventory().getItemInMainHand();
-        int maxWeaponCharge = getMaxWeaponCharge(player, weapon);
-        if (event.isSneaking()) {
-            if (maxWeaponCharge > 0) {
-                double attackSpeed = player.getAttribute(Attribute.GENERIC_ATTACK_SPEED).getValue();
-                plugin.getSession(player).startCharging(player, maxWeaponCharge, attackSpeed);
-            } else {
-                plugin.getSession(player).stopCharging();
-            }
-        } else {
-            if (maxWeaponCharge > 0 && plugin.getSession(player).isCharging()) {
-                double charge = plugin.getSession(player).getWeaponCharge();
-                int chargeLevel = Math.min(maxWeaponCharge, (int)charge);
-                switch (weapon.getType()) {
-                case IRON_SWORD:
-                    if (chargeLevel == 1) ironSwordSlash(player);
-                    if (chargeLevel == 2) ironSwordSpin(player);
-                    break;
-                case DIAMOND_SWORD:
-                    if (chargeLevel == 1) diamondSpearPierce(player);
-                    if (chargeLevel == 2) diamondSpearDash(player);
-                    break;
-                case GOLD_SWORD:
-                    if (chargeLevel == 1) goldSwordHeal(player);
-                    if (chargeLevel == 2) goldSwordRage(player);
-                    break;
-                case IRON_AXE:
-                    if (chargeLevel == 1) ironHammerSmash(player);
-                    if (chargeLevel == 2) ironHammerSmash2(player);
-                    break;
-                case DIAMOND_AXE:
-                    if (chargeLevel == 1) diamondAxeSlash(player); // TODO come up with something unique??
-                    if (chargeLevel == 2) diamondAxeThrow(player);
-                    break;
-                case GOLD_AXE:
-                    if (chargeLevel == 1) goldAxeArea(player);
-                    if (chargeLevel == 2) goldAxeArea2(player);
-                    break;
-                default: break;
-                }
-            }
-            plugin.getSession(player).stopCharging();
-        }
-    }
-
-    /**
-     * Changing the hotbar item can start and stop charging, assuming
-     * we are sneaking.
-     */
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
-    public void onPlayerItemHeld(PlayerItemHeldEvent event) {
-        final Player player = event.getPlayer();
-        final int newSlot = event.getNewSlot();
-        if (player.isSneaking()) {
-            int maxWeaponCharge = getMaxWeaponCharge(player, player.getInventory().getItem(newSlot));
-            if (maxWeaponCharge > 0) {
-                double chargeSpeed = player.getAttribute(Attribute.GENERIC_ATTACK_SPEED).getValue();
-                plugin.getSession(player).startCharging(player, maxWeaponCharge, chargeSpeed);
-            } else {
-                plugin.getSession(player).stopCharging();
-            }
-        }
-    }
-
-    /**
-     * Left clicking restarts the weapon charge (if any) and triggers
-     * the action of the current charge (if any).
-     */
-    @EventHandler(ignoreCancelled = false, priority = EventPriority.MONITOR)
-    public void onPlayerInteract(PlayerInteractEvent event) {
-        if (event.getHand() != EquipmentSlot.HAND) return;
-        switch (event.getAction()) {
-        case LEFT_CLICK_BLOCK:
-        case LEFT_CLICK_AIR:
-            final Player player = event.getPlayer();
-            if (player.isSneaking()) {
-                int maxWeaponCharge = getMaxWeaponCharge(player, player.getInventory().getItemInMainHand());
-                if (maxWeaponCharge > 0) {
-                    double chargeSpeed = player.getAttribute(Attribute.GENERIC_ATTACK_SPEED).getValue();
-                    plugin.getSession(player).startCharging(player, maxWeaponCharge, chargeSpeed);
-                }
-            }
-            break;
-        default: break;
-        }
     }
 
     double damage(LivingEntity entity, double damage, Player player, ItemStack item) {
@@ -218,40 +122,38 @@ final class BrawlSkill extends Skill {
         }
     }
 
-    int getMaxWeaponCharge(Player player, ItemStack weapon) {
-        final UUID uuid = player.getUniqueId();
-        if (weapon == null) return 0;
-        switch (weapon.getType()) {
-        case WOOD_SWORD:
-        case STONE_SWORD:
-            if (plugin.getScore().hasPerk(uuid, Perk.BRAWL_CHARGE)) return 1;
-            return 0;
-        case GOLD_SWORD:
-            if (plugin.getScore().hasPerk(uuid, Perk.BRAWL_CHARGE)) {
-                if (plugin.getScore().hasPerk(uuid, Perk.BRAWL_SWORD_GOLD_LIFE_STEAL)) return 2;
-                return 1;
+    void basicChargeAttack(final Player player) {
+        Location eyeLocation = player.getEyeLocation();
+        Vector eyeVector = eyeLocation.toVector();
+        Vector viewDirection = eyeLocation.getDirection();
+        Map<LivingEntity, Double> targetDists = new IdentityHashMap<>();
+        List<LivingEntity> targets = new ArrayList<>();
+        for (Entity nearby: player.getNearbyEntities(4, 4, 4)) {
+            if (isViableAttackTarget(nearby, player)) {
+                LivingEntity living = (LivingEntity)nearby;
+                Location entityCenter = living.getLocation().add(0, living.getHeight() * 0.5, 0);
+                double distanceSquared = eyeLocation.distanceSquared(entityCenter);
+                if (distanceSquared < 16) {
+                    Vector entityVector = entityCenter.toVector().subtract(eyeVector).normalize();
+                    double angle = viewDirection.angle(entityVector);
+                    if (angle < Math.PI * 0.5) {
+                        targetDists.put(living, distanceSquared);
+                        targets.add(living);
+                    }
+                }
             }
-            return 0;
-        case IRON_SWORD:
-            if (plugin.getScore().hasPerk(uuid, Perk.BRAWL_CHARGE)) {
-                if (plugin.getScore().hasPerk(uuid, Perk.BRAWL_SWORD_IRON_SPIN)) return 2;
-                return 1;
+        }
+        player.getWorld().playSound(eyeLocation, Sound.ENTITY_PLAYER_ATTACK_SWEEP, SoundCategory.PLAYERS, 0.2f, 1.2f);
+        player.getWorld().spawnParticle(Particle.SWEEP_ATTACK, eyeLocation.clone().add(viewDirection), 1, 0, 0, 0, 0);
+        Collections.sort(targets, (a, b) -> Double.compare(targetDists.get(a), targetDists.get(b)));
+        double damage = player.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE).getValue();
+        for (LivingEntity target: targets) {
+            double finalDamage = damage(target, damage, player, player.getInventory().getItemInMainHand());
+            if (finalDamage > 0) {
+                target.getWorld().playSound(target.getEyeLocation(), Sound.ENTITY_PLAYER_ATTACK_STRONG, SoundCategory.HOSTILE, 0.5f, 1.0f);
+                target.getWorld().spawnParticle(Particle.DAMAGE_INDICATOR, target.getEyeLocation(), 8, .25, .25, .25, 0);
+                break;
             }
-            return 0;
-        case DIAMOND_SWORD:
-            if (plugin.getScore().hasPerk(uuid, Perk.BRAWL_CHARGE)) {
-                if (plugin.getScore().hasPerk(uuid, Perk.BRAWL_SWORD_DIAMOND_DASH)) return 2;
-                return 1;
-            }
-            return 0;
-        case WOOD_AXE:
-        case STONE_AXE:
-        case GOLD_AXE:
-        case IRON_AXE:
-        case DIAMOND_AXE:
-            return 2;
-        default:
-            return 0;
         }
     }
 

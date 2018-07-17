@@ -53,7 +53,10 @@ import org.bukkit.event.inventory.FurnaceSmeltEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.inventory.BrewerInventory;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.FurnaceInventory;
@@ -240,6 +243,10 @@ public final class SkillsPlugin extends JavaPlugin implements Listener {
             ingredients.put(type, item);
         }
         event.addItem(gearItem);
+        for (ArrowItem.Type type: ArrowItem.Type.values()) {
+            ArrowItem item = new ArrowItem(this, type);
+            event.addItem(item);
+        }
     }
 
     @RequiredArgsConstructor @Getter
@@ -621,7 +628,7 @@ public final class SkillsPlugin extends JavaPlugin implements Listener {
             Projectile projectile = (Projectile)damager;
             if (projectile.getShooter() instanceof Player) {
                 setMetadata(damagee, LAST_DAMAGE_CAUSE_KEY, SkillType.HUNT.key);
-                getSkill(HuntSkill.class).onProjectileHit((Player)projectile.getShooter(), projectile, damagee);
+                getSkill(HuntSkill.class).onProjectileDamage((Player)projectile.getShooter(), projectile, damagee);
             }
         } else if (damager instanceof Tameable) {
             Tameable pet = (Tameable)damager;
@@ -630,6 +637,185 @@ public final class SkillsPlugin extends JavaPlugin implements Listener {
             }
         }
     }
+
+    // Weapon Charge Listeners and Utility
+
+    int getMaxWeaponCharge(Player player, ItemStack weapon) {
+        final UUID uuid = player.getUniqueId();
+        Set<Perk> perks = score.getPerks(uuid);
+        if (weapon == null) return 0;
+        switch (weapon.getType()) {
+        case WOOD_SWORD:
+        case STONE_SWORD:
+            if (score.hasPerk(uuid, Perk.BRAWL_SWORD_CHARGE)) return 1;
+            return 0;
+        case GOLD_SWORD:
+            if (perks.contains(Perk.BRAWL_SWORD_GOLD_RAGE)) return 3;
+            if (perks.contains(Perk.BRAWL_SWORD_GOLD_LIFE_STEAL)) return 2;
+            if (perks.contains(Perk.BRAWL_SWORD_CHARGE)) return 1;
+            return 0;
+        case IRON_SWORD:
+            if (perks.contains(Perk.BRAWL_SWORD_IRON_SPIN)) return 3;
+            if (perks.contains(Perk.BRAWL_SWORD_IRON_SLASH)) return 2;
+            if (perks.contains(Perk.BRAWL_SWORD_CHARGE)) return 1;
+            return 0;
+        case DIAMOND_SWORD:
+            if (perks.contains(Perk.BRAWL_SWORD_DIAMOND_DASH)) return 3;
+            if (perks.contains(Perk.BRAWL_SWORD_DIAMOND_DASH)) return 2;
+            if (perks.contains(Perk.BRAWL_SWORD_CHARGE)) return 1;
+            return 0;
+        case WOOD_AXE:
+        case STONE_AXE:
+            if (score.hasPerk(uuid, Perk.BRAWL_AXE_CHARGE)) return 1;
+            return 0;
+        case GOLD_AXE:
+            if (perks.contains(Perk.BRAWL_AXE_GOLD_LIFE_STEAL2)) return 3;
+            if (perks.contains(Perk.BRAWL_AXE_GOLD_LIFE_STEAL)) return 2;
+            if (perks.contains(Perk.BRAWL_AXE_CHARGE)) return 1;
+            return 0;
+        case IRON_AXE:
+            if (perks.contains(Perk.BRAWL_AXE_IRON_HAMMER2)) return 3;
+            if (perks.contains(Perk.BRAWL_AXE_IRON_HAMMER)) return 2;
+            if (perks.contains(Perk.BRAWL_AXE_CHARGE)) return 1;
+            return 0;
+        case DIAMOND_AXE:
+            if (perks.contains(Perk.BRAWL_AXE_DIAMOND_THROW)) return 3;
+            if (perks.contains(Perk.BRAWL_AXE_DIAMOND_SLASH)) return 2;
+            if (perks.contains(Perk.BRAWL_AXE_CHARGE)) return 1;
+            return 0;
+        case BOW:
+            if (perks.contains(Perk.HUNT_CHARGE_HAIL)) return 4;
+            if (perks.contains(Perk.HUNT_CHARGE_BARRAGE)) return 3;
+            if (perks.contains(Perk.HUNT_CHARGE_MULTIPLE)) return 2;
+            if (perks.contains(Perk.HUNT_CHARGE_BOW)) return 1;
+            return 0;
+        default:
+            return 0;
+        }
+    }
+
+    void dischargeWeapon(Player player, ItemStack weapon, int chargeLevel) {
+        switch (weapon.getType()) {
+        case IRON_SWORD:
+            switch (chargeLevel) {
+            case 3: getSkill(BrawlSkill.class).ironSwordSpin(player); break;
+            case 2: getSkill(BrawlSkill.class).ironSwordSlash(player); break;
+            default: getSkill(BrawlSkill.class).basicChargeAttack(player);
+            }
+            break;
+        case DIAMOND_SWORD:
+            switch (chargeLevel) {
+            case 3: getSkill(BrawlSkill.class).diamondSpearDash(player); break;
+            case 2: getSkill(BrawlSkill.class).diamondSpearPierce(player); break;
+            default: getSkill(BrawlSkill.class).basicChargeAttack(player);
+            }
+            break;
+        case GOLD_SWORD:
+            switch (chargeLevel) {
+            case 3: getSkill(BrawlSkill.class).goldSwordRage(player); break;
+            case 2: getSkill(BrawlSkill.class).goldSwordHeal(player); break;
+            default: getSkill(BrawlSkill.class).basicChargeAttack(player);
+            }
+            break;
+        case IRON_AXE:
+            switch (chargeLevel) {
+            case 3: getSkill(BrawlSkill.class).ironHammerSmash2(player); break;
+            case 2: getSkill(BrawlSkill.class).ironHammerSmash(player); break;
+            default: getSkill(BrawlSkill.class).basicChargeAttack(player);
+            }
+            break;
+        case DIAMOND_AXE:
+            switch (chargeLevel) {
+            case 3: getSkill(BrawlSkill.class).diamondAxeThrow(player); break;
+            case 2: getSkill(BrawlSkill.class).diamondAxeSlash(player); break;
+            default: getSkill(BrawlSkill.class).basicChargeAttack(player);
+            }
+            break;
+        case GOLD_AXE:
+            switch (chargeLevel) {
+            case 3: getSkill(BrawlSkill.class).goldAxeArea2(player); break;
+            case 2: getSkill(BrawlSkill.class).goldAxeArea(player); break;
+            default: getSkill(BrawlSkill.class).basicChargeAttack(player);
+            }
+            break;
+        case BOW:
+            switch (chargeLevel) {
+            case 4: getSkill(HuntSkill.class).arrowHail(player); break;
+            case 3: getSkill(HuntSkill.class).arrowBarrage(player); break;
+            case 2: getSkill(HuntSkill.class).arrowMultiple(player); break;
+            default: getSkill(HuntSkill.class).basicArrowCharge(player); break;
+            }
+        default: break;
+        }
+    }
+
+    /**
+     * Sneaking start and stops weapon charge.
+     */
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+    public void onPlayerToggleSneak(PlayerToggleSneakEvent event) {
+        final Player player = event.getPlayer();
+        final ItemStack weapon = player.getInventory().getItemInMainHand();
+        int maxWeaponCharge = getMaxWeaponCharge(player, weapon);
+        if (event.isSneaking()) {
+            if (maxWeaponCharge > 0) {
+                double attackSpeed = player.getAttribute(Attribute.GENERIC_ATTACK_SPEED).getValue();
+                getSession(player).startCharging(player, maxWeaponCharge, attackSpeed);
+            } else {
+                getSession(player).stopCharging();
+            }
+        } else {
+            if (maxWeaponCharge > 0 && getSession(player).isCharging()) {
+                double charge = getSession(player).getWeaponCharge();
+                int chargeLevel = Math.min(maxWeaponCharge, (int)charge);
+                dischargeWeapon(player, weapon, chargeLevel);
+            }
+            getSession(player).stopCharging();
+        }
+    }
+
+    /**
+     * Changing the hotbar item can start and stop charging, assuming
+     * we are sneaking.
+     */
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+    public void onPlayerItemHeld(PlayerItemHeldEvent event) {
+        final Player player = event.getPlayer();
+        final int newSlot = event.getNewSlot();
+        if (player.isSneaking()) {
+            int maxWeaponCharge = getMaxWeaponCharge(player, player.getInventory().getItem(newSlot));
+            if (maxWeaponCharge > 0) {
+                double chargeSpeed = player.getAttribute(Attribute.GENERIC_ATTACK_SPEED).getValue();
+                getSession(player).startCharging(player, maxWeaponCharge, chargeSpeed);
+            } else {
+                getSession(player).stopCharging();
+            }
+        }
+    }
+
+    /**
+     * Left clicking restarts the weapon charge (if any).
+     */
+    @EventHandler(ignoreCancelled = false, priority = EventPriority.MONITOR)
+    public void onPlayerInteract(PlayerInteractEvent event) {
+        if (event.getHand() != EquipmentSlot.HAND) return;
+        switch (event.getAction()) {
+        case LEFT_CLICK_BLOCK:
+        case LEFT_CLICK_AIR:
+            final Player player = event.getPlayer();
+            if (player.isSneaking()) {
+                int maxWeaponCharge = getMaxWeaponCharge(player, player.getInventory().getItemInMainHand());
+                if (maxWeaponCharge > 0) {
+                    double chargeSpeed = player.getAttribute(Attribute.GENERIC_ATTACK_SPEED).getValue();
+                    getSession(player).startCharging(player, maxWeaponCharge, chargeSpeed);
+                }
+            }
+            break;
+        default: break;
+        }
+    }
+
+    // Utility
 
     void buildNameMap() {
         nameMap.clear();

@@ -24,21 +24,37 @@ public enum Perk {
     SMITH_GOLD_AXE_ATTACK_SPEED(SkillType.SMITH, Perk.SMITH_GOLD),
     SMITH_DIAMOND_AXE_DAMAGE(SkillType.SMITH, Perk.SMITH_DIAMOND),
     // Brawl Swords ================================================
-    BRAWL_CHARGE(SkillType.BRAWL, null),
-    BRAWL_SWORD_DIAMOND_PIERCE(SkillType.BRAWL, Perk.BRAWL_CHARGE),
+    BRAWL_SWORD_CHARGE(SkillType.BRAWL, null),
+    BRAWL_SWORD_DIAMOND_PIERCE(SkillType.BRAWL, Perk.BRAWL_SWORD_CHARGE),
     BRAWL_SWORD_DIAMOND_DASH(SkillType.BRAWL, Perk.BRAWL_SWORD_DIAMOND_PIERCE),
-    BRAWL_SWORD_IRON_SLASH(SkillType.BRAWL, Perk.BRAWL_CHARGE),
+    BRAWL_SWORD_IRON_SLASH(SkillType.BRAWL, Perk.BRAWL_SWORD_CHARGE),
     BRAWL_SWORD_IRON_SPIN(SkillType.BRAWL, Perk.BRAWL_SWORD_IRON_SLASH),
-    BRAWL_SWORD_GOLD_LIFE_STEAL(SkillType.BRAWL, Perk.BRAWL_CHARGE),
-    BRAWL_SWORD_GOLD_REGENERATION(SkillType.BRAWL, Perk.BRAWL_SWORD_GOLD_LIFE_STEAL),
-    BRAWL_SWORD_GOLD_HEALTH(SkillType.BRAWL, Perk.BRAWL_SWORD_GOLD_REGENERATION),
+    BRAWL_SWORD_GOLD_LIFE_STEAL(SkillType.BRAWL, Perk.BRAWL_SWORD_CHARGE),
+    BRAWL_SWORD_GOLD_RAGE(SkillType.BRAWL, Perk.BRAWL_SWORD_GOLD_LIFE_STEAL),
     // Brawl Axes
-    BRAWL_AXE_AOE(SkillType.BRAWL, null),
-    BRAWL_AXE_KNOCKBACK(SkillType.BRAWL, null),
-    BRAWL_IRON_AXE_PARALYSIS(SkillType.BRAWL, null),
-    BRAWL_GOLD_AXE_FIRE(SkillType.BRAWL, null),
-    BRAWL_DIAMOND_AXE_BLEED(SkillType.BRAWL, null),
+    BRAWL_AXE_CHARGE(SkillType.BRAWL, null),
+    BRAWL_AXE_IRON_HAMMER(SkillType.BRAWL, Perk.BRAWL_AXE_CHARGE),
+    BRAWL_AXE_IRON_HAMMER2(SkillType.BRAWL, Perk.BRAWL_AXE_IRON_HAMMER),
+    BRAWL_AXE_GOLD_LIFE_STEAL(SkillType.BRAWL, Perk.BRAWL_AXE_CHARGE),
+    BRAWL_AXE_GOLD_LIFE_STEAL2(SkillType.BRAWL, Perk.BRAWL_AXE_GOLD_LIFE_STEAL),
+    BRAWL_AXE_DIAMOND_SLASH(SkillType.BRAWL, Perk.BRAWL_AXE_CHARGE),
+    BRAWL_AXE_DIAMOND_THROW(SkillType.BRAWL, Perk.BRAWL_AXE_DIAMOND_SLASH),
     // Hunting =====================================================
+    HUNT_BASE(SkillType.HUNT, null),
+    // Special hits
+    HUNT_HEADSHOT(SkillType.HUNT, Perk.HUNT_BASE),
+    HUNT_FOOTSHOT(SkillType.HUNT, Perk.HUNT_BASE),
+    HUNT_CRIT(SkillType.HUNT, Perk.HUNT_BASE),
+    HUNT_CRIT2(SkillType.HUNT, Perk.HUNT_BASE),
+    // Improve arrows
+    HUNT_ARROW_RETRIEVE(SkillType.HUNT, Perk.HUNT_BASE),
+    HUNT_ARROW_ABSORB(SkillType.HUNT, Perk.HUNT_ARROW_RETRIEVE),
+    HUNT_ARROW_ABSORB2(SkillType.HUNT, Perk.HUNT_ARROW_ABSORB),
+    // Bow charging
+    HUNT_CHARGE_BOW(SkillType.HUNT, Perk.HUNT_BASE), // 1
+    HUNT_CHARGE_MULTIPLE(SkillType.HUNT, Perk.HUNT_CHARGE_BOW), // 2
+    HUNT_CHARGE_BARRAGE(SkillType.HUNT, Perk.HUNT_CHARGE_MULTIPLE), // 3
+    HUNT_CHARGE_HAIL(SkillType.HUNT, Perk.HUNT_CHARGE_BARRAGE), // 4
     // Ranching ====================================================
     RANCH_COW(SkillType.RANCH, null),
     RANCH_PIG(SkillType.RANCH, null),
@@ -78,7 +94,7 @@ public enum Perk {
     BREW_DAMAGE_POISON(SkillType.BREW, Perk.BREW_DEBUFF_DURATION),
     BREW_WEAK_BLIND(SkillType.BREW, Perk.BREW_DAMAGE_POISON),
     BREW_SLOW_WITHER(SkillType.BREW, Perk.BREW_WEAK_BLIND),
-    // Cookinf =====================================================
+    // Cooking =====================================================
     COOK_SATURATION(SkillType.COOK, null),
     COOK_MEAT_RESISTANCE(SkillType.COOK, null),
     COOK_VEGETABLE_HEALTH(SkillType.COOK, null),
