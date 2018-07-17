@@ -1,5 +1,6 @@
 package com.winthier.skills;
 
+import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
@@ -16,10 +17,12 @@ final class HuntSkill extends Skill {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     void onProjectileLaunch(ProjectileLaunchEvent event) {
-        final Player player = event.getPlayer();
+        final Projectile projectile = event.getEntity();
+        if (!(projectile.getShooter() instanceof Player)) return;
+        final Player player = (Player)projectile.getShooter();
         if (!allowPlayer(player)) return;
         int slot = findArrowToUse(player);
-        player.sendMessage(slot);
+        player.sendMessage(event.getEventName() + " slot " + slot);
     }
 
     /**
@@ -42,7 +45,7 @@ final class HuntSkill extends Skill {
         PlayerInventory inv = player.getInventory();
         ItemStack item;
         int slot = inv.getHeldItemSlot();
-        item = inv.getItem(heldItemSlot);
+        item = inv.getItem(slot);
         if (item != null && item.getType() == Material.ARROW) return slot;
         slot = 40; // off-hand
         item = inv.getItem(slot);

@@ -38,12 +38,12 @@ final class LevelUpEffect extends BukkitRunnable {
             if (ticks == 0) {
                 Msg.announce("&f%s reached total skill level %d", player.getName(), level);
             }
-            if (ticks % 20 == 10) world.playSound(player.getEyeLocation(), Sound.ENTITY_ENDERMEN_TELEPORT, .1f, .65f);
+            if (ticks % 20 == 10) world.playSound(player.getEyeLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, .1f, .65f);
             if (level >= 10) {
-                if (ticks == 20 * 2) world.playSound(player.getEyeLocation(), Sound.ENTITY_FIREWORK_TWINKLE, .6f, 1);
-                if (ticks == 20 * 4) world.playSound(player.getEyeLocation(), Sound.ENTITY_FIREWORK_TWINKLE, .5f, 1);
-                if (ticks == 20 * 6) world.playSound(player.getEyeLocation(), Sound.ENTITY_FIREWORK_TWINKLE_FAR, .6f, 1);
-                if (ticks == 20 * 8) world.playSound(player.getEyeLocation(), Sound.ENTITY_FIREWORK_TWINKLE_FAR, .5f, 1);
+                if (ticks == 20 * 2) world.playSound(player.getEyeLocation(), Sound.ENTITY_FIREWORK_ROCKET_TWINKLE, .6f, 1);
+                if (ticks == 20 * 4) world.playSound(player.getEyeLocation(), Sound.ENTITY_FIREWORK_ROCKET_TWINKLE, .5f, 1);
+                if (ticks == 20 * 6) world.playSound(player.getEyeLocation(), Sound.ENTITY_FIREWORK_ROCKET_TWINKLE_FAR, .6f, 1);
+                if (ticks == 20 * 8) world.playSound(player.getEyeLocation(), Sound.ENTITY_FIREWORK_ROCKET_TWINKLE_FAR, .5f, 1);
             }
             // Spiral effect
             double frac = Math.PI * (double)ticks / (double)13;

@@ -24,11 +24,11 @@ final class DigSkill extends Skill {
         final Player player = event.getPlayer();
         if (!allowPlayer(player)) return;
         switch (player.getInventory().getItemInMainHand().getType()) {
-        case DIAMOND_SPADE:
-        case GOLD_SPADE:
-        case IRON_SPADE:
-        case STONE_SPADE:
-        case WOOD_SPADE:
+        case DIAMOND_SHOVEL:
+        case GOLDEN_SHOVEL:
+        case IRON_SHOVEL:
+        case STONE_SHOVEL:
+        case WOODEN_SHOVEL:
             break;
         default:
             return;

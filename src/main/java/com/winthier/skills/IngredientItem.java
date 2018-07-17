@@ -27,9 +27,9 @@ public final class IngredientItem implements CustomItem {
         LEATHER_SCRAPS(Material.LEATHER),
         HARDENED_LEATHER(Material.LEATHER),
         // Food
-        SIRLOIN(Material.RAW_BEEF),
-        BACON(Material.PORK),
-        FRESH_MILK(Material.DRAGONS_BREATH),
+        SIRLOIN(Material.BEEF),
+        BACON(Material.PORKCHOP),
+        FRESH_MILK(Material.DRAGON_BREATH),
         TRUFFLE(Material.BROWN_MUSHROOM),
         CHICKEN_DOWN(Material.FEATHER),
         // Iron
@@ -49,7 +49,7 @@ public final class IngredientItem implements CustomItem {
         EDGED_DIAMOND(Material.DIAMOND),
         EDGED_EMERALD(Material.EMERALD),
         DIAMOND_DUST(Material.SUGAR),
-        EMERALD_DUST(Material.INK_SACK, 2, (String)null), // TODO cactus_green in 1.13
+        EMERALD_DUST(Material.CACTUS_GREEN),
         GEMSTONE_DUST(Material.BLAZE_POWDER),
         // Rare
         CREEPER_OIL(Material.POTION),
@@ -57,18 +57,10 @@ public final class IngredientItem implements CustomItem {
         NICKEL(Material.GHAST_TEAR);
 
         final Material material;
-        final int data; // TODO remove in 1.13
-        final String extra;
         final String customId;
 
         Type(Material material) {
-            this(material, 0, null);
-        }
-
-        Type(Material material, int data, String extra) {
             this.material = material;
-            this.data = data;
-            this.extra = extra;
             this.customId = "skills:" + name().toLowerCase();
         }
 
@@ -95,7 +87,7 @@ public final class IngredientItem implements CustomItem {
     IngredientItem(SkillsPlugin plugin, Type type) {
         this.plugin = plugin;
         this.type = type;
-        this.itemStack = new ItemStack(type.material, 1, (short)type.data);
+        this.itemStack = new ItemStack(type.material);
         ItemMeta meta = this.itemStack.getItemMeta();
         meta.addEnchant(Enchantment.DURABILITY, 1, false);
         meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);

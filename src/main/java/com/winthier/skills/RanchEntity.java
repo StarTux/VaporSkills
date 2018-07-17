@@ -27,6 +27,7 @@ import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.block.Block;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -53,7 +54,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.material.Crops;
-import org.bukkit.material.MaterialData;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -225,8 +225,8 @@ public final class RanchEntity implements CustomEntity, TickableEntity {
         Material.IRON_NUGGET,
         Material.STICK,
         Material.BUCKET,
-        Material.TOTEM,
-        Material.FLOWER_POT_ITEM,
+        Material.TOTEM_OF_UNDYING,
+        Material.FLOWER_POT,
         Material.GLASS_BOTTLE
     };
 
@@ -279,7 +279,7 @@ public final class RanchEntity implements CustomEntity, TickableEntity {
             e.getWorld().playSound(e.getEyeLocation(), Sound.ENTITY_HORSE_AMBIENT, 1f, pitch);
             break;
         case PLAYER:
-            e.getWorld().playSound(e.getEyeLocation(), Sound.BLOCK_NOTE_GUITAR, 0.5f, 1f);
+            e.getWorld().playSound(e.getEyeLocation(), Sound.BLOCK_NOTE_BLOCK_GUITAR, 0.5f, 1f);
             break;
         default: break;
         }
@@ -593,18 +593,18 @@ public final class RanchEntity implements CustomEntity, TickableEntity {
                             block.setType(Material.AIR);
                             hunger = Math.max(0, hunger - 600);
                             block.getWorld().playSound(block.getLocation().add(0.5, 0, 0.5), Sound.BLOCK_GRASS_BREAK, 1.0f, 0.8f);
-                            block.getWorld().spawnParticle(Particle.BLOCK_DUST, block.getLocation().add(.5, .5, .5), 16, .5, .5, .5, 0, new MaterialData(Material.GRASS));
+                            block.getWorld().spawnParticle(Particle.BLOCK_DUST, block.getLocation().add(.5, .5, .5), 16, .5, .5, .5, 0, Material.GRASS_BLOCK.createBlockData());
                             customEntity.entityEatEffect(entity);
                             return true;
                         }
                         break;
-                    case BEETROOT_BLOCK:
+                    case BEETROOT:
                         // if (block.getData() == 3) {
                         if (((Crops)block.getState().getData()).getState() == CropState.RIPE) {
                             block.setType(Material.AIR);
                             hunger = Math.max(0, hunger - 600);
                             block.getWorld().playSound(block.getLocation().add(0.5, 0, 0.5), Sound.BLOCK_GRASS_BREAK, 1.0f, 0.8f);
-                            block.getWorld().spawnParticle(Particle.BLOCK_DUST, block.getLocation().add(.5, .5, .5), 16, .5, .5, .5, 0, new MaterialData(Material.GRASS));
+                            block.getWorld().spawnParticle(Particle.BLOCK_DUST, block.getLocation().add(.5, .5, .5), 16, .5, .5, .5, 0, Material.GRASS_BLOCK.createBlockData());
                             customEntity.entityEatEffect(entity);
                             return true;
                         }
@@ -617,13 +617,15 @@ public final class RanchEntity implements CustomEntity, TickableEntity {
                 for (int i = 0; i < 2; i += 1) {
                     block = entity.getLocation().getBlock().getRelative(0, i, 0);
                     switch (block.getType()) {
-                    case CROPS:
-                        // if (block.getData() == 7) {
-                        if (((Crops)block.getState().getData()).getState() == CropState.RIPE) {
+                    case WHEAT:
+                        BlockData blockData = block.getBlockData();
+                        if (blockData instanceof org.bukkit.block.data.Ageable
+                            && ((org.bukkit.block.data.Ageable)blockData).getAge()
+                            == ((org.bukkit.block.data.Ageable)blockData).getMaximumAge()) {
                             block.setType(Material.AIR);
                             hunger = Math.max(0, hunger - 600);
                             block.getWorld().playSound(block.getLocation().add(0.5, 0, 0.5), Sound.BLOCK_GRASS_BREAK, 1.0f, 0.8f);
-                            block.getWorld().spawnParticle(Particle.BLOCK_DUST, block.getLocation().add(.5, .5, .5), 16, .5, .5, .5, 0, new MaterialData(Material.GRASS));
+                            block.getWorld().spawnParticle(Particle.BLOCK_DUST, block.getLocation().add(.5, .5, .5), 16, .5, .5, .5, 0, Material.GRASS_BLOCK.createBlockData());
                             customEntity.entityEatEffect(entity);
                             return true;
                         }
@@ -635,27 +637,28 @@ public final class RanchEntity implements CustomEntity, TickableEntity {
             case RABBIT:
                 for (int i = 0; i < 2; i += 1) {
                     block = entity.getLocation().getBlock().getRelative(0, i, 0);
+                    BlockData blockData;
                     switch (block.getType()) {
                     case CARROT:
-                        // if (block.getData() == 7) {
-                        if (((Crops)block.getState().getData()).getState() == CropState.RIPE) {
+                        blockData = block.getBlockData();
+                        if (blockData instanceof org.bukkit.block.data.Ageable
+                            && ((org.bukkit.block.data.Ageable)blockData).getAge()
+                            == ((org.bukkit.block.data.Ageable)blockData).getMaximumAge()) {
                             block.setType(Material.AIR);
                             hunger = Math.max(0, hunger - 600);
                             block.getWorld().playSound(block.getLocation().add(0.5, 0, 0.5), Sound.BLOCK_GRASS_BREAK, 1.0f, 0.8f);
-                            block.getWorld().spawnParticle(Particle.BLOCK_DUST, block.getLocation().add(.5, .5, .5), 16, .5, .5, .5, 0, new MaterialData(Material.GRASS));
+                            block.getWorld().spawnParticle(Particle.BLOCK_DUST, block.getLocation().add(.5, .5, .5), 16, .5, .5, .5, 0, Material.GRASS_BLOCK.createBlockData());
                             customEntity.entityEatEffect(entity);
                             return true;
                         }
                         break;
-                    case YELLOW_FLOWER:
-                        // if (block.getData() == 0) {
+                    case DANDELION:
                         block.setType(Material.AIR);
                         hunger = Math.max(0, hunger - 600);
                         block.getWorld().playSound(block.getLocation().add(0.5, 0, 0.5), Sound.BLOCK_GRASS_BREAK, 1.0f, 0.8f);
-                        block.getWorld().spawnParticle(Particle.BLOCK_DUST, block.getLocation().add(.5, .5, .5), 16, .5, .5, .5, 0, new MaterialData(Material.GRASS));
+                        block.getWorld().spawnParticle(Particle.BLOCK_DUST, block.getLocation().add(.5, .5, .5), 16, .5, .5, .5, 0, Material.GRASS_BLOCK.createBlockData());
                         customEntity.entityEatEffect(entity);
                         return true;
-                        // }
                     default: break;
                     }
                 }
@@ -668,12 +671,12 @@ public final class RanchEntity implements CustomEntity, TickableEntity {
             case SHEEP:
             case RABBIT:
                 block = entity.getLocation().getBlock();
-                if (block.getType() == Material.LONG_GRASS) {
+                if (block.getType() == Material.TALL_GRASS) {
                     block.setType(Material.AIR);
                     hunger = Math.max(0, hunger - 600);
                     if (entity.getType() == EntityType.SHEEP) entity.playEffect(EntityEffect.SHEEP_EAT);
                     block.getWorld().playSound(block.getLocation().add(0.5, 0, 0.5), Sound.BLOCK_GRASS_BREAK, 1.0f, 0.8f);
-                    block.getWorld().spawnParticle(Particle.BLOCK_DUST, block.getLocation().add(.5, .5, .5), 16, .5, .5, .5, 0, new MaterialData(Material.GRASS));
+                    block.getWorld().spawnParticle(Particle.BLOCK_DUST, block.getLocation().add(.5, .5, .5), 16, .5, .5, .5, 0, Material.GRASS_BLOCK.createBlockData());
                     customEntity.entityEatEffect(entity);
                     return true;
                 }
@@ -685,47 +688,46 @@ public final class RanchEntity implements CustomEntity, TickableEntity {
                     block.setType(Material.AIR);
                     hunger = Math.max(0, hunger - 600);
                     block.getWorld().playSound(block.getLocation().add(0.5, 0, 0.5), Sound.BLOCK_GRASS_BREAK, 1.0f, 0.8f);
-                    block.getWorld().spawnParticle(Particle.BLOCK_DUST, block.getLocation().add(.5, .5, .5), 16, .5, .5, .5, 0, new MaterialData(Material.GRASS));
+                    block.getWorld().spawnParticle(Particle.BLOCK_DUST, block.getLocation().add(.5, .5, .5), 16, .5, .5, .5, 0, Material.GRASS_BLOCK.createBlockData());
                     customEntity.entityEatEffect(entity);
                     return true;
                 }
                 break;
             default: break;
             }
-            // Flat grass or mycel
             switch (entity.getType()) {
             case COW:
             case SHEEP:
                 block = entity.getLocation().getBlock().getRelative(0, -1, 0);
-                if (block.getType() == Material.GRASS) {
+                if (block.getType() == Material.GRASS_BLOCK) {
                     block.setType(Material.DIRT);
                     hunger = Math.max(0, hunger - 300);
                     if (entity.getType() == EntityType.SHEEP) entity.playEffect(EntityEffect.SHEEP_EAT);
                     block.getWorld().playSound(block.getLocation().add(0.5, 0, 0.5), Sound.BLOCK_GRASS_BREAK, 1.0f, 0.8f);
-                    block.getWorld().spawnParticle(Particle.BLOCK_DUST, block.getLocation().add(.5, 1.5, .5), 16, .5, .5, .5, 0, new MaterialData(Material.GRASS));
+                    block.getWorld().spawnParticle(Particle.BLOCK_DUST, block.getLocation().add(.5, 1.5, .5), 16, .5, .5, .5, 0, Material.GRASS_BLOCK.createBlockData());
                     customEntity.entityEatEffect(entity);
                     return true;
                 }
                 break;
             case CHICKEN:
                 block = entity.getLocation().getBlock().getRelative(0, -1, 0);
-                if (block.getType() == Material.GRASS
+                if (block.getType() == Material.GRASS_BLOCK
                     || block.getType() == Material.DIRT) {
-                    block.setTypeIdAndData(Material.DIRT.getId(), (byte)3, true); // Coarse dirt
+                    block.setType(Material.COARSE_DIRT);
                     hunger = Math.max(0, hunger - 300);
                     block.getWorld().playSound(block.getLocation().add(0.5, 0, 0.5), Sound.BLOCK_GRASS_BREAK, 1.0f, 0.8f);
-                    block.getWorld().spawnParticle(Particle.BLOCK_DUST, block.getLocation().add(.5, 1.5, .5), 16, .5, .5, .5, 0, new MaterialData(Material.GRASS));
+                    block.getWorld().spawnParticle(Particle.BLOCK_DUST, block.getLocation().add(.5, 1.5, .5), 16, .5, .5, .5, 0, Material.GRASS_BLOCK.createBlockData());
                     customEntity.entityEatEffect(entity);
                     return true;
                 }
                 break;
             case MUSHROOM_COW:
                 block = entity.getLocation().getBlock().getRelative(0, -1, 0);
-                if (block.getType() == Material.MYCEL) {
+                if (block.getType() == Material.MYCELIUM) {
                     block.setType(Material.DIRT);
                     hunger = Math.max(0, hunger - 300);
                     block.getWorld().playSound(block.getLocation().add(0.5, 0, 0.5), Sound.BLOCK_GRASS_BREAK, 1.0f, 0.8f);
-                    block.getWorld().spawnParticle(Particle.BLOCK_DUST, block.getLocation().add(.5, 1.5, .5), 16, .5, .5, .5, 0, new MaterialData(Material.GRASS));
+                    block.getWorld().spawnParticle(Particle.BLOCK_DUST, block.getLocation().add(.5, 1.5, .5), 16, .5, .5, .5, 0, Material.GRASS_BLOCK.createBlockData());
                     customEntity.entityEatEffect(entity);
                     return true;
                 }
@@ -779,7 +781,7 @@ public final class RanchEntity implements CustomEntity, TickableEntity {
             case COW:
                 for (int i = 0; i < foodDrop; i += 1) foodAmount += 1 + random.nextInt(3); // 1 - 3
                 for (int i = 0; i < itemDrop; i += 1) itemAmount += random.nextInt(3); // 0 - 2
-                if (foodAmount > 0) loot.add(new ItemStack(Material.RAW_BEEF, foodAmount));
+                if (foodAmount > 0) loot.add(new ItemStack(Material.BEEF, foodAmount));
                 if (itemAmount < 0) loot.add(new ItemStack(Material.LEATHER, itemAmount));
                 if (customEntity.plugin.getScore().hasPerk(owner, Perk.RANCH_COW_OXHIDE)) {
                     if (random.nextInt(100) < specialDropChance) loot.add(IngredientItem.Type.OXHIDE.spawn());
@@ -791,12 +793,12 @@ public final class RanchEntity implements CustomEntity, TickableEntity {
             case MUSHROOM_COW:
                 for (int i = 0; i < foodDrop; i += 1) foodAmount += 1 + random.nextInt(3); // 1 - 3
                 for (int i = 0; i < itemDrop; i += 1) itemAmount += random.nextInt(3); // 0 - 2
-                if (foodAmount > 0) loot.add(new ItemStack(Material.RAW_BEEF, foodAmount));
+                if (foodAmount > 0) loot.add(new ItemStack(Material.BEEF, foodAmount));
                 if (itemAmount < 0) loot.add(new ItemStack(Material.LEATHER, itemAmount));
                 break;
             case PIG:
                 for (int i = 0; i < foodDrop; i += 1) foodAmount += 1 + random.nextInt(3); // 1 - 3
-                if (foodAmount > 0) loot.add(new ItemStack(Material.PORK, foodAmount));
+                if (foodAmount > 0) loot.add(new ItemStack(Material.PORKCHOP, foodAmount));
                 if (customEntity.plugin.getScore().hasPerk(owner, Perk.RANCH_PIG_PIGSKIN)) {
                     if (random.nextInt(100) < specialDropChance) loot.add(IngredientItem.Type.PIGSKIN.spawn());
                 }
@@ -808,7 +810,27 @@ public final class RanchEntity implements CustomEntity, TickableEntity {
                 for (int i = 0; i < foodDrop; i += 1) foodAmount += 1 + random.nextInt(3); // 1 - 3
                 for (int i = 0; i < itemDrop; i += 1) itemAmount += random.nextInt(3); // 0 - 2 (vanilla: 1)
                 if (foodAmount > 0) loot.add(new ItemStack(Material.MUTTON, foodAmount));
-                if (itemAmount > 0) loot.add(new ItemStack(Material.WOOL, itemAmount)); // TODO colorize
+                Material woolMaterial;
+                switch (((Sheep)entity).getColor()) {
+                case WHITE: woolMaterial = Material.WHITE_WOOL; break;
+                case ORANGE: woolMaterial = Material.ORANGE_WOOL; break;
+                case MAGENTA: woolMaterial = Material.MAGENTA_WOOL; break;
+                case LIGHT_BLUE: woolMaterial = Material.LIGHT_BLUE_WOOL; break;
+                case YELLOW: woolMaterial = Material.YELLOW_WOOL; break;
+                case LIME: woolMaterial = Material.LIME_WOOL; break;
+                case PINK: woolMaterial = Material.PINK_WOOL; break;
+                case GRAY: woolMaterial = Material.GRAY_WOOL; break;
+                case SILVER: woolMaterial = Material.LIGHT_GRAY_WOOL; break;
+                case CYAN: woolMaterial = Material.CYAN_WOOL; break;
+                case PURPLE: woolMaterial = Material.PURPLE_WOOL; break;
+                case BLUE: woolMaterial = Material.BLUE_WOOL; break;
+                case BROWN: woolMaterial = Material.BROWN_WOOL; break;
+                case GREEN: woolMaterial = Material.GREEN_WOOL; break;
+                case RED: woolMaterial = Material.RED_WOOL; break;
+                case BLACK: woolMaterial = Material.BLACK_WOOL; break;
+                default: woolMaterial = Material.WHITE_WOOL;
+                }
+                if (itemAmount > 0) loot.add(new ItemStack(woolMaterial, itemAmount));
                 break;
             case RABBIT:
                 for (int i = 0; i < foodDrop; i += 1) foodAmount += random.nextInt(2); // 0 - 1
@@ -822,7 +844,7 @@ public final class RanchEntity implements CustomEntity, TickableEntity {
             case CHICKEN:
                 for (int i = 0; i < foodDrop; i += 1) foodAmount += random.nextInt(3); // 0 - 2 (vanilla: 1)
                 for (int i = 0; i < itemDrop; i += 1) itemAmount += random.nextInt(3); // 0 - 2
-                if (foodAmount > 0) loot.add(new ItemStack(Material.RAW_CHICKEN, foodAmount));
+                if (foodAmount > 0) loot.add(new ItemStack(Material.CHICKEN, foodAmount));
                 if (itemAmount > 0) loot.add(new ItemStack(Material.FEATHER, itemAmount));
                 if (customEntity.plugin.getScore().hasPerk(owner, Perk.RANCH_CHICKEN_DOWN)) {
                     if (random.nextInt(100) < specialDropChance) loot.add(IngredientItem.Type.CHICKEN_DOWN.spawn());
@@ -1031,7 +1053,7 @@ public final class RanchEntity implements CustomEntity, TickableEntity {
                             case PIG:
                                 IngredientItem.Type.TRUFFLE.drop(loc);
                                 loc.getWorld().playSound(loc, Sound.BLOCK_GRASS_BREAK, 1.0f, 0.8f);
-                                loc.getWorld().spawnParticle(Particle.BLOCK_DUST, loc, 16, .5, .5, .5, 0, new MaterialData(Material.GRASS));
+                                loc.getWorld().spawnParticle(Particle.BLOCK_DUST, loc, 16, .5, .5, .5, 0, Material.GRASS_BLOCK.createBlockData());
                                 break;
                             case CHICKEN:
                                 IngredientItem.Type.GOLDEN_EGG.drop(loc);
@@ -1247,8 +1269,8 @@ public final class RanchEntity implements CustomEntity, TickableEntity {
                     break;
                 case PIG:
                     switch (item.getType()) {
-                    case POTATO_ITEM:
-                    case CARROT_ITEM:
+                    case POTATO:
+                    case CARROT:
                     case BEETROOT:
                         isFood = true;
                     default: break;
@@ -1256,7 +1278,7 @@ public final class RanchEntity implements CustomEntity, TickableEntity {
                     break;
                 case CHICKEN:
                     switch (item.getType()) {
-                    case SEEDS:
+                    case WHEAT_SEEDS:
                     case BEETROOT_SEEDS:
                     case MELON_SEEDS:
                     case PUMPKIN_SEEDS:
@@ -1274,7 +1296,7 @@ public final class RanchEntity implements CustomEntity, TickableEntity {
                 case RABBIT:
                     switch (item.getType()) {
                     case CARROT:
-                    case YELLOW_FLOWER:
+                    case DANDELION:
                         isFood = true;
                     default: break;
                     }
@@ -1316,7 +1338,27 @@ public final class RanchEntity implements CustomEntity, TickableEntity {
                 }
                 final Random random = customEntity.plugin.random;
                 for (int i = 0; i < 16; i += 1) {
-                    ItemStack item = new ItemStack(Material.WOOL, 1 + random.nextInt(3), (short)i);
+                    Material woolMaterial;
+                    switch (i) {
+                    case 0: woolMaterial = Material.WHITE_WOOL; break;
+                    case 1: woolMaterial = Material.ORANGE_WOOL; break;
+                    case 2: woolMaterial = Material.MAGENTA_WOOL; break;
+                    case 3: woolMaterial = Material.LIGHT_BLUE_WOOL; break;
+                    case 4: woolMaterial = Material.YELLOW_WOOL; break;
+                    case 5: woolMaterial = Material.LIME_WOOL; break;
+                    case 6: woolMaterial = Material.PINK_WOOL; break;
+                    case 7: woolMaterial = Material.GRAY_WOOL; break;
+                    case 8: woolMaterial = Material.LIGHT_GRAY_WOOL; break;
+                    case 9: woolMaterial = Material.CYAN_WOOL; break;
+                    case 10: woolMaterial = Material.PURPLE_WOOL; break;
+                    case 11: woolMaterial = Material.BLUE_WOOL; break;
+                    case 12: woolMaterial = Material.BROWN_WOOL; break;
+                    case 13: woolMaterial = Material.GREEN_WOOL; break;
+                    case 14: woolMaterial = Material.RED_WOOL; break;
+                    case 15: woolMaterial = Material.BLACK_WOOL; break;
+                    default: woolMaterial = Material.WHITE_WOOL;
+                    }
+                    ItemStack item = new ItemStack(woolMaterial, 1 + random.nextInt(3));
                     entity.getWorld().dropItemNaturally(entity.getEyeLocation(), item);
                 }
                 say(entity);

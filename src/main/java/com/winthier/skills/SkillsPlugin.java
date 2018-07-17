@@ -645,11 +645,11 @@ public final class SkillsPlugin extends JavaPlugin implements Listener {
         Set<Perk> perks = score.getPerks(uuid);
         if (weapon == null) return 0;
         switch (weapon.getType()) {
-        case WOOD_SWORD:
+        case WOODEN_SWORD:
         case STONE_SWORD:
             if (score.hasPerk(uuid, Perk.BRAWL_SWORD_CHARGE)) return 1;
             return 0;
-        case GOLD_SWORD:
+        case GOLDEN_SWORD:
             if (perks.contains(Perk.BRAWL_SWORD_GOLD_RAGE)) return 3;
             if (perks.contains(Perk.BRAWL_SWORD_GOLD_LIFE_STEAL)) return 2;
             if (perks.contains(Perk.BRAWL_SWORD_CHARGE)) return 1;
@@ -664,11 +664,11 @@ public final class SkillsPlugin extends JavaPlugin implements Listener {
             if (perks.contains(Perk.BRAWL_SWORD_DIAMOND_DASH)) return 2;
             if (perks.contains(Perk.BRAWL_SWORD_CHARGE)) return 1;
             return 0;
-        case WOOD_AXE:
+        case WOODEN_AXE:
         case STONE_AXE:
             if (score.hasPerk(uuid, Perk.BRAWL_AXE_CHARGE)) return 1;
             return 0;
-        case GOLD_AXE:
+        case GOLDEN_AXE:
             if (perks.contains(Perk.BRAWL_AXE_GOLD_LIFE_STEAL2)) return 3;
             if (perks.contains(Perk.BRAWL_AXE_GOLD_LIFE_STEAL)) return 2;
             if (perks.contains(Perk.BRAWL_AXE_CHARGE)) return 1;
@@ -710,7 +710,7 @@ public final class SkillsPlugin extends JavaPlugin implements Listener {
             default: getSkill(BrawlSkill.class).basicChargeAttack(player);
             }
             break;
-        case GOLD_SWORD:
+        case GOLDEN_SWORD:
             switch (chargeLevel) {
             case 3: getSkill(BrawlSkill.class).goldSwordRage(player); break;
             case 2: getSkill(BrawlSkill.class).goldSwordHeal(player); break;
@@ -731,7 +731,7 @@ public final class SkillsPlugin extends JavaPlugin implements Listener {
             default: getSkill(BrawlSkill.class).basicChargeAttack(player);
             }
             break;
-        case GOLD_AXE:
+        case GOLDEN_AXE:
             switch (chargeLevel) {
             case 3: getSkill(BrawlSkill.class).goldAxeArea2(player); break;
             case 2: getSkill(BrawlSkill.class).goldAxeArea(player); break;

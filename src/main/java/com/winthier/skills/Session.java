@@ -142,7 +142,7 @@ final class Session {
                 } else {
                     weaponChargeBar.setTitle(color + "Charge " + chargeLevel);
                 }
-                player.playSound(player.getEyeLocation(), Sound.BLOCK_NOTE_BELL, SoundCategory.PLAYERS, 0.1f, 1.4f + 0.1f * (float)chargeLevel);
+                player.playSound(player.getEyeLocation(), Sound.BLOCK_NOTE_BLOCK_BELL, SoundCategory.PLAYERS, 0.1f, 1.4f + 0.1f * (float)chargeLevel);
             }
             if (weaponCharge < 0.01) {
                 weaponChargeBar.setProgress(0);

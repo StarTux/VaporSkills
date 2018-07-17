@@ -25,10 +25,10 @@ final class WoodcutSkill extends Skill {
         if (!allowPlayer(player)) return;
         switch (player.getInventory().getItemInMainHand().getType()) {
         case DIAMOND_AXE:
-        case GOLD_AXE:
+        case GOLDEN_AXE:
         case IRON_AXE:
         case STONE_AXE:
-        case WOOD_AXE:
+        case WOODEN_AXE:
             break;
         default:
             return;

@@ -25,10 +25,10 @@ final class SmithSkill extends Skill {
         case LEATHER_CHESTPLATE: return 3;
         case LEATHER_LEGGINGS: return 2;
         case LEATHER_BOOTS: return 1;
-        case GOLD_HELMET: return 2;
-        case GOLD_CHESTPLATE: return 5;
-        case GOLD_LEGGINGS: return 3;
-        case GOLD_BOOTS: return 1;
+        case GOLDEN_HELMET: return 2;
+        case GOLDEN_CHESTPLATE: return 5;
+        case GOLDEN_LEGGINGS: return 3;
+        case GOLDEN_BOOTS: return 1;
         case CHAINMAIL_HELMET: return 2;
         case CHAINMAIL_CHESTPLATE: return 5;
         case CHAINMAIL_LEGGINGS: return 4;
@@ -47,32 +47,32 @@ final class SmithSkill extends Skill {
 
     static double getDefaultAttackDamage(Material mat) {
         switch (mat) {
-        case WOOD_SWORD: return 4;
-        case GOLD_SWORD: return 4;
+        case WOODEN_SWORD: return 4;
+        case GOLDEN_SWORD: return 4;
         case STONE_SWORD: return 5;
         case IRON_SWORD: return 6;
         case DIAMOND_SWORD: return 7;
             // Axes
-        case WOOD_AXE: return 7;
-        case GOLD_AXE: return 7;
+        case WOODEN_AXE: return 7;
+        case GOLDEN_AXE: return 7;
         case STONE_AXE: return 9;
         case IRON_AXE: return 9;
         case DIAMOND_AXE: return 9;
             // Pickaxes
-        case WOOD_PICKAXE: return 2;
-        case GOLD_PICKAXE: return 2;
+        case WOODEN_PICKAXE: return 2;
+        case GOLDEN_PICKAXE: return 2;
         case STONE_PICKAXE: return 3;
         case IRON_PICKAXE: return 4;
         case DIAMOND_PICKAXE: return 5;
             // Shovel
-        case WOOD_SPADE: return 2.5;
-        case GOLD_SPADE: return 2.5;
-        case STONE_SPADE: return 3.5;
-        case IRON_SPADE: return 4.5;
-        case DIAMOND_SPADE: return 5.5;
+        case WOODEN_SHOVEL: return 2.5;
+        case GOLDEN_SHOVEL: return 2.5;
+        case STONE_SHOVEL: return 3.5;
+        case IRON_SHOVEL: return 4.5;
+        case DIAMOND_SHOVEL: return 5.5;
             // Hoe
-        case WOOD_HOE: return 1;
-        case GOLD_HOE: return 1;
+        case WOODEN_HOE: return 1;
+        case GOLDEN_HOE: return 1;
         case STONE_HOE: return 1;
         case IRON_HOE: return 1;
         case DIAMOND_HOE: return 1;
@@ -82,33 +82,33 @@ final class SmithSkill extends Skill {
 
     static double getDefaultAttackSpeed(Material mat) {
         switch (mat) {
-        case WOOD_SWORD:
-        case GOLD_SWORD:
+        case WOODEN_SWORD:
+        case GOLDEN_SWORD:
         case STONE_SWORD:
         case IRON_SWORD:
         case DIAMOND_SWORD:
             return 1.6;
             // Axes
-        case WOOD_AXE: return 0.8;
-        case GOLD_AXE: return 1.0;
+        case WOODEN_AXE: return 0.8;
+        case GOLDEN_AXE: return 1.0;
         case STONE_AXE: return 0.8;
         case IRON_AXE: return 0.9;
         case DIAMOND_AXE: return 1.0;
             // Pickaxes
-        case WOOD_PICKAXE: return 1.2;
+        case WOODEN_PICKAXE: return 1.2;
         case STONE_PICKAXE: return 1.2;
-        case GOLD_PICKAXE: return 1.2;
+        case GOLDEN_PICKAXE: return 1.2;
         case IRON_PICKAXE: return 1.2;
         case DIAMOND_PICKAXE: return 1.2;
             // Shovels
-        case WOOD_SPADE: return 1.0;
-        case GOLD_SPADE: return 1.0;
-        case STONE_SPADE: return 1.0;
-        case IRON_SPADE: return 1.0;
-        case DIAMOND_SPADE: return 1.0;
+        case WOODEN_SHOVEL: return 1.0;
+        case GOLDEN_SHOVEL: return 1.0;
+        case STONE_SHOVEL: return 1.0;
+        case IRON_SHOVEL: return 1.0;
+        case DIAMOND_SHOVEL: return 1.0;
             // Hoes
-        case WOOD_HOE: return 1.0;
-        case GOLD_HOE: return 1.0;
+        case WOODEN_HOE: return 1.0;
+        case GOLDEN_HOE: return 1.0;
         case STONE_HOE: return 2.0;
         case IRON_HOE: return 3.0;
         case DIAMOND_HOE: return 4.0;
@@ -149,10 +149,10 @@ final class SmithSkill extends Skill {
         HOE(EquipmentSlot.HAND, Category.TOOL),
         SHIELD(EquipmentSlot.OFF_HAND, Category.SHIELD),
         BOW(EquipmentSlot.HAND, Category.BOW),
-        BARDING(EquipmentSlot.CHEST, Category.BARDING);
+        HORSE_ARMOR(EquipmentSlot.CHEST, Category.HORSE_ARMOR);
 
         enum Category {
-            ARMOR, WEAPON, TOOL, WEAPON_TOOL, SHIELD, BARDING, BOW;
+            ARMOR, WEAPON, TOOL, WEAPON_TOOL, SHIELD, HORSE_ARMOR, BOW;
 
             boolean isWeapon() {
                 switch (this) {
@@ -191,61 +191,61 @@ final class SmithSkill extends Skill {
                 return Gear.SHIELD;
             case CHAINMAIL_HELMET:
             case DIAMOND_HELMET:
-            case GOLD_HELMET:
+            case GOLDEN_HELMET:
             case IRON_HELMET:
             case LEATHER_HELMET:
                 return Gear.HELMET;
             case CHAINMAIL_CHESTPLATE:
             case DIAMOND_CHESTPLATE:
-            case GOLD_CHESTPLATE:
+            case GOLDEN_CHESTPLATE:
             case IRON_CHESTPLATE:
             case LEATHER_CHESTPLATE:
                 return Gear.CHESTPLATE;
             case CHAINMAIL_LEGGINGS:
             case DIAMOND_LEGGINGS:
-            case GOLD_LEGGINGS:
+            case GOLDEN_LEGGINGS:
             case IRON_LEGGINGS:
             case LEATHER_LEGGINGS:
                 return Gear.LEGGINGS;
             case CHAINMAIL_BOOTS:
             case DIAMOND_BOOTS:
-            case GOLD_BOOTS:
+            case GOLDEN_BOOTS:
             case IRON_BOOTS:
             case LEATHER_BOOTS:
                 return Gear.BOOTS;
             case DIAMOND_SWORD:
-            case GOLD_SWORD:
+            case GOLDEN_SWORD:
             case IRON_SWORD:
             case STONE_SWORD:
-            case WOOD_SWORD:
+            case WOODEN_SWORD:
                 return Gear.SWORD;
             case DIAMOND_AXE:
-            case GOLD_AXE:
+            case GOLDEN_AXE:
             case IRON_AXE:
             case STONE_AXE:
-            case WOOD_AXE:
+            case WOODEN_AXE:
                 return Gear.AXE;
             case DIAMOND_PICKAXE:
-            case GOLD_PICKAXE:
+            case GOLDEN_PICKAXE:
             case IRON_PICKAXE:
             case STONE_PICKAXE:
-            case WOOD_PICKAXE:
+            case WOODEN_PICKAXE:
                 return Gear.PICKAXE;
-            case DIAMOND_SPADE:
-            case GOLD_SPADE:
-            case IRON_SPADE:
-            case STONE_SPADE:
-            case WOOD_SPADE:
+            case DIAMOND_SHOVEL:
+            case GOLDEN_SHOVEL:
+            case IRON_SHOVEL:
+            case STONE_SHOVEL:
+            case WOODEN_SHOVEL:
                 return Gear.SHOVEL;
-            case DIAMOND_BARDING:
-            case GOLD_BARDING:
-            case IRON_BARDING:
-                return Gear.BARDING;
+            case DIAMOND_HORSE_ARMOR:
+            case GOLDEN_HORSE_ARMOR:
+            case IRON_HORSE_ARMOR:
+                return Gear.HORSE_ARMOR;
             case DIAMOND_HOE:
-            case GOLD_HOE:
+            case GOLDEN_HOE:
             case IRON_HOE:
             case STONE_HOE:
-            case WOOD_HOE:
+            case WOODEN_HOE:
                 return Gear.HOE;
             default:
                 return null;
@@ -254,7 +254,7 @@ final class SmithSkill extends Skill {
     }
 
     enum Quality {
-        WOOD(Material.WOOD, null),
+        WOOD(Material.OAK_PLANKS, null),
         STONE(Material.COBBLESTONE, null),
         LEATHER(Material.LEATHER, Perk.SMITH_LEATHER),
         IRON(Material.IRON_INGOT, Perk.SMITH_IRON),
@@ -272,16 +272,16 @@ final class SmithSkill extends Skill {
 
         static Quality of(Material mat) {
             switch (mat) {
-            case WOOD_AXE:
-            case WOOD_HOE:
-            case WOOD_PICKAXE:
-            case WOOD_SPADE:
-            case WOOD_SWORD:
+            case WOODEN_AXE:
+            case WOODEN_HOE:
+            case WOODEN_PICKAXE:
+            case WOODEN_SHOVEL:
+            case WOODEN_SWORD:
                 return Quality.WOOD;
             case STONE_AXE:
             case STONE_HOE:
             case STONE_PICKAXE:
-            case STONE_SPADE:
+            case STONE_SHOVEL:
             case STONE_SWORD:
                 return Quality.STONE;
             case LEATHER_BOOTS:
@@ -290,26 +290,26 @@ final class SmithSkill extends Skill {
             case LEATHER_LEGGINGS:
                 return Quality.LEATHER;
             case IRON_AXE:
-            case IRON_BARDING:
+            case IRON_HORSE_ARMOR:
             case IRON_BOOTS:
             case IRON_CHESTPLATE:
             case IRON_HELMET:
             case IRON_HOE:
             case IRON_LEGGINGS:
             case IRON_PICKAXE:
-            case IRON_SPADE:
+            case IRON_SHOVEL:
             case IRON_SWORD:
                 return Quality.IRON;
-            case GOLD_AXE:
-            case GOLD_BARDING:
-            case GOLD_BOOTS:
-            case GOLD_CHESTPLATE:
-            case GOLD_HELMET:
-            case GOLD_HOE:
-            case GOLD_LEGGINGS:
-            case GOLD_PICKAXE:
-            case GOLD_SPADE:
-            case GOLD_SWORD:
+            case GOLDEN_AXE:
+            case GOLDEN_HORSE_ARMOR:
+            case GOLDEN_BOOTS:
+            case GOLDEN_CHESTPLATE:
+            case GOLDEN_HELMET:
+            case GOLDEN_HOE:
+            case GOLDEN_LEGGINGS:
+            case GOLDEN_PICKAXE:
+            case GOLDEN_SHOVEL:
+            case GOLDEN_SWORD:
                 return Quality.GOLD;
             case CHAINMAIL_BOOTS:
             case CHAINMAIL_CHESTPLATE:
@@ -317,14 +317,14 @@ final class SmithSkill extends Skill {
             case CHAINMAIL_LEGGINGS:
                 return Quality.MAIL;
             case DIAMOND_AXE:
-            case DIAMOND_BARDING:
+            case DIAMOND_HORSE_ARMOR:
             case DIAMOND_BOOTS:
             case DIAMOND_CHESTPLATE:
             case DIAMOND_HELMET:
             case DIAMOND_HOE:
             case DIAMOND_LEGGINGS:
             case DIAMOND_PICKAXE:
-            case DIAMOND_SPADE:
+            case DIAMOND_SHOVEL:
             case DIAMOND_SWORD:
                 return Quality.DIAMOND;
             default:
@@ -346,7 +346,7 @@ final class SmithSkill extends Skill {
         if (gear != null && quality != null && anvilStore.inputB == null) {
             int enchantCount = anvilStore.inputA.getEnchantments().size();
             if (enchantCount == 0) return;
-            anvilStore.setOutput(new ItemStack(Material.EXP_BOTTLE, enchantCount));
+            anvilStore.setOutput(new ItemStack(Material.EXPERIENCE_BOTTLE, enchantCount));
         } else if (gear != null && quality != null) {
             // Gear improvements require exactly 1 item per slot.  The
             // first item has to be an undamaged, unmodified vanilla

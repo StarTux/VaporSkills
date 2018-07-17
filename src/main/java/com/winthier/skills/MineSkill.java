@@ -25,10 +25,10 @@ final class MineSkill extends Skill {
         if (!allowPlayer(player)) return;
         switch (player.getInventory().getItemInMainHand().getType()) {
         case DIAMOND_PICKAXE:
-        case GOLD_PICKAXE:
+        case GOLDEN_PICKAXE:
         case IRON_PICKAXE:
         case STONE_PICKAXE:
-        case WOOD_PICKAXE:
+        case WOODEN_PICKAXE:
             break;
         default:
             return;

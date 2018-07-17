@@ -25,7 +25,7 @@ final class GardenSkill extends Skill {
         int factor = 1;
         switch (mat) {
         case CACTUS:
-        case SUGAR_CANE_BLOCK:
+        case SUGAR_CANE:
             Block stackedBlock = block.getRelative(0, 1, 0);
             while (stackedBlock.getType() == mat
                    && BukkitExploits.getInstance().isPlayerPlaced(stackedBlock)) {

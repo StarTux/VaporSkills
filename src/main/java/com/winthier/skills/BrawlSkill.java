@@ -29,7 +29,6 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.material.MaterialData;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -174,7 +173,7 @@ final class BrawlSkill extends Skill {
                     LivingEntity living = (LivingEntity)nearby;
                     if (damage(living, damage, player, weapon) > 0) {
                         living.getWorld().playSound(living.getEyeLocation(), Sound.ENTITY_PLAYER_ATTACK_STRONG, SoundCategory.HOSTILE, 0.5f, 0.8f);
-                        location.getWorld().spawnParticle(Particle.BLOCK_DUST, location, 16, .25, .25, .25, 0.1, new MaterialData(Material.DIAMOND_BLOCK));
+                        location.getWorld().spawnParticle(Particle.BLOCK_DUST, location, 16, .25, .25, .25, 0.1, Material.DIAMOND_BLOCK.createBlockData());
                     }
                 }
             }
@@ -219,7 +218,7 @@ final class BrawlSkill extends Skill {
                                     living.setVelocity(living.getVelocity().add(velo));
                                     player.setVelocity(new Vector(0, 0, 0));
                                     living.getWorld().playSound(living.getEyeLocation(), Sound.ENTITY_PLAYER_ATTACK_STRONG, SoundCategory.HOSTILE, 0.5f, 1.5f);
-                                    location.getWorld().spawnParticle(Particle.BLOCK_DUST, location, 16, .25, .25, .25, 0.1, new MaterialData(Material.DIAMOND_BLOCK));
+                                    location.getWorld().spawnParticle(Particle.BLOCK_DUST, location, 16, .25, .25, .25, 0.1, Material.DIAMOND_BLOCK.createBlockData());
                                 }
                             }
                         }
@@ -250,7 +249,7 @@ final class BrawlSkill extends Skill {
                     if (angle < Math.PI * 0.5) {
                         if (damage(living, damage, player, weapon) > 0) {
                             living.getWorld().playSound(living.getEyeLocation(), Sound.ENTITY_PLAYER_ATTACK_KNOCKBACK, SoundCategory.HOSTILE, 0.3f, 1.2f);
-                            living.getWorld().spawnParticle(Particle.BLOCK_DUST, living.getEyeLocation(), 16, .25, .25, .25, 0.1, new MaterialData(Material.IRON_BLOCK));
+                            living.getWorld().spawnParticle(Particle.BLOCK_DUST, living.getEyeLocation(), 16, .25, .25, .25, 0.1, Material.IRON_BLOCK.createBlockData());
                         }
                     }
                 }
@@ -286,7 +285,7 @@ final class BrawlSkill extends Skill {
                             LivingEntity living = (LivingEntity)e;
                             if (damage(living, damage, player, weapon) > 0) {
                                 living.getWorld().playSound(living.getEyeLocation(), Sound.ENTITY_PLAYER_ATTACK_KNOCKBACK, SoundCategory.HOSTILE, 0.3f, 1.15f);
-                                living.getWorld().spawnParticle(Particle.BLOCK_DUST, living.getEyeLocation(), 32, .25, .25, .25, 0.1, new MaterialData(Material.IRON_BLOCK));
+                                living.getWorld().spawnParticle(Particle.BLOCK_DUST, living.getEyeLocation(), 32, .25, .25, .25, 0.1, Material.IRON_BLOCK.createBlockData());
                             }
                         }
                     }
@@ -325,7 +324,7 @@ final class BrawlSkill extends Skill {
             double finalDamage = damage(target, player.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE).getValue(), player, player.getInventory().getItemInMainHand());
             if (finalDamage > 0) {
                 target.getWorld().playSound(target.getEyeLocation(), Sound.ENTITY_PLAYER_ATTACK_STRONG, SoundCategory.HOSTILE, 0.5f, 1.0f);
-                target.getWorld().spawnParticle(Particle.BLOCK_DUST, target.getEyeLocation(), 16, .25, .25, .25, 0.1, new MaterialData(Material.GOLD_BLOCK));
+                target.getWorld().spawnParticle(Particle.BLOCK_DUST, target.getEyeLocation(), 16, .25, .25, .25, 0.1, Material.GOLD_BLOCK.createBlockData());
                 if (finalDamage >= 4) {
                     player.addPotionEffect(new PotionEffect(PotionEffectType.HEAL, 1, 0));
                 }
@@ -368,7 +367,7 @@ final class BrawlSkill extends Skill {
                         for (LivingEntity target: targets) {
                             if (0 < damage(target, damage, player, weapon)) {
                                 target.getWorld().playSound(target.getEyeLocation(), Sound.ENTITY_PLAYER_ATTACK_CRIT, SoundCategory.HOSTILE, 0.3f, 1.3f);
-                                target.getWorld().spawnParticle(Particle.BLOCK_DUST, target.getEyeLocation(), 16, .25, .25, .25, 0.1, new MaterialData(Material.IRON_BLOCK));
+                                target.getWorld().spawnParticle(Particle.BLOCK_DUST, target.getEyeLocation(), 16, .25, .25, .25, 0.1, Material.IRON_BLOCK.createBlockData());
                                 affectedEntities.add(target.getUniqueId());
                                 break;
                             }
@@ -403,7 +402,7 @@ final class BrawlSkill extends Skill {
                     if (angle < Math.PI * 0.5) {
                         if (damage(living, damage, player, weapon) > 0) {
                             living.getWorld().playSound(living.getEyeLocation(), Sound.ENTITY_PLAYER_ATTACK_KNOCKBACK, SoundCategory.HOSTILE, 0.3f, 1.2f);
-                            living.getWorld().spawnParticle(Particle.BLOCK_DUST, living.getEyeLocation(), 16, .25, .25, .25, 0.1, new MaterialData(Material.DIAMOND_BLOCK));
+                            living.getWorld().spawnParticle(Particle.BLOCK_DUST, living.getEyeLocation(), 16, .25, .25, .25, 0.1, Material.DIAMOND_BLOCK.createBlockData());
                         }
                     }
                 }
@@ -507,7 +506,7 @@ final class BrawlSkill extends Skill {
                 if (player.getEyeLocation().distanceSquared(targetLocation) <= 9) {
                     if (0 < damage(target, damage, player, weapon)) {
                         target.getWorld().playSound(target.getEyeLocation(), Sound.ENTITY_PLAYER_ATTACK_STRONG, SoundCategory.HOSTILE, 0.5f, 1.0f);
-                        target.getWorld().spawnParticle(Particle.BLOCK_DUST, target.getEyeLocation(), 16, .25, .25, .25, 0.1, new MaterialData(Material.GOLD_BLOCK));
+                        target.getWorld().spawnParticle(Particle.BLOCK_DUST, target.getEyeLocation(), 16, .25, .25, .25, 0.1, Material.GOLD_BLOCK.createBlockData());
                         affectedCount += 1;
                     }
                 }
@@ -561,7 +560,7 @@ final class BrawlSkill extends Skill {
                 if (player.getEyeLocation().distanceSquared(targetLocation) <= 25) {
                     if (0 < damage(target, damage, player, weapon)) {
                         target.getWorld().playSound(target.getEyeLocation(), Sound.ENTITY_PLAYER_ATTACK_STRONG, SoundCategory.HOSTILE, 0.5f, 1.0f);
-                        target.getWorld().spawnParticle(Particle.BLOCK_DUST, target.getEyeLocation(), 32, .25, .25, .25, 0.1, new MaterialData(Material.GOLD_BLOCK));
+                        target.getWorld().spawnParticle(Particle.BLOCK_DUST, target.getEyeLocation(), 32, .25, .25, .25, 0.1, Material.GOLD_BLOCK.createBlockData());
                         affectedCount += 1;
                     }
                 }
@@ -619,7 +618,7 @@ final class BrawlSkill extends Skill {
         for (LivingEntity target: targets) {
             if (0 < damage(target, damage, player, weapon)) {
                 target.getWorld().playSound(target.getEyeLocation(), Sound.ENTITY_GENERIC_EXPLODE, SoundCategory.HOSTILE, 0.3f, 1.6f);
-                target.getWorld().spawnParticle(Particle.BLOCK_DUST, target.getEyeLocation(), 16, .25, .25, .25, 0.1, new MaterialData(Material.IRON_BLOCK));
+                target.getWorld().spawnParticle(Particle.BLOCK_DUST, target.getEyeLocation(), 16, .25, .25, .25, 0.1, Material.IRON_BLOCK.createBlockData());
             }
         }
     }
@@ -684,7 +683,7 @@ final class BrawlSkill extends Skill {
                         for (LivingEntity target: targets) {
                             if (0 < damage(target, damage, player, weapon)) {
                                 target.getWorld().playSound(target.getEyeLocation(), Sound.ENTITY_GENERIC_EXPLODE, SoundCategory.HOSTILE, 0.3f, 0.8f);
-                                target.getWorld().spawnParticle(Particle.BLOCK_DUST, target.getEyeLocation(), 32, .25, .25, .25, 0.1, new MaterialData(Material.IRON_BLOCK));
+                                target.getWorld().spawnParticle(Particle.BLOCK_DUST, target.getEyeLocation(), 32, .25, .25, .25, 0.1, Material.IRON_BLOCK.createBlockData());
                                 target.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 60, 0));
                                 target.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 60, 9));
                             }

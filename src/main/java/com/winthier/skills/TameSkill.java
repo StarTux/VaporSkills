@@ -41,7 +41,6 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.inventory.HorseInventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.material.MaterialData;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -123,7 +122,7 @@ final class TameSkill extends Skill {
                     plugin.setMetadata(pet, "LastDodge", pet.getTicksLived());
                     Location loc = ((LivingEntity)pet).getEyeLocation();
                     loc.getWorld().spawnParticle(Particle.SPELL_MOB, loc, 16, .5, .5, .5, 1.0f);
-                    loc.getWorld().playSound(loc, Sound.ENTITY_ENDERMEN_TELEPORT, SoundCategory.NEUTRAL, 0.3f, 1.5f);
+                    loc.getWorld().playSound(loc, Sound.ENTITY_ENDERMAN_TELEPORT, SoundCategory.NEUTRAL, 0.3f, 1.5f);
                 }
                 break;
             default:
@@ -191,7 +190,7 @@ final class TameSkill extends Skill {
                     if (!loc.getWorld().equals(petLoc.getWorld()) || loc.distanceSquared(petLoc) >= 256) {
                         pet.teleport(loc);
                         loc.getWorld().spawnParticle(Particle.SPELL_MOB, loc, 16, .5, .5, .5, 1.0f);
-                        loc.getWorld().playSound(loc, Sound.ENTITY_ENDERMEN_TELEPORT, SoundCategory.NEUTRAL, 0.3f, 1.5f);
+                        loc.getWorld().playSound(loc, Sound.ENTITY_ENDERMAN_TELEPORT, SoundCategory.NEUTRAL, 0.3f, 1.5f);
                     }
                     ((Sittable)pet).setSitting(false);
                 }
@@ -383,9 +382,9 @@ final class TameSkill extends Skill {
                             damage = 1;
                         } else {
                             switch (armor.getType()) {
-                            case IRON_BARDING: damage = 5; break;
-                            case GOLD_BARDING: damage = 3; break;
-                            case DIAMOND_BARDING: damage = 10; break;
+                            case IRON_HORSE_ARMOR: damage = 5; break;
+                            case GOLDEN_HORSE_ARMOR: damage = 3; break;
+                            case DIAMOND_HORSE_ARMOR: damage = 10; break;
                             default: damage = 1;
                             }
                         }
@@ -397,7 +396,7 @@ final class TameSkill extends Skill {
                     }
                     Location loc = target.getLocation();
                     loc.getWorld().playSound(loc, Sound.ENTITY_HORSE_LAND, SoundCategory.HOSTILE, 1.0f, 0.5f);
-                    loc.getWorld().spawnParticle(Particle.BLOCK_DUST, loc, 24, .5, .5, .5, 0.2, new MaterialData(Material.DIRT));
+                    loc.getWorld().spawnParticle(Particle.BLOCK_DUST, loc, 24, .5, .5, .5, 0.2, Material.DIRT.createBlockData());
                 }
             }
             break;

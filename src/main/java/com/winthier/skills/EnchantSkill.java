@@ -37,12 +37,12 @@ final class EnchantSkill extends Skill {
     }
 
     enum Enchant {
-        AQUA_AFFINITY(Enchantment.WATER_WORKER, Material.WATER_LILY),
+        AQUA_AFFINITY(Enchantment.WATER_WORKER, Material.LILY_PAD),
         BANE_OF_ARTHROPODS(Enchantment.DAMAGE_ARTHROPODS, Material.SPIDER_EYE),
-        BLAST_PROTECTION(Enchantment.PROTECTION_EXPLOSIONS, Material.SULPHUR),
-        CURSE_OF_BINDING(Enchantment.BINDING_CURSE, Material.WEB),
+        BLAST_PROTECTION(Enchantment.PROTECTION_EXPLOSIONS, Material.GUNPOWDER),
+        CURSE_OF_BINDING(Enchantment.BINDING_CURSE, Material.COBWEB),
         CURSE_OF_VANISHING(Enchantment.VANISHING_CURSE, Material.ENDER_PEARL),
-        DEPTH_STRIDER(Enchantment.DEPTH_STRIDER, Material.ENDER_STONE), // TODO: Maybe Nautilus Shell?
+        DEPTH_STRIDER(Enchantment.DEPTH_STRIDER, Material.END_STONE),
         EFFICIENCY(Enchantment.DIG_SPEED, Material.REDSTONE),
         FEATHER_FALLING(Enchantment.PROTECTION_FALL, Material.FEATHER),
         FIRE_ASPECT(Enchantment.FIRE_ASPECT, Material.BLAZE_POWDER),
@@ -51,26 +51,26 @@ final class EnchantSkill extends Skill {
         FORTUNE(Enchantment.LOOT_BONUS_BLOCKS, Material.RABBIT_FOOT),
         FROST_WALKER(Enchantment.FROST_WALKER, Material.PACKED_ICE),
         INFINITY(Enchantment.ARROW_INFINITE, Material.SPECTRAL_ARROW),
-        KNOCKBACK(Enchantment.KNOCKBACK, Material.PISTON_BASE),
+        KNOCKBACK(Enchantment.KNOCKBACK, Material.PISTON),
         LOOTING(Enchantment.LOOT_BONUS_MOBS, Material.RABBIT_FOOT),
-        LUCK_OF_THE_SEA(Enchantment.LUCK, Material.COOKED_FISH), // TODO: Clownfish
-        LURE(Enchantment.LURE, Material.RAW_FISH), // TODO: Sea Pickle
+        LUCK_OF_THE_SEA(Enchantment.LUCK, Material.TROPICAL_FISH),
+        LURE(Enchantment.LURE, Material.SEA_PICKLE),
         MENDING(Enchantment.MENDING, Material.GHAST_TEAR),
         POWER(Enchantment.ARROW_DAMAGE, Material.DIAMOND),
-        PROJECTILE_PROTECTION(Enchantment.PROTECTION_PROJECTILE, Material.LEATHER), // TODO: Scute
+        PROJECTILE_PROTECTION(Enchantment.PROTECTION_PROJECTILE, Material.SCUTE),
         PROTECTION(Enchantment.PROTECTION_ENVIRONMENTAL, Material.IRON_INGOT),
-        PUNCH(Enchantment.ARROW_KNOCKBACK, Material.PISTON_STICKY_BASE),
-        RESPIRATION(Enchantment.OXYGEN, Material.RAW_FISH), // TODO: Pufferfish
+        PUNCH(Enchantment.ARROW_KNOCKBACK, Material.STICKY_PISTON),
+        RESPIRATION(Enchantment.OXYGEN, Material.PUFFERFISH),
         SHARPNESS(Enchantment.DAMAGE_ALL, Material.EMERALD),
         SILK_TOUCH(Enchantment.SILK_TOUCH, Material.FEATHER),
         SMITE(Enchantment.DAMAGE_UNDEAD, Material.ROTTEN_FLESH),
-        SWEEPING_EDGE(Enchantment.SWEEPING_EDGE, Material.EYE_OF_ENDER),
-        THORNS(Enchantment.THORNS, Material.DOUBLE_PLANT), // TODO: Rose bush
-        UNBREAKING(Enchantment.DURABILITY, Material.OBSIDIAN);
-        // TODO: Loyalty: Name tag
-        // TODO: Impaling: Nautilus shell
-        // TODO: Riptide: Prismarine Crystal
-        // TODO: Channeling: Glowstone
+        SWEEPING_EDGE(Enchantment.SWEEPING_EDGE, Material.ENDER_EYE),
+        THORNS(Enchantment.THORNS, Material.ROSE_BUSH),
+        UNBREAKING(Enchantment.DURABILITY, Material.OBSIDIAN),
+        LOYALTY(Enchantment.LOYALTY, Material.NAME_TAG),
+        IMPALING(Enchantment.IMPALING, Material.NAUTILUS_SHELL),
+        RIPTIDE(Enchantment.RIPTIDE, Material.PRISMARINE_CRYSTALS),
+        CHANNELING(Enchantment.CHANNELING, Material.GLOWSTONE_DUST);
 
         final Enchantment bukkitEnchant;
         final Material sacrificeMaterial;
