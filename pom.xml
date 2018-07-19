@@ -13,6 +13,10 @@
   <repositories>
     <!-- Spigot Repo -->
     <repository>
+      <id>cavetale-repo</id>
+      <url>http://cavetale.com/jenkins/plugin/repository/everything</url>
+    </repository>
+    <repository>
       <id>spigot-repo</id>
       <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
     </repository>
@@ -35,35 +39,35 @@
     <dependency>
       <groupId>com.winthier.exploits</groupId>
       <artifactId>exploits</artifactId>
-      <version>0.1</version>
+      <version>0.1-SNAPSHOT</version>
       <scope>provided</scope>
     </dependency>
     <!-- PlayerCache -->
     <dependency>
       <groupId>com.winthier.playercache</groupId>
       <artifactId>playercache</artifactId>
-      <version>0.1</version>
+      <version>0.1-SNAPSHOT</version>
       <scope>provided</scope>
     </dependency>
     <!-- SQL -->
     <dependency>
       <groupId>com.winthier.sql</groupId>
       <artifactId>sql</artifactId>
-      <version>0.1</version>
+      <version>0.1-SNAPSHOT</version>
       <scope>provided</scope>
     </dependency>
     <!-- Custom -->
     <dependency>
       <groupId>com.winthier.custom</groupId>
       <artifactId>custom</artifactId>
-      <version>0.1</version>
+      <version>0.1-SNAPSHOT</version>
       <scope>provided</scope>
     </dependency>
     <!-- NoCheatPlus -->
     <dependency>
-      <groupId>fr.neatmonster.nocheatplus</groupId>
-      <artifactId>NoCheatPlus</artifactId>
-      <version>3.16.0</version>
+      <groupId>fr.neatmonster</groupId>
+      <artifactId>nocheatplus</artifactId>
+      <version>3.16.1-SNAPSHOT</version>
       <scope>provided</scope>
     </dependency>
   </dependencies>
