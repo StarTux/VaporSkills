@@ -820,7 +820,7 @@ public final class RanchEntity implements CustomEntity, TickableEntity {
                 case LIME: woolMaterial = Material.LIME_WOOL; break;
                 case PINK: woolMaterial = Material.PINK_WOOL; break;
                 case GRAY: woolMaterial = Material.GRAY_WOOL; break;
-                case SILVER: woolMaterial = Material.LIGHT_GRAY_WOOL; break;
+                case LIGHT_GRAY: woolMaterial = Material.LIGHT_GRAY_WOOL; break;
                 case CYAN: woolMaterial = Material.CYAN_WOOL; break;
                 case PURPLE: woolMaterial = Material.PURPLE_WOOL; break;
                 case BLUE: woolMaterial = Material.BLUE_WOOL; break;
