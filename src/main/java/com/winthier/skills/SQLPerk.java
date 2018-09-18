@@ -20,7 +20,7 @@ import lombok.Setter;
 public final class SQLPerk {
     @Id private Integer id;
     @Column(nullable = false) private UUID player;
-    @Column(nullable = false) private String perk;
+    @Column(nullable = false, length = 32) private String perk;
     @Column(nullable = false) private Date unlocked;
 
     public SQLPerk(UUID player, String perk) {

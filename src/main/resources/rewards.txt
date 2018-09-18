@@ -12,9 +12,8 @@ Mine break_block	gold_ore - -		5
 Mine break_block	emerald_ore - -		10
 Mine break_block	coal_ore - -		.5
 Mine break_block	redstone_ore - -	2
-Mine break_block	glowing_redstone_ore - -	2
 Mine break_block	lapis_ore - -		3.5
-Mine break_block	quartz_ore - -		1
+Mine break_block	nether_quartz_ore - -	1
 Mine break_block	glowstone - -		3
 Mine break_block	sea_lantern - -		5
 
@@ -22,16 +21,15 @@ Mine break_block	sea_lantern - -		5
 # Digging
 #=====================================================
 
-Dig break_block		dirt 0 -		.15
-Dig break_block		dirt 1 -		.15
-Dig break_block		dirt 2 -		.15
-Dig break_block		grass 0 -		.15
-Dig break_block		mycel 0 -		.15
-Dig break_block		sand 0 -		.15
-Dig break_block		sand 1 -		.15
-Dig break_block		gravel 0 -		.15
-Dig break_block		soul_Sand 0 -		.15
-Dig break_block		clay 0 -		.5
+Dig break_block		dirt - -		.15
+Dig break_block		coarse_dirt - -		.15
+Dig break_block		grass_block - -		.15
+Dig break_block		mycelium - -		.15
+Dig break_block		sand - -		.15
+Dig break_block		red_sand - -		.15
+Dig break_block		gravel - -		.15
+Dig break_block		soul_Sand - -		.15
+Dig break_block		clay - -		.5
 
 #=====================================================
 # Brawling
@@ -143,17 +141,17 @@ Tame pet_kill_entity	- - -			1
 # Brewing
 #=====================================================
 
-Brew ingredient		nether_stalk - -	2
+Brew ingredient		nether_wart - -		2
 Brew ingredient		redstone - -		3
 Brew ingredient		glowstone_dust - -	3
 Brew ingredient		sugar - -		3
-Brew ingredient		sulphur - -		3
+Brew ingredient		gunpowder - -		3
 Brew ingredient		spider_eye - -		3
 Brew ingredient		magma_cream - -		6
 Brew ingredient	fermented_spider_eye - -	6
 Brew ingredient		golden_carrot - -	6
-Brew ingredient		speckled_melon - -	6
-Brew ingredient		raw_fish 3 - 		6
+Brew ingredient	glistering_melon_slice - -	6
+Brew ingredient		cod - - 		6
 Brew ingredient		rabbit_foot - - 	6
 Brew ingredient		ghast_tear - -		6
 
@@ -161,16 +159,16 @@ Brew ingredient		ghast_tear - -		6
 # Fishing
 #=====================================================
 
-Fish fish_item		raw_fish 0 -		7
-Fish fish_item		raw_fish 1 -		7	# Salmon
-Fish fish_item		raw_fish 2 -		10	# Clownfish
-Fish fish_item		raw_fish 3 -		10	# Pufferfish
+Fish fish_item		cod - -			7
+Fish fish_item		salmon - -		7	# Salmon
+Fish fish_item		tropical_fish - -	10	# Clownfish
+Fish fish_item		pufferfish - -		10	# Pufferfish
 
 Fish fish_item		bow - -			10
 Fish fish_item		enchanted_book - -	10
 Fish fish_item		fishing_rod - -		10
 Fish fish_item		name_tag - - 		10
-Fish fish_item		water_lily - - 		10
+Fish fish_item		lily_pad - - 		10
 
 Fish fish_item		bowl - - 		5
 Fish fish_item		leather - - 		5
@@ -180,7 +178,7 @@ Fish fish_item		stick - -		5
 Fish fish_item		string - -		5
 Fish fish_item		potion - -		5	# Water Bottle
 Fish fish_item		bone - -		5
-Fish fish_item		ink_sack - -		5
+Fish fish_item		ink_sac - -		5
 Fish fish_item		tripwire_hook - -	5
 
 Fish fish_item		emerald - -		10
@@ -190,14 +188,13 @@ Fish fish_item		diamond - -		20
 # Cooking
 #=====================================================
 
-Cook smelt_item		cooked_beef 0 -		.35
-Cook smelt_item		cooked_chicken 0 -	.35
-Cook smelt_item		cooked_fish 0 -		.35
-Cook smelt_item		cooked_fish 1 -		.35
-Cook smelt_item		cooked_mutton 0 -	.35
-Cook smelt_item		cooked_rabbit 0 -	.35
-Cook smelt_item		grilled_pork 0 -	.35
-Cook smelt_item		baked_potato 0 -	.35
+Cook smelt_item		cooked_cod - -		.35
+Cook smelt_item		cooked_chicken - -	.35
+Cook smelt_item		cooked_salmon - -	.35
+Cook smelt_item		cooked_mutton - -	.35
+Cook smelt_item		cooked_rabbit - -	.35
+Cook smelt_item		cooked_porkchop - -	.35
+Cook smelt_item		baked_potato - -	.35
 
 #=====================================================
 # Enchanting
@@ -242,32 +239,34 @@ Smith craft_gear	- 5 -			8
 # Woodcutting
 #=====================================================
 
-Woodcut break_block	log - -			.75
-Woodcut break_block	log_2 - -		.75
-Woodcut break_block	leaves - -		.1
-Woodcut break_block	leaves_2 - -		.1
+Woodcut break_block	acacia_log - -			.75
+Woodcut break_block	birch_log - -			.75
+Woodcut break_block	dark_oak_log - -		.75
+Woodcut break_block	jungle_log - -			.75
+Woodcut break_block	oak_log - -			.75
+Woodcut break_block	spruce_log - -			.75
 
 #=====================================================
 # Gardening
 #=====================================================
 
-Garden break_block	crops 7 -		.2
-Garden break_block	potato 7 -		.2
-Garden break_block	carrot 7 -		.2
+Garden break_block	wheat - -		.2
+Garden break_block	potato - -		.2
+Garden break_block	carrot - -		.2
 Garden break_block	red_mushroom 0 -	.2
 Garden break_block	brown_Mushroom 0 -	.2
 Garden break_block	cactus - -		.2
-Garden break_block	sugar_cane_block - -	.1
+Garden break_block	sugar_cane - -		.1
 Garden break_block	pumpkin - -		.2
-Garden break_block	melon_block - -		.2
-Garden break_block	nether_warts 3 -	.2
-Garden break_block	huge_mushroom_1 - -	.2
-Garden break_block	huge_mushroom_2 - -	.2
+Garden break_block	melon - -		.2
+Garden break_block	nether_wart - -		.2
+Garden break_block	brown_mushroom_block - - .2
+Garden break_block	red_mushroom_block - -	.2
 Garden break_block	vine - -		.5
-Garden break_block	water_lily - -		.5
+Garden break_block	lily_pad - -		.5
 
 Garden break_block	cocoa - -		.2
 
 Garden break_block	chorus_plant - -	.1
 Garden break_block	chorus_flower - -	.1
-Garden break_block	beetroot_block - -	.1
+Garden break_block	beetroot - -		.1

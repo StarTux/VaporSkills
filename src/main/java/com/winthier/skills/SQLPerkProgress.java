@@ -21,7 +21,7 @@ import lombok.Setter;
 public final class SQLPerkProgress {
     @Id private Integer id;
     @Column(nullable = false) private UUID player;
-    @Column(nullable = false) private String skill;
+    @Column(nullable = false, length = 32) private String skill;
     @Column(nullable = false) private Integer perkPoints;
     @Column(nullable = false) private Integer perks;
     @Version private Date version;

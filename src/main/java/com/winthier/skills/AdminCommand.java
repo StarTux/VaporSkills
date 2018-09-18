@@ -14,12 +14,14 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.json.simple.JSONValue;
 
 @RequiredArgsConstructor
 class AdminCommand implements CommandExecutor {
     private final SkillsPlugin plugin;
+    private YamlConfiguration perksOut;
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -268,11 +270,23 @@ class AdminCommand implements CommandExecutor {
         map.put("display", displayMap);
         Map<String, Object> iconMap = new HashMap<>();
         displayMap.put("icon", iconMap);
-        ConfigurationSection config = plugin.getPerksConfig().getConfigurationSection("perks." + perkName);
-        iconMap.put("item", config.getString("Icon.Item", "minecraft:diamond"));
-        if (config.isSet("Icon.Data")) iconMap.put("data", config.getInt("Icon.Data"));
-        displayMap.put("title", config.getString("DisplayName", perkName));
-        displayMap.put("description", config.getString("Description", perkName));
+        ConfigurationSection config = plugin.getPerksConfig().getConfigurationSection(perkName);
+        ConfigurationSection configOut = perksOut.createSection(perkName);
+        if (config == null) config = configOut;
+        String cfgIconItem = config.getString("Icon.Item", "minecraft:stick");
+        iconMap.put("item", cfgIconItem);
+        configOut.set("Icon.Item", cfgIconItem);
+        if (config.isSet("Icon.Data")) {
+            int cfgIconData = config.getInt("Icon.Data");
+            iconMap.put("data", cfgIconData);
+            configOut.set("Icon.Data", cfgIconData);
+        }
+        String cfgTitle = config.getString("DisplayName", perkName);
+        displayMap.put("title", cfgTitle);
+        configOut.set("DisplayName", cfgTitle);
+        String cfgDescription = config.getString("Description", perkName);
+        displayMap.put("description", cfgDescription);
+        configOut.set("Description", perkName);
         if (perkName.equals("root")) displayMap.put("background", "minecraft:textures/gui/advancements/backgrounds/stone.png");
         displayMap.put("hidden", false);
         displayMap.put("announce_to_chat", false);
@@ -295,6 +309,8 @@ class AdminCommand implements CommandExecutor {
     boolean onCommandPerks(CommandSender sender, String[] args) {
         if (args.length == 1 && args[0].equals("adv")) {
             File root = plugin.getDataFolder();
+            File perksFile = new File(root, "perks-out.yml");
+            perksOut = new YamlConfiguration();
             root = new File(root, "advancements");
             root = new File(root, "winthier");
             root = new File(root, "skills");
@@ -305,6 +321,13 @@ class AdminCommand implements CommandExecutor {
             } catch (IOException ioe) {
                 ioe.printStackTrace();
             }
+            try {
+                perksOut.save(perksFile);
+            } catch (IOException ioe) {
+                System.err.println("Could not save " + perksFile.getName());
+                ioe.printStackTrace();
+            }
+            perksOut = null;
             sender.sendMessage("" + Perk.values().length + " advancements created");
         } else {
             sender.sendMessage("/skadmin perk adv");
