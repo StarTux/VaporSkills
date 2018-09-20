@@ -137,8 +137,11 @@ public enum Perk {
     TAME_HORSE_JUMP_CHANCE(SkillType.TAME, Perk.TAME_HORSE_SPEED_CHANCE),
     TAME_HORSE_KNOCKBACK(SkillType.TAME, Perk.TAME_BASE),
     TAME_HORSE_RIDE_DOWN(SkillType.TAME, Perk.TAME_HORSE_KNOCKBACK),
-    TAME_HORSE_RESURRECT(SkillType.TAME, Perk.TAME_HORSE_RIDE_DOWN);
+    TAME_HORSE_RESURRECT(SkillType.TAME, Perk.TAME_HORSE_RIDE_DOWN),
 
+    FISH_FOO(SkillType.FISH, null),
+    GARDEN_FOO(SkillType.GARDEN, null),
+    WOODCUT_FOO(SkillType.WOODCUT, null);
     final SkillType skillType;
     final Perk depends;
     final String key;

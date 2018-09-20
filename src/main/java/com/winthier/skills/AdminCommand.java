@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -263,7 +264,17 @@ class AdminCommand implements CommandExecutor {
         return true;
     }
 
-    private void makeAdvancement(File root, String perkName, String depends) throws IOException {
+    private void makeAdvancement(File root, Perk perk, SkillType skillType) throws IOException {
+        String perkName, depends;
+        if (perk != null) {
+            perkName = perk.key;
+            depends = perk.depends == null ? "skills:" + perk.skillType.key + "/" + perk.skillType.key : "skills:" + perk.depends.skillType.key + "/" + perk.depends.key;
+        } else if (skillType != null) {
+            perkName = skillType.key;
+            depends = null;
+        } else {
+            throw new NullPointerException("Perks and skillType cannot both be null!");
+        }
         File file = new File(root, perkName + ".json");
         Map<String, Object> map = new HashMap<>();
         Map<String, Object> displayMap = new HashMap<>();
@@ -272,52 +283,121 @@ class AdminCommand implements CommandExecutor {
         displayMap.put("icon", iconMap);
         ConfigurationSection config = plugin.getPerksConfig().getConfigurationSection(perkName);
         ConfigurationSection configOut = perksOut.createSection(perkName);
-        if (config == null) config = configOut;
-        String cfgIconItem = config.getString("Icon.Item", "minecraft:stick");
-        iconMap.put("item", cfgIconItem);
-        configOut.set("Icon.Item", cfgIconItem);
-        if (config.isSet("Icon.Data")) {
-            int cfgIconData = config.getInt("Icon.Data");
-            iconMap.put("data", cfgIconData);
-            configOut.set("Icon.Data", cfgIconData);
+        if (config == null) {
+            plugin.getLogger().warning("Missing perk section: " + perkName);
+            config = configOut;
         }
-        String cfgTitle = config.getString("DisplayName", perkName);
+        String cfgIconItem = config.getString("item");
+        if (cfgIconItem == null) cfgIconItem = "stick";
+        String cfgIconNbt = config.getString("nbt");
+        if (cfgIconNbt == null) cfgIconNbt = "{}";
+        Material mat;
+        try {
+            mat = Material.valueOf(cfgIconItem.toUpperCase());
+        } catch (IllegalArgumentException iae) {
+            plugin.getLogger().warning("Unknown icon material: " + cfgIconItem);
+        }
+        iconMap.put("item", "minecraft:" + cfgIconItem);
+        iconMap.put("nbt", cfgIconNbt);
+        configOut.set("item", cfgIconItem);
+        configOut.set("nbt", cfgIconNbt);
+        String cfgTitle = config.getString("title");
+        if (cfgTitle == null) {
+            if (skillType != null) {
+                cfgTitle = plugin.getSkill(skillType).getDisplayName();
+            } else {
+                cfgTitle = perkName;
+            }
+        }
         displayMap.put("title", cfgTitle);
-        configOut.set("DisplayName", cfgTitle);
-        String cfgDescription = config.getString("Description", perkName);
+        configOut.set("title", cfgTitle);
+        String cfgDescription = config.getString("description");
+        if (cfgDescription == null) {
+            if (skillType != null) {
+                cfgDescription = plugin.getSkill(skillType).getDescription();
+            } else {
+                cfgDescription = perkName;
+            }
+        }
         displayMap.put("description", cfgDescription);
-        configOut.set("Description", perkName);
-        if (perkName.equals("root")) displayMap.put("background", "minecraft:textures/gui/advancements/backgrounds/stone.png");
+        configOut.set("description", perkName);
+        if (skillType != null) {
+            String background = config.getString("background");
+            if (background == null) background = "minecraft:textures/block/cobblestone.png";
+            if (background != null) {
+                displayMap.put("background", background);
+                configOut.set("background", background);
+            }
+        }
         displayMap.put("hidden", false);
         displayMap.put("announce_to_chat", false);
         displayMap.put("show_toast", false);
-        // displayMap.put("frame", "goal");
-        if (depends != null) {
-            map.put("parent", "winthier:skills/" + depends);
+        if (skillType == null) {
+            displayMap.put("frame", "goal");
+        } else {
+            displayMap.put("frame", "challenge");
         }
         Map<String, Object> criteriaMap = new HashMap<>();
         map.put("criteria", criteriaMap);
-        Map<String, Object> impossibleMap = new HashMap<>();
-        criteriaMap.put("impossible", impossibleMap);
-        impossibleMap.put("trigger", "minecraft:location");
-        //impossibleMap.put("trigger", "minecraft:impossible");
+        if (depends == null) {
+            // Root advancements are always enabled.
+            Map<String, Object> automaticMap = new HashMap<>();
+            criteriaMap.put("auto", automaticMap);
+            automaticMap.put("trigger", "minecraft:location");
+        } else {
+            map.put("parent", depends);
+            Map<String, Object> impossibleMap = new HashMap<>();
+            criteriaMap.put("impossible", impossibleMap);
+            impossibleMap.put("trigger", "minecraft:impossible");
+        }
         FileWriter writer = new FileWriter(file);
         JSONValue.writeJSONString(map, writer);
         writer.close();
     }
 
+    void delete(File file) {
+        if (file.isDirectory()) {
+            for (File sub: file.listFiles()) {
+                delete(sub);
+            }
+        }
+        file.delete();
+    }
+
     boolean onCommandPerks(CommandSender sender, String[] args) {
         if (args.length == 1 && args[0].equals("adv")) {
-            File root = plugin.getDataFolder();
-            File perksFile = new File(root, "perks-out.yml");
+            File perksFile = new File(plugin.getDataFolder(), "perks-out.yml");
             perksOut = new YamlConfiguration();
-            root = new File(root, "advancements");
-            root = new File(root, "winthier");
+            File root = plugin.getServer().getWorlds().get(0).getWorldFolder();
+            root = new File(root, "datapacks");
             root = new File(root, "skills");
+            if (root.exists()) delete(root);
+            File metafile = new File(root, "pack.mcmeta");
+            Map<String, Object> metaRoot = new HashMap<>();
+            Map<String, Object> metaPack = new HashMap<>();
+            metaRoot.put("pack", metaPack);
+            metaPack.put("pack_format", 1);
+            metaPack.put("description", "Skills perk advancements");
             root.mkdirs();
             try {
-                makeAdvancement(root, "root", null);
-                for (Perk perk: Perk.values()) makeAdvancement(root, perk.name().toLowerCase(), perk.depends == null ? "root" : perk.depends.name().toLowerCase());
+                FileWriter writer = new FileWriter(metafile);
+                JSONValue.writeJSONString(metaRoot, writer);
+                writer.close();
+            } catch (IOException ioe) {
+                ioe.printStackTrace();
+            }
+            root = new File(root, "data");
+            root = new File(root, "skills");
+            root = new File(root, "advancements");
+            try {
+                for (Perk perk: Perk.values()) {
+                    File dir = new File(root, perk.skillType.key);
+                    if (!dir.exists()) {
+                        dir.mkdirs();
+                        makeAdvancement(dir, null, perk.skillType);
+                    }
+                    makeAdvancement(dir, perk, null);
+                }
             } catch (IOException ioe) {
                 ioe.printStackTrace();
             }
@@ -329,6 +409,15 @@ class AdminCommand implements CommandExecutor {
             }
             perksOut = null;
             sender.sendMessage("" + Perk.values().length + " advancements created");
+            for (String key: plugin.getPerksConfig().getKeys(false)) {
+                if (key.equals("root")) continue;
+                try {
+                    Perk.valueOf(key.toUpperCase());
+                } catch (IllegalArgumentException iae) {
+                    plugin.getLogger().info("Unknown perk key: " + key);
+                }
+            }
+            plugin.getServer().reloadData();
         } else {
             sender.sendMessage("/skadmin perk adv");
         }

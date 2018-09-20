@@ -1,70 +1,91 @@
-root:
-  DisplayName: Skills
-  Description: Improve various Skills. See /sk.
-  Icon:
-    Item: 'minecraft:experience_bottle'
-smith_improve_leather:
-  DisplayName: Leatherworking
-  Description: Improve leather armor.
-  Icon:
-    Item: 'minecraft:leather_chestplate'
-smith_improve_gold:
-  DisplayName: Goldsmith
-  Description: Improve golden gear.
-  Icon:
-    Item: 'minecraft:gold_ingot'
-smith_improve_mail:
-  DisplayName: Chainmail
-  Description: Create improved chainmail armor.
-  Icon:
-    Item: 'minecraft:chainmail_chestplate'
-smith_improve_iron:
-  DisplayName: Ironwork
-  Description: Improve iron armor and gear.
-  Icon:
-    Item: 'minecraft:iron_ingot'
-smith_improve_diamond:
-  DisplayName: Jeweler
-  Description: Improve diamond armor and gear.
-  Icon:
-    Item: 'minecraft:diamond'
+brawl:
+  item: iron_sword
+  background: 'minecraft:textures/block/redstone_block.png'
+hunt:
+  item: bow
+  background: 'minecraft:textures/block/dispenser_front.png'
+tame:
+  item: bone
+  background: 'minecraft:textures/block/green_wool.png'
+brew:
+  item: potion
+  background: 'minecraft:textures/block/soul_sand.png'
+cook:
+  item: cooked_beef
+  background: 'minecraft:textures/block/furnace_front.png'
+enchant:
+  item: enchanted_book
+  background: 'minecraft:textures/block/obsidian.png'
+smith:
+  item: anvil
+  background: 'minecraft:textures/block/iron_block.png'
+ranch:
+  item: lead
+  background: 'minecraft:textures/block/hay_block_side.png'
+fish:
+  item: cod
+  background: 'minecraft:textures/misc/underwater.png'
+garden:
+  item: sunflower
+  background: 'minecraft:textures/block/farmland_moist.png'
+dig:
+  item: iron_shovel
+  background: 'minecraft:textures/block/dirt.png'
+mine:
+  item: diamond_pickaxe
+  background: 'minecraft:textures/block/coal_ore.png'
+woodcut:
+  item: iron_axe
+  background: 'minecraft:textures/block/oak_log.png'
+smith_leather:
+  title: Leatherworking
+  description: Improve leather armor.
+  item: leather_chestplate
+smith_gold:
+  title: Goldsmith
+  description: Improve golden gear.
+  item: gold_ingot
+smith_mail:
+  title: Chainmail
+  description: Create improved chainmail armor.
+  item: chainmail_chestplate
+smith_iron:
+  title: Ironwork
+  description: Improve iron armor and gear.
+  item: iron_ingot
+smith_diamond:
+  title: Jeweler
+  description: Improve diamond armor and gear.
+  item: diamond
 smith_leather_armor_speed:
-  DisplayName: Speedy Leather
-  Description: Improved leather armor grants speed depending on your smithing level.
-  Icon:
-    Item: 'minecraft:leather_boots'
+  title: Speedy Leather
+  description: Improved leather armor grants speed depending on your smithing level.
+  item: leather_boots
 smith_gold_armor_health:
-  DisplayName: Golden Healthbar
-  Description: Improved golden armor grants extra health depending on your smithing level.
-  Icon:
-    Item: 'minecraft:diamond_helmet'
+  title: Golden Healthbar
+  description: Improved golden armor grants extra health depending on your smithing level.
+  item: diamond_helmet
 smith_mail_armor_damage:
-  DisplayName: Strong Chainmail
-  Description: Improved chainmail armor grants extra attack damage depending on your smithing level.
-  Icon:
-    Item: 'minecraft:chainmail_leggings'
+  title: Strong Chainmail
+  description: Improved chainmail armor grants extra attack damage depending on your smithing level.
+  item: chainmail_leggings
 smith_iron_armor_armor:
-  DisplayName: Iron Armor
-  Description: Improved iron armor is extra strong, depending on your smithing level.
-  Icon:
-    Item: 'minecraft:iron_helmet'
+  title: Iron Armor
+  description: Improved iron armor is extra strong, depending on your smithing level.
+  item: iron_helmet
 smith_diamond_armor_armor:
-  DisplayName: Diamond Armor
-  Description: Improved diamond armor is extra strong, depending on your smithing level.
-  Icon:
-    Item: 'minecraft:diamond_helmet'
+  title: Diamond Armor
+  description: Improved diamond armor is extra strong, depending on your smithing level.
+  item: diamond_helmet
 smith_diamond_armor_tough:
-  DisplayName: Diamond toughness
-  Description: Improved diamond armor has additional toughness, depending on your smithing level.
-  Icon:
-    Item: 'minecraft:diamond_chestplate'
+  title: Diamond toughness
+  description: Improved diamond armor has additional toughness, depending on your smithing level.
+  item: diamond_chestplate
 smith_shield_armor:
-  DisplayName: Iron Shield
-  Description: Improved shields grant additional armor, depending on your smithing level.
-  Icon:
-    Item: 'minecraft:shield'
+  title: Iron Shield
+  description: Improved shields grant additional armor, depending on your smithing level.
+  item: shield
 smith_sword_damage:
-  DisplayName: Sharp Swords
-  Description: Improved swords grant extra damage, depending on material and your smithing level.
-  Icon:
-    Item: 'minecraft:iron_sword'
+  title: Sharp Swords
+  description: Improved swords grant extra damage, depending on material and your smithing level.
+  item: iron_sword

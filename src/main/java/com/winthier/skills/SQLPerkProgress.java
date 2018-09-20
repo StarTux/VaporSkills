@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "perks",
+@Table(name = "perk_progress",
        uniqueConstraints = @UniqueConstraint(columnNames = {"player", "skill"}))
 @Getter
 @Setter

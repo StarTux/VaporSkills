@@ -104,19 +104,13 @@ public final class SkillsPlugin extends JavaPlugin implements Listener {
         instance = this;
     }
 
-    static List<Class<?>> getDatabaseClasses() {
-        return Arrays.asList(SQLScore.class,
-                             SQLPerk.class,
-                             SQLPerkProgress.class);
-    }
-
     @Override
     public void onEnable() {
         // Files
         reloadConfig();
         // Database
         db = new SQLDatabase(this);
-        for (Class<?> clazz: getDatabaseClasses()) db.registerTable(clazz);
+        db.registerTables(SQLScore.class, SQLPerk.class, SQLPerkProgress.class);
         if (!db.createAllTables()) {
             getLogger().warning("Database setup failed. Disabling skills.");
             getServer().getPluginManager().disablePlugin(this);
