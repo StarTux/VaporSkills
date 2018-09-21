@@ -119,12 +119,12 @@ final class Msg {
         double percentage = Math.min(100.0, (double)has / (double)needs);
         has = (int)(percentage * (double)len);
         StringBuilder sb = new StringBuilder();
-        sb.append("&3[&f");
+        sb.append("&7[&9");
         for (int i = 0; i < len; ++i) {
             if (has == i) sb.append("&8");
             sb.append("|");
         }
-        sb.append("&3]");
+        sb.append("&7]");
         return format(sb.toString());
     }
 
