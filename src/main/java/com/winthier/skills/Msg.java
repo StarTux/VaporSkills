@@ -180,8 +180,16 @@ final class Msg {
         return en.name().toLowerCase().replace("_", " ");
     }
 
+    public static String niceEnumName(String s) {
+        return s.toLowerCase().replace("_", " ");
+    }
+
     public static String capitalEnumName(Enum en) {
-        String[] t = en.name().split("_");
+        return capitalEnumName(en.name());
+    }
+
+    public static String capitalEnumName(String s) {
+        String[] t = s.split("_");
         StringBuilder sb = new StringBuilder(capitalize(t[0]));
         for (int i = 1; i < t.length; i += 1) sb.append(" ").append(capitalize(t[i]));
         return sb.toString();

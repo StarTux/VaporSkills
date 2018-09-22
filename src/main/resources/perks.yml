@@ -1,91 +1,536 @@
-brawl:
-  item: iron_sword
-  background: 'minecraft:textures/block/redstone_block.png'
-hunt:
-  item: bow
-  background: 'minecraft:textures/block/dispenser_front.png'
-tame:
-  item: bone
-  background: 'minecraft:textures/block/green_wool.png'
-brew:
-  item: potion
-  background: 'minecraft:textures/block/soul_sand.png'
-cook:
-  item: cooked_beef
-  background: 'minecraft:textures/block/furnace_front.png'
-enchant:
-  item: enchanted_book
-  background: 'minecraft:textures/block/obsidian.png'
 smith:
-  item: anvil
-  background: 'minecraft:textures/block/iron_block.png'
-ranch:
-  item: lead
-  background: 'minecraft:textures/block/hay_block_side.png'
-fish:
-  item: cod
-  background: 'minecraft:textures/misc/underwater.png'
-garden:
-  item: sunflower
-  background: 'minecraft:textures/block/farmland_moist.png'
-dig:
-  item: iron_shovel
-  background: 'minecraft:textures/block/dirt.png'
-mine:
-  item: diamond_pickaxe
-  background: 'minecraft:textures/block/coal_ore.png'
-woodcut:
-  item: iron_axe
-  background: 'minecraft:textures/block/oak_log.png'
+  icon: anvil
+  title: Smithing
+  description: Improve your gear on an anvil. Depending on your skill level, armor offers more protection, and weapons deal more damage. Additional attributes depend on the quality of the used ingredients.
+  background: minecraft:textures/block/iron_block.png
 smith_leather:
+  icon: leather_chestplate
   title: Leatherworking
   description: Improve leather armor.
-  item: leather_chestplate
 smith_gold:
+  icon: gold_ingot
   title: Goldsmith
   description: Improve golden gear.
-  item: gold_ingot
 smith_mail:
+  icon: chainmail_chestplate
   title: Chainmail
   description: Create improved chainmail armor.
-  item: chainmail_chestplate
 smith_iron:
+  icon: iron_ingot
   title: Ironwork
   description: Improve iron armor and gear.
-  item: iron_ingot
 smith_diamond:
+  icon: diamond
   title: Jeweler
   description: Improve diamond armor and gear.
-  item: diamond
+smith_unbreakable:
+  icon: bedrock
+  title: Unbreakable
+  description: Improved items are unbreakable.
 smith_leather_armor_speed:
+  icon: leather_boots
   title: Speedy Leather
-  description: Improved leather armor grants speed depending on your smithing level.
-  item: leather_boots
+  description: Improved leather armor grants speed.
 smith_gold_armor_health:
+  icon: gold_helmet
   title: Golden Healthbar
-  description: Improved golden armor grants extra health depending on your smithing level.
-  item: diamond_helmet
+  description: Improved golden armor grants extra health.
 smith_mail_armor_damage:
+  icon: chainmail_leggings
   title: Strong Chainmail
-  description: Improved chainmail armor grants extra attack damage depending on your smithing level.
-  item: chainmail_leggings
+  description: Improved chainmail armor grants extra attack damage.
 smith_iron_armor_armor:
-  title: Iron Armor
-  description: Improved iron armor is extra strong, depending on your smithing level.
-  item: iron_helmet
-smith_diamond_armor_armor:
-  title: Diamond Armor
-  description: Improved diamond armor is extra strong, depending on your smithing level.
-  item: diamond_helmet
+  icon: iron_helmet
+  title: Iron Smithing
+  description: Improve iron armor on an anvil.
 smith_diamond_armor_tough:
-  title: Diamond toughness
-  description: Improved diamond armor has additional toughness, depending on your smithing level.
-  item: diamond_chestplate
-smith_shield_armor:
-  title: Iron Shield
-  description: Improved shields grant additional armor, depending on your smithing level.
-  item: shield
-smith_sword_damage:
-  title: Sharp Swords
-  description: Improved swords grant extra damage, depending on material and your smithing level.
-  item: iron_sword
+  icon: diamond_chestplate
+  title: Diamond Toughness
+  description: Improved diamond armor has additional toughness.
+smith_shield_knockback_resist:
+  icon: shield
+  title: Improved shields offer additional knockback resistance.
+  description: Smith Shield Knockback Resist
+smith_iron_sword_damage:
+  icon: iron_sword
+  title: Heavy Metal
+  description: Improved iron swords deal more damage.
+smith_gold_sword_attack_speed:
+  icon: gold_sword
+  title: Aurum Speed
+  description: Improved golden swords have increased attack speed.
+smith_diamond_sword_speed:
+  icon: stick
+  title: Speedy Lance
+  description: Improved diamond swords grant bonus movement speed.
+smith_iron_axe_knockback_resist:
+  icon: iron_axe
+  title: And My Axe
+  description: Improved iron axes protect against knockback effects.
+smith_gold_axe_attack_speed:
+  icon: golden_axe
+  title: Golden Toy
+  description: Improved golden axes have heightened attack speed.
+smith_diamond_axe_damage:
+  icon: diamond_axe
+  title: Diamond Edge
+  description: Improved diamond axes deal even more damage.
+brawl:
+  icon: iron_sword
+  title: Brawling
+  description: Fight hostile monsters in close combat, ideally with your sword.
+  background: minecraft:textures/block/redstone_block.png
+brawl_sword_charge:
+  icon: wooden_sword
+  title: Sword Charge
+  description: Sneak to charge your sword for extra damage.
+brawl_sword_diamond_pierce:
+  icon: diamond_sword
+  title: Diamond Pierce Attack
+  description: Charge your diamond sword to level 2 to perform a pierce attack.
+brawl_sword_diamond_dash:
+  icon: diamond_sword
+  title: Diamond Lance Dash
+  description: Charge your diamond sword to level 3 to perform a dash attack.
+brawl_sword_iron_slash:
+  icon: iron_sword
+  title: Iron Slash Attack
+  description: Charge your iron sword to level 2 to perform a slash attack.
+brawl_sword_iron_spin:
+  icon: iron_sword
+  title: Iron Spin Attack
+  description: Charge your iron sword to level 3 to perform a spin attack.
+brawl_sword_gold_life_steal:
+  icon: golden_sword
+  title: Gold Vampirism
+  description: Charge your gold sword to level 2 to steal life.
+brawl_sword_gold_rage:
+  icon: golden_sword
+  title: Golden Rage
+  description: Charge your gold sword to level 3 to perform a life stealing rage attack.
+brawl_axe_charge:
+  icon: wooden_axe
+  title: Axe Charge
+  description: Sneak to charge your axes for stronger area attacks.
+brawl_axe_iron_hammer:
+  icon: stick
+  title: Iron Hammer
+  description: Charge your iron axe to level 2 to hit the ground with your hammer.
+brawl_axe_iron_hammer2:
+  icon: stick
+  title: "Thor's Hammer"
+  description: Charge your iron axe to level 2 to cause an earthquake.
+brawl_axe_gold_life_steal:
+  icon: golden_axe
+  title: Golden Healing Axe
+  description: Charge your golden axe to level 2 to steal the life of your opponents.
+brawl_axe_gold_life_steal2:
+  icon: golden_axe
+  title: Golden Life Steal
+  description: Charge to level 3 to steal life from more enemies.
+brawl_axe_diamond_slash:
+  icon: diamond_axe
+  title: Diamond Axe Slash
+  description: Charge your diamond axe to level 2 to perform a slash attack.
+brawl_axe_diamond_throw:
+  icon: diamond_axe
+  title: Diamond Axe Throw
+  description: Charge your axe to level 3 to throw it at your enemies.
+hunt:
+  icon: bow
+  title: Hunting
+  description: Snipe dangerous creatures from afar with your bow to stay out of harms
+    way.
+  background: minecraft:textures/block/dispenser_front.png
+hunt_base:
+  icon: stick
+  title: Hunt Base
+  description: Hunt Base
+hunt_headshot:
+  icon: stick
+  title: Hunt Headshot
+  description: Hunt Headshot
+hunt_footshot:
+  icon: stick
+  title: Hunt Footshot
+  description: Hunt Footshot
+hunt_crit:
+  icon: stick
+  title: Hunt Crit
+  description: Hunt Crit
+hunt_crit2:
+  icon: stick
+  title: Hunt Crit2
+  description: Hunt Crit2
+hunt_arrow_retrieve:
+  icon: stick
+  title: Hunt Arrow Retrieve
+  description: Hunt Arrow Retrieve
+hunt_arrow_absorb:
+  icon: stick
+  title: Hunt Arrow Absorb
+  description: Hunt Arrow Absorb
+hunt_arrow_absorb2:
+  icon: stick
+  title: Hunt Arrow Absorb2
+  description: Hunt Arrow Absorb2
+hunt_charge_bow:
+  icon: stick
+  title: Hunt Charge Bow
+  description: Hunt Charge Bow
+hunt_charge_multiple:
+  icon: stick
+  title: Hunt Charge Multiple
+  description: Hunt Charge Multiple
+hunt_charge_barrage:
+  icon: stick
+  title: Hunt Charge Barrage
+  description: Hunt Charge Barrage
+hunt_charge_hail:
+  icon: stick
+  title: Hunt Charge Hail
+  description: Hunt Charge Hail
+ranch:
+  icon: lead
+  title: Ranching
+  description: Feed your farm animals to make them breed and increase their numbers.
+  background: minecraft:textures/block/hay_block_side.png
+ranch_cow:
+  icon: milk_bucket
+  title: Cowherd
+  description: Breed magnificent cows and nurture them to great heath.
+ranch_pig:
+  icon: porkchop
+  title: Swineherd
+  description: Improve pigs by breeding and nurturing them.
+ranch_sheep:
+  icon: white_wool
+  title: Shepherd
+  description: Improve your sheep via breeding and nurture.
+ranch_chicken:
+  icon: egg
+  title: Chicken Rancher
+  description: Get better chickens by breeding and nurture.
+ranch_rabbit:
+  icon: rabbit_foot
+  title: Rabbit Rancher
+  description: Breed rabbits and nurture them to great health.
+ranch_carry:
+  icon: saddle
+  title: Heavy Lifting
+  description: Carry your animals around with you.
+ranch_twins:
+  icon: wheat
+  title: Twin Babies
+  description: Get a chance to breed twins.
+ranch_triplets:
+  icon: trident
+  title: Triplets
+  description: Get a chance to breed triplets.
+ranch_quadruplets:
+  icon: apple
+  title: Quadruplets
+  description: Get a chance to breed quadruplets.
+ranch_inspect_book:
+  icon: book
+  title: Inspection Book
+  description: Use a book on your animals to get more information.
+ranch_inspect_favorite:
+  icon: written_book
+  title: Favorite Inspection
+  description: "Fill your book with information about the animal's favorites."
+ranch_inspect_quirk:
+  icon: enchanted_book
+  title: Gene Testing
+  description: Find information about the genetic traits of your animals.
+ranch_cow_oxhide:
+  icon: leather
+  title: Oxhide
+  description: Good cows drop oxhide.
+ranch_cow_sirloin:
+  icon: cooked_porkchop
+  title: Sirloin
+  description: Good cows drop sirloin.
+ranch_cow_milk:
+  icon: milk_bucket
+  title: Cow Milk
+  description: Milk your good cows for special cow milk.
+ranch_pig_truffle:
+  icon: brown_mushroom
+  title: Truffle Pig
+  description: Your good pigs may find truffles when you take them for a walk.
+ranch_pig_pigskin:
+  icon: leather
+  title: Pigskin
+  description: Good pigs drop pigskin.
+ranch_pig_bacon:
+  icon: porkchop
+  title: Bacon
+  description: Good pigs drop bacon.
+ranch_sheep_rainbow:
+  icon: shears
+  title: Jeb was here
+  description: Get a chance to breed a rainbow sheep.
+ranch_chicken_gold_egg:
+  icon: egg
+  title: Gold Egg
+  description: Your good chickens lay golden eggs.
+ranch_chicken_down:
+  icon: feather
+  title: Feather Down
+  description: Your good chickens drop feather down.
+ranch_rabbit_foot:
+  icon: rabbit_foot
+  title: Rabbit Foot
+  description: Your good rabbits drop rabbit foot.
+brew:
+  icon: potion
+  title: Brewing
+  description: Brew magic potions in the brewing stand to achieve epic effects to
+    wreak havoc on your enemies.
+  background: minecraft:textures/block/soul_sand.png
+brew_stack:
+  icon: stick
+  title: Brew Stack
+  description: Brew Stack
+brew_movement_duration:
+  icon: stick
+  title: Brew Movement Duration
+  description: Brew Movement Duration
+brew_resistance_duration:
+  icon: stick
+  title: Brew Resistance Duration
+  description: Brew Resistance Duration
+brew_ability_duration:
+  icon: stick
+  title: Brew Ability Duration
+  description: Brew Ability Duration
+brew_resistance_absorption:
+  icon: stick
+  title: Brew Resistance Absorption
+  description: Brew Resistance Absorption
+brew_heal_regen:
+  icon: stick
+  title: Brew Heal Regen
+  description: Brew Heal Regen
+brew_regen_health:
+  icon: stick
+  title: Brew Regen Health
+  description: Brew Regen Health
+brew_debuff_duration:
+  icon: stick
+  title: Brew Debuff Duration
+  description: Brew Debuff Duration
+brew_damage_poison:
+  icon: stick
+  title: Brew Damage Poison
+  description: Brew Damage Poison
+brew_weak_blind:
+  icon: stick
+  title: Brew Weak Blind
+  description: Brew Weak Blind
+brew_slow_wither:
+  icon: stick
+  title: Brew Slow Wither
+  description: Brew Slow Wither
+cook:
+  icon: cooked_beef
+  title: Cooking
+  description: Prepare your meals in the oven to increase their effectiveness and
+    taste.
+  background: minecraft:textures/block/furnace_front.png
+cook_saturation:
+  icon: stick
+  title: Cook Saturation
+  description: Cook Saturation
+cook_meat_resistance:
+  icon: stick
+  title: Cook Meat Resistance
+  description: Cook Meat Resistance
+cook_vegetable_health:
+  icon: stick
+  title: Cook Vegetable Health
+  description: Cook Vegetable Health
+cook_starch_strength:
+  icon: stick
+  title: Cook Starch Strength
+  description: Cook Starch Strength
+cook_sugar_speed:
+  icon: stick
+  title: Cook Sugar Speed
+  description: Cook Sugar Speed
+cook_fish_absorption:
+  icon: stick
+  title: Cook Fish Absorption
+  description: Cook Fish Absorption
+dig:
+  icon: iron_shovel
+  title: Digging
+  description: Use your shovel to dig in the ground and find epic treasure hidden
+    beneath.
+  background: minecraft:textures/block/dirt.png
+dig_bone:
+  icon: stick
+  title: Dig Bone
+  description: Dig Bone
+dig_string:
+  icon: stick
+  title: Dig String
+  description: Dig String
+dig_feather:
+  icon: stick
+  title: Dig Feather
+  description: Dig Feather
+dig_gunpowder:
+  icon: stick
+  title: Dig Gunpowder
+  description: Dig Gunpowder
+dig_seeds:
+  icon: stick
+  title: Dig Seeds
+  description: Dig Seeds
+dig_iron:
+  icon: stick
+  title: Dig Iron
+  description: Dig Iron
+dig_gold:
+  icon: stick
+  title: Dig Gold
+  description: Dig Gold
+dig_emerald:
+  icon: stick
+  title: Dig Emerald
+  description: Dig Emerald
+dig_diamond:
+  icon: stick
+  title: Dig Diamond
+  description: Dig Diamond
+dig_falling_stack:
+  icon: stick
+  title: Dig Falling Stack
+  description: Dig Falling Stack
+dig_radius:
+  icon: stick
+  title: Dig Radius
+  description: Dig Radius
+enchant:
+  icon: enchanted_book
+  title: Enchanting
+  description: Improve your weapons, tools and armor on the enchanting table to make
+    them stronger, more effective and deadlier.
+  background: minecraft:textures/block/obsidian.png
+enchant_altar:
+  icon: stick
+  title: Enchant Altar
+  description: Enchant Altar
+enchant_find_books:
+  icon: stick
+  title: Enchant Find Books
+  description: Enchant Find Books
+enchant_keep_books:
+  icon: stick
+  title: Enchant Keep Books
+  description: Enchant Keep Books
+tame:
+  icon: bone
+  title: Taming
+  description: Tame wild animals.
+  background: minecraft:textures/block/green_wool.png
+tame_base:
+  icon: wolf_spawn_egg
+  title: Good Boy
+  description: Your wolves deal more damage based on your skill level.
+tame_follow_teleport:
+  icon: ender_eye
+  title: Follow Teleport
+  description: Tamed animals follow you when you teleport.
+tame_cat_lives:
+  icon: cod
+  title: Nine Lives
+  description: Your tamed cats have nine lives.
+tame_cat_aggro_creeper:
+  icon: creeper_head
+  title: Hiss
+  description: Your tamed Cats attack creepers.
+tame_cat_rage:
+  icon: music_disc_cat
+  title: Kitty Rage
+  description: When cats attack, they get a brief damage and movement speed buff.
+tame_dog_attack_damage:
+  icon: bone
+  title: Wolf Strong
+  description: Wolfs get an additional attack boost
+tame_dog_movement_speed:
+  icon: stick
+  title: Greyhound
+  description: Dogs gain increased movement speed when you tame them.
+tame_dog_health:
+  icon: rotten_flesh
+  title: Healthy Boy
+  description: Dogs gain increased health when you tame them.
+tame_dog_dodge:
+  icon: cactus
+  title: Smart Boy
+  description: Your dogs dodge environmental damage.
+tame_dog_death_heals:
+  icon: bone
+  title: Dog Heaven
+  description: When one of your dogs dies, it heals you.
+tame_dog_sacrifice:
+  icon: iron_sword
+  title: Selfless Boy
+  description: When you die, one of your dogs will sacrifice its life to safe yours.
+tame_horse_inherit:
+  icon: iron_horse_amor
+  title: Horse Inheritance
+  description: "Tamed horses inherit their parent's traits."
+tame_horse_speed_chance:
+  icon: saddle
+  title: Race Horse
+  description: Your tamed horses get a chance to birth even faster children.
+tame_horse_jump_chance:
+  icon: oak_fence
+  title: Jolly Jumper
+  description: Your tamed horses get a chance to birth even greater jump strength.
+tame_horse_knockback:
+  icon: golden_horse_armor
+  title: Horse Power
+  description: Your horses knock back enemies when you ride through them.
+tame_horse_ride_down:
+  icon: diamond_horse_armor
+  title: Ride Down
+  description: Your horses hurt enemies when you ride through them.
+tame_horse_resurrect:
+  icon: hay_block
+  title: Horse Resurrection
+  description: Your horses resurrect as a zombie or skeleton horse when they die.
+fish:
+  icon: cod
+  title: Fishing
+  description: Cast your fishing rod in bodies of water to catch different types of
+    fish for food or brewing.
+  background: minecraft:textures/misc/underwater.png
+fish_foo:
+  icon: stick
+  title: Fish Foo
+  description: Fish Foo
+garden:
+  icon: sunflower
+  title: Gardening
+  description: Reap the rewards of your hard gardening work by harvesting crops, fruit
+    and vegetables.
+  background: minecraft:textures/block/farmland_moist.png
+garden_foo:
+  icon: stick
+  title: Garden Foo
+  description: Garden Foo
+woodcut:
+  icon: iron_axe
+  title: Woodcutting
+  description: Grab your axe and cut down trees to collect lumber for your building
+    projects.
+  background: minecraft:textures/block/oak_log.png
+woodcut_foo:
+  icon: stick
+  title: Woodcut Foo
+  description: Woodcut Foo

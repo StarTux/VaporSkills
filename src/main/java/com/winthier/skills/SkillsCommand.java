@@ -2,6 +2,7 @@ package com.winthier.skills;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import net.md_5.bungee.api.ChatColor;
@@ -30,6 +31,10 @@ class SkillsCommand implements CommandExecutor {
         String cmd = args.length > 0 ? args[0].toLowerCase() : "";
         if (args.length == 0) {
             listSkills(player);
+        } else if (args.length == 2 && args[0].startsWith("perk")) {
+            skillPerks(player, args[1]);
+        } else if (args.length == 2 && args[0].equals("unlock")) {
+            unlockPerk(player, args[1]);
         } else if (args.length >= 1 && "progressbar".equals(cmd)) {
             String sub = args.length == 2 ? args[1].toLowerCase() : "";
             modifyProgressBar(player, sub);
@@ -106,29 +111,86 @@ class SkillsCommand implements CommandExecutor {
         int rank = hi.rankOfPlayer(uuid);
         String rankString = rank > 0 ? "#" + rank : "-";
         Msg.raw(player,
-                       Msg.format(" &9Your rank: "),
-                       Msg.button("&f" + rankString + " &9[&fHighscore&9]",
-                                         "/hi " + skill.skillType.key,
-                                         "&a/hi " + skill.skillType.key,
-                                         "&9&l" + skill.getDisplayName() + " &f" + rankString,
-                                         plugin.getHighscoreCommand().formatHighscoreAroundPlayer(hi, uuid),
-                                         "&7Click for more details"));
+                Msg.format(" &9Your rank: "),
+                Msg.button("&f" + rankString + " &9[&fHighscore&9]",
+                           "/hi " + skill.skillType.key,
+                           "&a/hi " + skill.skillType.key,
+                           "&9&l" + skill.getDisplayName() + " &f" + rankString,
+                           plugin.getHighscoreCommand().formatHighscoreAroundPlayer(hi, uuid),
+                           "&7Click for more details"));
         // Perks
-        ComponentBuilder cb = new ComponentBuilder("");
-        for (Perk perk: Perk.values()) {
-            if (perk.skillType != skill.skillType) continue;
-            cb.append(" ");
-            ConfigurationSection section = plugin.getPerksConfig().getConfigurationSection(perk.key);
-            if (section == null) section = plugin.getPerksConfig().createSection("tmp");
-            String title = section.getString("title");
-            String description = section.getString("description");
-            if (title == null) title = Msg.niceEnumName(perk);
-            if (description == null) description = title;
-            cb.append("§9[§f" + title + "§9]").color(ChatColor.WHITE);
-            cb.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponent.fromLegacyText("§9§l" + title + "\n§r§d§o" + description)));
+        ComponentBuilder cb = new ComponentBuilder(" ");
+        cb.append("Perks").color(ChatColor.BLUE);
+        int perks = plugin.getScore().getPerks(uuid, skill.skillType);
+        if (perks > 0) {
+            if (perks > 1) {
+                cb.append(" " + perks + " Points ");
+            } else {
+                cb.append(" " + perks + " Point ");
+            }
+            cb.color(ChatColor.WHITE);
+            cb.append("§9[§fSpend§9]").color(ChatColor.WHITE)
+                .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponent.fromLegacyText("§9View and unlock perks")))
+                .event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/sk perk " + skill.skillType.key));
+        } else {
+            int perkPoints = plugin.getScore().getPerkPoints(uuid, skill.skillType);
+            int left = Score.perkPointsPerPerk() - perkPoints;
+            if (left > 1) {
+                cb.append(" " + left + " more levels required. ").color(ChatColor.WHITE);
+            } else {
+                cb.append(" one more level required. ").color(ChatColor.WHITE);
+            }
+            cb.append("§9[§fView§9]").color(ChatColor.WHITE)
+                .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponent.fromLegacyText("§9View perks")))
+                .event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/sk perk " + skill.skillType.key));
         }
         player.spigot().sendMessage(cb.create());
         Msg.msg(player, "");
+    }
+
+    void skillPerks(Player player, String name) {
+        Skill skill = plugin.skillByName(name);
+        if (skill == null) {
+            Msg.msg(player, "&cSkill not found: %s", name);
+            return;
+        }
+        skillPerks(player, skill);
+    }
+
+    void skillPerks(Player player, Skill skill) {
+        final UUID uuid = player.getUniqueId();
+        // Title
+        Msg.msg(player, "&9&l%s &7Perks", skill.getDisplayName());
+        // Perks
+        Set<Perk> playerPerks = plugin.getScore().getPerks(player.getUniqueId());
+        ComponentBuilder cb = new ComponentBuilder("");
+        Perk pre = null;
+        for (Perk perk: Perk.values()) {
+            if (perk.skillType != skill.skillType) continue;
+            boolean hasPerk = playerPerks.contains(perk);
+            boolean canSeePerk = hasPerk || perk.depends == null || playerPerks.contains(perk.depends);
+            if (!canSeePerk) continue;
+            if (pre != null && pre == perk.depends) {
+                cb.append("  ").color(ChatColor.BLUE).strikethrough(true);
+                cb.append("").strikethrough(false);
+            } else {
+                cb.append("  ");
+            }
+            pre = perk;
+            String title = plugin.getPerkInfo(perk.key).title;
+            String description = plugin.getPerkInfo(perk.key).description;
+            if (hasPerk) {
+                // Has perk
+                cb.append("§9[§6" + title + "§9]").color(ChatColor.GOLD);
+                cb.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponent.fromLegacyText("§9" + title + "\n§r§d§o" + description)));
+            } else if (canSeePerk) {
+                // Can see perk
+                cb.append("§9[§8" + title + "§9]").color(ChatColor.DARK_GRAY);
+                cb.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponent.fromLegacyText("§9" + title + "\n§4LOCKED\n§eUnlock for 1 Perk.\n§r§d§o" + description)));
+                cb.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/sk unlock " + perk.key));
+            }
+        }
+        player.spigot().sendMessage(cb.create());
     }
 
     void modifyProgressBar(Player player, String arg) {
@@ -139,5 +201,33 @@ class SkillsCommand implements CommandExecutor {
             plugin.getSession(player).setProgressBarEnabled(true);
             Msg.msg(player, "&7Progress bar enabled");
         }
+    }
+
+    boolean unlockPerk(Player player, String arg) {
+        Perk perk;
+        try {
+            perk = Perk.valueOf(arg.toUpperCase());
+        } catch (IllegalArgumentException iae) {
+            return true;
+        }
+        UUID uuid = player.getUniqueId();
+        if (plugin.getScore().hasPerk(uuid, perk)) return true;
+        if (perk.depends != null && !plugin.getScore().hasPerk(uuid, perk.depends)) return true;
+        if (plugin.getScore().getPerks(uuid, perk.skillType) < 1) {
+            int left = Score.perkPointsPerPerk() - plugin.getScore().getPerkPoints(uuid, perk.skillType);
+            if (left > 1) {
+                Msg.msg(player, "&cYou need to gain " + left + " more levels to unlock another perk!");
+            } else {
+                Msg.msg(player, "&cYou need to gain one more level to unlock another perk!");
+            }
+            return true;
+        }
+        plugin.getScore().givePerks(uuid, perk.skillType, -1);
+        plugin.getScore().unlockPerk(uuid, perk);
+        Msg.msg(player, "&6Perk %s unlocked!", plugin.getPerkInfo(perk.key).title);
+        Msg.title(player, "&6" + plugin.getPerkInfo(perk.key).title, "&6Perk Unlocked!");
+        skillPerks(player, plugin.getSkill(perk.skillType));
+        Msg.consoleCommand("minecraft:advancement grant " + player.getName() + " until " + "skills:" + perk.skillType.key + "/" + perk.key);
+        return true;
     }
 }

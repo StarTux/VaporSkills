@@ -20,11 +20,11 @@ public final class Highscore {
         final int skillLevel;
     }
 
-    static Highscore create(SkillsPlugin plugin, SkillType skill) {
+    static Highscore create(SkillsPlugin plugin, String key) {
         Highscore result = new Highscore(plugin);
         int lastLevel = -1;
         int rank = 0;
-        for (SQLScore score : plugin.getDb().find(SQLScore.class).where().eq("skill", skill.key).orderByDescending("skillLevel").findList()) {
+        for (SQLScore score : plugin.getDb().find(SQLScore.class).where().eq("skill", key).orderByDescending("skillLevel").findList()) {
             UUID player = score.getPlayer();
             int skillPoints = (int)score.getSkillPoints();
             int skillLevel = score.getSkillLevel();

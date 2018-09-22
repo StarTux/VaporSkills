@@ -9,7 +9,6 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.persistence.Version;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
@@ -17,7 +16,6 @@ import lombok.Setter;
        uniqueConstraints = @UniqueConstraint(columnNames = {"player", "skill"}))
 @Getter
 @Setter
-@NoArgsConstructor
 public final class SQLPerkProgress {
     @Id private Integer id;
     @Column(nullable = false) private UUID player;
@@ -25,4 +23,13 @@ public final class SQLPerkProgress {
     @Column(nullable = false) private Integer perkPoints;
     @Column(nullable = false) private Integer perks;
     @Version private Date version;
+
+    public SQLPerkProgress() { }
+
+    public SQLPerkProgress(UUID player, String skill) {
+        this.player = player;
+        this.skill = skill;
+        this.perkPoints = 0;
+        this.perks = 0;
+    }
 }

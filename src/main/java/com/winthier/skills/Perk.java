@@ -40,21 +40,21 @@ public enum Perk {
     BRAWL_AXE_DIAMOND_SLASH(SkillType.BRAWL, Perk.BRAWL_AXE_CHARGE),
     BRAWL_AXE_DIAMOND_THROW(SkillType.BRAWL, Perk.BRAWL_AXE_DIAMOND_SLASH),
     // Hunting =====================================================
-    HUNT_BASE(SkillType.HUNT, null),
-    // Special hits
-    HUNT_HEADSHOT(SkillType.HUNT, Perk.HUNT_BASE),
-    HUNT_FOOTSHOT(SkillType.HUNT, Perk.HUNT_BASE),
-    HUNT_CRIT(SkillType.HUNT, Perk.HUNT_BASE),
-    HUNT_CRIT2(SkillType.HUNT, Perk.HUNT_BASE),
-    // Improve arrows
-    HUNT_ARROW_RETRIEVE(SkillType.HUNT, Perk.HUNT_BASE),
-    HUNT_ARROW_ABSORB(SkillType.HUNT, Perk.HUNT_ARROW_RETRIEVE),
-    HUNT_ARROW_ABSORB2(SkillType.HUNT, Perk.HUNT_ARROW_ABSORB),
-    // Bow charging
-    HUNT_CHARGE_BOW(SkillType.HUNT, Perk.HUNT_BASE), // 1
-    HUNT_CHARGE_MULTIPLE(SkillType.HUNT, Perk.HUNT_CHARGE_BOW), // 2
-    HUNT_CHARGE_BARRAGE(SkillType.HUNT, Perk.HUNT_CHARGE_MULTIPLE), // 3
-    HUNT_CHARGE_HAIL(SkillType.HUNT, Perk.HUNT_CHARGE_BARRAGE), // 4
+    // HUNT_BASE(SkillType.HUNT, null),
+    // // Special hits
+    // HUNT_HEADSHOT(SkillType.HUNT, Perk.HUNT_BASE),
+    // HUNT_FOOTSHOT(SkillType.HUNT, Perk.HUNT_BASE),
+    // HUNT_CRIT(SkillType.HUNT, Perk.HUNT_BASE),
+    // HUNT_CRIT2(SkillType.HUNT, Perk.HUNT_BASE),
+    // // Improve arrows
+    // HUNT_ARROW_RETRIEVE(SkillType.HUNT, Perk.HUNT_BASE),
+    // HUNT_ARROW_ABSORB(SkillType.HUNT, Perk.HUNT_ARROW_RETRIEVE),
+    // HUNT_ARROW_ABSORB2(SkillType.HUNT, Perk.HUNT_ARROW_ABSORB),
+    // // Bow charging
+    // HUNT_CHARGE_BOW(SkillType.HUNT, Perk.HUNT_BASE), // 1
+    // HUNT_CHARGE_MULTIPLE(SkillType.HUNT, Perk.HUNT_CHARGE_BOW), // 2
+    // HUNT_CHARGE_BARRAGE(SkillType.HUNT, Perk.HUNT_CHARGE_MULTIPLE), // 3
+    // HUNT_CHARGE_HAIL(SkillType.HUNT, Perk.HUNT_CHARGE_BARRAGE), // 4
     // Ranching ====================================================
     RANCH_COW(SkillType.RANCH, null),
     RANCH_PIG(SkillType.RANCH, null),
@@ -81,42 +81,42 @@ public enum Perk {
     RANCH_CHICKEN_DOWN(SkillType.RANCH, Perk.RANCH_CHICKEN),
     RANCH_RABBIT_FOOT(SkillType.RANCH, Perk.RANCH_RABBIT),
     // Brewing =====================================================
-    BREW_STACK(SkillType.BREW, null),
-    // Brewing for yourself
-    BREW_MOVEMENT_DURATION(SkillType.BREW, Perk.BREW_STACK),
-    BREW_RESISTANCE_DURATION(SkillType.BREW, Perk.BREW_MOVEMENT_DURATION),
-    BREW_ABILITY_DURATION(SkillType.BREW, Perk.BREW_RESISTANCE_DURATION),
-    BREW_RESISTANCE_ABSORPTION(SkillType.BREW, Perk.BREW_ABILITY_DURATION),
-    BREW_HEAL_REGEN(SkillType.BREW, Perk.BREW_RESISTANCE_ABSORPTION),
-    BREW_REGEN_HEALTH(SkillType.BREW, Perk.BREW_HEAL_REGEN),
-    // Brewing to hurt enemies
-    BREW_DEBUFF_DURATION(SkillType.BREW, Perk.BREW_STACK),
-    BREW_DAMAGE_POISON(SkillType.BREW, Perk.BREW_DEBUFF_DURATION),
-    BREW_WEAK_BLIND(SkillType.BREW, Perk.BREW_DAMAGE_POISON),
-    BREW_SLOW_WITHER(SkillType.BREW, Perk.BREW_WEAK_BLIND),
+    // BREW_STACK(SkillType.BREW, null),
+    // // Brewing for yourself
+    // BREW_MOVEMENT_DURATION(SkillType.BREW, Perk.BREW_STACK),
+    // BREW_RESISTANCE_DURATION(SkillType.BREW, Perk.BREW_MOVEMENT_DURATION),
+    // BREW_ABILITY_DURATION(SkillType.BREW, Perk.BREW_RESISTANCE_DURATION),
+    // BREW_RESISTANCE_ABSORPTION(SkillType.BREW, Perk.BREW_ABILITY_DURATION),
+    // BREW_HEAL_REGEN(SkillType.BREW, Perk.BREW_RESISTANCE_ABSORPTION),
+    // BREW_REGEN_HEALTH(SkillType.BREW, Perk.BREW_HEAL_REGEN),
+    // // Brewing to hurt enemies
+    // BREW_DEBUFF_DURATION(SkillType.BREW, Perk.BREW_STACK),
+    // BREW_DAMAGE_POISON(SkillType.BREW, Perk.BREW_DEBUFF_DURATION),
+    // BREW_WEAK_BLIND(SkillType.BREW, Perk.BREW_DAMAGE_POISON),
+    // BREW_SLOW_WITHER(SkillType.BREW, Perk.BREW_WEAK_BLIND),
     // Cooking =====================================================
-    COOK_SATURATION(SkillType.COOK, null),
-    COOK_MEAT_RESISTANCE(SkillType.COOK, null),
-    COOK_VEGETABLE_HEALTH(SkillType.COOK, null),
-    COOK_STARCH_STRENGTH(SkillType.COOK, null),
-    COOK_SUGAR_SPEED(SkillType.COOK, null),
-    COOK_FISH_ABSORPTION(SkillType.COOK, null),
+    // COOK_SATURATION(SkillType.COOK, null),
+    // COOK_MEAT_RESISTANCE(SkillType.COOK, null),
+    // COOK_VEGETABLE_HEALTH(SkillType.COOK, null),
+    // COOK_STARCH_STRENGTH(SkillType.COOK, null),
+    // COOK_SUGAR_SPEED(SkillType.COOK, null),
+    // COOK_FISH_ABSORPTION(SkillType.COOK, null),
     // Digging =====================================================
-    DIG_BONE(SkillType.DIG, null),
-    DIG_STRING(SkillType.DIG, null),
-    DIG_FEATHER(SkillType.DIG, null),
-    DIG_GUNPOWDER(SkillType.DIG, null),
-    DIG_SEEDS(SkillType.DIG, null),
-    DIG_IRON(SkillType.DIG, null),
-    DIG_GOLD(SkillType.DIG, null),
-    DIG_EMERALD(SkillType.DIG, null),
-    DIG_DIAMOND(SkillType.DIG, null),
-    DIG_FALLING_STACK(SkillType.DIG, null),
-    DIG_RADIUS(SkillType.DIG, null),
+    // DIG_BONE(SkillType.DIG, null),
+    // DIG_STRING(SkillType.DIG, null),
+    // DIG_FEATHER(SkillType.DIG, null),
+    // DIG_GUNPOWDER(SkillType.DIG, null),
+    // DIG_SEEDS(SkillType.DIG, null),
+    // DIG_IRON(SkillType.DIG, null),
+    // DIG_GOLD(SkillType.DIG, null),
+    // DIG_EMERALD(SkillType.DIG, null),
+    // DIG_DIAMOND(SkillType.DIG, null),
+    // DIG_FALLING_STACK(SkillType.DIG, null),
+    // DIG_RADIUS(SkillType.DIG, null),
     // Enchanting ==================================================
-    ENCHANT_ALTAR(SkillType.ENCHANT, null),
-    ENCHANT_FIND_BOOKS(SkillType.ENCHANT, Perk.ENCHANT_ALTAR),
-    ENCHANT_KEEP_BOOKS(SkillType.ENCHANT, Perk.ENCHANT_FIND_BOOKS),
+    // ENCHANT_ALTAR(SkillType.ENCHANT, null),
+    // ENCHANT_FIND_BOOKS(SkillType.ENCHANT, Perk.ENCHANT_ALTAR),
+    // ENCHANT_KEEP_BOOKS(SkillType.ENCHANT, Perk.ENCHANT_FIND_BOOKS),
     // Taming ======================================================
     TAME_BASE(SkillType.TAME, null),
     TAME_FOLLOW_TELEPORT(SkillType.TAME, Perk.TAME_BASE),
@@ -137,11 +137,11 @@ public enum Perk {
     TAME_HORSE_JUMP_CHANCE(SkillType.TAME, Perk.TAME_HORSE_SPEED_CHANCE),
     TAME_HORSE_KNOCKBACK(SkillType.TAME, Perk.TAME_BASE),
     TAME_HORSE_RIDE_DOWN(SkillType.TAME, Perk.TAME_HORSE_KNOCKBACK),
-    TAME_HORSE_RESURRECT(SkillType.TAME, Perk.TAME_HORSE_RIDE_DOWN),
+    TAME_HORSE_RESURRECT(SkillType.TAME, Perk.TAME_HORSE_RIDE_DOWN);
 
-    FISH_FOO(SkillType.FISH, null),
-    GARDEN_FOO(SkillType.GARDEN, null),
-    WOODCUT_FOO(SkillType.WOODCUT, null);
+    // FISH_FOO(SkillType.FISH, null),
+    // GARDEN_FOO(SkillType.GARDEN, null),
+    // WOODCUT_FOO(SkillType.WOODCUT, null);
     final SkillType skillType;
     final Perk depends;
     final String key;

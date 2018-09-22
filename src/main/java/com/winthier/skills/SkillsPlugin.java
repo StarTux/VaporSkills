@@ -93,7 +93,7 @@ public final class SkillsPlugin extends JavaPlugin implements Listener {
     private final Set<UUID> playersInDebugMode = new HashSet<>();
     private final Map<UUID, Session> sessions = new HashMap<>();
     private final List<AnvilRecipe> anvilRecipes = new ArrayList<>();
-    private ConfigurationSection perksConfig = null;
+    private Map<String, PerkInfo> perksInfo = null;
     private RanchEntity ranchEntity = null;
     private GearItem gearItem = null;
     private LootEntity lootEntity = null;
@@ -119,18 +119,18 @@ public final class SkillsPlugin extends JavaPlugin implements Listener {
         // Skills
         List<Skill> skills = Arrays.asList(
             new BrawlSkill(this),
-            new BrewSkill(this),
-            new CookSkill(this),
-            new DigSkill(this),
-            new EnchantSkill(this),
-            new FishSkill(this),
-            new GardenSkill(this),
-            new HuntSkill(this),
-            new MineSkill(this),
+            //            new BrewSkill(this),
+            //            new CookSkill(this),
+            //            new DigSkill(this),
+            //            new EnchantSkill(this),
+            //            new FishSkill(this),
+            //            new GardenSkill(this),
+            //            new HuntSkill(this),
+            //            new MineSkill(this),
             new RanchSkill(this),
             new SmithSkill(this),
-            new TameSkill(this),
-            new WoodcutSkill(this));
+            new TameSkill(this));
+            //            new WoodcutSkill(this));
         for (Skill skill : skills) {
             SkillType type = skill.getSkillType();
             if (skillMap.containsKey(type)) {
@@ -186,20 +186,66 @@ public final class SkillsPlugin extends JavaPlugin implements Listener {
         saveResource(ANVIL_RECIPES_YML, force);
     }
 
-    public ConfigurationSection getPerksConfig() {
-        if (perksConfig == null) {
+    PerkInfo makePerkInfo(ConfigurationSection section, String key) {
+        String title = section.getString("title");
+        String desc = section.getString("description");
+        String iconStr = section.getString("icon");
+        String iconNbt = section.getString("iconNbt");
+        String background = section.getString("background");
+        if (title == null) title = Msg.capitalEnumName(key);
+        if (desc == null) desc = title;
+        Material icon = Material.STICK;
+        if (iconStr != null) {
+            try {
+                icon = Material.valueOf(iconStr.toUpperCase());
+            } catch (IllegalArgumentException iae) {
+                System.err.println("Unknown material in perk.yml/" + key + ": " + iconStr);
+            }
+        }
+        return new PerkInfo(title, desc, icon, iconNbt, background);
+    }
+
+    public Map<String, PerkInfo> getPerksInfo() {
+        if (perksInfo == null) {
+            perksInfo = new HashMap<>();
             YamlConfiguration tmp;
             tmp = YamlConfiguration.loadConfiguration(new File(getDataFolder(), "perks.yml"));
             tmp.setDefaults(YamlConfiguration.loadConfiguration(new InputStreamReader(getResource("perks.yml"))));
-            this.perksConfig = tmp;
+            for (Perk perk: Perk.values()) {
+                ConfigurationSection section = tmp.getConfigurationSection(perk.key);
+                if (section == null) {
+                    getLogger().warning("Missing entry in perks.yml: " + perk.key);
+                    section = tmp.createSection(perk.key);
+                }
+                perksInfo.put(perk.key, makePerkInfo(section, perk.key));
+                tmp.set(perk.key, null);
+            }
+            for (SkillType skillType: SkillType.values()) {
+                ConfigurationSection section = tmp.getConfigurationSection(skillType.key);
+                if (section == null) {
+                    section = tmp.createSection(skillType.key);
+                    getLogger().warning("Missing entry in perks.yml: " + skillType.key);
+                }
+                if (!section.isSet("title")) section.set("title", getSkill(skillType).getDisplayName());
+                if (!section.isSet("description")) section.set("description", getSkill(skillType).getDescription());
+                perksInfo.put(skillType.key, makePerkInfo(section, skillType.key));
+                tmp.set(skillType.key, null);
+            }
+            for (String key: tmp.getKeys(false)) {
+                getLogger().warning("Obsolete entry in perks.yml: " + key);
+            }
         }
-        return perksConfig;
+        return perksInfo;
+    }
+
+    public PerkInfo getPerkInfo(String name) {
+        return getPerksInfo().get(name);
     }
 
     void reloadAll() {
         writeDefaultFiles(false);
         reloadConfig();
-        perksConfig = null;
+        perksInfo = null;
         for (Skill skill : getSkills()) skill.configure();
         buildNameMap();
         score.clear();
@@ -273,6 +319,15 @@ public final class SkillsPlugin extends JavaPlugin implements Listener {
             final int amount;
         }
         private Item inputA, inputB, output;
+    }
+
+    @Value
+    static final class PerkInfo {
+        public final String title;
+        public final String description;
+        public final Material icon;
+        public final String iconNbt;
+        public final String background;
     }
 
     // Anvil, Brewing Stand, Furnace
@@ -437,7 +492,7 @@ public final class SkillsPlugin extends JavaPlugin implements Listener {
                 final AnvilStore anvilStore = (AnvilStore)getMetadata(anvilBlock, AnvilStore.KEY);
                 removeMetadata(anvilBlock, AnvilStore.KEY);
                 if (anvilStore == null) return;
-                if (anvilStore.getOutput() == null) return;
+                if (!anvilStore.isCustomRecipe()) return;
                 // Compare AnvilStore with AnvilInventory, except the
                 // output, which tends to differ for some reason.
                 if (!anvilStore.player.equals(player.getUniqueId())) return;
@@ -522,15 +577,12 @@ public final class SkillsPlugin extends JavaPlugin implements Listener {
                 }
             }
         }
-        if (!anvilStore.isCustomRecipe()) {
-            getSkill(SmithSkill.class).anvilRecipe(player, anvilStore);
-        }
         if (anvilStore.isCustomRecipe()) {
             event.setResult(anvilStore.output);
             setMetadata(anvilBlock, AnvilStore.KEY, anvilStore);
         } else {
-            event.setResult(null);
             removeMetadata(anvilBlock, AnvilStore.KEY);
+            getSkill(SmithSkill.class).anvilRecipe(player, anvilStore);
         }
     }
 
@@ -545,7 +597,7 @@ public final class SkillsPlugin extends JavaPlugin implements Listener {
         Player player = getServer().getPlayer(furnaceStore.player);
         if (player == null) return;
         if (hasDebugMode(player)) player.sendMessage("SMELT " + furnaceStore.material + " " + furnaceStore.amount);
-        getSkill(CookSkill.class).onItemSmelt(player, event.getSource(), event.getResult());
+        // getSkill(CookSkill.class).onItemSmelt(player, event.getSource(), event.getResult());
         getSkill(SmithSkill.class).onItemSmelt(player, event.getSource(), event.getResult());
     }
 
@@ -558,7 +610,7 @@ public final class SkillsPlugin extends JavaPlugin implements Listener {
         Player player = getServer().getPlayer(furnaceStore.player);
         if (player == null) return;
         if (hasDebugMode(player)) player.sendMessage("BREW " + event.getContents().getItem(0));
-        ((BrewSkill)getSkill(SkillType.BREW)).onBrew(player, event.getContents());
+        // ((BrewSkill)getSkill(SkillType.BREW)).onBrew(player, event.getContents());
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
@@ -594,10 +646,10 @@ public final class SkillsPlugin extends JavaPlugin implements Listener {
             Player killer = entity.getKiller();
             if (killer == null) return;
             getSkill(BrawlSkill.class).onEntityKill(killer, entity);
-        } else if (lastDamageCause.equals(SkillType.HUNT.key)) {
-            Player killer = entity.getKiller();
-            if (killer == null) return;
-            getSkill(HuntSkill.class).onEntityKill(killer, entity);
+        // } else if (lastDamageCause.equals(SkillType.HUNT.key)) {
+        //     Player killer = entity.getKiller();
+        //     if (killer == null) return;
+        //     getSkill(HuntSkill.class).onEntityKill(killer, entity);
         } else if (lastDamageCause.equals(SkillType.TAME.key)) {
             EntityDamageEvent damageEvent = entity.getLastDamageCause();
             if (!(damageEvent instanceof EntityDamageByEntityEvent)) return;
@@ -621,8 +673,8 @@ public final class SkillsPlugin extends JavaPlugin implements Listener {
         } else if (damager instanceof Projectile) {
             Projectile projectile = (Projectile)damager;
             if (projectile.getShooter() instanceof Player) {
-                setMetadata(damagee, LAST_DAMAGE_CAUSE_KEY, SkillType.HUNT.key);
-                getSkill(HuntSkill.class).onProjectileDamage((Player)projectile.getShooter(), projectile, damagee);
+                // setMetadata(damagee, LAST_DAMAGE_CAUSE_KEY, SkillType.HUNT.key);
+                // getSkill(HuntSkill.class).onProjectileDamage((Player)projectile.getShooter(), projectile, damagee);
             }
         } else if (damager instanceof Tameable) {
             Tameable pet = (Tameable)damager;
@@ -677,12 +729,12 @@ public final class SkillsPlugin extends JavaPlugin implements Listener {
             if (perks.contains(Perk.BRAWL_AXE_DIAMOND_SLASH)) return 2;
             if (perks.contains(Perk.BRAWL_AXE_CHARGE)) return 1;
             return 0;
-        case BOW:
-            if (perks.contains(Perk.HUNT_CHARGE_HAIL)) return 4;
-            if (perks.contains(Perk.HUNT_CHARGE_BARRAGE)) return 3;
-            if (perks.contains(Perk.HUNT_CHARGE_MULTIPLE)) return 2;
-            if (perks.contains(Perk.HUNT_CHARGE_BOW)) return 1;
-            return 0;
+        // case BOW:
+        //     if (perks.contains(Perk.HUNT_CHARGE_HAIL)) return 4;
+        //     if (perks.contains(Perk.HUNT_CHARGE_BARRAGE)) return 3;
+        //     if (perks.contains(Perk.HUNT_CHARGE_MULTIPLE)) return 2;
+        //     if (perks.contains(Perk.HUNT_CHARGE_BOW)) return 1;
+            // return 0;
         default:
             return 0;
         }
@@ -732,13 +784,13 @@ public final class SkillsPlugin extends JavaPlugin implements Listener {
             default: getSkill(BrawlSkill.class).basicChargeAttack(player);
             }
             break;
-        case BOW:
-            switch (chargeLevel) {
-            case 4: getSkill(HuntSkill.class).arrowHail(player); break;
-            case 3: getSkill(HuntSkill.class).arrowBarrage(player); break;
-            case 2: getSkill(HuntSkill.class).arrowMultiple(player); break;
-            default: getSkill(HuntSkill.class).basicArrowCharge(player); break;
-            }
+        // case BOW:
+        //     switch (chargeLevel) {
+        //     case 4: getSkill(HuntSkill.class).arrowHail(player); break;
+        //     case 3: getSkill(HuntSkill.class).arrowBarrage(player); break;
+        //     case 2: getSkill(HuntSkill.class).arrowMultiple(player); break;
+        //     default: getSkill(HuntSkill.class).basicArrowCharge(player); break;
+        //     }
         default: break;
         }
     }
@@ -828,10 +880,10 @@ public final class SkillsPlugin extends JavaPlugin implements Listener {
         }
     }
 
-    public void onLevelUp(UUID uuid, SkillType skillType, int level) {
+    public void onLevelUp(UUID uuid, SkillType skillType, int level, boolean totalLevelUp) {
         final Player player = Bukkit.getServer().getPlayer(uuid);
         if (player == null) return;
-        LevelUpEffect.launch(this, player, skillType, level);
+        LevelUpEffect.launch(this, player, skillType, level, totalLevelUp);
         Bukkit.getServer().getPluginManager().callEvent(new SkillsLevelUpEvent(player, skillType, level));
     }
 

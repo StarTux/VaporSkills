@@ -13,15 +13,18 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 @RequiredArgsConstructor
 final class LevelUpEffect extends BukkitRunnable {
+    private static final int MAX_TICKS = 20 * 8;
+    // Constants
     private final SkillsPlugin plugin;
     private final UUID uuid;
     private final SkillType skillType;
     private final int level;
+    private final boolean totalLevelUp;
+    // State
     private int tickCounter = 0;
-    private static final int MAX_TICKS = 20 * 8;
 
-    static void launch(SkillsPlugin plugin, Player player, SkillType skillType, int level) {
-        new LevelUpEffect(plugin, player.getUniqueId(), skillType, level).runTaskTimer(plugin, 0, 1);
+    static void launch(SkillsPlugin plugin, Player player, SkillType skillType, int level, boolean totalLevelUp) {
+        new LevelUpEffect(plugin, player.getUniqueId(), skillType, level, totalLevelUp).runTaskTimer(plugin, 0, 1);
     }
 
     @Override
@@ -34,9 +37,9 @@ final class LevelUpEffect extends BukkitRunnable {
             return;
         }
         final World world = player.getWorld();
-        if (skillType == SkillType.TOTAL) {
+        if (totalLevelUp) {
             if (ticks == 0) {
-                Msg.announce("&f%s reached total skill level %d", player.getName(), level);
+                Msg.announce("&a%s reached total skill level %d", player.getName(), level);
             }
             if (ticks % 20 == 10) world.playSound(player.getEyeLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, .1f, .65f);
             if (level >= 10) {

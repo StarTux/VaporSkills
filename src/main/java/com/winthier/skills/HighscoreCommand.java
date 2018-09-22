@@ -53,7 +53,7 @@ class HighscoreCommand implements CommandExecutor {
         Msg.msg(player, "");
         Msg.msg(player, "&3&lHighscore &7&o(Click for more info)");
         List<Object> message = new ArrayList<>();
-        Highscore hi = plugin.getScore().getHighscore(SkillType.TOTAL);
+        Highscore hi = plugin.getScore().getTotalHighscore();
         int rank = hi.rankOfPlayer(uuid);
         String rankString = rank > 0 ? "#" + rank : "-";
         message.add(Msg.button(

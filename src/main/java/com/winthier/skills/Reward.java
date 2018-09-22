@@ -45,7 +45,7 @@ class Reward {
             String dataArg = tokens[3];
             String extraArg = tokens[4];
             Skill skill = SkillsPlugin.getInstance().skillByName(skillTypeArg);
-            if (skill == null) throw new IllegalArgumentException("Skill not found: " + skillTypeArg);
+            if (skill == null) continue; //throw new IllegalArgumentException("Skill not found: " + skillTypeArg);
             Category category = Category.valueOf(categoryArg.toUpperCase());
             String name = "-".equals(nameArg) ? null : nameArg.toUpperCase();
             Integer data = "-".equals(dataArg) ? null : Integer.parseInt(dataArg);
