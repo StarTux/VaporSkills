@@ -960,6 +960,7 @@ public final class SkillsPlugin extends JavaPlugin implements Listener {
                     re.printStackTrace();
                     continue;
                 }
+                if (reward == null) continue;
                 if (map.containsKey(reward.key)) getLogger().warning("Warning: Duplicate key '" + reward.key + "' in line " + linum);
                 map.put(reward.key, reward);
                 try {

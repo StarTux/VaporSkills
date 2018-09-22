@@ -45,7 +45,7 @@ class Reward {
             String dataArg = tokens[3];
             String extraArg = tokens[4];
             Skill skill = SkillsPlugin.getInstance().skillByName(skillTypeArg);
-            if (skill == null) continue; //throw new IllegalArgumentException("Skill not found: " + skillTypeArg);
+            if (skill == null) return null; //throw new IllegalArgumentException("Skill not found: " + skillTypeArg);
             Category category = Category.valueOf(categoryArg.toUpperCase());
             String name = "-".equals(nameArg) ? null : nameArg.toUpperCase();
             Integer data = "-".equals(dataArg) ? null : Integer.parseInt(dataArg);
@@ -61,6 +61,7 @@ class Reward {
     static Reward parse(String[] tokens) {
         if (tokens.length != 6) throw new IllegalArgumentException("6 items required");
         Key key = Key.parse(Arrays.copyOfRange(tokens, 0, 5));
+        if (key == null) return null;
         String skillPointsArg = tokens[5];
         double skillPoints = Double.parseDouble(skillPointsArg);
         return new Reward(key, skillPoints);
