@@ -1,11 +1,8 @@
 package com.winthier.skills;
 
-import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.EnumSet;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -23,7 +20,6 @@ public final class Score {
     final Map<UUID, Map<SkillType, SQLPerkProgress>> perkProgress = new HashMap<>();
     final Map<UUID, SQLPerkProgress> totalPerkProgress = new HashMap<>();
     @Getter @Setter private Map<Reward.Key, Reward> rewards = new HashMap<>();
-    final List<SQLScore> dirtyScores = new ArrayList<>();
 
     // Score getters
 
@@ -50,13 +46,12 @@ public final class Score {
         if (newSkillLevel > skillLevel) {
             score.setSkillLevel(newSkillLevel);
             // Save instantly
-            plugin.getDb().save(score);
-            dirtyScores.remove(score);
+            plugin.getDatabase().saveAsync(score, null, "skill_points", "skill_level");
             // Flush highscores
             highscores.remove(skill);
             plugin.onLevelUp(player, skill, newSkillLevel, false); // TODO
         } else {
-            if (!dirtyScores.contains(score)) dirtyScores.add(score);
+            plugin.getDatabase().saveAsync(score, null, "skill_points");
         }
     }
 
@@ -66,8 +61,7 @@ public final class Score {
         int skillPoints = pointsForLevel(skillLevel);
         score.setSkillPoints(skillPoints);
         score.setSkillLevel(skillLevel);
-        plugin.getDb().save(score);
-        dirtyScores.remove(score);
+        plugin.getDatabase().saveAsync(score, null, "skill_points", "skill_level");
     }
 
     // Score: points-level conversion
@@ -127,7 +121,7 @@ public final class Score {
         Set<Perk> result = perks.get(player);
         if (result == null) {
             result = EnumSet.noneOf(Perk.class);
-            for (SQLPerk sqlPerk: plugin.getDb().find(SQLPerk.class).where().eq("player", player).findList()) {
+            for (SQLPerk sqlPerk: plugin.getDatabase().find(SQLPerk.class).where().eq("player", player).findList()) {
                 try {
                     Perk perk = Perk.valueOf(sqlPerk.getPerk().toUpperCase());
                     result.add(perk);
@@ -142,7 +136,7 @@ public final class Score {
         Map<SkillType, SQLPerkProgress> result = perkProgress.get(player);
         if (result == null) {
             result = new EnumMap<>(SkillType.class);
-            for (SQLPerkProgress row: plugin.getDb().find(SQLPerkProgress.class).where().eq("player", player).findList()) {
+            for (SQLPerkProgress row: plugin.getDatabase().find(SQLPerkProgress.class).where().eq("player", player).findList()) {
                 if (row.getSkill().equals("total")) {
                     totalPerkProgress.put(player, row);
                 } else {
@@ -153,13 +147,13 @@ public final class Score {
             for (SkillType skillType: SkillType.values()) {
                 if (!result.containsKey(skillType)) {
                     SQLPerkProgress row = new SQLPerkProgress(player, skillType.key);
-                    plugin.getDb().save(row);
+                    plugin.getDatabase().save(row);
                     result.put(skillType, row);
                 }
             }
             if (!totalPerkProgress.containsKey(player)) {
                 SQLPerkProgress row = new SQLPerkProgress(player, "total");
-                plugin.getDb().save(row);
+                plugin.getDatabase().save(row);
                 totalPerkProgress.put(player, row);
             }
         }
@@ -183,7 +177,7 @@ public final class Score {
         Set<Perk> playerPerks = getPerks(player);
         if (playerPerks.contains(perk)) return false;
         playerPerks.add(perk);
-        plugin.getDb().saveIgnore(new SQLPerk(player, perk.key));
+        plugin.getDatabase().saveIgnoreAsync(new SQLPerk(player, perk.key), null);
         return true;
     }
 
@@ -202,7 +196,7 @@ public final class Score {
     public void givePerks(UUID player, SkillType skill, int amount) {
         SQLPerkProgress row = getPerkProgress(player, skill);
         row.setPerks(row.getPerks() + amount);
-        plugin.getDb().save(row);
+        plugin.getDatabase().save(row);
     }
 
     // Internal score database getters
@@ -212,7 +206,7 @@ public final class Score {
         if (result == null) {
             result = new EnumMap<>(SkillType.class);
             scores.put(player, result);
-            for (SQLScore score: plugin.getDb().find(SQLScore.class).where().eq("player", player).findList()) {
+            for (SQLScore score: plugin.getDatabase().find(SQLScore.class).where().eq("player", player).findList()) {
                 try {
                     SkillType skillType = SkillType.valueOf(score.getSkill().toUpperCase());
                     result.put(skillType, score);
@@ -221,7 +215,7 @@ public final class Score {
             for (SkillType skillType: SkillType.values()) {
                 if (!result.containsKey(skillType)) {
                     SQLScore score = new SQLScore(player, skillType.key);
-                    plugin.getDb().save(score);
+                    plugin.getDatabase().saveAsync(score, null);
                     result.put(skillType, score);
                 }
             }
@@ -233,26 +227,11 @@ public final class Score {
         return getScore(player).get(skill);
     }
 
-    void saveOneDirtyRow() {
-        if (!dirtyScores.isEmpty()) {
-            SQLScore score = dirtyScores.remove(0);
-            plugin.getDb().save(score);
-        }
-    }
-
     void removePlayer(UUID player) {
         scores.remove(player);
         perks.remove(player);
         perkProgress.remove(player);
         totalPerkProgress.remove(player);
-        Iterator<SQLScore> iter = dirtyScores.iterator();
-        while (iter.hasNext()) {
-            SQLScore score = iter.next();
-            if (score.getPlayer().equals(player)) {
-                plugin.getDb().save(score);
-                iter.remove();
-            }
-        }
     }
 
     void clear() {
@@ -260,6 +239,5 @@ public final class Score {
         perks.clear();
         rewards.clear();
         scores.clear();
-        dirtyScores.clear();
     }
 }

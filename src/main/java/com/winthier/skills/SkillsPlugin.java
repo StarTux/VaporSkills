@@ -80,7 +80,7 @@ public final class SkillsPlugin extends JavaPlugin implements Listener {
     // Singleton
     @Getter private static SkillsPlugin instance;
     // External Data
-    private SQLDatabase db;
+    private SQLDatabase database;
     // Commands
     private final AdminCommand adminCommand = new AdminCommand(this);
     private final SkillsCommand skillsCommand = new SkillsCommand(this);
@@ -109,9 +109,9 @@ public final class SkillsPlugin extends JavaPlugin implements Listener {
         // Files
         reloadConfig();
         // Database
-        db = new SQLDatabase(this);
-        db.registerTables(SQLScore.class, SQLPerk.class, SQLPerkProgress.class);
-        if (!db.createAllTables()) {
+        database = new SQLDatabase(this);
+        database.registerTables(SQLScore.class, SQLPerk.class, SQLPerkProgress.class);
+        if (!database.createAllTables()) {
             getLogger().warning("Database setup failed. Disabling skills.");
             getServer().getPluginManager().disablePlugin(this);
             return;
@@ -932,7 +932,6 @@ public final class SkillsPlugin extends JavaPlugin implements Listener {
         for (Player player : Bukkit.getServer().getOnlinePlayers()) {
             getSession(player.getUniqueId()).onTick(player);
         }
-        score.saveOneDirtyRow();
     }
 
     void importRewards() {

@@ -24,7 +24,7 @@ public final class Highscore {
         Highscore result = new Highscore(plugin);
         int lastLevel = -1;
         int rank = 0;
-        for (SQLScore score : plugin.getDb().find(SQLScore.class).where().eq("skill", key).orderByDescending("skillLevel").findList()) {
+        for (SQLScore score : plugin.getDatabase().find(SQLScore.class).where().eq("skill", key).orderByDescending("skillLevel").findList()) {
             UUID player = score.getPlayer();
             int skillPoints = (int)score.getSkillPoints();
             int skillLevel = score.getSkillLevel();

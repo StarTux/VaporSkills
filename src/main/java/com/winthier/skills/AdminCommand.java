@@ -10,7 +10,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
-import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -55,7 +54,7 @@ class AdminCommand implements CommandExecutor {
                 return true;
             case "info":
                 sender.sendMessage("Debug info");
-                sender.sendMessage("Dirty scores: " + plugin.getScore().dirtyScores.size());
+                sender.sendMessage("Nothing to show.");
                 return true;
             default:
                 sender.sendMessage("/skadmin info");
